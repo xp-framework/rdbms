@@ -16,7 +16,7 @@ Note: All of the above will require corresponding PHP extensions to be
 loaded. See the classes' apidocs for dependency details.
 
 The DriverManager model
-----------------------=
+-----------------------
 To retrieve a connection class from the driver manager, you need to use 
 the rdbms.DriverManager class. 
 
@@ -81,7 +81,7 @@ Transactions
 To start a transaction, you can use the connection's begin method as 
 follows: 
 
-```
+```php
 public function createAuthor(...) {
   try {
     $tran= $conn->begin(new Transaction('create_author'));
