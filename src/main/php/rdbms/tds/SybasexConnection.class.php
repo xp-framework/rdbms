@@ -1,64 +1,55 @@
-<?php
-/* This class is part of the XP framework
- *
- * $Id$ 
- */
+<?php namespace rdbms\tds;
 
-  uses(
-    'rdbms.tds.TdsConnection',
-    'rdbms.tds.TdsV5Protocol',
-    'rdbms.tds.ConnectionLookup',
-    'rdbms.sybase.SybaseDialect'
-  );
+use rdbms\sybase\SybaseDialect;
+
+
+/**
+ * Connection to Sybase Databases via TDS 5.0
+ *
+ * @see   xp://rdbms.tds.TdsConnection
+ */
+class SybasexConnection extends TdsConnection {
+  protected static $lookup;
+
+  static function __static() {
+    if (strncasecmp(PHP_OS, 'Win', 3) === 0) {
+      self::$lookup= \lang\XPClass::forName('rdbms.tds.SqlIniLookup')->newInstance();
+    } else if (getenv('SYBASE')) {
+      self::$lookup= \lang\XPClass::forName('rdbms.tds.InterfacesLookup')->newInstance();
+    } else {
+      self::$lookup= \lang\XPClass::forName('rdbms.tds.FreeTdsLookup')->newInstance();
+    }
+    \rdbms\DriverManager::register('sybase+x', new \lang\XPClass(__CLASS__));
+  }
 
   /**
-   * Connection to Sybase Databases via TDS 5.0
+   * Constructor
    *
-   * @see   xp://rdbms.tds.TdsConnection
+   * @param   rdbms.DSN dsn
    */
-  class SybasexConnection extends TdsConnection {
-    protected static $lookup;
-
-    static function __static() {
-      if (strncasecmp(PHP_OS, 'Win', 3) === 0) {
-        self::$lookup= XPClass::forName('rdbms.tds.SqlIniLookup')->newInstance();
-      } else if (getenv('SYBASE')) {
-        self::$lookup= XPClass::forName('rdbms.tds.InterfacesLookup')->newInstance();
-      } else {
-        self::$lookup= XPClass::forName('rdbms.tds.FreeTdsLookup')->newInstance();
-      }
-      DriverManager::register('sybase+x', new XPClass(__CLASS__));
+  public function __construct($dsn) {
+    if (null === $dsn->getPort(null)) {       // Check lookup
+      self::$lookup->lookup($dsn);
     }
-
-    /**
-     * Constructor
-     *
-     * @param   rdbms.DSN dsn
-     */
-    public function __construct($dsn) {
-      if (NULL === $dsn->getPort(NULL)) {       // Check lookup
-        self::$lookup->lookup($dsn);
-      }
-      parent::__construct($dsn);
-    }
-
-    /**
-     * Returns dialect
-     *
-     * @return  rdbms.SQLDialect
-     */
-    protected function getDialect() {
-      return new SybaseDialect();
-    }
-    
-    /**
-     * Returns protocol
-     *
-     * @param   peer.Socket sock
-     * @return  rdbms.tds.TdsProtocol
-     */
-    protected function getProtocol($sock) {
-      return new TdsV5Protocol($sock);
-    }
+    parent::__construct($dsn);
   }
-?>
+
+  /**
+   * Returns dialect
+   *
+   * @return  rdbms.SQLDialect
+   */
+  protected function getDialect() {
+    return new SybaseDialect();
+  }
+  
+  /**
+   * Returns protocol
+   *
+   * @param   peer.Socket sock
+   * @return  rdbms.tds.TdsProtocol
+   */
+  protected function getProtocol($sock) {
+    return new TdsV5Protocol($sock);
+  }
+}

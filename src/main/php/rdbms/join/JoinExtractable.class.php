@@ -1,52 +1,48 @@
-<?php
-/* This class is part of the XP framework
- *
- * $Id$ 
- */
+<?php namespace rdbms\join;
 
-  uses('util.XPIterator');
+use util\XPIterator;
+
+
+/**
+ * Interface for joins
+ * Classes, that implement this interface can be filled with objects
+ * by a JoinProcessor
+ *
+ * @purpose rdbms.join
+ * @see     xp://rdbms.join.JoinPart#extract
+ */
+interface JoinExtractable {
 
   /**
-   * Interface for joins
-   * Classes, that implement this interface can be filled with objects
-   * by a JoinProcessor
+   * set "in construct" result object
    *
-   * @purpose rdbms.join
-   * @see     xp://rdbms.join.JoinPart#extract
+   * @param   string role
+   * @param   string unique key
+   * @param   lang.Object obj
    */
-  interface JoinExtractable {
+  public function setCachedObj($role, $key, $obj);
 
-    /**
-     * set "in construct" result object
-     *
-     * @param   string role
-     * @param   string unique key
-     * @param   lang.Object obj
-     */
-    public function setCachedObj($role, $key, $obj);
+  /**
+   * get an object from "found objects"
+   *
+   * @param   string role
+   * @param   string unique key
+   * @throws  util.NoSuchElementException
+   */
+  public function getCachedObj($role, $key);
 
-    /**
-     * get an object from "found objects"
-     *
-     * @param   string role
-     * @param   string unique key
-     * @throws  util.NoSuchElementException
-     */
-    public function getCachedObj($role, $key);
+  /**
+   * test an object for existance in "found objects"
+   *
+   * @param   string role
+   * @param   string unique key
+   */
+  public function hasCachedObj($role, $key);
 
-    /**
-     * test an object for existance in "found objects"
-     *
-     * @param   string role
-     * @param   string unique key
-     */
-    public function hasCachedObj($role, $key);
-
-    /**
-     * mark a role as chached
-     *
-     * @param   string role
-     */
-    public function markAsCached($role);
-  }
-?>
+  /**
+   * mark a role as chached
+   *
+   * @param   string role
+   */
+  public function markAsCached($role);
+}

@@ -1,30 +1,25 @@
-<?php
-/* This class is part of the XP framework
+<?php namespace rdbms\query;
+
+
+/**
+ * store complete queries with criteria, method and peer
  *
- * $Id$ 
+ * @see      xp://rdbms.query.Query
+ * @purpose  rdbms.query
  */
-  uses('rdbms.query.Query');
+class UpdateQuery extends Query {
 
   /**
-   * store complete queries with criteria, method and peer
+   * execute query without set operation
    *
-   * @see      xp://rdbms.query.Query
-   * @purpose  rdbms.query
+   * @param  var[] values
+   * @return int number of affected rows
+   * @throws lang.IllegalStateException
    */
-  class UpdateQuery extends Query {
-
-    /**
-     * execute query without set operation
-     *
-     * @param  var[] values
-     * @return int number of affected rows
-     * @throws lang.IllegalStateException
-     */
-    public function execute($values= NULL) {
-      if (is_null($this->peer))      throw new IllegalStateException('no peer set');
-      if ($this->criteria->isJoin()) throw new IllegalStateException('can not update into joins');
-      return $this->peer->doUpdate($values, $this->criteria);
-    }
-    
+  public function execute($values= null) {
+    if (is_null($this->peer))      throw new \lang\IllegalStateException('no peer set');
+    if ($this->criteria->isJoin()) throw new \lang\IllegalStateException('can not update into joins');
+    return $this->peer->doUpdate($values, $this->criteria);
   }
-?>
+  
+}

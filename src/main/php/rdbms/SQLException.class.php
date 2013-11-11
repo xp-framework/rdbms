@@ -1,15 +1,10 @@
-<?php
-/* This class is part of the XP framework
- *
- * $Id$ 
- */
+<?php namespace rdbms;
  
-  /**
-   * SQL-Exception
-   * 
-   * @purpose  Exception
-   */
-  class SQLException extends XPException {
+/**
+ * SQL-Exception
+ * 
+ * @purpose  Exception
+ */
+class SQLException extends \lang\XPException {
 
-  }
-?>
+}

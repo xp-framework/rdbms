@@ -1,18 +1,13 @@
-<?php
-/* This class is part of the XP framework
+<?php namespace rdbms;
+
+
+
+/**
+ * Indicates the connection was lost during an SQL query
  *
- * $Id$ 
+ * @see      rfc://0058
+ * @purpose  Exception
  */
+class SQLConnectionClosedException extends SQLStatementFailedException {
 
-  uses('rdbms.SQLStatementFailedException');
-
-  /**
-   * Indicates the connection was lost during an SQL query
-   *
-   * @see      rfc://0058
-   * @purpose  Exception
-   */
-  class SQLConnectionClosedException extends SQLStatementFailedException {
-  
-  }
-?>
+}

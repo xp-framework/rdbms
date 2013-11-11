@@ -1,17 +1,12 @@
-<?php
-/* This class is part of the XP framework
+<?php namespace rdbms;
+
+
+
+/**
+ * Indicates a connection is not registered.
  *
- * $Id$ 
+ * @purpose  Exception
  */
+class ConnectionNotRegisteredException extends SQLException {
 
-  uses('rdbms.SQLException');
-
-  /**
-   * Indicates a connection is not registered.
-   *
-   * @purpose  Exception
-   */
-  class ConnectionNotRegisteredException extends SQLException {
-  
-  }
-?>
+}

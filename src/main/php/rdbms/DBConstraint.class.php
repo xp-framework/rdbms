@@ -1,33 +1,28 @@
-<?php
-/* This class is part of the XP framework
- *
- * $Id$ 
+<?php namespace rdbms;
+
+/**
+ * Represents a database constaint
  */
+abstract class DBConstraint extends \lang\Object {
+
+  public 
+    $name= '';
 
   /**
-   * Represents a database constaint
+   * Set name
+   *
+   * @param   string name
    */
-  abstract class DBConstraint extends Object {
-
-    public 
-      $name= '';
-
-    /**
-     * Set name
-     *
-     * @param   string name
-     */
-    public function setName($name) {
-      $this->name= $name;
-    }
-
-    /**
-     * Get name
-     *
-     * @return  string
-     */
-    public function getName() {
-      return $this->name;
-    }
+  public function setName($name) {
+    $this->name= $name;
   }
-?>
+
+  /**
+   * Get name
+   *
+   * @return  string
+   */
+  public function getName() {
+    return $this->name;
+  }
+}

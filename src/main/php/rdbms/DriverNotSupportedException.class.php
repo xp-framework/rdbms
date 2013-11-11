@@ -1,15 +1,10 @@
-<?php
-/* This class is part of the XP framework
- *
- * $Id$ 
- */
+<?php namespace rdbms;
  
-  /**
-   * DriverNotSupportedException
-   * 
-   * @purpose  Exception
-   */
-  class DriverNotSupportedException extends XPException {
+/**
+ * DriverNotSupportedException
+ * 
+ * @purpose  Exception
+ */
+class DriverNotSupportedException extends \lang\XPException {
 
-  }
-?>
+}

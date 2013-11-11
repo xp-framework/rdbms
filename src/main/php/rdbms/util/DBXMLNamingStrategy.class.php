@@ -1,32 +1,27 @@
-<?php
-/* This class is part of the XP framework
+<?php namespace rdbms\util;
+
+/**
+ * Generate Names for database generated classes
  *
- * $Id$ 
  */
+abstract class DBXMLNamingStrategy extends \lang\Object {
+  
+  /**
+   * assemble th name of a foreign key constraint
+   *
+   * @param   rdbms.DBTable t referenced table
+   * @param   rdbms.DBConstraint c
+   * @return  string
+   */
+  abstract function foreignKeyConstraintName($t, $c);
 
   /**
-   * Generate Names for database generated classes
+   * assemble the name of a referencing foreign Key constraint
+   * (current entity at the tip)
    *
+   * @param   rdbms.DBTable t referencing table
+   * @param   rdbms.DBConstraint c
+   * @return  string
    */
-  abstract class DBXMLNamingStrategy extends Object {
-    
-    /**
-     * assemble th name of a foreign key constraint
-     *
-     * @param   rdbms.DBTable t referenced table
-     * @param   rdbms.DBConstraint c
-     * @return  string
-     */
-    abstract function foreignKeyConstraintName($t, $c);
-
-    /**
-     * assemble the name of a referencing foreign Key constraint
-     * (current entity at the tip)
-     *
-     * @param   rdbms.DBTable t referencing table
-     * @param   rdbms.DBConstraint c
-     * @return  string
-     */
-    abstract function referencingForeignKeyConstraintName($t, $c);
-  }
-?>
+  abstract function referencingForeignKeyConstraintName($t, $c);
+}

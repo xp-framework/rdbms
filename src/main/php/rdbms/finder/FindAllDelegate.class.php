@@ -1,34 +1,25 @@
-<?php
-/* This class is part of the XP framework
- *
- * $Id$ 
- */
+<?php namespace rdbms\finder;
 
-  $package= 'rdbms.finder';
-  
-  uses('rdbms.finder.FinderDelegate');
+/**
+ * Expects to find any amount of rows
+ *
+ * @see   xp://rdbms.finder.Finder#find
+ */
+class FindAllDelegate extends FinderDelegate {
 
   /**
-   * Expects to find any amount of rows
+   * Select implementation
    *
-   * @see   xp://rdbms.finder.Finder#find
+   * @param   rdbms.Criteria criteria
+   * @return  rdbms.DataSet[]
+   * @throws  rdbms.finder.FinderException
    */
-  class rdbms·finder·FindAllDelegate extends FinderDelegate {
-
-    /**
-     * Select implementation
-     *
-     * @param   rdbms.Criteria criteria
-     * @return  rdbms.DataSet[]
-     * @throws  rdbms.finder.FinderException
-     */
-    public function select($criteria) {
-      $peer= $this->finder->getPeer();
-      try {
-        return $peer->doSelect($criteria);
-      } catch (SQLException $e) {
-        throw new FinderException('Failed finding '.$peer->identifier, $e);
-      }
+  public function select($criteria) {
+    $peer= $this->finder->getPeer();
+    try {
+      return $peer->doSelect($criteria);
+    } catch (\rdbms\SQLException $e) {
+      throw new FinderException('Failed finding '.$peer->identifier, $e);
     }
   }
-?>
+}

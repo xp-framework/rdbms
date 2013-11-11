@@ -1,30 +1,26 @@
-<?php
-/* This class is part of the XP framework
+<?php namespace rdbms\tds;
+
+use rdbms\ResultSet;
+
+
+/**
+ * Abstract base class
  *
- * $Id$ 
  */
-
-  uses('rdbms.ResultSet');
-
+abstract class AbstractTdsResultSet extends ResultSet {
+ 
   /**
-   * Abstract base class
+   * Returns a record
    *
+   * @param   [:var] record
+   * @param   string field
+   * @return  [:var] record
    */
-  abstract class AbstractTdsResultSet extends ResultSet {
-   
-    /**
-     * Returns a record
-     *
-     * @param   [:var] record
-     * @param   string field
-     * @return  [:var] record
-     */
-    protected function record($record, $field= NULL) {
-      $return= array();
-      foreach ($this->fields as $i => $info) {
-        $return[$info['name']] = $record[$i];
-      }
-      return NULL === $field ? $return : $return[$field];
-    } 
-  }
-?>
+  protected function record($record, $field= null) {
+    $return= array();
+    foreach ($this->fields as $i => $info) {
+      $return[$info['name']] = $record[$i];
+    }
+    return null === $field ? $return : $return[$field];
+  } 
+}

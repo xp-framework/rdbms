@@ -1,17 +1,10 @@
-<?php
-/* This class is part of the XP framework
+<?php namespace rdbms;
+
+/**
+ * Generic DB observer interface.
  *
- * $Id$ 
+ * @deprecated
  */
+interface DBObserver extends \util\log\BoundLogObserver {
 
-  uses('util.log.BoundLogObserver');
-
-  /**
-   * Generic DB observer interface.
-   *
-   * @purpose  DB observer interface
-   * @deprecated
-   */
-  interface DBObserver extends BoundLogObserver {
-  }
-?>
+}

@@ -1,18 +1,13 @@
-<?php
-/* This class is part of the XP framework
+<?php namespace rdbms\finder;
+
+
+
+/**
+ * Indicates a specific entity could not be found
  *
- * $Id$ 
+ * @see      xp://rdbms.finder.FinderException#find
+ * @purpose  Chained exception
  */
+class NoSuchEntityException extends FinderException {
 
-  uses('rdbms.finder.FinderException');
-
-  /**
-   * Indicates a specific entity could not be found
-   *
-   * @see      xp://rdbms.finder.FinderException#find
-   * @purpose  Chained exception
-   */
-  class NoSuchEntityException extends FinderException {
-  
-  }
-?>
+}
