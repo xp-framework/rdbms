@@ -475,7 +475,7 @@ class DataSetTest extends TestCase {
 
   #[@test]
   public function percentSign() {
-    $observer= $this->getConnection()->addObserver(newinstance('rdbms.DBObserver', array(create('new Vector<lang.types.String>')), '{
+    $observer= $this->getConnection()->addObserver(newinstance('rdbms.DBObserver', array(create('new util.collections.Vector<lang.types.String>')), '{
       public $statements;
       public function __construct($statements) {
         $this->statements= $statements;
