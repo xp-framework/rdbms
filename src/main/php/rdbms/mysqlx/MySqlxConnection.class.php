@@ -76,7 +76,7 @@ class MySqlxConnection extends DBConnection {
     }
 
     try {
-      $this->handle->exec('set names LATIN1');
+      $this->handle->exec('set names UTF8');
 
       // Figure out sql_mode and update formatter's escaperules accordingly
       // - See: http://bugs.mysql.com/bug.php?id=10214

@@ -1,7 +1,5 @@
 <?php namespace rdbms\tds;
 
-
-
 /**
  * TDS V5 protocol implementation
  *
@@ -130,7 +128,7 @@ class TdsV5Protocol extends TdsProtocol {
       0x00,                               // Security label hierarchy
       0x00,                               // Security spare
       0x00,                               // Security login role
-      'iso_1', strlen('iso_1'),           // Charset
+      'utf8', strlen('utf8'),             // Charset
       0x01,                               // Notify on charset change
       $packetSize, strlen($packetSize)    // Network packet size (in text!)
     );
