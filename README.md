@@ -29,14 +29,14 @@ implements the protocol to communicate with the database system in userland code
 For the latter case, you need not do anything to your PHP setup; if there's a hard
 dependency on a PHP extension, you need to install that before you can use the driver.
 
-| *Database system*                  | *PHP Extensions*        | *Userland driver*  |
-| ---------------------------------- | ----------------------- | ------------------ |
-| MySQL (name: `mysql`)              | ext/mysql or ext/mysqli | :white_check_mark: |
-| PostgreSQL (name: `pgsql`)         | ext/pgsql               |                    |
-| SQLite3 (name: `sqlite`)           | ext/sqlite3             |                    |
-| Interbase/FireBird (name: `ibase`) | ext/sqlite3             |                    |
-| Sybase (name: `sybase`)            | ext/sybase-ct           | :white_check_mark: |
-| MSSQL (name: `mssql`)              | ext/mssql or ext/sqlsrv | :white_check_mark: |
+| *Database system*  | *DSN name* | *PHP Extensions*        | *Userland driver*  |
+| ------------------ | ---------- | ----------------------- | ------------------ |
+| MySQL              | `mysql`    | ext/mysql or ext/mysqli | :white_check_mark: |
+| PostgreSQL         | `pgsql`    | ext/pgsql               |                    |
+| SQLite3            | `sqlite`   | ext/sqlite3             |                    |
+| Interbase/FireBird | `ibase`    | ext/sqlite3             |                    |
+| Sybase             | `sybase`   | ext/sybase-ct           | :white_check_mark: |
+| MSSQL              | `mssql`    | ext/mssql or ext/sqlsrv | :white_check_mark: |
 
 Exceptions
 ----------
