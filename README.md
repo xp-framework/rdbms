@@ -8,27 +8,35 @@ RDBMS support for the XP Framework
 
 RDBMS access APIs, connection manager, reverse engineering, O/R mapping.
 
-Supported drivers
------------------
-
-* MySQL (name: `mysql`, via ext/mysql, ext/mysqli or userland driver *mysql+x*)
-* PostgreSQL (name: `pgsql`, via ext/pgsql)
-* SQLite3 (name: `sqlite`, via ext/sqlite3)
-* Interbase/FireBird (name: `ibase`, via ext/interbaase)
-* Sybase (name: `sybase`, via ext/sybase_ct or userland driver *sybase+x*)
-* MSSQL (name: `mssql`, via ext/mssql, ext/sqlsrv or userland driver *mssql+x*)
-
 The DriverManager model
 -----------------------
 To retrieve a connection class from the driver manager, you need to use 
 the rdbms.DriverManager class. 
 
 ```php
-$conn= \rdbms\DriverManager::getConnection('sybase://user:pass@server/NICOTINE');
+use rdbms\DriverManager;
+
+$conn= DriverManager::getConnection('sybase://user:pass@server/NICOTINE');
 ```
 
 The DriverManager class expects a unified connection string (we call it DSN).
-For details, see the `DriverManager`'s apidoc.
+
+Supported drivers
+-----------------
+The DriverManager will select an appropriate driver from the DSN string via its name.
+This will load an implemenation class which is either based on a PHP extension or
+implements the protocol to communicate with the database system in userland code.
+For the latter case, you need not do anything to your PHP setup; if there's a hard
+dependency on a PHP extension, you need to install that before you can use the driver.
+
+| *Database system*                  | *PHP Extensions*        | *Userland driver*  |
+| ---------------------------------- | ----------------------- | ------------------ |
+| MySQL (name: `mysql`)              | ext/mysql or ext/mysqli | :white_check_mark: |
+| PostgreSQL (name: `pgsql`)         | ext/pgsql               |                    |
+| SQLite3 (name: `sqlite`)           | ext/sqlite3             |                    |
+| Interbase/FireBird (name: `ibase`) | ext/sqlite3             |                    |
+| Sybase (name: `sybase`)            | ext/sybase-ct           | :white_check_mark: |
+| MSSQL (name: `mssql`)              | ext/mssql or ext/sqlsrv | :white_check_mark: |
 
 Exceptions
 ----------
