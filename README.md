@@ -11,15 +11,12 @@ RDBMS access APIs, connection manager, reverse engineering, O/R mapping.
 Supported drivers
 -----------------
 
-* MySQL (name: `mysql`)
-* PostgreSQL (name: `pgsql`)
-* SQLite (name: `sqlite`)
-* Interbase/FireBird (name: `ibase`)
-* Sybase (name: `sybase`)
-* MSSQL (name: `mssql`)
-
-Note: All of the above will require corresponding PHP extensions to be
-loaded. See the classes' apidocs for dependency details.
+* MySQL (name: `mysql`, via ext/mysql, ext/mysqli or userland driver *mysql+x*)
+* PostgreSQL (name: `pgsql`, via ext/pgsql)
+* SQLite3 (name: `sqlite`, via ext/sqlite3)
+* Interbase/FireBird (name: `ibase`, via ext/interbaase)
+* Sybase (name: `sybase`, via ext/sybase_ct or userland driver *sybase+x*)
+* MSSQL (name: `mssql`, via ext/mssql, ext/sqlsrv or userland driver *mssql+x*)
 
 The DriverManager model
 -----------------------
