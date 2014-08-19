@@ -73,12 +73,12 @@ class QueryTest extends TestCase {
     $q= new SelectQuery();
     $this->assertNull($q->getConnection());
     $q->setPeer(Job::getPeer());
-    $this->assertClass($q->getConnection(), 'rdbms.unittest.mock.MockConnection');
+    $this->assertInstanceOf('rdbms.unittest.mock.MockConnection', $q->getConnection());
   }
   
   #[@test]
   public function executeWithRestriction() {
-    $this->assertClass(create(new SelectQuery())->withRestriction(Job::column('job_id')->equal(5)), 'rdbms.query.SelectQuery');
+    $this->assertInstanceOf('rdbms.query.SelectQuery', create(new SelectQuery())->withRestriction(Job::column('job_id')->equal(5)));
   }
   
   #[@test]

@@ -48,7 +48,7 @@ class DataSetTest extends TestCase {
   #[@test]
   public function peerObject() {
     $peer= Job::getPeer();
-    $this->assertClass($peer, 'rdbms.Peer');
+    $this->assertInstanceOf('rdbms.Peer', $peer);
     $this->assertEquals('rdbms\unittest\dataset\job', strtolower($peer->identifier));
     $this->assertEquals('jobs', $peer->connection);
     $this->assertEquals('JOBS.job', $peer->table);
@@ -75,7 +75,7 @@ class DataSetTest extends TestCase {
       )
     )));
     $job= Job::getByJob_id(1);
-    $this->assertClass($job, 'rdbms.unittest.dataset.Job');
+    $this->assertInstanceOf('rdbms.unittest.dataset.Job', $job);
     $this->assertEquals(1, $job->getJob_id());
     $this->assertEquals('Unit tester', $job->getTitle());
     $this->assertEquals($now, $job->getValid_from());
@@ -160,7 +160,7 @@ class DataSetTest extends TestCase {
 
   #[@test]
   public function saveReturnsIdentityForUpdates() {
-    $this->setResults(new MOckResultSet(array(
+    $this->setResults(new MockResultSet(array(
       0 => array(   // First row
         'job_id'      => 1,
         'title'       => 'Unit tester',
@@ -206,7 +206,7 @@ class DataSetTest extends TestCase {
   
   #[@test]
   public function oneResultForDoSelect() {
-    $this->setResults(new MOckResultSet(array(
+    $this->setResults(new MockResultSet(array(
       0 => array(
         'job_id'      => 1,
         'title'       => 'Unit tester',
@@ -218,25 +218,25 @@ class DataSetTest extends TestCase {
     $peer= Job::getPeer();
     $jobs= $peer->doSelect(new \rdbms\Criteria(array('title', 'Unit tester', EQUAL)));
 
-    $this->assertArray($jobs);
+    $this->assertInstanceOf('var[]', $jobs);
     $this->assertEquals(1, sizeof($jobs));
-    $this->assertClass($jobs[0], 'rdbms.unittest.dataset.Job');
+    $this->assertInstanceOf('rdbms.unittest.dataset.Job', $jobs[0]);
   }
 
   #[@test]
   public function noResultForDoSelect() {
-    $this->setResults(new MOckResultSet());
+    $this->setResults(new MockResultSet());
   
     $peer= Job::getPeer();
     $jobs= $peer->doSelect(new \rdbms\Criteria(array('job_id', self::IRRELEVANT_NUMBER, EQUAL)));
 
-    $this->assertArray($jobs);
+    $this->assertInstanceOf('var[]', $jobs);
     $this->assertEquals(0, sizeof($jobs));
   }
 
   #[@test]
   public function multipleResultForDoSelect() {
-    $this->setResults(new MOckResultSet(array(
+    $this->setResults(new MockResultSet(array(
       0 => array(
         'job_id'      => 1,
         'title'       => 'Unit tester',
@@ -254,17 +254,17 @@ class DataSetTest extends TestCase {
     $peer= Job::getPeer();
     $jobs= $peer->doSelect(new \rdbms\Criteria(array('job_id', 10, LESS_THAN)));
 
-    $this->assertArray($jobs);
+    $this->assertInstanceOf('var[]', $jobs);
     $this->assertEquals(2, sizeof($jobs));
-    $this->assertClass($jobs[0], 'rdbms.unittest.dataset.Job');
+    $this->assertInstanceOf('rdbms.unittest.dataset.Job', $jobs[0]);
     $this->assertEquals(1, $jobs[0]->getJob_id());
-    $this->assertClass($jobs[1], 'rdbms.unittest.dataset.Job');
+    $this->assertInstanceOf('rdbms.unittest.dataset.Job', $jobs[1]);
     $this->assertEquals(9, $jobs[1]->getJob_id());
   }
   
   #[@test]
   public function iterateOverCriteria() {
-    $this->setResults(new MOckResultSet(array(
+    $this->setResults(new MockResultSet(array(
       0 => array(
         'job_id'      => 654,
         'title'       => 'Java Unit tester',
@@ -282,7 +282,7 @@ class DataSetTest extends TestCase {
     $peer= Job::getPeer();
     $iterator= $peer->iteratorFor(new \rdbms\Criteria(array('expire_at', null, EQUAL)));
 
-    $this->assertClass($iterator, 'rdbms.ResultIterator');
+    $this->assertInstanceOf('rdbms.ResultIterator', $iterator);
     
     // Make sure hasNext() does not forward the resultset pointer
     $this->assertTrue($iterator->hasNext());
@@ -290,13 +290,13 @@ class DataSetTest extends TestCase {
     $this->assertTrue($iterator->hasNext());
     
     $job= $iterator->next();
-    $this->assertClass($job, 'rdbms.unittest.dataset.Job');
+    $this->assertInstanceOf('rdbms.unittest.dataset.Job', $job);
     $this->assertEquals(654, $job->getJob_id());
 
     $this->assertTrue($iterator->hasNext());
 
     $job= $iterator->next();
-    $this->assertClass($job, 'rdbms.unittest.dataset.Job');
+    $this->assertInstanceOf('rdbms.unittest.dataset.Job', $job);
     $this->assertEquals(329, $job->getJob_id());
 
     $this->assertFalse($iterator->hasNext());
@@ -304,7 +304,7 @@ class DataSetTest extends TestCase {
 
   #[@test]
   public function nextCallWithoutHasNext() {
-    $this->setResults(new MOckResultSet(array(
+    $this->setResults(new MockResultSet(array(
       0 => array(
         'job_id'      => 654,
         'title'       => 'Java Unit tester',
@@ -323,7 +323,7 @@ class DataSetTest extends TestCase {
     $iterator= $peer->iteratorFor(new \rdbms\Criteria(array('expire_at', null, EQUAL)));
 
     $job= $iterator->next();
-    $this->assertClass($job, 'rdbms.unittest.dataset.Job');
+    $this->assertInstanceOf('rdbms.unittest.dataset.Job', $job);
     $this->assertEquals(654, $job->getJob_id());
 
     $this->assertTrue($iterator->hasNext());
@@ -331,7 +331,7 @@ class DataSetTest extends TestCase {
 
   #[@test, @expect('util.NoSuchElementException')]
   public function nextCallOnEmptyResultSet() {
-    $this->setResults(new MOckResultSet());
+    $this->setResults(new MockResultSet());
     $peer= Job::getPeer();
     $iterator= $peer->iteratorFor(new \rdbms\Criteria(array('expire_at', null, EQUAL)));
     $iterator->next();
@@ -339,7 +339,7 @@ class DataSetTest extends TestCase {
 
   #[@test, @expect('util.NoSuchElementException')]
   public function nextCallPastEndOfResultSet() {
-    $this->setResults(new MOckResultSet(array(
+    $this->setResults(new MockResultSet(array(
       0 => array(
         'job_id'      => 654,
         'title'       => 'Java Unit tester',
@@ -356,7 +356,7 @@ class DataSetTest extends TestCase {
   
   #[@test]
   public function iterateOverStatement() {
-    $this->setResults(new MOckResultSet(array(
+    $this->setResults(new MockResultSet(array(
       0 => array(
         'job_id'      => 654,
         'title'       => 'Java Unit tester',
@@ -367,12 +367,12 @@ class DataSetTest extends TestCase {
 
     $peer= Job::getPeer();
     $iterator= $peer->iteratorFor(new Statement('select object(j) from job j where 1 = 1'));
-    $this->assertClass($iterator, 'rdbms.ResultIterator');
+    $this->assertInstanceOf('rdbms.ResultIterator', $iterator);
 
     $this->assertTrue($iterator->hasNext());
 
     $job= $iterator->next();
-    $this->assertClass($job, 'rdbms.unittest.dataset.Job');
+    $this->assertInstanceOf('rdbms.unittest.dataset.Job', $job);
     $this->assertEquals(654, $job->getJob_id());
     $this->assertEquals('Java Unit tester', $job->getTitle());
 
@@ -383,7 +383,7 @@ class DataSetTest extends TestCase {
   public function updateUnchangedObject() {
 
     // First, retrieve an object
-    $this->setResults(new MOckResultSet(array(
+    $this->setResults(new MockResultSet(array(
       0 => array(
         'job_id'      => 654,
         'title'       => 'Java Unit tester',
@@ -401,13 +401,13 @@ class DataSetTest extends TestCase {
     $job->update();
 
     // Make next query return empty results (not fail)
-    $this->setResults(new MOckResultSet());
+    $this->setResults(new MockResultSet());
   }
 
   #[@test]
   public function column() {
     $c= Job::column('job_id');
-    $this->assertClass($c, 'rdbms.Column');
+    $this->assertInstanceOf('rdbms.Column', $c);
     $this->assertEquals('job_id', $c->getName());
   }
 
@@ -418,7 +418,7 @@ class DataSetTest extends TestCase {
 
   #[@test]
   public function relativeColumn() {
-    $this->assertClass(Job::column('PersonJob->person_id'), 'rdbms.Column');
+    $this->assertInstanceOf('rdbms.Column', Job::column('PersonJob->person_id'));
   }
 
   #[@test, @expect('lang.IllegalArgumentException')]
@@ -428,7 +428,7 @@ class DataSetTest extends TestCase {
 
   #[@test]
   public function farRelativeColumn() {
-    $this->assertClass(Job::column('PersonJob->Department->department_id'), 'rdbms.Column');
+    $this->assertInstanceOf('rdbms.Column', Job::column('PersonJob->Department->department_id'));
   }
 
   #[@test, @expect('lang.IllegalArgumentException')]
@@ -444,7 +444,7 @@ class DataSetTest extends TestCase {
 
   #[@test]
   public function doUpdate() {
-    $this->setResults(new MOckResultSet(array(
+    $this->setResults(new MockResultSet(array(
       0 => array(
         'job_id'      => 654,
         'title'       => 'Java Unit tester',
