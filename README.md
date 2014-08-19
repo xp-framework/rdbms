@@ -38,37 +38,43 @@ dependency on a PHP extension, you need to install that before you can use the d
 | Sybase             | `sybase`   | ext/sybase-ct           | :white_check_mark: |
 | MSSQL              | `mssql`    | ext/mssql or ext/sqlsrv | :white_check_mark: |
 
-Exceptions
-----------
-Methods will throw exceptions for failed SQL queries, syntax errors, connection
-failure etc. All these exceptions are subclasses of `rdbms.SQLException`, so to
-catch all possible errors, use it in the catch clause.
-
 Basics
 ------
 Once we have fetched a specific database connection class, we can now 
 invoke a number of methods on it. 
 
+### Selecting
+Selecting can be done with the "one-stop" method `select()` which will return
+all results into an array. Alternatively, the `query()` method allows iterative
+fetching.
+
 ```php
-$conn= \rdbms\DriverManager::getConnection('sybase://user:pass@server/NICOTINE?autoconnect=1');
 $news= $conn->select('news_id, caption, author_id from news');
+// $news= [
+//   [
+//     'news_id'   => 12,
+//     'caption'   => 'Hello World',
+//     'author_id' => 1549
+//   ]
+// ]
+
+$q= $conn->query('select news_id, caption, author_id from news');
+while ($record= $q->next()) {
+  // $record= [
+  //   'news_id'   => 12,
+  //   'caption'   => 'Hello World',
+  //   'author_id' => 1549
+  // ]
+}
+
 ```
 
-The variable `$news` will now contain an array of all result sets
-which in turn are associative arrays containing `field => value `
-associations.
-
-Dynamically creating SQL queries 
---------------------------------
+### Inserting
 To "bind" parameters to an SQL query, the query, select, update, delete 
 and insert methods offer a printf style tokenizer and support varargs 
 syntax. These take care of NULL and proper escaping for you. 
 
 ```php
-// Selecting
-$q= $conn->query('select * from news where news_id= %d', $newsId);
-
-// Inserting
 $conn->insert('
   into news (
     caption, author_id, body, extended, created_at
@@ -85,6 +91,35 @@ $conn->insert('
   $extended,
   Date::now()
 );
+```
+
+### Updating
+
+```php
+$conn->update('news set author_id= %d where author_id is null', $authorId);
+```
+
+### Deleting
+
+```php
+$conn->delete('from news where caption = "[DELETE]"');
+```
+
+Exceptions
+----------
+All of the above methods will throw exceptions for failed SQL queries, syntax errors, 
+connection failure etc. All these exceptions are subclasses of `rdbms.SQLException`, 
+so to catch all possible errors, use it in the catch clause:
+
+
+```
++ rdbms.SQLException
+|-- rdbms.ConnectionNotRegisteredException
+|-- rdbms.SQLConnectException
+|-- rdbms.SQLStateException
+`-- rdbms.SQLStatementFailedException
+    |-- rdbms.SQLConnectionClosedException
+    `-- rdbms.SQLDeadlockException
 ```
 
 Transactions
@@ -109,6 +144,4 @@ public function createAuthor(...) {
 }
 ```
 
-Note: Not all RDBMS' support transactions, and of those that do, not all 
-support nested transactions. Be sure to read the manual pages of the RDBMS 
-you are accessing. 
+*Note: Not all database systems support transactions, and of those that do, not all support nested transactions. Be sure to read the manual pages of the RDBMS you are accessing.*
