@@ -46,14 +46,8 @@ class JoinPartTest extends TestCase {
   #[@test]
   public function getTableTest() {
     $joinpart= new JoinPart('job', Job::getPeer());
-    $this->assertClass(
-      $joinpart->getTable(),
-      'rdbms.join.JoinTable'
-    );
-    $this->assertEquals(
-      $joinpart->getTable()->toSqlString(),
-      'JOBS.job as job'
-    );
+    $this->assertInstanceOf('rdbms.join.JoinTable', $joinpart->getTable());
+    $this->assertEquals($joinpart->getTable()->toSqlString(), 'JOBS.job as job');
   }
 
   #[@test]
@@ -65,9 +59,9 @@ class JoinPartTest extends TestCase {
 
     $this->assertArray($jobpart->getJoinRelations());
     $j_p= current($jobpart->getJoinRelations());
-    $this->assertClass($j_p, 'rdbms.join.JoinRelation');
-    $this->assertClass($j_p->getSource(), 'rdbms.join.JoinTable');
-    $this->assertClass($j_p->getTarget(), 'rdbms.join.JoinTable');
+    $this->assertInstanceOf('rdbms.join.JoinRelation', $j_p);
+    $this->assertInstanceOf('rdbms.join.JoinTable', $j_p->getSource());
+    $this->assertInstanceOf('rdbms.join.JoinTable', $j_p->getTarget());
     $this->assertEquals(
       $j_p->getConditions(),
       array('j.job_id = p.job_id')
@@ -128,17 +122,8 @@ class JoinPartTest extends TestCase {
       'JobPerson'
     );
     
-    $this->assertClass(
-      $job->getCachedObj('JobPerson', '#11'),
-      'rdbms.unittest.dataset.Person'
-    );
-    $this->assertClass(
-      $job->getCachedObj('JobPerson', '#11')->getCachedObj('Department', '#31'),
-      'rdbms.unittest.dataset.Department'
-    );
-    $this->assertClass(
-      $job->getCachedObj('JobPerson', '#11')->getCachedObj('Department', '#31')->getCachedObj('DepartmentChief', '#12'),
-      'rdbms.unittest.dataset.Person'
-    );
+    $this->assertInstanceOf('rdbms.unittest.dataset.Person', $job->getCachedObj('JobPerson', '#11'));
+    $this->assertInstanceOf('rdbms.unittest.dataset.Department', $job->getCachedObj('JobPerson', '#11')->getCachedObj('Department', '#31'));
+    $this->assertInstanceOf('rdbms.unittest.dataset.Person', $job->getCachedObj('JobPerson', '#11')->getCachedObj('Department', '#31')->getCachedObj('DepartmentChief', '#12'));
   }
 }

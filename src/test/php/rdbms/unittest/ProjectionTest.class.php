@@ -182,9 +182,9 @@ class ProjectionTest extends TestCase {
         ->add(Projections::property(Job::column('job_id')))
         ->add(Projections::property(Job::column('title')))
     ));
-    $this->assertClass(
-      Projections::projectionList()->add(Projections::property(Job::column('job_id'))),
-      'rdbms.criterion.ProjectionList'
+    $this->assertInstanceOf(
+      'rdbms.criterion.ProjectionList',
+      Projections::projectionList()->add(Projections::property(Job::column('job_id')))
     );
   }
 
@@ -218,9 +218,9 @@ class ProjectionTest extends TestCase {
   #[@test]
   function withProjectionTest() {
     $crit= new Criteria();
-    $this->assertClass(
-      $crit->withProjection(Projections::property(Job::column('job_id'))),
-      'rdbms.Criteria'
+    $this->assertInstanceOf(
+      'rdbms.Criteria',
+      $crit->withProjection(Projections::property(Job::column('job_id')))
     );
     $this->assertFalse($crit->isProjection());
     $this->assertTrue($crit->withProjection(Projections::property(Job::column('job_id')))->isProjection());
