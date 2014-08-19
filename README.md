@@ -11,11 +11,11 @@ RDBMS access APIs, connection manager, reverse engineering, O/R mapping.
 Supported drivers
 -----------------
 
-* Sybase (name: `sybase`)
 * MySQL (name: `mysql`)
 * PostgreSQL (name: `pgsql`)
 * SQLite (name: `sqlite`)
 * Interbase/FireBird (name: `ibase`)
+* Sybase (name: `sybase`)
 * MSSQL (name: `mssql`)
 
 Note: All of the above will require corresponding PHP extensions to be
@@ -61,7 +61,7 @@ syntax. These take care of NULL and proper escaping for you.
 
 ```php
 // Selecting
-$q= $conn->query('selectfrom news where news_id= %d', $newsId);
+$q= $conn->query('select * from news where news_id= %d', $newsId);
 
 // Inserting
 $conn->insert('
@@ -107,7 +107,3 @@ public function createAuthor(...) {
 Note: Not all RDBMS' support transactions, and of those that do, not all 
 support nested transactions. Be sure to read the manual pages of the RDBMS 
 you are accessing. 
-
-See also
---------
-http://news.xp-framework.net/category/14/Databases/
