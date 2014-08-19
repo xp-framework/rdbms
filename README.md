@@ -10,8 +10,7 @@ RDBMS access APIs, connection manager, reverse engineering, O/R mapping.
 
 The DriverManager model
 -----------------------
-To retrieve a connection class from the driver manager, you need to use 
-the rdbms.DriverManager class. 
+To retrieve a connection class from the driver manager, you need to use the rdbms.DriverManager class.
 
 ```php
 use rdbms\DriverManager;
@@ -23,11 +22,7 @@ The DriverManager class expects a unified connection string (we call it DSN).
 
 Supported drivers
 -----------------
-The DriverManager will select an appropriate driver from the DSN string via its name.
-This will load an implemenation class which is either based on a PHP extension or
-implements the protocol to communicate with the database system in userland code.
-For the latter case, you need not do anything to your PHP setup; if there's a hard
-dependency on a PHP extension, you need to install that before you can use the driver.
+The DriverManager will select an appropriate driver from the DSN string via its name. This will load an implemenation class which is either based on a PHP extension or implements the protocol to communicate with the database system in userland code. For the latter case, you need not do anything to your PHP setup; if there's a hard dependency on a PHP extension, you need to install that before you can use the driver.
 
 | *Database system*  | *DSN name* | *PHP Extensions*        | *Userland driver*  |
 | ------------------ | ---------- | ----------------------- | ------------------ |
@@ -40,13 +35,10 @@ dependency on a PHP extension, you need to install that before you can use the d
 
 Basics
 ------
-Once we have fetched a specific database connection class, we can now 
-invoke a number of methods on it. 
+Once we have fetched a specific database connection class, we can now invoke a number of methods on it.
 
 ### Selecting
-Selecting can be done with the "one-stop" method `select()` which will return
-all results into an array. Alternatively, the `query()` method allows iterative
-fetching.
+Selecting can be done with the "one-stop" method `select()` which will return all results into an array. Alternatively, the `query()` method allows iterative fetching.
 
 ```php
 $news= $conn->select('news_id, caption, author_id from news');
@@ -66,13 +58,10 @@ while ($record= $q->next()) {
   //   'author_id' => 1549
   // ]
 }
-
 ```
 
 ### Inserting
-To "bind" parameters to an SQL query, the query, select, update, delete 
-and insert methods offer a printf style tokenizer and support varargs 
-syntax. These take care of NULL and proper escaping for you. 
+To "bind" parameters to an SQL query, the query, select, update, delete and insert methods offer a printf style tokenizer and support varargs syntax. These take care of NULL, type handling and proper escaping for you.
 
 ```php
 $conn->insert('
@@ -107,9 +96,7 @@ $conn->delete('from news where caption = "[DELETE]"');
 
 Exceptions
 ----------
-All of the above methods will throw exceptions for failed SQL queries, syntax errors, 
-connection failure etc. All these exceptions are subclasses of `rdbms.SQLException`, 
-so to catch all possible errors, use it in the catch clause:
+All of the above methods will throw exceptions for failed SQL queries, syntax errors, connection failure etc. All these exceptions are subclasses of `rdbms.SQLException`, so to catch all possible errors, use it in the catch clause:
 
 
 ```
@@ -124,8 +111,7 @@ so to catch all possible errors, use it in the catch clause:
 
 Transactions
 ------------
-To start a transaction, you can use the connection's begin method as 
-follows: 
+To start a transaction, you can use the connection's `begin()`, `commit()` and `rollback()` methods as follows:
 
 ```php
 public function createAuthor(...) {
