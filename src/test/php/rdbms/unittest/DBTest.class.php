@@ -36,7 +36,7 @@ class DBTest extends TestCase {
     $this->conn->setResultSet(new MockResultSet(array(array('version' => $version))));
     if (
       ($r= $this->conn->query('select %s as version', $version)) &&
-      ($this->assertSubclass($r, 'rdbms.ResultSet')) && 
+      ($this->assertInstanceOf('rdbms.ResultSet', $r)) && 
       ($field= $r->next('version'))
     ) $this->assertEquals($field, $version);
   }

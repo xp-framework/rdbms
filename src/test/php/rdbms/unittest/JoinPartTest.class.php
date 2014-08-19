@@ -57,7 +57,7 @@ class JoinPartTest extends TestCase {
 
     $jobpart->addRelative($personpart, 'PersonJob');
 
-    $this->assertArray($jobpart->getJoinRelations());
+    $this->assertInstanceOf('var[]', $jobpart->getJoinRelations());
     $j_p= current($jobpart->getJoinRelations());
     $this->assertInstanceOf('rdbms.join.JoinRelation', $j_p);
     $this->assertInstanceOf('rdbms.join.JoinTable', $j_p->getSource());

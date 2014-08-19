@@ -160,7 +160,7 @@ class DataSetTest extends TestCase {
 
   #[@test]
   public function saveReturnsIdentityForUpdates() {
-    $this->setResults(new MOckResultSet(array(
+    $this->setResults(new MockResultSet(array(
       0 => array(   // First row
         'job_id'      => 1,
         'title'       => 'Unit tester',
@@ -206,7 +206,7 @@ class DataSetTest extends TestCase {
   
   #[@test]
   public function oneResultForDoSelect() {
-    $this->setResults(new MOckResultSet(array(
+    $this->setResults(new MockResultSet(array(
       0 => array(
         'job_id'      => 1,
         'title'       => 'Unit tester',
@@ -218,25 +218,25 @@ class DataSetTest extends TestCase {
     $peer= Job::getPeer();
     $jobs= $peer->doSelect(new \rdbms\Criteria(array('title', 'Unit tester', EQUAL)));
 
-    $this->assertArray($jobs);
+    $this->assertInstanceOf('var[]', $jobs);
     $this->assertEquals(1, sizeof($jobs));
     $this->assertInstanceOf('rdbms.unittest.dataset.Job', $jobs[0]);
   }
 
   #[@test]
   public function noResultForDoSelect() {
-    $this->setResults(new MOckResultSet());
+    $this->setResults(new MockResultSet());
   
     $peer= Job::getPeer();
     $jobs= $peer->doSelect(new \rdbms\Criteria(array('job_id', self::IRRELEVANT_NUMBER, EQUAL)));
 
-    $this->assertArray($jobs);
+    $this->assertInstanceOf('var[]', $jobs);
     $this->assertEquals(0, sizeof($jobs));
   }
 
   #[@test]
   public function multipleResultForDoSelect() {
-    $this->setResults(new MOckResultSet(array(
+    $this->setResults(new MockResultSet(array(
       0 => array(
         'job_id'      => 1,
         'title'       => 'Unit tester',
@@ -254,7 +254,7 @@ class DataSetTest extends TestCase {
     $peer= Job::getPeer();
     $jobs= $peer->doSelect(new \rdbms\Criteria(array('job_id', 10, LESS_THAN)));
 
-    $this->assertArray($jobs);
+    $this->assertInstanceOf('var[]', $jobs);
     $this->assertEquals(2, sizeof($jobs));
     $this->assertInstanceOf('rdbms.unittest.dataset.Job', $jobs[0]);
     $this->assertEquals(1, $jobs[0]->getJob_id());
@@ -264,7 +264,7 @@ class DataSetTest extends TestCase {
   
   #[@test]
   public function iterateOverCriteria() {
-    $this->setResults(new MOckResultSet(array(
+    $this->setResults(new MockResultSet(array(
       0 => array(
         'job_id'      => 654,
         'title'       => 'Java Unit tester',
@@ -304,7 +304,7 @@ class DataSetTest extends TestCase {
 
   #[@test]
   public function nextCallWithoutHasNext() {
-    $this->setResults(new MOckResultSet(array(
+    $this->setResults(new MockResultSet(array(
       0 => array(
         'job_id'      => 654,
         'title'       => 'Java Unit tester',
@@ -331,7 +331,7 @@ class DataSetTest extends TestCase {
 
   #[@test, @expect('util.NoSuchElementException')]
   public function nextCallOnEmptyResultSet() {
-    $this->setResults(new MOckResultSet());
+    $this->setResults(new MockResultSet());
     $peer= Job::getPeer();
     $iterator= $peer->iteratorFor(new \rdbms\Criteria(array('expire_at', null, EQUAL)));
     $iterator->next();
@@ -339,7 +339,7 @@ class DataSetTest extends TestCase {
 
   #[@test, @expect('util.NoSuchElementException')]
   public function nextCallPastEndOfResultSet() {
-    $this->setResults(new MOckResultSet(array(
+    $this->setResults(new MockResultSet(array(
       0 => array(
         'job_id'      => 654,
         'title'       => 'Java Unit tester',
@@ -356,7 +356,7 @@ class DataSetTest extends TestCase {
   
   #[@test]
   public function iterateOverStatement() {
-    $this->setResults(new MOckResultSet(array(
+    $this->setResults(new MockResultSet(array(
       0 => array(
         'job_id'      => 654,
         'title'       => 'Java Unit tester',
@@ -383,7 +383,7 @@ class DataSetTest extends TestCase {
   public function updateUnchangedObject() {
 
     // First, retrieve an object
-    $this->setResults(new MOckResultSet(array(
+    $this->setResults(new MockResultSet(array(
       0 => array(
         'job_id'      => 654,
         'title'       => 'Java Unit tester',
@@ -401,7 +401,7 @@ class DataSetTest extends TestCase {
     $job->update();
 
     // Make next query return empty results (not fail)
-    $this->setResults(new MOckResultSet());
+    $this->setResults(new MockResultSet());
   }
 
   #[@test]
@@ -444,7 +444,7 @@ class DataSetTest extends TestCase {
 
   #[@test]
   public function doUpdate() {
-    $this->setResults(new MOckResultSet(array(
+    $this->setResults(new MockResultSet(array(
       0 => array(
         'job_id'      => 654,
         'title'       => 'Java Unit tester',

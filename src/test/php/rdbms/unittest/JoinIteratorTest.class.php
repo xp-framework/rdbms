@@ -163,7 +163,7 @@ class JoinIteratorTest extends TestCase {
 
     $this->assertTrue($ji->hasNext());
     $this->assertInstanceOf('rdbms.unittest.dataset.Job', $job= $ji->next());
-    $this->assertArray($job->getPersonJobList());
+    $this->assertInstanceOf('var[]', $job->getPersonJobList());
     $this->assertInstanceOf('util.HashmapIterator', $pji= $job->getPersonJobIterator());
 
     $this->assertTrue($pji->hasNext());
@@ -174,7 +174,7 @@ class JoinIteratorTest extends TestCase {
 
     $this->assertTrue($ji->hasNext());
     $this->assertInstanceOf('rdbms.unittest.dataset.Job', $job= $ji->next());
-    $this->assertArray($job->getPersonJobList());
+    $this->assertInstanceOf('var[]', $job->getPersonJobList());
     $this->assertInstanceOf('util.HashmapIterator', $pji= $job->getPersonJobIterator());
     $this->assertTrue($pji->hasNext());
     $this->assertInstanceOf('rdbms.unittest.dataset.Person', $pji->next());
@@ -182,7 +182,7 @@ class JoinIteratorTest extends TestCase {
 
     $this->assertTrue($ji->hasNext());
     $this->assertInstanceOf('rdbms.unittest.dataset.Job', $job= $ji->next());
-    $this->assertArray($job->getPersonJobList());
+    $this->assertInstanceOf('var[]', $job->getPersonJobList());
     $this->assertInstanceOf('util.HashmapIterator', $pji= $job->getPersonJobIterator());
     $this->assertFalse($pji->hasNext());
 

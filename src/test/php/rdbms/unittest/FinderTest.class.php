@@ -85,7 +85,7 @@ class FinderTest extends TestCase {
       $name= $method->getName();
       $this->assertEquals(COLLECTION, $method->getKind(), $name);
       $this->assertEquals(true, isset($invocation[$name]), $name);
-      $this->assertSubClass($method->invoke($invocation[$name]), 'rdbms.SQLExpression', $name);
+      $this->assertInstanceOf('rdbms.SQLExpression', $method->invoke($invocation[$name]), $name);
     }
   }
 
