@@ -83,12 +83,14 @@ $conn->insert('
 ```
 
 ### Updating
+The `update()` and `delete()` methods will return the number of affected rows, in case you're interested.
 
 ```php
 $conn->update('news set author_id= %d where author_id is null', $authorId);
 ```
 
 ### Deleting
+Even if your RDBMS requires you to use single quotes (or what-else), the API will take care of rewriting string literals for you.
 
 ```php
 $conn->delete('from news where caption = "[DELETE]"');
