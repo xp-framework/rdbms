@@ -16,6 +16,16 @@ class DBXmlGeneratorTest extends TestCase {
   protected $xpath= null;
 
   /**
+   * Sets up test case
+   */
+  #[@beforeClass]
+  public static function onlyWithXmlModule() {
+    if (!class_exists('xml\Tree')) {
+      throw new \unittest\PrerequisitesNotMetError('XML Module not available', NULL, array('loaded'));
+    }
+  }
+
+  /**
    * Sets up a Database Object for the test
    */
   public function setUp() {

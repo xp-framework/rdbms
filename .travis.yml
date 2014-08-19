@@ -1,0 +1,19 @@
+# xp-framework/rdbms
+
+language: php
+
+php:
+  - 5.4
+  - 5.5
+  - 5.6
+
+before_script:
+  - wget 'http://xp-framework.net/downloads/releases/bin/setup' -O - | php
+  - wget 'https://github.com/xp-framework/core/releases/download/v6.0.0alpha1/xp-6.0.0alpha1.zip'
+  - unzip xp-6.0.0alpha1.zip && rm xp-6.0.0alpha1.zip
+  - echo "use=6.0.0alpha1" > xp.ini
+  - echo "[runtime]" >> xp.ini
+  - echo "date.timezone=Europe/Berlin" >> xp.ini
+
+script:
+  - ./unittest src/test/php

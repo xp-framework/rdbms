@@ -1,15 +1,21 @@
 RDBMS support for the XP Framework
 ========================================================================
+
+[![Build Status on TravisCI](https://secure.travis-ci.org/xp-framework/rdbms.svg)](http://travis-ci.org/xp-framework/rdbms)
+[![XP Framework Mdodule](https://raw.githubusercontent.com/xp-framework/web/master/static/xp-framework-badge.png)](https://github.com/xp-framework/core)
+[![BSD Licence](https://raw.githubusercontent.com/xp-framework/web/master/static/licence-bsd.png)](https://github.com/xp-framework/core/blob/master/LICENCE.md)
+[![Required PHP 5.4+](https://raw.githubusercontent.com/xp-framework/web/master/static/php-5_4plus.png)](http://php.net/)
+
 RDBMS access APIs, connection manager, reverse engineering, O/R mapping.
 
 Supported drivers
 -----------------
 
-* Sybase (name: `sybase`)
 * MySQL (name: `mysql`)
 * PostgreSQL (name: `pgsql`)
 * SQLite (name: `sqlite`)
 * Interbase/FireBird (name: `ibase`)
+* Sybase (name: `sybase`)
 * MSSQL (name: `mssql`)
 
 Note: All of the above will require corresponding PHP extensions to be
@@ -55,7 +61,7 @@ syntax. These take care of NULL and proper escaping for you.
 
 ```php
 // Selecting
-$q= $conn->query('selectfrom news where news_id= %d', $newsId);
+$q= $conn->query('select * from news where news_id= %d', $newsId);
 
 // Inserting
 $conn->insert('
@@ -101,7 +107,3 @@ public function createAuthor(...) {
 Note: Not all RDBMS' support transactions, and of those that do, not all 
 support nested transactions. Be sure to read the manual pages of the RDBMS 
 you are accessing. 
-
-See also
---------
-http://news.xp-framework.net/category/14/Databases/
