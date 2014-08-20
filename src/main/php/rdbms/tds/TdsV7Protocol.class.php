@@ -190,7 +190,6 @@ class TdsV7Protocol extends TdsProtocol {
     $this->stream->write(self::MSG_LOGIN7, pack('V', $offset).$login.$data);
   }
   
-
   /**
    * Issues a query and returns the results
    *

@@ -2,7 +2,6 @@
 
 use peer\Socket;
 
-
 /**
  * TDS protocol implementation
  *
@@ -333,6 +332,7 @@ abstract class TdsProtocol extends \lang\Object {
    * @throws  rdbms.tds.TdsProtocolException
    */
   protected function handleError() {
+    $meta= $this->stream->get('vlength/Vnumber/Cstate/Cclass', 8);
     $message= $this->stream->getString($this->stream->getShort());
     $server= $this->stream->getString($this->stream->getByte());
     $proc= $this->stream->getString($this->stream->getByte());
@@ -408,13 +408,14 @@ abstract class TdsProtocol extends \lang\Object {
    *
    * @param   string user
    * @param   string password
+   * @param   string charset
    * @throws  io.IOException
    */
-  public function connect($user= '', $password= '') {
+  public function connect($user= '', $password= '', $charset= null) {
     $this->connected= false;
     $this->stream->connect();
     $this->messages= [];
-    $this->login($user, $password);
+    $this->login($user, $password, $charset);
     $token= $this->read();
 
     do {
@@ -455,7 +456,7 @@ abstract class TdsProtocol extends \lang\Object {
         throw new TdsProtocolException('Unexpected login response '.dechex(ord($token)));
       }
       $token= $this->stream->getToken();
-    } while ($this->stream);
+    } while ($token);
   }
 
   /**

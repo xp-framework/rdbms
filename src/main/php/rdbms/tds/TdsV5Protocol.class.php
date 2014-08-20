@@ -92,13 +92,15 @@ class TdsV5Protocol extends TdsProtocol {
    *
    * @param   string user
    * @param   string password
+   * @param   string charset
    * @throws  io.IOException
    */
-  protected function login($user, $password) {
+  protected function login($user, $password, $charset= null) {
     if (strlen($password) > 253) {
       throw new \lang\IllegalArgumentException('Password length must not exceed 253 bytes.');
     }
 
+    $charset= $charset ?: 'utf8';
     $packetSize= (string)$this->defaultPacketSize();
     $packet= pack(
       'a30Ca30Ca30Ca30CCCCCCCCCCx7a30Ca30Cx2a253CCCCCa10CCCCCCCCa30CCnx8nCa30CCa6Cx8',
@@ -129,7 +131,7 @@ class TdsV5Protocol extends TdsProtocol {
       0x00,                               // Security label hierarchy
       0x00,                               // Security spare
       0x00,                               // Security login role
-      'utf8', strlen('utf8'),             // Charset
+      $charset, strlen($charset),         // Charset
       0x01,                               // Notify on charset change
       $packetSize, strlen($packetSize)    // Network packet size (in text!)
     );
@@ -159,7 +161,7 @@ class TdsV5Protocol extends TdsProtocol {
    */
   protected function handleEnvChange($type, $old, $new, $initial= false) {
     if ($initial && 3 === $type) {
-      $this->servercs= strtr($old, array('iso_' => 'iso-8859-', 'utf8' => 'utf-8'));
+      $this->servercs= strtr($new, array('iso_' => 'iso-8859-', 'utf8' => 'utf-8'));
     }
     // DEBUG Console::writeLine($initial ? 'I' : 'E', $type, ' ', $old, ' -> ', $new);
   }
@@ -172,7 +174,11 @@ class TdsV5Protocol extends TdsProtocol {
    */
   public function query($sql) {
     $this->messages= [];
-    $this->stream->write(self::MSG_QUERY, $sql);
+    if (\xp::ENCODING === $this->servercs) {
+      $this->stream->write(self::MSG_QUERY, $sql);
+    } else{
+      $this->stream->write(self::MSG_QUERY, iconv(\xp::ENCODING, $this->servercs, $sql));
+    }
     $token= $this->read();
 
     // Skip over DONEPROC & DONEINPROC results
