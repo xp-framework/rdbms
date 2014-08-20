@@ -421,6 +421,11 @@ abstract class TdsProtocol extends \lang\Object {
       if ("\xAD" === $token) {          // TDS_LOGINACK
         $meta= $this->stream->get('vlength/Cstatus', 3);
         switch ($meta['status']) {
+          case 1:     // OK, SQL Server
+            $this->stream->read($meta['length']- 1);
+            $this->connected= true;
+            break;
+
           case 5:     // TDS_LOG_SUCCEED
             $this->stream->read($meta['length']- 1);
             $this->connected= true;
@@ -438,14 +443,19 @@ abstract class TdsProtocol extends \lang\Object {
         }
       } else if ("\xE3" === $token) {   // TDS_ENVCHANGE
         $this->envchange();
+      } else if ("\xAB" === $token) {
+        $this->handleInfo();
       } else if ("\xE5" === $token) {
         $this->handleEED();
+      } else if ("\xFD" === $token) {
+        $this->handleDone();
+        break;
       } else {
         $this->cancel();
         throw new TdsProtocolException('Unexpected login response '.dechex(ord($token)));
       }
       $token= $this->stream->getToken();
-    } while (!$this->connected);
+    } while ($this->stream);
   }
 
   /**
