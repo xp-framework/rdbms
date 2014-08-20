@@ -289,7 +289,7 @@ abstract class RdbmsIntegrationTest extends TestCase {
 
   #[@test]
   public function selectUmlautString() {
-    $this->assertEquals('Übercoder', $this->db()->query('select %s as value', 'Übercoder')->next('value'));
+    $this->assertEquals('Ãœbercoder', $this->db()->query('select %s as value', 'Ãœbercoder')->next('value'));
   }
   
   #[@test]
@@ -493,7 +493,7 @@ abstract class RdbmsIntegrationTest extends TestCase {
 
   #[@test]
   public function selectUmlautText() {
-    $this->assertEquals('Übercoder', $this->db()->query('select cast("Übercoder" as text) as value')->next('value'));
+    $this->assertEquals('Ãœbercoder', $this->db()->query('select cast("Ãœbercoder" as text) as value')->next('value'));
   }
 
   #[@test]
@@ -513,7 +513,7 @@ abstract class RdbmsIntegrationTest extends TestCase {
 
   #[@test]
   public function selectUmlautImage() {
-    $this->assertEquals('Übercoder', $this->db()->query('select cast("Übercoder" as image) as value')->next('value'));
+    $this->assertEquals('Ãœbercoder', $this->db()->query('select cast("Ãœbercoder" as image) as value')->next('value'));
   }
 
   #[@test]
@@ -534,7 +534,7 @@ abstract class RdbmsIntegrationTest extends TestCase {
 
   #[@test]
   public function selectUmlautBinary() {
-    $this->assertEquals('Übercoder', $this->db()->query('select cast("Übercoder" as binary) as value')->next('value'));
+    $this->assertEquals('Ãœbercoder', $this->db()->query('select cast("Ãœbercoder" as binary) as value')->next('value'));
   }
 
   #[@test]
@@ -554,7 +554,7 @@ abstract class RdbmsIntegrationTest extends TestCase {
 
   #[@test]
   public function selectUmlautVarBinary() {
-    $this->assertEquals('Übercoder', $this->db()->query('select cast("Übercoder" as varbinary) as value')->next('value'));
+    $this->assertEquals('Ãœbercoder', $this->db()->query('select cast("Ãœbercoder" as varbinary) as value')->next('value'));
   }
 
   #[@test]

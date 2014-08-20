@@ -103,13 +103,13 @@ abstract class TdsProtocol extends \lang\Object {
     self::$recordsFor[0][self::T_VARCHAR]= newinstance('rdbms.tds.TdsRecord', array(), '{
       public function unmarshal($stream, $field, $records) {
         $len= $stream->getByte();
-        return 0 === $len ? NULL : $stream->read($len);
+        return 0 === $len ? null : $stream->read($len);
       }
     }');
     self::$recordsFor[0][self::XT_VARCHAR]= newinstance('rdbms.tds.TdsRecord', array(), '{
       public function unmarshal($stream, $field, $records) {
         $len= $stream->getShort();
-        return 0xFFFF === $len ? NULL : $stream->read($len);
+        return 0xFFFF === $len ? null : $stream->read($len);
       }
     }');
     self::$recordsFor[0][self::XT_NVARCHAR]= self::$recordsFor[0][self::XT_VARCHAR];
@@ -121,7 +121,7 @@ abstract class TdsProtocol extends \lang\Object {
           case 2: return $stream->getShort();
           case 4: return $stream->getLong();
           case 8: return $this->toNumber($stream->getInt64(), 0, 0);
-          default: return NULL;
+          default: return null;
         }
       }
     }');
@@ -151,7 +151,7 @@ abstract class TdsProtocol extends \lang\Object {
         switch ($len) {
           case 4: return $this->toFloat($stream->read(4)); break;
           case 8: return $this->toDouble($stream->read(8)); break;
-          default: return NULL;
+          default: return null;
         }
       }
     }');
@@ -181,7 +181,7 @@ abstract class TdsProtocol extends \lang\Object {
         switch ($len) {
           case 4: return $this->toDate($stream->getShort(), $stream->getShort() * 60); break;
           case 8: return $this->toDate($stream->getLong(), $stream->getLong()); break;
-          default: return NULL;
+          default: return null;
         }
       }
     }');
@@ -191,7 +191,7 @@ abstract class TdsProtocol extends \lang\Object {
         switch ($len) {
           case 4: return $this->toMoney($stream->getLong()); break;
           case 8: return $this->toMoney($stream->getLong(), $stream->getLong()); break;
-          default: return NULL;
+          default: return null;
         }
       }
     }');
@@ -210,12 +210,12 @@ abstract class TdsProtocol extends \lang\Object {
     self::$recordsFor[0][self::T_TEXT]= newinstance('rdbms.tds.TdsRecord', array(), '{
       public function unmarshal($stream, $field, $records) {
         $has= $stream->getByte();
-        if ($has !== 16) return NULL;
+        if ($has !== 16) return null;
 
         $stream->read(24);  // Skip 16 Byte TEXTPTR, 8 Byte TIMESTAMP
 
         $len= $stream->getLong();
-        if ($len === 0) return $field["status"] & 0x20 ? NULL : "";
+        if ($len === 0) return $field["status"] & 0x20 ? null : "";
 
         return $stream->read($len);
       }
@@ -223,7 +223,7 @@ abstract class TdsProtocol extends \lang\Object {
     self::$recordsFor[0][self::T_NTEXT]= self::$recordsFor[0][self::T_TEXT];
     self::$recordsFor[0][self::T_BITN]= newinstance('rdbms.tds.TdsRecord', array(), '{
       public function unmarshal($stream, $field, $records) {
-        return $stream->getByte() ? $stream->getByte() : NULL;
+        return $stream->getByte() ? $stream->getByte() : null;
       }
     }');
     self::$recordsFor[0][self::T_BIT]= newinstance('rdbms.tds.TdsRecord', array(), '{

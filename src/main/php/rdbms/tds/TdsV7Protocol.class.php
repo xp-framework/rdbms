@@ -20,7 +20,7 @@ class TdsV7Protocol extends TdsProtocol {
     $records[self::T_NUMERIC]= newinstance('rdbms.tds.TdsRecord', array(), '{
       public function unmarshal($stream, $field, $records) {
         $len= isset($field["len"]) ? $field["len"]- 1 : $stream->getByte()- 1;
-        if (-1 === $len) return NULL;
+        if (-1 === $len) return null;
         $pos= $stream->getByte();
         for ($j= 0, $n= 0, $m= $pos ? 1 : -1; $j < $len; $j+= 4, $m= bcmul($m, "4294967296", 0)) {
           $n= bcadd($n, bcmul(sprintf("%u", $stream->getLong()), $m, 0), 0);
@@ -31,7 +31,7 @@ class TdsV7Protocol extends TdsProtocol {
     $records[self::T_DECIMAL]= $records[self::T_NUMERIC];
     $records[self::T_VARIANT]= newinstance('rdbms.tds.TdsRecord', array(), '{
       public function unmarshal($stream, $field, $records) {
-        if (0 === ($len= $stream->getLong())) return NULL;
+        if (0 === ($len= $stream->getLong())) return null;
 
         $base= $stream->getByte();
         $prop= $stream->getByte();
@@ -57,7 +57,7 @@ class TdsV7Protocol extends TdsProtocol {
     $records[self::T_UNIQUE]= newinstance('rdbms.tds.TdsRecord', array(), '{
       public function unmarshal($stream, $field, $records) {
         $len= isset($field["len"]) ? $field["len"] : $stream->getByte();
-        if (0 === $len) return NULL;
+        if (0 === $len) return null;
 
         $bytes= $stream->read($len);
         return sprintf(
@@ -73,7 +73,7 @@ class TdsV7Protocol extends TdsProtocol {
     $records[self::T_IMAGE]= newinstance('rdbms.tds.TdsRecord', array(), '{
       public function unmarshal($stream, $field, $records) {
         $has= $stream->getByte();
-        if ($has !== 16) return NULL;
+        if ($has !== 16) return null;
 
         $stream->read(24);  // Skip 16 Byte TEXTPTR, 8 Byte TIMESTAMP
         return $stream->read($stream->getLong());
@@ -81,21 +81,21 @@ class TdsV7Protocol extends TdsProtocol {
     }');
     $records[self::XT_BINARY]= newinstance('rdbms.tds.TdsRecord', array(), '{
       public function unmarshal($stream, $field, $records) {
-        if (0xFFFF === ($len= $stream->getShort())) return NULL;
+        if (0xFFFF === ($len= $stream->getShort())) return null;
         $string= $stream->read($len);
         return substr($string, 0, strcspn($string, "\0"));
       }
     }');
     $records[self::XT_VARBINARY]= newinstance('rdbms.tds.TdsRecord', array(), '{
       public function unmarshal($stream, $field, $records) {
-        if (0xFFFF === ($len= $stream->getShort())) return NULL;
+        if (0xFFFF === ($len= $stream->getShort())) return null;
         return $stream->read($len);
       }
     }');
     $records[self::XT_NVARCHAR]= newinstance('rdbms.tds.TdsRecord', array(), '{
       public function unmarshal($stream, $field, $records) {
         $len= $stream->getShort();
-        return 0xFFFF === $len ? NULL : iconv("ucs-2le", xp::ENCODING, $stream->read($len));
+        return 0xFFFF === $len ? null : iconv("ucs-2le", \xp::ENCODING, $stream->read($len));
       }
     }');
     return $records;

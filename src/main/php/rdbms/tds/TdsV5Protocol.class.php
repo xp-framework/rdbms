@@ -21,7 +21,7 @@ class TdsV5Protocol extends TdsProtocol {
   protected function setupRecords() {
     $records[self::T_NUMERIC]= newinstance('rdbms.tds.TdsRecord', array(), '{
       public function unmarshal($stream, $field, $records) {
-        if (-1 === ($len= $stream->getByte()- 1)) return NULL;
+        if (-1 === ($len= $stream->getByte()- 1)) return null;
         $pos= $stream->getByte();
         $bytes= $stream->read($len);
         if ($i= ($len % 4)) {
@@ -37,19 +37,19 @@ class TdsV5Protocol extends TdsProtocol {
     $records[self::T_DECIMAL]= $records[self::T_NUMERIC];
     $records[self::T_BINARY]= newinstance('rdbms.tds.TdsRecord', array(), '{
       public function unmarshal($stream, $field, $records) {
-        if (0 === ($len= $stream->getByte())) return NULL;
+        if (0 === ($len= $stream->getByte())) return null;
         $string= $stream->read($len);
-        return iconv($field["conv"], xp::ENCODING, substr($string, 0, strcspn($string, "\0")));
+        return iconv($field["conv"], \xp::ENCODING, substr($string, 0, strcspn($string, "\0")));
       }
     }');
     $records[self::T_IMAGE]= newinstance('rdbms.tds.TdsRecord', array(), '{
       public function unmarshal($stream, $field, $records) {
         $has= $stream->getByte();
-        if ($has !== 16) return NULL; // Seems to always be 16 - obsolete?
+        if ($has !== 16) return null; // Seems to always be 16 - obsolete?
 
         $stream->read(24);  // Skip 16 Byte TEXTPTR, 8 Byte TIMESTAMP
         $len= $stream->getLong();
-        if (0 === $len) return NULL;
+        if (0 === $len) return null;
 
         $r= $stream->read($len);
 
@@ -57,16 +57,16 @@ class TdsV5Protocol extends TdsProtocol {
         // but as IMAGE type with different inside layout!
         return iconv(
           strlen($r) > 1 && "\0" === $r{1} ? "ucs-2le" : $field["conv"],
-          xp::ENCODING,
+          \xp::ENCODING,
           $r
         );
       }
     }');
     $records[self::T_VARBINARY]= newinstance('rdbms.tds.TdsRecord', array(), '{
       public function unmarshal($stream, $field, $records) {
-        if (0 === ($len= $stream->getByte())) return NULL;
+        if (0 === ($len= $stream->getByte())) return null;
 
-        return iconv($field["conv"], xp::ENCODING, $stream->read($len));
+        return iconv($field["conv"], \xp::ENCODING, $stream->read($len));
       }
     }');
     $records[self::T_LONGBINARY]= newinstance('rdbms.tds.TdsRecord', array(), '{
