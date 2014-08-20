@@ -544,9 +544,9 @@ abstract class TdsProtocol extends \lang\Object {
         $continue= true;
       } else if ("\xAA" === $token) {
         $this->handleError();
-        // Always raises an exception
+        throw $this->exception();
       } else if ("\xE5" === $token) {
-        $this->handleExtendedError();
+        $this->handleEED();
         $token= $this->stream->getToken();
         $continue= true;
       } else if ("\xA9" === $token) {       // TDS_COLUMNORDER
