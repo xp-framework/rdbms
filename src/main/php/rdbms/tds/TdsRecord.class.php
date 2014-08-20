@@ -2,10 +2,8 @@
 
 use util\Date;
 
-
 /**
  * Abstract base class for TDS records
- *
  */
 abstract class TdsRecord extends \lang\Object {
   protected static $precision;
