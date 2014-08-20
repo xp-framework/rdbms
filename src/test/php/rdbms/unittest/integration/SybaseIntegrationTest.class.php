@@ -118,7 +118,7 @@ class SybaseIntegrationTest extends RdbmsIntegrationTest {
 
   #[@test]
   public function selectUmlautUniVarChar() {
-    $this->assertEquals('Übercoder', $this->db()->query('select cast("Übercoder" as univarchar(255)) as value')->next('value'));
+    $this->assertEquals('Ãœbercoder', $this->db()->query('select cast("Ãœbercoder" as univarchar(255)) as value')->next('value'));
   }
 
   #[@test]
@@ -138,7 +138,7 @@ class SybaseIntegrationTest extends RdbmsIntegrationTest {
 
   #[@test, @version(15000)]
   public function selectUmlautUniText() {
-    $this->assertEquals('Übercoder', $this->db()->query('select cast("Übercoder" as unitext) as value')->next('value'));
+    $this->assertEquals('Ãœbercoder', $this->db()->query('select cast("Ãœbercoder" as unitext) as value')->next('value'));
   }
 
   #[@test, @version(15000)]
