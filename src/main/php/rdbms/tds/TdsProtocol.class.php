@@ -411,35 +411,41 @@ abstract class TdsProtocol extends \lang\Object {
    * @throws  io.IOException
    */
   public function connect($user= '', $password= '') {
+    $this->connected= false;
     $this->stream->connect();
     $this->messages= [];
     $this->login($user, $password);
-    $response= $this->read();
+    $token= $this->read();
 
-    if ("\xAD" === $response) {          // TDS_LOGINACK
-      $meta= $this->stream->get('vlength/Cstatus', 3);
-      switch ($meta['status']) {
-        case 5:     // TDS_LOG_SUCCEED
-          $this->stream->read($meta['length']- 1);
-          break;
+    do {
+      if ("\xAD" === $token) {          // TDS_LOGINACK
+        $meta= $this->stream->get('vlength/Cstatus', 3);
+        switch ($meta['status']) {
+          case 5:     // TDS_LOG_SUCCEED
+            $this->stream->read($meta['length']- 1);
+            $this->connected= true;
+            break;
 
-        case 6:     // TDS_LOG_FAIL
-          $this->stream->read($meta['length']- 1);
-          $this->stream->getToken();    // 0xE5
-          $this->handleEED();
-          throw $this->exception('Login failed');
+          case 6:     // TDS_LOG_FAIL
+            $this->stream->read($meta['length']- 1);
+            $this->stream->getToken();    // 0xE5
+            $this->handleEED();
+            throw $this->exception('Login failed');
 
-        case 7:     // TDS_LOG_NEGOTIATE
-          $this->stream->read($meta['length']- 1);
-          throw new TdsProtocolException('Negotiation not yet implemented');
+          case 7:     // TDS_LOG_NEGOTIATE
+            $this->stream->read($meta['length']- 1);
+            throw new TdsProtocolException('Negotiation not yet implemented');
+        }
+      } else if ("\xE3" === $token) {   // TDS_ENVCHANGE
+        $this->envchange();
+      } else if ("\xE5" === $token) {
+        $this->handleEED();
+      } else {
+        $this->cancel();
+        throw new TdsProtocolException('Unexpected login response '.dechex(ord($token)));
       }
-    } else if ("\xE3" === $response) {   // TDS_ENVCHANGE
-      $this->envchange();
-    } else {
-      $this->cancel();                   // TODO: What else could we get here?
-    }
-
-    $this->connected= true;
+      $token= $this->stream->getToken();
+    } while (!$this->connected);
   }
 
   /**
@@ -483,7 +489,7 @@ abstract class TdsProtocol extends \lang\Object {
       $this->done= true;
       throw $this->exception();
     }
-    
+
     return $token;
   }
 
