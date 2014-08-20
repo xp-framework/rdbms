@@ -559,9 +559,8 @@ abstract class TdsProtocol extends \lang\Object {
         $this->stream->read($this->stream->getShort());
         $token= $this->stream->getToken();
         $continue= true;
-      } else if ("\xFE" === $token || "\xFF" === $token) {
-        $meta= $this->stream->get('vstatus/vcmd/Vrowcount', 8);
-        if ($meta['status'] & 0x0001) {
+      } else if ("\xFD" === $token || "\xFF" === $token || "\xFE" === $token) {   // DONE
+        if (-1 === ($rows= $this->handleDone())) {
           $token= $this->stream->getToken();
           $continue= true;
         } else {
