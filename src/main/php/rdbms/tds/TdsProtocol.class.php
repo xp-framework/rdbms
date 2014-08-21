@@ -431,26 +431,10 @@ abstract class TdsProtocol extends \lang\Object {
     do {
       if ("\xAD" === $token) {          // TDS_LOGINACK
         $meta= $this->stream->get('vlength/Cstatus', 3);
-        switch ($meta['status']) {
-          case 1:     // OK, SQL Server
-            $this->stream->read($meta['length']- 1);
-            $this->connected= true;
-            break;
-
-          case 5:     // TDS_LOG_SUCCEED
-            $this->stream->read($meta['length']- 1);
-            $this->connected= true;
-            break;
-
-          case 6:     // TDS_LOG_FAIL
-            $this->stream->read($meta['length']- 1);
-            $this->stream->getToken();    // 0xE5
-            $this->handleEED();
-            throw $this->exception('Login failed');
-
-          case 7:     // TDS_LOG_NEGOTIATE
-            $this->stream->read($meta['length']- 1);
-            throw new TdsProtocolException('Negotiation not yet implemented');
+        $this->stream->read($meta['length']- 1);
+        if (7 === $meta['status']) {
+          $this->cancel();
+          throw $this->exception('Negotiation not yet implemented');
         }
       } else if ("\xE3" === $token) {   // TDS_ENVCHANGE
         $this->envchange();
@@ -459,14 +443,16 @@ abstract class TdsProtocol extends \lang\Object {
       } else if ("\xE5" === $token) {
         $this->handleEED();
       } else if ("\xFD" === $token) {
-        $this->handleDone();
-        break;
+        $this->handleDone();            // Throws on error
+        $this->connected= true;
+        return;
       } else {
         $this->cancel();
-        throw new TdsProtocolException('Unexpected login response '.dechex(ord($token)));
+        throw $this->exception('Unexpected login response '.dechex(ord($token)));
       }
-      $token= $this->stream->getToken();
-    } while ($token);
+    } while ($token= $this->stream->getToken());
+
+    throw $this->exception('Unexpected login handshake error');
   }
 
   /**
