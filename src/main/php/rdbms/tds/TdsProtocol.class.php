@@ -102,7 +102,13 @@ abstract class TdsProtocol extends \lang\Object {
     self::$recordsFor[0][self::T_VARCHAR]= newinstance('rdbms.tds.TdsRecord', array(), '{
       public function unmarshal($stream, $field, $records) {
         $len= $stream->getByte();
-        return 0 === $len ? null : $stream->read($len);
+        if (0 === $len) {
+          return null;
+        } else if (\xp::ENCODING === $field["conv"]) {
+          return $stream->read($len);
+        } else {
+          return iconv($field["conv"], \xp::ENCODING, $stream->read($len));
+        }
       }
     }');
     self::$recordsFor[0][self::XT_VARCHAR]= newinstance('rdbms.tds.TdsRecord', array(), '{
@@ -214,9 +220,13 @@ abstract class TdsProtocol extends \lang\Object {
         $stream->read(24);  // Skip 16 Byte TEXTPTR, 8 Byte TIMESTAMP
 
         $len= $stream->getLong();
-        if ($len === 0) return $field["status"] & 0x20 ? null : "";
-
-        return $stream->read($len);
+        if ($len === 0) {
+          return $field["status"] & 0x20 ? null : "";
+        } else if (\xp::ENCODING === $field["conv"]) {
+          return $stream->read($len);
+        } else {
+          return iconv($field["conv"], \xp::ENCODING, $stream->read($len));
+        }
       }
     }');
     self::$recordsFor[0][self::T_NTEXT]= self::$recordsFor[0][self::T_TEXT];

@@ -203,11 +203,11 @@ class TdsV5Protocol extends TdsProtocol {
         $this->stream->getShort();
         $nfields= $this->stream->getShort();
         for ($i= 0; $i < $nfields; $i++) {
-          $field= array();
+          $field= ['conv' => $this->servercs];
           if (0 === ($len= $this->stream->getByte())) {
-            $field= array('name' => null);
+            $field['name']= null;
           } else {
-            $field= array('name' => $this->stream->read($len));
+            $field['name']= $this->stream->read($len);
           }
           $field['status']= $this->stream->getByte();
           $this->stream->read(4);              // Skip usertype
@@ -216,7 +216,6 @@ class TdsV5Protocol extends TdsProtocol {
           // Handle column.
           if (self::T_TEXT === $field['type'] || self::T_IMAGE === $field['type']) {
             $field['size']= $this->stream->getLong();
-            $field['conv']= $this->servercs;
             $this->stream->read($this->stream->getShort());
           } else if (self::T_NUMERIC === $field['type'] || self::T_DECIMAL === $field['type']) {
             $field['size']= $this->stream->getByte();
@@ -228,7 +227,6 @@ class TdsV5Protocol extends TdsProtocol {
             $field['size']= self::$fixed[$field['type']];
           } else if (self::T_VARBINARY === $field['type'] || self::T_BINARY === $field['type']) {
             $field['size']= $this->stream->getByte();
-            $field['conv']= $this->servercs;
           } else {
             $field['size']= $this->stream->getByte();
           }
