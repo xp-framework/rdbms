@@ -42,7 +42,7 @@ abstract class AbstractMysqlxResultSet extends ResultSet {
         case 2:     // SHORT
         case 1:     // TINY
         case 16:    // BIT
-          if ($value <= LONG_MAX && $value >= LONG_MIN) {
+          if ($value <= PHP_INT_MAX && $value >= -PHP_INT_MAX- 1) {
             $return[$info['name']]= (int)$value;
           } else {
             $return[$info['name']]= (double)$value;

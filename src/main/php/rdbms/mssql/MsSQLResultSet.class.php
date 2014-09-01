@@ -75,7 +75,7 @@ class MsSQLResultSet extends ResultSet {
         }
           
         case 'int': {
-          if ($value <= LONG_MAX && $value >= LONG_MIN) {
+          if ($value <= PHP_INT_MAX && $value >= -PHP_INT_MAX- 1) {
             settype($row[$key], 'integer');
           } else {
             settype($row[$key], 'double');
