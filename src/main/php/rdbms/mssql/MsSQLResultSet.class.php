@@ -62,7 +62,7 @@ class MsSQLResultSet extends ResultSet {
       
       switch ($this->fields[$key]) {
         case 'datetime': {
-          $row[$key]= \util\Date::fromString($value, $this->tz);
+          $row[$key]= new \util\Date($value, $this->tz);
           break;
         }
         

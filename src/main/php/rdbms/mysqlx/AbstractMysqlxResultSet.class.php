@@ -33,7 +33,7 @@ abstract class AbstractMysqlxResultSet extends ResultSet {
         case 12:    // DATETIME
         case 14:    // NEWDATETIME
         case 7:     // TIMESTAMP
-          $return[$info['name']]= null === $value || '0000-00-00 00:00:00' === $value ? null : \util\Date::fromString($value, $this->tz);
+          $return[$info['name']]= null === $value || '0000-00-00 00:00:00' === $value ? null : new \util\Date($value, $this->tz);
           break;
         
         case 8:     // LONGLONG

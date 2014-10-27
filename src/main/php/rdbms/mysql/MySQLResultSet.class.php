@@ -77,7 +77,7 @@ class MySQLResultSet extends ResultSet {
             
         case 'datetime':
         case 'date':
-          $row[$key]= \util\Date::fromString($row[$key], $this->tz);
+          $row[$key]= new \util\Date($row[$key], $this->tz);
           break;
           
         case 'int':

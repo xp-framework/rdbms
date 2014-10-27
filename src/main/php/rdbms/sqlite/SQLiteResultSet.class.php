@@ -61,7 +61,7 @@ class SQLiteResultSet extends ResultSet {
       
       switch ($row[$key]{0}) {
         case "\2":
-          $row[$key]= \util\Date::fromString(substr($row[$key], 1));
+          $row[$key]= new \util\Date(substr($row[$key], 1));
           break;
 
         case "\3":

@@ -60,7 +60,7 @@ class SybaseResultSet extends ResultSet {
     foreach (array_keys($row) as $key) {
       if (null === $row[$key] || !isset($this->fields[$key])) continue;
       if ('datetime' === $this->fields[$key]) {
-        $row[$key]= \util\Date::fromString($row[$key], $this->tz);
+        $row[$key]= new \util\Date($row[$key], $this->tz);
       }
     }
     

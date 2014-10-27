@@ -61,7 +61,7 @@ class PostgreSQLResultSet extends ResultSet {
         case 'date':
         case 'time':
         case 'timestamp':
-          $row[$key]= \util\Date::fromString($row[$key], $this->tz);
+          $row[$key]= new \util\Date($row[$key], $this->tz);
           break;
 
         case 'bool':

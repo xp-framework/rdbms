@@ -64,7 +64,7 @@ class MySQLiResultSet extends ResultSet {
         case MYSQLI_TYPE_TIME:
         case MYSQLI_TYPE_TIMESTAMP:
         case MYSQLI_TYPE_NEWDATE:
-          $row[$key]= '0000-00-00 00:00:00' === $row[$key] ? null : \util\Date::fromString($row[$key], $this->tz);
+          $row[$key]= '0000-00-00 00:00:00' === $row[$key] ? null : new \util\Date($row[$key], $this->tz);
           break;
           
         case MYSQLI_TYPE_LONGLONG:
