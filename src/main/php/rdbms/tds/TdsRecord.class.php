@@ -71,7 +71,7 @@ abstract class TdsRecord extends \lang\Object {
    */
   protected function toNumber($n, $scale, $prec) {
     if (0 === $scale) {
-      return bccomp($n, LONG_MAX) == 1 || bccomp($n, LONG_MIN) == -1 ? $n : (int)$n;
+      return bccomp($n, PHP_INT_MAX) == 1 || bccomp($n, -PHP_INT_MAX -1) == -1 ? $n : (int)$n;
     } else {
       $n= bcdiv($n, pow(10, $scale), $scale);
       return strlen($n) > self::$precision ? $n : (double)$n;

@@ -81,7 +81,7 @@ class SqlSrvResultSet extends ResultSet {
           // Fall through intentionally
         
         case 4:  // SQLSRV_SQLTYPE_INT
-          if ($value <= LONG_MAX && $value >= LONG_MIN) {
+          if ($value <= PHP_INT_MAX && $value >= -PHP_INT_MAX- 1) {
             settype($row[$key], 'integer');
           } else {
             settype($row[$key], 'double');

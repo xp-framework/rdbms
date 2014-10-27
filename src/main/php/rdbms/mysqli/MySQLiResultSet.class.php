@@ -73,7 +73,7 @@ class MySQLiResultSet extends ResultSet {
         case MYSQLI_TYPE_SHORT:
         case MYSQLI_TYPE_TINY:
         case MYSQLI_TYPE_BIT:
-          if ($row[$key] <= LONG_MAX && $row[$key] >= LONG_MIN) {
+          if ($row[$key] <= PHP_INT_MAX && $row[$key] >= -PHP_INT_MAX- 1) {
             settype($row[$key], 'integer');
           } else {
             settype($row[$key], 'double');
