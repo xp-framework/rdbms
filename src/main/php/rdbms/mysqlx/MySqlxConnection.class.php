@@ -167,7 +167,7 @@ class MySqlxConnection extends DBConnection {
     try {
       $this->handle->ready() || $this->handle->cancel();
       $result= $this->handle->query($sql);
-    } catch (\MySqlxProtocolException $e) {
+    } catch (MySqlxProtocolException $e) {
       $message= $e->getMessage().' (sqlstate '.$e->sqlstate.')';
       switch ($e->error) {
         case 2006: // MySQL server has gone away
@@ -191,9 +191,9 @@ class MySqlxConnection extends DBConnection {
 
     $this->affected= -1;
     if (!$buffered || $this->flags & DB_UNBUFFERED) {
-      return new \MysqlxResultSet($this->handle, $result, $this->tz);
+      return new MySqlxResultSet($this->handle, $result, $this->tz);
     } else {
-      return new \MysqlxBufferedResultSet($this->handle, $result, $this->tz);
+      return new MySqlxBufferedResultSet($this->handle, $result, $this->tz);
     }
   }
 

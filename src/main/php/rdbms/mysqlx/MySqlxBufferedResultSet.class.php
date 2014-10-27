@@ -1,7 +1,5 @@
 <?php namespace rdbms\mysqlx;
 
-
-
 /**
  * Result set
  *
