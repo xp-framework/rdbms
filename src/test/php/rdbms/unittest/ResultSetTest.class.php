@@ -2,9 +2,19 @@
 
 use lang\ClassLoader;
 
+/**
+ * Tests for the abstract ResultSet base class
+ *
+ * @see  xp://rdbms.ResultSet
+ */
 class ResultSetTest extends \unittest\TestCase {
   protected static $resultSet;
 
+  /**
+   * Defines ResultSetTest_Fixture class
+   *
+   * @return void
+   */
   #[@beforeClass]
   public static function defineResultSet() {
     self::$resultSet= ClassLoader::defineClass('ResultSetTest_Fixture', 'rdbms.ResultSet', [], '{
@@ -29,6 +39,11 @@ class ResultSetTest extends \unittest\TestCase {
     }');
   }
 
+  /**
+   * Defines record fixtures
+   *
+   * @return var[][]
+   */
   protected function fixtures() {
     return [
       [[]],
