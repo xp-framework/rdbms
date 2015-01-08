@@ -1,6 +1,7 @@
 <?php namespace rdbms\sybase;
 
 use rdbms\DBAdapter;
+use rdbms\DBTableAttribute;
 
 
 /**
@@ -20,36 +21,37 @@ class SybaseDBAdapter extends DBAdapter {
    */
   public function __construct($conn) {
     $this->map= array(
-      'binary'        => DB_ATTRTYPE_BINARY, 
-      'bit'           => DB_ATTRTYPE_BIT,      
-      'char'          => DB_ATTRTYPE_CHAR,     
-      'datetime'      => DB_ATTRTYPE_DATETIME,   
-      'datetimn'      => DB_ATTRTYPE_DATETIMN,   
-      'decimal'       => DB_ATTRTYPE_DECIMAL,    
-      'decimaln'      => DB_ATTRTYPE_DECIMALN,   
-      'float'         => DB_ATTRTYPE_FLOAT,     
-      'floatn'        => DB_ATTRTYPE_FLOATN, 
-      'image'         => DB_ATTRTYPE_IMAGE,     
-      'int'           => DB_ATTRTYPE_INT,      
-      'intn'          => DB_ATTRTYPE_INTN,     
-      'money'         => DB_ATTRTYPE_MONEY,     
-      'moneyn'        => DB_ATTRTYPE_MONEYN, 
-      'nchar'         => DB_ATTRTYPE_NCHAR,     
-      'numeric'       => DB_ATTRTYPE_NUMERIC,    
-      'numericn'      => DB_ATTRTYPE_NUMERICN,   
-      'nvarchar'      => DB_ATTRTYPE_NVARCHAR,   
-      'real'          => DB_ATTRTYPE_REAL,     
-      'smalldatetime' => DB_ATTRTYPE_SMALLDATETIME,
-      'smallint'      => DB_ATTRTYPE_SMALLINT,   
-      'smallmoney'    => DB_ATTRTYPE_SMALLMONEY,
-      'sysname'       => DB_ATTRTYPE_SYSNAME,    
-      'text'          => DB_ATTRTYPE_TEXT,     
-      'timestamp'     => DB_ATTRTYPE_TIMESTAMP,  
-      'tinyint'       => DB_ATTRTYPE_TINYINT,
-      'unichar'       => DB_ATTRTYPE_CHAR,    
-      'univarchar'    => DB_ATTRTYPE_VARCHAR,
-      'varbinary'     => DB_ATTRTYPE_VARBINARY,  
-      'varchar'       => DB_ATTRTYPE_VARCHAR,
+      'binary'        => DBTableAttribute::DB_ATTRTYPE_BINARY,
+      'bit'           => DBTableAttribute::DB_ATTRTYPE_BIT,
+      'char'          => DBTableAttribute::DB_ATTRTYPE_CHAR,
+      'datetime'      => DBTableAttribute::DB_ATTRTYPE_DATETIME,
+      'datetimn'      => DBTableAttribute::DB_ATTRTYPE_DATETIMN,
+      'decimal'       => DBTableAttribute::DB_ATTRTYPE_DECIMAL,
+      'decimaln'      => DBTableAttribute::DB_ATTRTYPE_DECIMALN,
+      'float'         => DBTableAttribute::DB_ATTRTYPE_FLOAT,
+      'floatn'        => DBTableAttribute::DB_ATTRTYPE_FLOATN,
+      'image'         => DBTableAttribute::DB_ATTRTYPE_IMAGE,
+      'uint'          => DBTableAttribute::DB_ATTRTYPE_INT,
+      'int'           => DBTableAttribute::DB_ATTRTYPE_INT,
+      'intn'          => DBTableAttribute::DB_ATTRTYPE_INTN,
+      'money'         => DBTableAttribute::DB_ATTRTYPE_MONEY,
+      'moneyn'        => DBTableAttribute::DB_ATTRTYPE_MONEYN,
+      'nchar'         => DBTableAttribute::DB_ATTRTYPE_NCHAR,
+      'numeric'       => DBTableAttribute::DB_ATTRTYPE_NUMERIC,
+      'numericn'      => DBTableAttribute::DB_ATTRTYPE_NUMERICN,
+      'nvarchar'      => DBTableAttribute::DB_ATTRTYPE_NVARCHAR,
+      'real'          => DBTableAttribute::DB_ATTRTYPE_REAL,
+      'smalldatetime' => DBTableAttribute::DB_ATTRTYPE_SMALLDATETIME,
+      'smallint'      => DBTableAttribute::DB_ATTRTYPE_SMALLINT,
+      'smallmoney'    => DBTableAttribute::DB_ATTRTYPE_SMALLMONEY,
+      'sysname'       => DBTableAttribute::DB_ATTRTYPE_SYSNAME,
+      'text'          => DBTableAttribute::DB_ATTRTYPE_TEXT,
+      'timestamp'     => DBTableAttribute::DB_ATTRTYPE_TIMESTAMP,
+      'tinyint'       => DBTableAttribute::DB_ATTRTYPE_TINYINT,
+      'unichar'       => DBTableAttribute::DB_ATTRTYPE_CHAR,
+      'univarchar'    => DBTableAttribute::DB_ATTRTYPE_VARCHAR,
+      'varbinary'     => DBTableAttribute::DB_ATTRTYPE_VARBINARY,
+      'varchar'       => DBTableAttribute::DB_ATTRTYPE_VARCHAR,
     );
     parent::__construct($conn);
   }
@@ -113,7 +115,7 @@ class SybaseDBAdapter extends DBAdapter {
       // Known bits of status column:
       // 0x08 => NULLable
       // 0x80 => identity column
-      $t->addAttribute(new \rdbms\DBTableAttribute(
+      $t->addAttribute(new DBTableAttribute(
         $record['name'], 
         $this->map[$record['type']],
         ($record['status'] & 0x80), 
@@ -209,6 +211,8 @@ class SybaseDBAdapter extends DBAdapter {
     if (!$sp_helpconstraint instanceof \rdbms\ResultSet) return $t;
 
     while ($db_constraint= $sp_helpconstraint->next()) {
+      if (!isset($db_constraint['type']) || !isset($db_constraint['definition'])) continue;
+
       if ('referential constraint' != $db_constraint['type']) continue;
       if (0 !== strpos($db_constraint['definition'], $table.' ')) continue;
       $t->addForeignKeyConstraint($this->parseForeignKey($db_constraint));

@@ -1,36 +1,5 @@
 <?php namespace rdbms;
 
-define('DB_ATTRTYPE_BINARY',         0x0000);             
-define('DB_ATTRTYPE_BIT',            0x0001);               
-define('DB_ATTRTYPE_CHAR',           0x0002);              
-define('DB_ATTRTYPE_DATETIME',       0x0003);            
-define('DB_ATTRTYPE_DATETIMN',       0x0004);            
-define('DB_ATTRTYPE_DECIMAL',        0x0005);             
-define('DB_ATTRTYPE_DECIMALN',       0x0006);            
-define('DB_ATTRTYPE_FLOAT',          0x0007);             
-define('DB_ATTRTYPE_FLOATN',         0x0008);            
-define('DB_ATTRTYPE_IMAGE',          0x0009);             
-define('DB_ATTRTYPE_INT',            0x000A);               
-define('DB_ATTRTYPE_INTN',           0x000B);              
-define('DB_ATTRTYPE_MONEY',          0x000C);             
-define('DB_ATTRTYPE_MONEYN',         0x000D);            
-define('DB_ATTRTYPE_NCHAR',          0x000E);             
-define('DB_ATTRTYPE_NUMERIC',        0x000F);             
-define('DB_ATTRTYPE_NUMERICN',       0x0010);            
-define('DB_ATTRTYPE_NVARCHAR',       0x0011);            
-define('DB_ATTRTYPE_REAL',           0x0012);              
-define('DB_ATTRTYPE_SMALLDATETIME',  0x0013);         
-define('DB_ATTRTYPE_SMALLINT',       0x0014);         
-define('DB_ATTRTYPE_SMALLMONEY',     0x0015);       
-define('DB_ATTRTYPE_SYSNAME',        0x0016);          
-define('DB_ATTRTYPE_TEXT',           0x0017);           
-define('DB_ATTRTYPE_TIMESTAMP',      0x0018);        
-define('DB_ATTRTYPE_TINYINT',        0x0019);          
-define('DB_ATTRTYPE_VARBINARY',      0x001A);        
-define('DB_ATTRTYPE_VARCHAR',        0x001B);          
-define('DB_ATTRTYPE_ENUM',           0x001C);          
-define('DB_ATTRTYPE_DATE',           0x001D);
-
 /**
  * Represents a table's attribute
  *
@@ -45,7 +14,39 @@ class DBTableAttribute extends \lang\Object {
     $length=      0,
     $precision=   0,
     $scale=       0;
-    
+
+  const
+    DB_ATTRTYPE_BINARY=          0x0000,
+    DB_ATTRTYPE_BIT=             0x0001,
+    DB_ATTRTYPE_CHAR=            0x0002,
+    DB_ATTRTYPE_DATETIME=        0x0003,
+    DB_ATTRTYPE_DATETIMN=        0x0004,
+    DB_ATTRTYPE_DECIMAL=         0x0005,
+    DB_ATTRTYPE_DECIMALN=        0x0006,
+    DB_ATTRTYPE_FLOAT=           0x0007,
+    DB_ATTRTYPE_FLOATN=          0x0008,
+    DB_ATTRTYPE_IMAGE=           0x0009,
+    DB_ATTRTYPE_INT=             0x000A,
+    DB_ATTRTYPE_INTN=            0x000B,
+    DB_ATTRTYPE_MONEY=           0x000C,
+    DB_ATTRTYPE_MONEYN=          0x000D,
+    DB_ATTRTYPE_NCHAR=           0x000E,
+    DB_ATTRTYPE_NUMERIC=         0x000F,
+    DB_ATTRTYPE_NUMERICN=        0x0010,
+    DB_ATTRTYPE_NVARCHAR=        0x0011,
+    DB_ATTRTYPE_REAL=            0x0012,
+    DB_ATTRTYPE_SMALLDATETIME=   0x0013,
+    DB_ATTRTYPE_SMALLINT=        0x0014,
+    DB_ATTRTYPE_SMALLMONEY=      0x0015,
+    DB_ATTRTYPE_SYSNAME=         0x0016,
+    DB_ATTRTYPE_TEXT=            0x0017,
+    DB_ATTRTYPE_TIMESTAMP=       0x0018,
+    DB_ATTRTYPE_TINYINT=         0x0019,
+    DB_ATTRTYPE_VARBINARY=       0x001A,
+    DB_ATTRTYPE_VARCHAR=         0x001B,
+    DB_ATTRTYPE_ENUM=            0x001C,
+    DB_ATTRTYPE_DATE=            0x001D;
+
   /**
    * Constructor
    *
@@ -178,48 +179,48 @@ class DBTableAttribute extends \lang\Object {
    */
   public function typeName() {
     switch ($this->type) {   
-      case DB_ATTRTYPE_BIT:
+      case self::DB_ATTRTYPE_BIT:
         return 'bool';
         
-      case DB_ATTRTYPE_DATETIME:
-      case DB_ATTRTYPE_DATETIMN:  
-      case DB_ATTRTYPE_TIMESTAMP:
-      case DB_ATTRTYPE_SMALLDATETIME:
-      case DB_ATTRTYPE_DATE:
+      case self::DB_ATTRTYPE_DATETIME:
+      case self::DB_ATTRTYPE_DATETIMN:
+      case self::DB_ATTRTYPE_TIMESTAMP:
+      case self::DB_ATTRTYPE_SMALLDATETIME:
+      case self::DB_ATTRTYPE_DATE:
         return 'util.Date';
         
-      case DB_ATTRTYPE_BINARY:
-      case DB_ATTRTYPE_CHAR:
-      case DB_ATTRTYPE_IMAGE:
-      case DB_ATTRTYPE_NCHAR:  
-      case DB_ATTRTYPE_NVARCHAR:
-      case DB_ATTRTYPE_TEXT:
-      case DB_ATTRTYPE_VARBINARY:
-      case DB_ATTRTYPE_VARCHAR:
-      case DB_ATTRTYPE_ENUM:
+      case self::DB_ATTRTYPE_BINARY:
+      case self::DB_ATTRTYPE_CHAR:
+      case self::DB_ATTRTYPE_IMAGE:
+      case self::DB_ATTRTYPE_NCHAR:
+      case self::DB_ATTRTYPE_NVARCHAR:
+      case self::DB_ATTRTYPE_TEXT:
+      case self::DB_ATTRTYPE_VARBINARY:
+      case self::DB_ATTRTYPE_VARCHAR:
+      case self::DB_ATTRTYPE_ENUM:
         return 'string';
         
-      case DB_ATTRTYPE_DECIMAL:
-      case DB_ATTRTYPE_DECIMALN:
-      case DB_ATTRTYPE_NUMERIC:  
-      case DB_ATTRTYPE_NUMERICN:
+      case self::DB_ATTRTYPE_DECIMAL:
+      case self::DB_ATTRTYPE_DECIMALN:
+      case self::DB_ATTRTYPE_NUMERIC:
+      case self::DB_ATTRTYPE_NUMERICN:
         return $this->scale == 0 ? 'int' : 'float';
         
-      case DB_ATTRTYPE_INT:
-      case DB_ATTRTYPE_INTN:
-      case DB_ATTRTYPE_TINYINT:
-      case DB_ATTRTYPE_SMALLINT:
+      case self::DB_ATTRTYPE_INT:
+      case self::DB_ATTRTYPE_INTN:
+      case self::DB_ATTRTYPE_TINYINT:
+      case self::DB_ATTRTYPE_SMALLINT:
         return 'int';
         
-      case DB_ATTRTYPE_FLOAT:
-      case DB_ATTRTYPE_FLOATN:
-      case DB_ATTRTYPE_MONEY:
-      case DB_ATTRTYPE_MONEYN:
-      case DB_ATTRTYPE_SMALLMONEY:
-      case DB_ATTRTYPE_REAL:
+      case self::DB_ATTRTYPE_FLOAT:
+      case self::DB_ATTRTYPE_FLOATN:
+      case self::DB_ATTRTYPE_MONEY:
+      case self::DB_ATTRTYPE_MONEYN:
+      case self::DB_ATTRTYPE_SMALLMONEY:
+      case self::DB_ATTRTYPE_REAL:
         return 'float';
         
-      case DB_ATTRTYPE_SYSNAME:
+      case self::DB_ATTRTYPE_SYSNAME:
         return 'string';
     }
     

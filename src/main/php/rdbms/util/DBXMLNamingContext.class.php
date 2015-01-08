@@ -18,7 +18,7 @@ class DBXMLNamingContext extends \lang\Object {
    *
    * @param   rdbms.DBXMLNamingStrategy s
    */
-  static function setStrategy(\DBXMLNamingStrategy $s) {
+  static function setStrategy(DBXMLNamingStrategy $s) {
     self::$strategy= $s;
   }
 

@@ -1,6 +1,7 @@
 <?php namespace rdbms\mysql;
 
 use rdbms\DBAdapter;
+use rdbms\DBTableAttribute;
 
 
 /**
@@ -12,31 +13,31 @@ use rdbms\DBAdapter;
  */
 class MySQLDBAdapter extends DBAdapter {
   public static $map= array(
-    'varchar'    => DB_ATTRTYPE_VARCHAR,
-    'varbinary'  => DB_ATTRTYPE_VARCHAR,
-    'char'       => DB_ATTRTYPE_CHAR,
-    'int'        => DB_ATTRTYPE_INT,
-    'bigint'     => DB_ATTRTYPE_NUMERIC,
-    'mediumint'  => DB_ATTRTYPE_SMALLINT,
-    'smallint'   => DB_ATTRTYPE_SMALLINT,
-    'tinyint'    => DB_ATTRTYPE_TINYINT,
-    'bit'        => DB_ATTRTYPE_TINYINT,
-    'date'       => DB_ATTRTYPE_DATE,
-    'datetime'   => DB_ATTRTYPE_DATETIME,
-    'timestamp'  => DB_ATTRTYPE_TIMESTAMP,
-    'tinytext'   => DB_ATTRTYPE_TEXT,
-    'mediumtext' => DB_ATTRTYPE_TEXT,
-    'text'       => DB_ATTRTYPE_TEXT,
-    'longtext'   => DB_ATTRTYPE_TEXT,
-    'enum'       => DB_ATTRTYPE_ENUM,
-    'decimal'    => DB_ATTRTYPE_DECIMAL,
-    'float'      => DB_ATTRTYPE_FLOAT,
-    'double'     => DB_ATTRTYPE_FLOAT,
-    'tinyblob'   => DB_ATTRTYPE_TEXT,
-    'blob'       => DB_ATTRTYPE_TEXT,
-    'mediumblob' => DB_ATTRTYPE_TEXT,
-    'longblob'   => DB_ATTRTYPE_TEXT,
-    'time'       => DB_ATTRTYPE_TEXT
+    'varchar'    => DBTableAttribute::DB_ATTRTYPE_VARCHAR,
+    'varbinary'  => DBTableAttribute::DB_ATTRTYPE_VARCHAR,
+    'char'       => DBTableAttribute::DB_ATTRTYPE_CHAR,
+    'int'        => DBTableAttribute::DB_ATTRTYPE_INT,
+    'bigint'     => DBTableAttribute::DB_ATTRTYPE_NUMERIC,
+    'mediumint'  => DBTableAttribute::DB_ATTRTYPE_SMALLINT,
+    'smallint'   => DBTableAttribute::DB_ATTRTYPE_SMALLINT,
+    'tinyint'    => DBTableAttribute::DB_ATTRTYPE_TINYINT,
+    'bit'        => DBTableAttribute::DB_ATTRTYPE_TINYINT,
+    'date'       => DBTableAttribute::DB_ATTRTYPE_DATE,
+    'datetime'   => DBTableAttribute::DB_ATTRTYPE_DATETIME,
+    'timestamp'  => DBTableAttribute::DB_ATTRTYPE_TIMESTAMP,
+    'tinytext'   => DBTableAttribute::DB_ATTRTYPE_TEXT,
+    'mediumtext' => DBTableAttribute::DB_ATTRTYPE_TEXT,
+    'text'       => DBTableAttribute::DB_ATTRTYPE_TEXT,
+    'longtext'   => DBTableAttribute::DB_ATTRTYPE_TEXT,
+    'enum'       => DBTableAttribute::DB_ATTRTYPE_ENUM,
+    'decimal'    => DBTableAttribute::DB_ATTRTYPE_DECIMAL,
+    'float'      => DBTableAttribute::DB_ATTRTYPE_FLOAT,
+    'double'     => DBTableAttribute::DB_ATTRTYPE_FLOAT,
+    'tinyblob'   => DBTableAttribute::DB_ATTRTYPE_TEXT,
+    'blob'       => DBTableAttribute::DB_ATTRTYPE_TEXT,
+    'mediumblob' => DBTableAttribute::DB_ATTRTYPE_TEXT,
+    'longblob'   => DBTableAttribute::DB_ATTRTYPE_TEXT,
+    'time'       => DBTableAttribute::DB_ATTRTYPE_TEXT
   );
 
   /**
@@ -97,12 +98,12 @@ class MySQLDBAdapter extends DBAdapter {
    */
   public static function tableAttributeFrom($record) {
     preg_match('#^([a-z]+)(\(([0-9,]+)\))?#', $record['Type'], $regs);
-    return new \rdbms\DBTableAttribute(
+    return new DBTableAttribute(
       $record['Field'],                                         // name
       self::$map[$regs[1]],                                     // type
       false !== strpos($record['Extra'], 'auto_increment'),     // identity
       !(empty($record['Null']) || ('NO' == $record['Null'])),   // nullable
-      (int)$regs[3],                                            // length
+      (int)(isset($regs[3]) ? $regs[3] : 0),                    // length
       0,                                                        // precision
       0                                                         // scale
     );
