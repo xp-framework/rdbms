@@ -1,7 +1,7 @@
 <?php namespace rdbms\sqlite;
 
 use rdbms\DBAdapter;
-
+use rdbms\DBTableAttribute;
 
 /**
  * Adapter for SQLite
@@ -21,22 +21,22 @@ class SQLiteDBAdapter extends DBAdapter {
    */
   public function __construct($conn) {
     $this->map= array(
-      'varchar'    => DB_ATTRTYPE_VARCHAR,
-      'char'       => DB_ATTRTYPE_CHAR,
-      'int'        => DB_ATTRTYPE_INT,
-      'integer'    => DB_ATTRTYPE_INT,
-      'bigint'     => DB_ATTRTYPE_NUMERIC,
-      'mediumint'  => DB_ATTRTYPE_SMALLINT,
-      'smallint'   => DB_ATTRTYPE_SMALLINT,
-      'tinyint'    => DB_ATTRTYPE_TINYINT,
-      'date'       => DB_ATTRTYPE_DATE,
-      'datetime'   => DB_ATTRTYPE_DATETIME,
-      'timestamp'  => DB_ATTRTYPE_TIMESTAMP,
-      'mediumtext' => DB_ATTRTYPE_TEXT,
-      'text'       => DB_ATTRTYPE_TEXT,
-      'enum'       => DB_ATTRTYPE_ENUM,
-      'decimal'    => DB_ATTRTYPE_DECIMAL,
-      'float'      => DB_ATTRTYPE_FLOAT
+      'varchar'    => DBTableAttribute::DB_ATTRTYPE_VARCHAR,
+      'char'       => DBTableAttribute::DB_ATTRTYPE_CHAR,
+      'int'        => DBTableAttribute::DB_ATTRTYPE_INT,
+      'integer'    => DBTableAttribute::DB_ATTRTYPE_INT,
+      'bigint'     => DBTableAttribute::DB_ATTRTYPE_NUMERIC,
+      'mediumint'  => DBTableAttribute::DB_ATTRTYPE_SMALLINT,
+      'smallint'   => DBTableAttribute::DB_ATTRTYPE_SMALLINT,
+      'tinyint'    => DBTableAttribute::DB_ATTRTYPE_TINYINT,
+      'date'       => DBTableAttribute::DB_ATTRTYPE_DATE,
+      'datetime'   => DBTableAttribute::DB_ATTRTYPE_DATETIME,
+      'timestamp'  => DBTableAttribute::DB_ATTRTYPE_TIMESTAMP,
+      'mediumtext' => DBTableAttribute::DB_ATTRTYPE_TEXT,
+      'text'       => DBTableAttribute::DB_ATTRTYPE_TEXT,
+      'enum'       => DBTableAttribute::DB_ATTRTYPE_ENUM,
+      'decimal'    => DBTableAttribute::DB_ATTRTYPE_DECIMAL,
+      'float'      => DBTableAttribute::DB_ATTRTYPE_FLOAT
     );
     parent::__construct($conn);
   }
