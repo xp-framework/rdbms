@@ -118,16 +118,16 @@ To start a transaction, you can use the connection's `begin()`, `commit()` and `
 
 ```php
 public function createAuthor(...) {
-  try {
-    $tran= $conn->begin(new Transaction('create_author'));
+  $tran= $conn->begin(new Transaction('create_author'));
 
+  try {
     $id= $conn->insert('into author ...');
     $conn->insert('into notify ...');
 
     $tran->commit();
     return $id;
   } catch (SQLException $e) {
-    $tran && $tran->rollback();
+    $tran->rollback();
     throw $e;
   }
 }
