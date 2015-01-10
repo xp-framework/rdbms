@@ -1,0 +1,15 @@
+{
+  "name" : "xp-framework/rdbms",
+  "type" : "library",
+  "homepage" : "http://xp-framework.net/",
+  "license" : "BSD-3-Clause",
+  "description" : "RDBMS support for the XP Framework",
+  "keywords": ["module", "xp"],
+  "require" : {
+    "xp-framework/core": "dev-master",
+    "php" : ">=5.4.0"
+  },
+  "autoload" : {
+    "files" : ["src/main/php/autoload.php"]
+  }
+}
