@@ -2,7 +2,6 @@
 
 use peer\Socket;
 
-
 /**
  * TDS protocol implementation
  *
@@ -15,6 +14,7 @@ abstract class TdsProtocol extends \lang\Object {
   protected $stream= null;
   protected $done= false;
   protected $records= array();
+  protected $messages= [];
   public $connected= false;
 
   // Record handler cache per base class implementation
@@ -102,7 +102,13 @@ abstract class TdsProtocol extends \lang\Object {
     self::$recordsFor[0][self::T_VARCHAR]= newinstance('rdbms.tds.TdsRecord', array(), '{
       public function unmarshal($stream, $field, $records) {
         $len= $stream->getByte();
-        return 0 === $len ? null : $stream->read($len);
+        if (0 === $len) {
+          return null;
+        } else if (\xp::ENCODING === $field["conv"]) {
+          return $stream->read($len);
+        } else {
+          return iconv($field["conv"], \xp::ENCODING, $stream->read($len));
+        }
       }
     }');
     self::$recordsFor[0][self::XT_VARCHAR]= newinstance('rdbms.tds.TdsRecord', array(), '{
@@ -214,9 +220,13 @@ abstract class TdsProtocol extends \lang\Object {
         $stream->read(24);  // Skip 16 Byte TEXTPTR, 8 Byte TIMESTAMP
 
         $len= $stream->getLong();
-        if ($len === 0) return $field["status"] & 0x20 ? null : "";
-
-        return $stream->read($len);
+        if ($len === 0) {
+          return $field["status"] & 0x20 ? null : "";
+        } else if (\xp::ENCODING === $field["conv"]) {
+          return $stream->read($len);
+        } else {
+          return iconv($field["conv"], \xp::ENCODING, $stream->read($len));
+        }
       }
     }');
     self::$recordsFor[0][self::T_NTEXT]= self::$recordsFor[0][self::T_TEXT];
@@ -271,6 +281,61 @@ abstract class TdsProtocol extends \lang\Object {
    */
   protected abstract function login($user, $password);
 
+   /**
+   * Handle messages
+   *
+   * @param   string message
+   * @param   int number
+   * @param   int state
+   * @param   int class
+   * @param   string server
+   * @param   string proc
+   * @param   int line
+   */
+  protected function handleMessage($message, $number= 0, $state= 0, $class= 0, $server= null, $proc= null, $line= 0) {
+    $this->messages[]= [
+      'message' => trim($message),
+      'number'  => $number,
+      'state'   => $state,
+      'class'   => $class,
+      'server'  => $server,
+      'proc'    => $proc,
+      'line'    => $line
+    ];
+  }
+
+  /**
+   * Returns an exception consuming all server messages into causes
+   *
+   * @param  string prefix
+   * @return rdbms.tds.TdsProtocolException
+   */
+  protected function exception($prefix= null) {
+    if ($this->messages) {
+      $cause= null;
+      while ($e= array_shift($this->messages)) {
+        $cause= new TdsProtocolException(
+          $e['message'],
+          $e['number'],
+          $e['state'],
+          $e['class'],
+          $e['server'],
+          $e['proc'],
+          $e['line'],
+          $cause
+        );
+      }
+    } else {
+      $cause= new TdsProtocolException('Unexpected protocol error', -1, -1, 0xFF, null, null, -1);
+    }
+
+    if (null !== $prefix) {
+      $cause->message= $prefix.': '.$cause->message;
+    }
+    return $cause;
+  }
+
+
   /**
    * Handles ERROR messages (0xAA)
    *
@@ -278,16 +343,12 @@ abstract class TdsProtocol extends \lang\Object {
    */
   protected function handleError() {
     $meta= $this->stream->get('vlength/Vnumber/Cstate/Cclass', 8);
-    $this->done= true;
-    throw new TdsProtocolException(
-      $this->stream->getString($this->stream->getShort()),
-      $meta['number'],
-      $meta['state'],
-      $meta['class'],
-      $this->stream->getString($this->stream->getByte()),
-      $this->stream->getString($this->stream->getByte()),
-      $this->stream->getByte()
-    );
+    $message= $this->stream->getString($this->stream->getShort());
+    $server= $this->stream->getString($this->stream->getByte());
+    $proc= $this->stream->getString($this->stream->getByte());
+    $line= $this->stream->getByte();
+
+    $this->handleMessage($message, $meta['number'], $meta['state'], $meta['class'], $server, $proc, $line);
   }
 
   /**
@@ -302,8 +363,7 @@ abstract class TdsProtocol extends \lang\Object {
     $proc= $this->stream->getString($this->stream->getByte());
     $line= $this->stream->getShort();
 
-    // TODO message handling
-    // DEBUG Console::$err->writeLine($server, ': ', $message, ' in ', $proc, ' line ', $line);
+    $this->handleMessage($message, $meta['number'], $meta['state'], $meta['class'], $server, $proc, $line);
   }
 
   /**
@@ -311,7 +371,7 @@ abstract class TdsProtocol extends \lang\Object {
    *
    * @throws  rdbms.tds.TdsProtocolException
    */
-  protected function handleExtendedError() {
+  protected function handleEED() {
     $meta= $this->stream->get('vlength/Vnumber/Cstate/Cclass', 8);
     $meta['sqlstate']= $this->stream->read($this->stream->getByte());
     $meta= array_merge($meta, $this->stream->get('Cstatus/vtranstate', 3));
@@ -319,24 +379,26 @@ abstract class TdsProtocol extends \lang\Object {
     $server= $this->stream->read($this->stream->getByte());
     $proc= $this->stream->read($this->stream->getByte());
     $line= $this->stream->getShort();
-    $this->done= true;
 
-    // Fetch TDS_DONE (FD, FE, FF) associated with this EED and check for the error bit
-    $done= $this->stream->get('Ctoken/vstatus/vcmd/Vrowcount', 9);
-    if ($done['token'] < 0xFD || $done['status'] & 0x0002) {
-      throw new TdsProtocolException(
-        $message,
-        $meta['number'],
-        $meta['state'],
-        $meta['class'],
-        $server,
-        $proc,
-        $line
-      );
+    $this->handleMessage($message, $meta['number'], $meta['state'], $meta['class'], $server, $proc, $line);
+  }
+
+  /**
+   * Handles DONE tokens (0xFD, 0xFF, 0xFE)
+   *
+   * @throws  rdbms.tds.TdsProtocolException
+   * @return  int rowcount, or -1 to indicate more results
+   */
+  protected function handleDone() {
+    $meta= $this->stream->get('vstatus/vtranstate/Vrowcount', 8);
+    if ($meta['status'] & 0x0001) {         // TDS_DONE_MORE
+      return -1;
+    } else if ($meta['status'] & 0x0002) {  // TDS_DONE_ERROR
+      throw $this->exception();
+    } else if (!empty($this->messages) && (3 === $meta['transtate']  || 4 === $meta['transtate'])) {
+      throw $this->exception('Aborted');
     }
-
-    // TODO message handling
-    // Console::$err->writeLine($server, ': ', $message, ' in ', $proc, ' line ', $line);
+    return $meta['rowcount'];
   }
 
   /**
@@ -356,37 +418,41 @@ abstract class TdsProtocol extends \lang\Object {
    *
    * @param   string user
    * @param   string password
+   * @param   string charset
    * @throws  io.IOException
    */
-  public function connect($user= '', $password= '') {
+  public function connect($user= '', $password= '', $charset= null) {
+    $this->connected= false;
     $this->stream->connect();
-    $this->login($user, $password);
-    $response= $this->read();
+    $this->messages= [];
+    $this->login($user, $password, $charset);
+    $token= $this->read();
 
-    if ("\xAD" === $response) {          // TDS_LOGINACK
-      $meta= $this->stream->get('vlength/Cstatus', 3);
-      switch ($meta['status']) {
-        case 5:     // TDS_LOG_SUCCEED
-          $this->stream->read($meta['length']- 1);
-          break;
-
-        case 6:     // TDS_LOG_FAIL
-          $this->stream->read($meta['length']- 1);
-          $this->stream->getToken();    // 0xE5
-          $this->handleExtendedError();
-          break;
-
-        case 7:     // TDS_LOG_NEGOTIATE
-          $this->stream->read($meta['length']- 1);
-          throw new TdsProtocolException('Negotiation not yet implemented');
+    do {
+      if ("\xAD" === $token) {          // TDS_LOGINACK
+        $meta= $this->stream->get('vlength/Cstatus', 3);
+        $this->stream->read($meta['length']- 1);
+        if (7 === $meta['status']) {
+          $this->cancel();
+          throw $this->exception('Negotiation not yet implemented');
+        }
+      } else if ("\xE3" === $token) {   // TDS_ENVCHANGE
+        $this->envchange();
+      } else if ("\xAB" === $token) {
+        $this->handleInfo();
+      } else if ("\xE5" === $token) {
+        $this->handleEED();
+      } else if ("\xFD" === $token) {
+        $this->handleDone();            // Throws on error
+        $this->connected= true;
+        return;
+      } else {
+        $this->cancel();
+        throw $this->exception('Unexpected login response '.dechex(ord($token)));
       }
-    } else if ("\xE3" === $response) {   // TDS_ENVCHANGE
-      $this->envchange();
-    } else {
-      $this->cancel();                   // TODO: What else could we get here?
-    }
+    } while ($token= $this->stream->getToken());
 
-    $this->connected= true;
+    throw $this->exception('Unexpected login handshake error');
   }
 
   /**
@@ -427,12 +493,10 @@ abstract class TdsProtocol extends \lang\Object {
     $token= $this->stream->getToken();
     if ("\xAA" === $token) {
       $this->handleError();
-      // Raises an exception
-    } else if ("\xE5" === $token) {
-      $this->handleExtendedError();
-      $token= $this->stream->getToken();
+      $this->done= true;
+      throw $this->exception();
     }
-    
+
     return $token;
   }
 
@@ -493,18 +557,17 @@ abstract class TdsProtocol extends \lang\Object {
         $continue= true;
       } else if ("\xAA" === $token) {
         $this->handleError();
-        // Always raises an exception
+        throw $this->exception();
       } else if ("\xE5" === $token) {
-        $this->handleExtendedError();
+        $this->handleEED();
         $token= $this->stream->getToken();
         $continue= true;
       } else if ("\xA9" === $token) {       // TDS_COLUMNORDER
         $this->stream->read($this->stream->getShort());
         $token= $this->stream->getToken();
         $continue= true;
-      } else if ("\xFE" === $token || "\xFF" === $token) {
-        $meta= $this->stream->get('vstatus/vcmd/Vrowcount', 8);
-        if ($meta['status'] & 0x0001) {
+      } else if ("\xFD" === $token || "\xFF" === $token || "\xFE" === $token) {   // DONE
+        if (-1 === ($rows= $this->handleDone())) {
           $token= $this->stream->getToken();
           $continue= true;
         } else {

@@ -53,12 +53,16 @@ abstract class TdsConnection extends DBConnection {
 
     $this->_obs && $this->notifyObservers(new \rdbms\DBEvent(\rdbms\DBEvent::CONNECT, $reconnect));
     try {
-      $this->handle->connect($this->dsn->getUser(), $this->dsn->getPassword());
+      $this->handle->connect($this->dsn->getUser(), $this->dsn->getPassword(), $this->dsn->getProperty('charset', null));
       $this->_obs && $this->notifyObservers(new \rdbms\DBEvent(\rdbms\DBEvent::CONNECTED, $reconnect));
     } catch (\io\IOException $e) {
       $this->handle->connected= null;
       $this->_obs && $this->notifyObservers(new \rdbms\DBEvent(\rdbms\DBEvent::CONNECTED, $reconnect));
-      throw new \rdbms\SQLConnectException($e->getMessage(), $this->dsn);
+      $message= '';
+      do {
+        $message.= $e->getMessage().': ';
+      } while ($e= $e->getCause());
+      throw new \rdbms\SQLConnectException(substr($message, 0, -2), $this->dsn);
     }
 
     return parent::connect();

@@ -3,6 +3,7 @@
 /**
  * TDS V5 protocol implementation
  *
+ * @see   http://www.sybase.com/content/1013412/tds34.pdf
  * @see   https://github.com/mono/mono/blob/master/mcs/class/Mono.Data.Tds/Mono.Data.Tds.Protocol/Tds50.cs
  */
 class TdsV5Protocol extends TdsProtocol {
@@ -91,13 +92,15 @@ class TdsV5Protocol extends TdsProtocol {
    *
    * @param   string user
    * @param   string password
+   * @param   string charset
    * @throws  io.IOException
    */
-  protected function login($user, $password) {
+  protected function login($user, $password, $charset= null) {
     if (strlen($password) > 253) {
       throw new \lang\IllegalArgumentException('Password length must not exceed 253 bytes.');
     }
 
+    $charset= $charset ?: 'utf8';
     $packetSize= (string)$this->defaultPacketSize();
     $packet= pack(
       'a30Ca30Ca30Ca30CCCCCCCCCCx7a30Ca30Cx2a253CCCCCa10CCCCCCCCa30CCnx8nCa30CCa6Cx8',
@@ -128,7 +131,7 @@ class TdsV5Protocol extends TdsProtocol {
       0x00,                               // Security label hierarchy
       0x00,                               // Security spare
       0x00,                               // Security login role
-      'utf8', strlen('utf8'),             // Charset
+      $charset, strlen($charset),         // Charset
       0x01,                               // Notify on charset change
       $packetSize, strlen($packetSize)    // Network packet size (in text!)
     );
@@ -158,11 +161,11 @@ class TdsV5Protocol extends TdsProtocol {
    */
   protected function handleEnvChange($type, $old, $new, $initial= false) {
     if ($initial && 3 === $type) {
-      $this->servercs= strtr($old, array('iso_' => 'iso-8859-', 'utf8' => 'utf-8'));
+      $this->servercs= strtr($new, array('iso_' => 'iso-8859-', 'utf8' => 'utf-8'));
     }
     // DEBUG Console::writeLine($initial ? 'I' : 'E', $type, ' ', $old, ' -> ', $new);
   }
-  
+
   /**
    * Issues a query and returns the results
    *
@@ -170,7 +173,12 @@ class TdsV5Protocol extends TdsProtocol {
    * @return  var
    */
   public function query($sql) {
-    $this->stream->write(self::MSG_QUERY, $sql);
+    $this->messages= [];
+    if (\xp::ENCODING === $this->servercs) {
+      $this->stream->write(self::MSG_QUERY, $sql);
+    } else{
+      $this->stream->write(self::MSG_QUERY, iconv(\xp::ENCODING, $this->servercs, $sql));
+    }
     $token= $this->read();
 
     // Skip over DONEPROC & DONEINPROC results
@@ -195,11 +203,11 @@ class TdsV5Protocol extends TdsProtocol {
         $this->stream->getShort();
         $nfields= $this->stream->getShort();
         for ($i= 0; $i < $nfields; $i++) {
-          $field= array();
+          $field= ['conv' => $this->servercs];
           if (0 === ($len= $this->stream->getByte())) {
-            $field= array('name' => null);
+            $field['name']= null;
           } else {
-            $field= array('name' => $this->stream->read($len));
+            $field['name']= $this->stream->read($len);
           }
           $field['status']= $this->stream->getByte();
           $this->stream->read(4);              // Skip usertype
@@ -208,7 +216,6 @@ class TdsV5Protocol extends TdsProtocol {
           // Handle column.
           if (self::T_TEXT === $field['type'] || self::T_IMAGE === $field['type']) {
             $field['size']= $this->stream->getLong();
-            $field['conv']= $this->servercs;
             $this->stream->read($this->stream->getShort());
           } else if (self::T_NUMERIC === $field['type'] || self::T_DECIMAL === $field['type']) {
             $field['size']= $this->stream->getByte();
@@ -220,7 +227,6 @@ class TdsV5Protocol extends TdsProtocol {
             $field['size']= self::$fixed[$field['type']];
           } else if (self::T_VARBINARY === $field['type'] || self::T_BINARY === $field['type']) {
             $field['size']= $this->stream->getByte();
-            $field['conv']= $this->servercs;
           } else {
             $field['size']= $this->stream->getByte();
           }
@@ -230,15 +236,14 @@ class TdsV5Protocol extends TdsProtocol {
         }
         return $fields;
       } else if ("\xFD" === $token || "\xFF" === $token || "\xFE" === $token) {   // DONE
-        $meta= $this->stream->get('vstatus/vcmd/Vrowcount', 8);
-        if ($meta['status'] & 0x0001) {
+        if (-1 === ($rows= $this->handleDone())) {
           $token= $this->stream->getToken();
           continue;
         }
         $this->done= true;
-        return $meta['rowcount'];
+        return $rows;
       } else if ("\xE5" === $token) {   // EED (messages or errors)
-        $this->handleExtendedError();
+        $this->handleEED();
         $token= $this->stream->getToken();
       } else if ("\xE3" === $token) {   // ENVCHANGE, e.g. from "use [db]" queries
         $this->envchange();

@@ -2,11 +2,10 @@
 
 use peer\ProtocolException;
 
-
 /**
  * Indicate an error was detected in the protocol
  *
- * @see   xp://rdbms.tds.TdsV7Protocol
+ * @see   xp://rdbms.tds.TdsProtocol
  */
 class TdsProtocolException extends ProtocolException {
   public $number;
@@ -19,16 +18,17 @@ class TdsProtocolException extends ProtocolException {
   /**
    * Constructor
    *
-   * @param   string message
-   * @param   int number
-   * @param   int state
-   * @param   int class
-   * @param   string server
-   * @param   string proc
-   * @param   int line
+   * @param   string $message
+   * @param   int $number
+   * @param   int $state
+   * @param   int $class
+   * @param   string $server
+   * @param   string $proc
+   * @param   int $line
+   * @param   lang.Throwable $cause
    */
-  public function __construct($message, $number= 0, $state= 0, $class= 0, $server= null, $proc= null, $line= 0) {
-    parent::__construct($message);
+  public function __construct($message, $number= 0, $state= 0, $class= 0, $server= null, $proc= null, $line= 0, $cause= null) {
+    parent::__construct($message, $cause);
     $this->number= $number;
     $this->state= $state;
     $this->class= $class;
