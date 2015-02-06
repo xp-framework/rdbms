@@ -58,14 +58,14 @@ class SybaseConnection extends DBConnection {
         $this->dsn->getHost(), 
         $this->dsn->getUser(), 
         $this->dsn->getPassword(),
-        'iso_1'
+        'utf8'
       );
     } else {
       $this->handle= sybase_connect(
         $this->dsn->getHost(), 
         $this->dsn->getUser(), 
         $this->dsn->getPassword(),
-        'iso_1'
+        'utf8'
       );
     }
 
