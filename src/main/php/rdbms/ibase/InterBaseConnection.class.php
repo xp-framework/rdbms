@@ -52,14 +52,14 @@ class InterBaseConnection extends DBConnection {
         $db, 
         $this->dsn->getUser(), 
         $this->dsn->getPassword(),
-        'ISO8859_1'
+        'UTF_8'
       );
     } else {
       $this->handle= ibase_connect(
         $db, 
         $this->dsn->getUser(), 
         $this->dsn->getPassword(),
-        'ISO8859_1'
+        'UTF_8'
       );
     }
 
