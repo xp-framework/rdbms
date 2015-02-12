@@ -3,6 +3,10 @@ RDBMS support for the XP Framework: MySQL, Sybase, MSSQL, PostgreSQL, SQLite3, I
 
 ## ?.?.? / ????-??-??
 
+## 6.1.1 / 2015-02-12
+
+* Changed dependency to use XP ~6.0 (instead of dev-master) - @thekid
+
 ## 6.1.0 / 2015-02-06
 
 * Fixed Sybase still using iso-8859-1 when using `ext/sybase_ct` drivers.
