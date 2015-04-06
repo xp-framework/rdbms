@@ -122,7 +122,7 @@ class MsSQLDBAdapter extends DBAdapter {
         $record['scale']
       ));
     }
-    delete($q);
+    unset($q);
       
     // This query is taken in part from sp_help (part of core sps from
     // SQL Server/11.0.3.3 ESD#6/P-FREE/Linux Intel/Linux 2.2.14 
@@ -248,7 +248,7 @@ class MsSQLDBAdapter extends DBAdapter {
       }
       
     } catch (\rdbms\SQLException $e) {
-      delete($t);
+      unset($t);
     } ensure($e); {
       $this->dropTemporaryIndexesTable();
       if ($e) throw $e;
@@ -269,7 +269,7 @@ class MsSQLDBAdapter extends DBAdapter {
       $this->prepareTemporaryIndexesTable();
       $t= $this->dbTableObjectFor($table, $database);
     } catch (\rdbms\SQLException $e) {
-      delete($t);
+      unset($t);
     } ensure($e); {
       $this->dropTemporaryIndexesTable();
       if ($e) throw $e;
