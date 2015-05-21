@@ -103,7 +103,7 @@ class TdsV5Protocol extends TdsProtocol {
     $charset= $charset ?: 'utf8';
     $packetSize= (string)$this->defaultPacketSize();
     $packet= pack(
-      'a30Ca30Ca30Ca30CCCCCCCCCCx7a30Ca30Cx2a253CCCCCa10CCCCCCCCa30CCnx8nCa30CCa6Cx8',
+      'a30Ca30Ca30Ca30CCCCCCCCCCx7a30Ca30CCCa253CCCCCa10CCCCCCCCa30CCnCx8na30CCa6Cx4',
       'localhost', min(30, strlen('localhost')),
       $user, min(30, strlen($user)),
       $password, min(30, strlen($password)),
@@ -119,9 +119,10 @@ class TdsV5Protocol extends TdsProtocol {
       0x00,       // Type of network connection
       $this->getClassName(), min(30, strlen($this->getClassName())),
       'localhost', min(30, strlen('localhost')),
-      $password, strlen($password)+ 2,    // Remote passwords
+      0, strlen($password),               // Remote passwords
+      $password, strlen($password)+ 2,    // Long version of password
       0x05, 0x00, 0x00, 0x00,             // TDS Version
-      'Ct-Library', strlen('Ct-Library'), // Client library name
+      'XP:rdbms', strlen('XP:rdbms'),     // Client library name
       0x06, 0x00, 0x00, 0x00,             // Prog version
       0x00,                               // Auto convert short
       0x0D,                               // Type of flt4
@@ -136,16 +137,8 @@ class TdsV5Protocol extends TdsProtocol {
       $packetSize, strlen($packetSize)    // Network packet size (in text!)
     );
 
-    // Capabilities
-    $capabilities= pack(
-      'CnCCCCCCCCCCCCCCCCCCCCCCCC',
-      0xE2,                               // TDS_CAPABILITY_TOKEN
-      24,                                 // Length
-      0x01, 0x0C,                         // TDS_CAP_REQUEST & Length
-      0x07, 0x4F, 0xFF, 0x85, 0xEE, 0xEF, 0x65, 0x7F, 0xFF, 0xFF, 0xFF, 0xD6,
-      0x02, 0x08,                         // TDS_CAP_RESPONSE & Length
-      0x00, 0x06, 0x80, 0x06, 0x48, 0x00, 0x00, 0x00
-    );
+    // Request and response capabilities
+    $capabilities= "\342\0\30\1\f\7\315\377\205\356\357e\177\377\377\377\326\2\10\0\6\200\6H\0\0\0";
 
     // Login
     $this->stream->write(self::MSG_LOGIN, $packet.$capabilities);
@@ -164,6 +157,40 @@ class TdsV5Protocol extends TdsProtocol {
       $this->servercs= strtr($new, array('iso_' => 'iso-8859-', 'utf8' => 'utf-8'));
     }
     // DEBUG Console::writeLine($initial ? 'I' : 'E', $type, ' ', $old, ' -> ', $new);
+  }
+
+  /**
+   * Reads data type descriptions for both TDS_ROWFMT and TDS_ROWFMT2
+   *
+   * @param  [:var] $field
+   * @return [:var]
+   */
+  private function fieldOf($field) {
+    $this->stream->read(4);     // Skip usertype
+    $field['type']= $this->stream->getByte();
+
+    if (self::T_TEXT === $field['type'] || self::T_IMAGE === $field['type']) {
+      $field['size']= $this->stream->getLong();
+      $this->stream->read($this->stream->getShort());
+    } else if (self::T_NUMERIC === $field['type'] || self::T_DECIMAL === $field['type']) {
+      $field['size']= $this->stream->getByte();
+      $field['prec']= $this->stream->getByte();
+      $field['scale']= $this->stream->getByte();
+    } else if (self::T_LONGBINARY === $field['type'] || self::XT_CHAR === $field['type']) {
+      $field['size']= $this->stream->getLong() / 2;
+    } else if (isset(self::$fixed[$field['type']])) {
+      $field['size']= self::$fixed[$field['type']];
+    } else if (self::T_UNITEXT === $field['type']) {
+      $field['size']= $this->stream->getByte();
+      $this->stream->read(5);       // XXX Collation?
+    } else if (self::T_VARBINARY === $field['type'] || self::T_BINARY === $field['type']) {
+      $field['size']= $this->stream->getByte();
+    } else {
+      $field['size']= $this->stream->getByte();
+    }
+
+    $field['locale']= $this->stream->getByte();
+    return $field;
   }
 
   /**
@@ -198,41 +225,32 @@ class TdsV5Protocol extends TdsProtocol {
       } else if ("\xA3" === $token || "\x23" === $token || "\x10" === $token) {
         $token= $this->read();                 // TDS_CURDECLARE*
         continue;
-      } else if ("\xEE" === $token) {          // TDS_ROWFMT
-        $fields= array();
-        $this->stream->getShort();
+      } else if ("\x61" === $token) {          // TDS_ROWFMT2
+        $this->stream->read(4);
         $nfields= $this->stream->getShort();
+        $fields= [];
         for ($i= 0; $i < $nfields; $i++) {
-          $field= ['conv' => $this->servercs];
-          if (0 === ($len= $this->stream->getByte())) {
-            $field['name']= null;
-          } else {
-            $field['name']= $this->stream->read($len);
-          }
-          $field['status']= $this->stream->getByte();
-          $this->stream->read(4);              // Skip usertype
-          $field['type']= $this->stream->getByte();
-
-          // Handle column.
-          if (self::T_TEXT === $field['type'] || self::T_IMAGE === $field['type']) {
-            $field['size']= $this->stream->getLong();
-            $this->stream->read($this->stream->getShort());
-          } else if (self::T_NUMERIC === $field['type'] || self::T_DECIMAL === $field['type']) {
-            $field['size']= $this->stream->getByte();
-            $field['prec']= $this->stream->getByte();
-            $field['scale']= $this->stream->getByte();
-          } else if (self::T_LONGBINARY === $field['type'] || self::XT_CHAR === $field['type']) {
-            $field['size']= $this->stream->getLong() / 2;
-          } else if (isset(self::$fixed[$field['type']])) {
-            $field['size']= self::$fixed[$field['type']];
-          } else if (self::T_VARBINARY === $field['type'] || self::T_BINARY === $field['type']) {
-            $field['size']= $this->stream->getByte();
-          } else {
-            $field['size']= $this->stream->getByte();
-          }
-
-          $field['locale']= $this->stream->getByte();
-          $fields[]= $field;
+          $fields[]= $this->fieldOf([
+            'conv'    => $this->servercs,
+            'label'   => $this->stream->read($this->stream->getByte()),
+            'catalog' => $this->stream->read($this->stream->getByte()),
+            'schema'  => $this->stream->read($this->stream->getByte()),
+            'table'   => $this->stream->read($this->stream->getByte()),
+            'name'    => $this->stream->read($this->stream->getByte()),
+            'status'  => $this->stream->getLong()
+          ]);
+        }
+        return $fields;
+      } else if ("\xEE" === $token) {          // TDS_ROWFMT
+        $this->stream->read(1);
+        $nfields= $this->stream->getShort();
+        $fields= [];
+        for ($i= 0; $i < $nfields; $i++) {
+          $fields[]= $this->fieldOf([
+            'conv'    => $this->servercs,
+            'name'    => $this->stream->read($this->stream->getByte()),
+            'status'  => $this->stream->getByte()
+          ]);
         }
         return $fields;
       } else if ("\xFD" === $token || "\xFF" === $token || "\xFE" === $token) {   // DONE
@@ -249,7 +267,7 @@ class TdsV5Protocol extends TdsProtocol {
         $this->envchange();
         return null;
       } else {
-        throw new \TdsProtocolException(
+        throw new TdsProtocolException(
           sprintf('Unexpected token 0x%02X', ord($token)),
           0,    // Number
           0,    // State
