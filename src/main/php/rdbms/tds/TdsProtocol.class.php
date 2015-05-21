@@ -150,6 +150,37 @@ abstract class TdsProtocol extends \lang\Object {
         return $this->toNumber($stream->getInt64(), 0, 0);
       }
     }');
+    self::$recordsFor[0][self::T_SINT1]= newinstance('rdbms.tds.TdsRecord', array(), '{
+      public function unmarshal($stream, $field, $records) {
+        return $stream->getByte();
+      }
+    }');
+    self::$recordsFor[0][self::T_UINT2]= newinstance('rdbms.tds.TdsRecord', array(), '{
+      public function unmarshal($stream, $field, $records) {
+        return $stream->getShort();
+      }
+    }');
+    self::$recordsFor[0][self::T_UINT4]= newinstance('rdbms.tds.TdsRecord', array(), '{
+      public function unmarshal($stream, $field, $records) {
+        return $stream->getLong();
+      }
+    }');
+    self::$recordsFor[0][self::T_UINT8]= newinstance('rdbms.tds.TdsRecord', array(), '{
+      public function unmarshal($stream, $field, $records) {
+        return $this->toNumber($stream->getUInt64(), 0, 0);
+      }
+    }');
+    self::$recordsFor[0][self::T_UINTN]= newinstance('rdbms.tds.TdsRecord', array(), '{
+      public function unmarshal($stream, $field, $records) {
+        $len= isset($field["len"]) ? $field["len"] : $stream->getByte();
+        switch ($len) {
+          case 2: return $stream->getShort();
+          case 4: return $stream->getLong();
+          case 8: $this->toNumber($stream->getUInt64(), 0, 0);
+          default: return null;
+        }
+      }
+    }');
     self::$recordsFor[0][self::T_FLTN]= newinstance('rdbms.tds.TdsRecord', array(), '{
       public function unmarshal($stream, $field, $records) {
         $len= isset($field["len"]) ? $field["len"] : $stream->getByte();
