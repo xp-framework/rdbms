@@ -201,6 +201,11 @@ abstract class TdsProtocol extends \lang\Object {
         return $this->toFloat($stream->read(4));
       }
     }');
+    self::$recordsFor[0][self::T_DATE]= newinstance('rdbms.tds.TdsRecord', array(), '{
+      public function unmarshal($stream, $field, $records) {
+        return $this->toDate($stream->getLong(), 0);
+      }
+    }');
     self::$recordsFor[0][self::T_DATETIME]= newinstance('rdbms.tds.TdsRecord', array(), '{
       public function unmarshal($stream, $field, $records) {
         return $this->toDate($stream->getLong(), $stream->getLong());
