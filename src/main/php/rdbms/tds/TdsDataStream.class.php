@@ -167,8 +167,18 @@ class TdsDataStream extends \lang\Object {
    * @return  string
    */
   public function getInt64() {
-    $u= unpack('VV', $this->read(8));
-    return bcadd($u[1], bcmul($u[2] + $u[1] < 0, "4294967296", 0), 0);
+    $u= unpack('Vh/Vl', $this->read(8));
+    return bcadd($u['h'], bcmul($u['l'] + $u['h'] < 0, '4294967296', 0), 0);
+  }
+
+  /**
+   * Get an unsigned 64-bit integer (8 bytes)
+   *
+   * @return  string
+   */
+  public function getUInt64() {
+    $u= unpack('Vh/Vl', $this->read(8));
+    return bcadd(sprintf('%u', $u['h']), bcmul(sprintf('%u', $u['l']), '4294967296', 0), 0);
   }
 
   /**
