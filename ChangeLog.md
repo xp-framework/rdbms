@@ -3,6 +3,12 @@ RDBMS support for the XP Framework: MySQL, Sybase, MSSQL, PostgreSQL, SQLite3, I
 
 ## ?.?.? / ????-??-??
 
+## 6.2.0 / 2015-05-21
+
+* Changed TDS 5.0 protocol to support long identifiers with Sybase 15.
+  Fixes `The identifier ... is too long. Maximum length is 30`
+  (@thekid)
+
 ## 6.1.1 / 2015-02-12
 
 * Changed dependency to use XP ~6.0 (instead of dev-master) - @thekid
