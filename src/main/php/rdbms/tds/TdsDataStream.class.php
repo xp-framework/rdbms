@@ -103,7 +103,7 @@ class TdsDataStream extends \lang\Object {
       $chunk= substr($arg, $offset, $length- 8);
       $packet= pack('CCnnCc', $type, $status, $length, 0x0000, $this->pkt, 0).$chunk;
 
-      // DEBUG Console::$err->writeLine("W->\n".self::dump($packet));
+      // \util\cmd\Console::$err->writeLine("W->\n".self::dump($packet));
 
       $this->sock->write($packet);
       $offset+= $length- 8;
@@ -237,7 +237,7 @@ class TdsDataStream extends \lang\Object {
 
       $packet= $this->readFully($this->header['length'] - 8);
 
-      // DEBUG Console::$err->writeLine("R->\n".self::dump($bytes.$packet));
+      // \util\cmd\Console::$err->writeLine("R->\n".self::dump($bytes.$packet));
 
       $this->buffer.= $packet;
     }
@@ -253,12 +253,14 @@ class TdsDataStream extends \lang\Object {
    * @throws  rdbms.tds.TdsProtocolException
    */
   public function read($length) {
-    $length= $this->read0($length);
-
-    // Return chunk of specified length
-    $chunk= substr($this->buffer, 0, $length);
-    $this->buffer= substr($this->buffer, $length);
-    return (string)$chunk;
+    if (0 === $length) {
+      return null;
+    } else {          // Return chunk of specified length
+      $length= $this->read0($length);
+      $chunk= substr($this->buffer, 0, $length);
+      $this->buffer= substr($this->buffer, $length);
+      return (string)$chunk;
+    }
   }
 
   /**
