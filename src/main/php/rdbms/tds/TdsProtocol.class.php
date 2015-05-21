@@ -436,6 +436,9 @@ abstract class TdsProtocol extends \lang\Object {
           $this->cancel();
           throw $this->exception('Negotiation not yet implemented');
         }
+      } else if ("\xE2" === $token) {   // TDS_CAPABILITY
+        $meta= $this->stream->get('nlength', 2);
+        $this->stream->read($meta['length']);
       } else if ("\xE3" === $token) {   // TDS_ENVCHANGE
         $this->envchange();
       } else if ("\xAB" === $token) {
@@ -583,7 +586,7 @@ abstract class TdsProtocol extends \lang\Object {
       }
     } while ($continue);
     
-    $record= array();
+    $record= [];
     foreach ($fields as $i => $field) {
       $type= $field['type'];
       if (!isset($this->records[$type])) {
