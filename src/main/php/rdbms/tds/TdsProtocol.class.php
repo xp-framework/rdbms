@@ -276,6 +276,20 @@ abstract class TdsProtocol extends \lang\Object {
         return $stream->getByte();
       }
     }');
+    self::$recordsFor[0][self::T_UNITEXT]= newinstance('rdbms.tds.TdsRecord', array(), '{
+      public function unmarshal($stream, $field, $records) {
+        $ptr= $stream->getByte();
+        $stream->read($ptr + 8);    // Skip TEXTPTR + 8 Bytes TIMESTAMP
+
+        $len= $stream->getLong();
+        if ($len === 0) {
+          return $field["status"] & 0x20 ? null : "";
+        } else {
+          $chunk= $stream->read($len);
+          return iconv("utf-16le", \xp::ENCODING, $chunk);
+        }
+      }
+    }');
   }
 
   /**
