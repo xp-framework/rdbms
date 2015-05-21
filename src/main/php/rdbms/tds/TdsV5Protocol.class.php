@@ -166,6 +166,8 @@ class TdsV5Protocol extends TdsProtocol {
    * @return [:var]
    */
   private function fieldOf($field) {
+    $field['name']= $field['label'] ?: $field['column'];
+
     $this->stream->read(4);     // Skip usertype
     $field['type']= $this->stream->getByte();
 
@@ -236,7 +238,7 @@ class TdsV5Protocol extends TdsProtocol {
             'catalog' => $this->stream->read($this->stream->getByte()),
             'schema'  => $this->stream->read($this->stream->getByte()),
             'table'   => $this->stream->read($this->stream->getByte()),
-            'name'    => $this->stream->read($this->stream->getByte()),
+            'column'  => $this->stream->read($this->stream->getByte()),
             'status'  => $this->stream->getLong()
           ]);
         }
@@ -248,7 +250,8 @@ class TdsV5Protocol extends TdsProtocol {
         for ($i= 0; $i < $nfields; $i++) {
           $fields[]= $this->fieldOf([
             'conv'    => $this->servercs,
-            'name'    => $this->stream->read($this->stream->getByte()),
+            'label'   => null,
+            'column'  => $this->stream->read($this->stream->getByte()),
             'status'  => $this->stream->getByte()
           ]);
         }
