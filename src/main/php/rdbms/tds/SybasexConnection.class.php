@@ -1,7 +1,8 @@
 <?php namespace rdbms\tds;
 
 use rdbms\sybase\SybaseDialect;
-
+use rdbms\DriverManager;
+use lang\XPClass;
 
 /**
  * Connection to Sybase Databases via TDS 5.0
@@ -13,13 +14,13 @@ class SybasexConnection extends TdsConnection {
 
   static function __static() {
     if (strncasecmp(PHP_OS, 'Win', 3) === 0) {
-      self::$lookup= \lang\XPClass::forName('rdbms.tds.SqlIniLookup')->newInstance();
+      self::$lookup= XPClass::forName('rdbms.tds.SqlIniLookup')->newInstance();
     } else if (getenv('SYBASE')) {
-      self::$lookup= \lang\XPClass::forName('rdbms.tds.InterfacesLookup')->newInstance();
+      self::$lookup= XPClass::forName('rdbms.tds.InterfacesLookup')->newInstance();
     } else {
-      self::$lookup= \lang\XPClass::forName('rdbms.tds.FreeTdsLookup')->newInstance();
+      self::$lookup= XPClass::forName('rdbms.tds.FreeTdsLookup')->newInstance();
     }
-    \rdbms\DriverManager::register('sybase+x', new \lang\XPClass(__CLASS__));
+    DriverManager::register('sybase+x', new XPClass(__CLASS__));
   }
 
   /**
