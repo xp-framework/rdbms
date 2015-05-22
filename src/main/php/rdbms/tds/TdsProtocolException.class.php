@@ -1,13 +1,11 @@
 <?php namespace rdbms\tds;
 
-use peer\ProtocolException;
-
 /**
  * Indicate an error was detected in the protocol
  *
  * @see   xp://rdbms.tds.TdsProtocol
  */
-class TdsProtocolException extends ProtocolException {
+class TdsProtocolException extends \peer\ProtocolException {
   public $number;
   public $state;
   public $class;

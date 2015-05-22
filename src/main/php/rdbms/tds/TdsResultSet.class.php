@@ -1,11 +1,10 @@
 <?php namespace rdbms\tds;
 
-
+use rdbms\SQLException;
+use peer\ProtocolException;
 
 /**
- * Result set
- *
- * @purpose  Resultset wrapper
+ * TDS result set
  */
 class TdsResultSet extends AbstractTdsResultSet {
 
@@ -17,7 +16,7 @@ class TdsResultSet extends AbstractTdsResultSet {
    * @throws  rdbms.SQLException
    */
   public function seek($offset) { 
-    throw new \rdbms\SQLException('Cannot seek to offset '.$offset);
+    throw new SQLException('Cannot seek to offset '.$offset);
   }
   
   /**
@@ -34,8 +33,8 @@ class TdsResultSet extends AbstractTdsResultSet {
         $this->handle= null;
         return false;
       }
-    } catch (\peer\ProtocolException $e) {
-      throw new \rdbms\SQLException('Failed reading row', $e);
+    } catch (ProtocolException $e) {
+      throw new SQLException('Failed reading row', $e);
     }
     
     return $this->record($record, $field);

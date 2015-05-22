@@ -1,5 +1,9 @@
 <?php namespace rdbms\tds;
 
+use peer\ProtocolException;
+use rdbms\SQLException;
+use util\TimeZone;
+
 /**
  * Result set
  *
@@ -17,14 +21,14 @@ class TdsBufferedResultSet extends AbstractTdsResultSet {
    * @param   [:var] fields
    * @param   util.TimeZone tz
    */
-  public function __construct($result, $fields, \util\TimeZone $tz= null) {
+  public function __construct($result, $fields, TimeZone $tz= null) {
     parent::__construct($result, $fields, $tz);
     do {
       try {
         if (null === ($record= $this->handle->fetch($this->fields))) break;
         $this->records[]= $record;
-      } catch (\peer\ProtocolException $e) {
-        $this->records[]= new \rdbms\SQLException('Failed reading rows', $e);
+      } catch (ProtocolException $e) {
+        $this->records[]= new SQLException('Failed reading rows', $e);
       }
     } while (1);
     $this->length= sizeof($this->records);
@@ -39,7 +43,7 @@ class TdsBufferedResultSet extends AbstractTdsResultSet {
    */
   public function seek($offset) { 
     if ($offset < 0 || $offset >= $this->length) {
-      throw new \rdbms\SQLException('Cannot seek to offset '.$offset.', out of bounds');
+      throw new SQLException('Cannot seek to offset '.$offset.', out of bounds');
     }
     $this->offset= $offset;
   }
@@ -56,7 +60,7 @@ class TdsBufferedResultSet extends AbstractTdsResultSet {
     if ($this->offset >= $this->length) return false;
     
     $record= $this->records[$this->offset++];
-    if ($record instanceof \rdbms\SQLException) {
+    if ($record instanceof SQLException) {
       throw $record;
     } else {
       return $this->record($record, $field);

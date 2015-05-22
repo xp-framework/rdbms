@@ -1,7 +1,8 @@
 <?php namespace rdbms\tds;
 
 use rdbms\mssql\MsSQLDialect;
-
+use rdbms\DriverManager;
+use lang\XPClass;
 
 /**
  * Connection to MSSQL Databases via TDS 7.0
@@ -11,7 +12,7 @@ use rdbms\mssql\MsSQLDialect;
 class MsSQLxConnection extends TdsConnection {
 
   static function __static() {
-    \rdbms\DriverManager::register('mssql+x', new \lang\XPClass(__CLASS__));
+    DriverManager::register('mssql+x', new XPClass(__CLASS__));
   }
   
   /**

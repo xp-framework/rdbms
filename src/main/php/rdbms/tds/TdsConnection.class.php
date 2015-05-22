@@ -1,7 +1,14 @@
 <?php namespace rdbms\tds;
 
+use peer\Socket;
+use io\IOException;
 use rdbms\DBConnection;
 use rdbms\Transaction;
+use rdbms\DBEvent;
+use rdbms\SQLConnectException;
+use rdbms\SQLStateException;
+use rdbms\SQLStatementFailedException;
+use rdbms\SQLDeadlockException;
 use rdbms\StatementFormatter;
 use rdbms\mssql\MsSQLDialect;
 
@@ -22,7 +29,7 @@ abstract class TdsConnection extends DBConnection {
   public function __construct($dsn) { 
     parent::__construct($dsn);
     $this->formatter= new StatementFormatter($this, $this->getDialect());
-    $this->handle= $this->getProtocol(new \peer\Socket($this->dsn->getHost(), $this->dsn->getPort(1433)));
+    $this->handle= $this->getProtocol(new Socket($this->dsn->getHost(), $this->dsn->getPort(1433)));
   }
   
   /**
@@ -51,18 +58,18 @@ abstract class TdsConnection extends DBConnection {
     if ($this->handle->connected) return true;                    // Already connected
     if (!$reconnect && (null === $this->handle->connected)) return false;   // Previously failed connecting
 
-    $this->_obs && $this->notifyObservers(new \rdbms\DBEvent(\rdbms\DBEvent::CONNECT, $reconnect));
+    $this->_obs && $this->notifyObservers(new DBEvent(DBEvent::CONNECT, $reconnect));
     try {
       $this->handle->connect($this->dsn->getUser(), $this->dsn->getPassword(), $this->dsn->getProperty('charset', null));
-      $this->_obs && $this->notifyObservers(new \rdbms\DBEvent(\rdbms\DBEvent::CONNECTED, $reconnect));
+      $this->_obs && $this->notifyObservers(new DBEvent(DBEvent::CONNECTED, $reconnect));
     } catch (\io\IOException $e) {
       $this->handle->connected= null;
-      $this->_obs && $this->notifyObservers(new \rdbms\DBEvent(\rdbms\DBEvent::CONNECTED, $reconnect));
+      $this->_obs && $this->notifyObservers(new DBEvent(DBEvent::CONNECTED, $reconnect));
       $message= '';
       do {
         $message.= $e->getMessage().': ';
       } while ($e= $e->getCause());
-      throw new \rdbms\SQLConnectException(substr($message, 0, -2), $this->dsn);
+      throw new SQLConnectException(substr($message, 0, -2), $this->dsn);
     }
 
     return parent::connect();
@@ -90,8 +97,8 @@ abstract class TdsConnection extends DBConnection {
     try {
       $this->handle->exec('use '.$db);
       return true;
-    } catch (\io\IOException $e) {
-      throw new \rdbms\SQLStatementFailedException($e->getMessage());
+    } catch (IOException $e) {
+      throw new SQLStatementFailedException($e->getMessage());
     }
   }
 
@@ -102,7 +109,7 @@ abstract class TdsConnection extends DBConnection {
    */
   public function identity($field= null) {
     $i= $this->query('select @@identity as xp_id')->next('xp_id');
-    $this->_obs && $this->notifyObservers(new \rdbms\DBEvent(\rdbms\DBEvent::IDENTITY, $i));
+    $this->_obs && $this->notifyObservers(new DBEvent(DBEvent::IDENTITY, $i));
     return $i;
   }
 
@@ -125,27 +132,27 @@ abstract class TdsConnection extends DBConnection {
    */
   protected function query0($sql, $buffered= true) {
     if (!$this->handle->connected) {
-      if (!($this->flags & DB_AUTOCONNECT)) throw new \rdbms\SQLStateException('Not connected');
+      if (!($this->flags & DB_AUTOCONNECT)) throw new SQLStateException('Not connected');
       $c= $this->connect();
       
       // Check for subsequent connection errors
-      if (false === $c) throw new \rdbms\SQLStateException('Previously failed to connect.');
+      if (false === $c) throw new SQLStateException('Previously failed to connect.');
     }
     
     try {
       $this->handle->ready() || $this->handle->cancel();
       $result= $this->handle->query($sql);
-    } catch (\TdsProtocolException $e) {
+    } catch (TdsProtocolException $e) {
       $message= $e->getMessage().' (number '.$e->number.')';
       switch ($e->number) {
         case 1205: // Deadlock
-          throw new \rdbms\SQLDeadlockException($message, $sql, $e->number);
+          throw new SQLDeadlockException($message, $sql, $e->number);
         
         default:   // Other error
-          throw new \rdbms\SQLStatementFailedException($message, $sql, $e->number);
+          throw new SQLStatementFailedException($message, $sql, $e->number);
       }
-    } catch (\io\IOException $e) {
-      throw new \rdbms\SQLStatementFailedException($e->getMessage());
+    } catch (IOException $e) {
+      throw new SQLStatementFailedException($e->getMessage());
     }
     
     if (!is_array($result)) {

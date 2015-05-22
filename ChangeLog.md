@@ -3,7 +3,8 @@ RDBMS support for the XP Framework: MySQL, Sybase, MSSQL, PostgreSQL, SQLite3, I
 
 ## ?.?.? / ????-??-??
 
-* Fixed TDS_ROWFMT handling - @thekid
+* Fixed incorrect references to TDS protocol exception class - @thekid
+* TDS 5.0 protocol: Fixed TDS_ROWFMT handling - @thekid
 
 ## 6.2.0 / 2015-05-21
 

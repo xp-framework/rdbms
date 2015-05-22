@@ -1,5 +1,7 @@
 <?php namespace rdbms\tds;
 
+use lang\IllegalArgumentException;
+
 /**
  * A TDS data stream
  *
@@ -11,7 +13,7 @@ class TdsDataStream extends \lang\Object {
   protected $packetSize= 0;
   protected $sock= null;
   protected $buffer= '';
-  protected $header= array('status' => 0, 'length' => -1);
+  protected $header= ['status' => 0, 'length' => -1];
 
   /**
    * Creates a new data stream on a given socket with a given packet size
@@ -21,7 +23,7 @@ class TdsDataStream extends \lang\Object {
    */
   public function __construct($sock, $packetSize= 512) {
     if ($packetSize < 9) {
-      throw new \lang\IllegalArgumentException('Packet size must be at least 9');
+      throw new IllegalArgumentException('Packet size must be at least 9');
     }
     $this->sock= $sock;
     $this->packetSize= $packetSize;
@@ -70,6 +72,7 @@ class TdsDataStream extends \lang\Object {
   /**
    * Connect
    *
+   * @return void
    */
   public function connect() {
     $this->sock->isConnected() || $this->sock->connect();
@@ -78,6 +81,7 @@ class TdsDataStream extends \lang\Object {
   /**
    * Close
    *
+   * @return void
    */
   public function close() {
     $this->sock->isConnected() && $this->sock->close();

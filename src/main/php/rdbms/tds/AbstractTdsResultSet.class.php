@@ -1,13 +1,10 @@
 <?php namespace rdbms\tds;
 
-use rdbms\ResultSet;
-
-
 /**
  * Abstract base class
  *
  */
-abstract class AbstractTdsResultSet extends ResultSet {
+abstract class AbstractTdsResultSet extends \rdbms\ResultSet {
  
   /**
    * Returns a record
@@ -17,7 +14,7 @@ abstract class AbstractTdsResultSet extends ResultSet {
    * @return  [:var] record
    */
   protected function record($record, $field= null) {
-    $return= array();
+    $return= [];
     foreach ($this->fields as $i => $info) {
       $return[$info['name']] = $record[$i];
     }

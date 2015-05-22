@@ -61,13 +61,13 @@ class FreeTdsLookup extends \lang\Object implements ConnectionLookup {
    * @return  io.File
    */
   protected function locateConf() {
-    foreach (array(
+    foreach ([
       getenv('FREETDSCONF'),
       getenv('HOME').'/.freetds.conf',
       '/etc/freetds/freetds.conf',
       '/etc/freetds.conf',
       '/usr/local/etc/freetds.conf'
-    ) as $location) {
+    ] as $location) {
       if (empty($location)) continue;
       $f= new File($location);
       if ($f->exists()) return $f;

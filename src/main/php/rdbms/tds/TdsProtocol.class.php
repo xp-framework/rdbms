@@ -1,6 +1,7 @@
 <?php namespace rdbms\tds;
 
 use peer\Socket;
+use peer\ProtocolException;
 
 /**
  * TDS protocol implementation
@@ -539,7 +540,7 @@ abstract class TdsProtocol extends \lang\Object {
     // Check for message type
     if (self::MSG_REPLY !== $type) {
       $this->cancel();
-      throw new \peer\ProtocolException('Unknown message type '.$type);
+      throw new ProtocolException('Unknown message type '.$type);
     }
 
     // Handle errors - see also 2.2.5.7: Data Buffer Stream Tokens
