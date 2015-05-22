@@ -1,6 +1,8 @@
 <?php namespace rdbms\unittest;
  
 use rdbms\DBConnection;
+use util\Date;
+use lang\types\String;
 
 /**
  * Test rdbms tokenizer
@@ -149,7 +151,7 @@ abstract class TokenizerTest extends \unittest\TestCase {
   public function stringTypeToken() {
     $this->assertEquals(
       'select \'"Hello", Tom\'\'s friend said\' as strval',
-      $this->fixture->prepare('select %s as strval', new \lang\types\String('"Hello", Tom\'s friend said'))
+      $this->fixture->prepare('select %s as strval', new String('"Hello", Tom\'s friend said'))
     );
   }
 
@@ -163,7 +165,7 @@ abstract class TokenizerTest extends \unittest\TestCase {
 
   #[@test]
   public function dateToken() {
-    $t= new \util\Date('1977-12-14');
+    $t= new Date('1977-12-14');
     $this->assertEquals(
       "select * from news where date= '1977-12-14 00:00:00'",
       $this->fixture->prepare('select * from news where date= %s', $t)
@@ -172,7 +174,7 @@ abstract class TokenizerTest extends \unittest\TestCase {
 
   #[@test]
   public function timeStampToken() {
-    $t= create(new \util\Date('1977-12-14'))->getTime();
+    $t= create(new Date('1977-12-14'))->getTime();
     $this->assertEquals(
       "select * from news where created= '1977-12-14 00:00:00'",
       $this->fixture->prepare('select * from news where created= %u', $t)
@@ -201,8 +203,8 @@ abstract class TokenizerTest extends \unittest\TestCase {
 
   #[@test]
   public function dateArrayToken() {
-    $d1= new \util\Date('1977-12-14');
-    $d2= new \util\Date('1977-12-15');
+    $d1= new Date('1977-12-14');
+    $d2= new Date('1977-12-15');
     $this->assertEquals(
       "select * from news where created in ('1977-12-14 00:00:00', '1977-12-15 00:00:00')",
       $this->fixture->prepare('select * from news where created in (%s)', array($d1, $d2))
