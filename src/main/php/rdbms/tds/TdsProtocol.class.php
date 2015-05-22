@@ -13,12 +13,12 @@ use peer\Socket;
 abstract class TdsProtocol extends \lang\Object {
   protected $stream= null;
   protected $done= false;
-  protected $records= array();
+  protected $records= [];
   protected $messages= [];
   public $connected= false;
 
   // Record handler cache per base class implementation
-  protected static $recordsFor= array();
+  protected static $recordsFor= [];
 
   // Messages
   const MSG_QUERY    = 0x1;
@@ -77,7 +77,7 @@ abstract class TdsProtocol extends \lang\Object {
   const T_VARIANT    = 0x62;
   const T_SINT8      = 0xBF;
 
-  protected static $fixed= array(
+  protected static $fixed= [
     self::T_INT1      => 1,
     self::T_INT2      => 2,
     self::T_INT4      => 4,
@@ -96,10 +96,10 @@ abstract class TdsProtocol extends \lang\Object {
     self::T_UINT4     => 3,
     self::T_UINT8     => 8,
     self::T_SINT8     => 8,
-  );
+  ];
 
   static function __static() {
-    self::$recordsFor[0][self::T_VARCHAR]= newinstance('rdbms.tds.TdsRecord', array(), '{
+    self::$recordsFor[0][self::T_VARCHAR]= newinstance('rdbms.tds.TdsRecord', [], '{
       public function unmarshal($stream, $field, $records) {
         $len= $stream->getByte();
         if (0 === $len) {
@@ -111,14 +111,14 @@ abstract class TdsProtocol extends \lang\Object {
         }
       }
     }');
-    self::$recordsFor[0][self::XT_VARCHAR]= newinstance('rdbms.tds.TdsRecord', array(), '{
+    self::$recordsFor[0][self::XT_VARCHAR]= newinstance('rdbms.tds.TdsRecord', [], '{
       public function unmarshal($stream, $field, $records) {
         $len= $stream->getShort();
         return 0xFFFF === $len ? null : $stream->read($len);
       }
     }');
     self::$recordsFor[0][self::XT_NVARCHAR]= self::$recordsFor[0][self::XT_VARCHAR];
-    self::$recordsFor[0][self::T_INTN]= newinstance('rdbms.tds.TdsRecord', array(), '{
+    self::$recordsFor[0][self::T_INTN]= newinstance('rdbms.tds.TdsRecord', [], '{
       public function unmarshal($stream, $field, $records) {
         $len= isset($field["len"]) ? $field["len"] : $stream->getByte();
         switch ($len) {
@@ -130,47 +130,47 @@ abstract class TdsProtocol extends \lang\Object {
         }
       }
     }');
-    self::$recordsFor[0][self::T_INT1]= newinstance('rdbms.tds.TdsRecord', array(), '{
+    self::$recordsFor[0][self::T_INT1]= newinstance('rdbms.tds.TdsRecord', [], '{
       public function unmarshal($stream, $field, $records) {
         return $stream->getByte();
       }
     }');
-    self::$recordsFor[0][self::T_INT2]= newinstance('rdbms.tds.TdsRecord', array(), '{
+    self::$recordsFor[0][self::T_INT2]= newinstance('rdbms.tds.TdsRecord', [], '{
       public function unmarshal($stream, $field, $records) {
         return $stream->getShort();
       }
     }');
-    self::$recordsFor[0][self::T_INT4]= newinstance('rdbms.tds.TdsRecord', array(), '{
+    self::$recordsFor[0][self::T_INT4]= newinstance('rdbms.tds.TdsRecord', [], '{
       public function unmarshal($stream, $field, $records) {
         return $stream->getLong();
       }
     }');
-    self::$recordsFor[0][self::T_INT8]= newinstance('rdbms.tds.TdsRecord', array(), '{
+    self::$recordsFor[0][self::T_INT8]= newinstance('rdbms.tds.TdsRecord', [], '{
       public function unmarshal($stream, $field, $records) {
         return $this->toNumber($stream->getInt64(), 0, 0);
       }
     }');
-    self::$recordsFor[0][self::T_SINT1]= newinstance('rdbms.tds.TdsRecord', array(), '{
+    self::$recordsFor[0][self::T_SINT1]= newinstance('rdbms.tds.TdsRecord', [], '{
       public function unmarshal($stream, $field, $records) {
         return $stream->getByte();
       }
     }');
-    self::$recordsFor[0][self::T_UINT2]= newinstance('rdbms.tds.TdsRecord', array(), '{
+    self::$recordsFor[0][self::T_UINT2]= newinstance('rdbms.tds.TdsRecord', [], '{
       public function unmarshal($stream, $field, $records) {
         return $stream->getShort();
       }
     }');
-    self::$recordsFor[0][self::T_UINT4]= newinstance('rdbms.tds.TdsRecord', array(), '{
+    self::$recordsFor[0][self::T_UINT4]= newinstance('rdbms.tds.TdsRecord', [], '{
       public function unmarshal($stream, $field, $records) {
         return $stream->getLong();
       }
     }');
-    self::$recordsFor[0][self::T_UINT8]= newinstance('rdbms.tds.TdsRecord', array(), '{
+    self::$recordsFor[0][self::T_UINT8]= newinstance('rdbms.tds.TdsRecord', [], '{
       public function unmarshal($stream, $field, $records) {
         return $this->toNumber($stream->getUInt64(), 0, 0);
       }
     }');
-    self::$recordsFor[0][self::T_UINTN]= newinstance('rdbms.tds.TdsRecord', array(), '{
+    self::$recordsFor[0][self::T_UINTN]= newinstance('rdbms.tds.TdsRecord', [], '{
       public function unmarshal($stream, $field, $records) {
         $len= isset($field["len"]) ? $field["len"] : $stream->getByte();
         switch ($len) {
@@ -181,7 +181,7 @@ abstract class TdsProtocol extends \lang\Object {
         }
       }
     }');
-    self::$recordsFor[0][self::T_FLTN]= newinstance('rdbms.tds.TdsRecord', array(), '{
+    self::$recordsFor[0][self::T_FLTN]= newinstance('rdbms.tds.TdsRecord', [], '{
       public function unmarshal($stream, $field, $records) {
         $len= isset($field["len"]) ? $field["len"] : $stream->getByte();
         switch ($len) {
@@ -191,32 +191,32 @@ abstract class TdsProtocol extends \lang\Object {
         }
       }
     }');
-    self::$recordsFor[0][self::T_FLT8]= newinstance('rdbms.tds.TdsRecord', array(), '{
+    self::$recordsFor[0][self::T_FLT8]= newinstance('rdbms.tds.TdsRecord', [], '{
       public function unmarshal($stream, $field, $records) {
         return $this->toDouble($stream->read(8));
       }
     }');
-    self::$recordsFor[0][self::T_REAL]= newinstance('rdbms.tds.TdsRecord', array(), '{
+    self::$recordsFor[0][self::T_REAL]= newinstance('rdbms.tds.TdsRecord', [], '{
       public function unmarshal($stream, $field, $records) {
         return $this->toFloat($stream->read(4));
       }
     }');
-    self::$recordsFor[0][self::T_DATE]= newinstance('rdbms.tds.TdsRecord', array(), '{
+    self::$recordsFor[0][self::T_DATE]= newinstance('rdbms.tds.TdsRecord', [], '{
       public function unmarshal($stream, $field, $records) {
         return $this->toDate($stream->getLong(), 0);
       }
     }');
-    self::$recordsFor[0][self::T_DATETIME]= newinstance('rdbms.tds.TdsRecord', array(), '{
+    self::$recordsFor[0][self::T_DATETIME]= newinstance('rdbms.tds.TdsRecord', [], '{
       public function unmarshal($stream, $field, $records) {
         return $this->toDate($stream->getLong(), $stream->getLong());
       }
     }');
-    self::$recordsFor[0][self::T_DATETIME4]= newinstance('rdbms.tds.TdsRecord', array(), '{
+    self::$recordsFor[0][self::T_DATETIME4]= newinstance('rdbms.tds.TdsRecord', [], '{
       public function unmarshal($stream, $field, $records) {
         return $this->toDate($stream->getShort(), $stream->getShort() * 60);
       }
     }');
-    self::$recordsFor[0][self::T_DATETIMN]= newinstance('rdbms.tds.TdsRecord', array(), '{
+    self::$recordsFor[0][self::T_DATETIMN]= newinstance('rdbms.tds.TdsRecord', [], '{
       public function unmarshal($stream, $field, $records) {
         $len= isset($field["len"]) ? $field["len"] : $stream->getByte();
         switch ($len) {
@@ -226,7 +226,7 @@ abstract class TdsProtocol extends \lang\Object {
         }
       }
     }');
-    self::$recordsFor[0][self::T_MONEYN]= newinstance('rdbms.tds.TdsRecord', array(), '{
+    self::$recordsFor[0][self::T_MONEYN]= newinstance('rdbms.tds.TdsRecord', [], '{
       public function unmarshal($stream, $field, $records) {
         $len= isset($field["len"]) ? $field["len"] : $stream->getByte();
         switch ($len) {
@@ -236,19 +236,19 @@ abstract class TdsProtocol extends \lang\Object {
         }
       }
     }');
-    self::$recordsFor[0][self::T_MONEY4]= newinstance('rdbms.tds.TdsRecord', array(), '{
+    self::$recordsFor[0][self::T_MONEY4]= newinstance('rdbms.tds.TdsRecord', [], '{
       public function unmarshal($stream, $field, $records) {
         return $this->toMoney($stream->getLong());
       }
     }');
-    self::$recordsFor[0][self::T_MONEY]= newinstance('rdbms.tds.TdsRecord', array(), '{
+    self::$recordsFor[0][self::T_MONEY]= newinstance('rdbms.tds.TdsRecord', [], '{
       public function unmarshal($stream, $field, $records) {
         return $this->toMoney($stream->getLong(), $stream->getLong());
       }
     }');
     self::$recordsFor[0][self::T_CHAR]= self::$recordsFor[0][self::T_VARCHAR];
     self::$recordsFor[0][self::XT_CHAR]= self::$recordsFor[0][self::XT_VARCHAR];
-    self::$recordsFor[0][self::T_TEXT]= newinstance('rdbms.tds.TdsRecord', array(), '{
+    self::$recordsFor[0][self::T_TEXT]= newinstance('rdbms.tds.TdsRecord', [], '{
       public function unmarshal($stream, $field, $records) {
         $has= $stream->getByte();
         if ($has !== 16) return null;
@@ -266,17 +266,17 @@ abstract class TdsProtocol extends \lang\Object {
       }
     }');
     self::$recordsFor[0][self::T_NTEXT]= self::$recordsFor[0][self::T_TEXT];
-    self::$recordsFor[0][self::T_BITN]= newinstance('rdbms.tds.TdsRecord', array(), '{
+    self::$recordsFor[0][self::T_BITN]= newinstance('rdbms.tds.TdsRecord', [], '{
       public function unmarshal($stream, $field, $records) {
         return $stream->getByte() ? $stream->getByte() : null;
       }
     }');
-    self::$recordsFor[0][self::T_BIT]= newinstance('rdbms.tds.TdsRecord', array(), '{
+    self::$recordsFor[0][self::T_BIT]= newinstance('rdbms.tds.TdsRecord', [], '{
       public function unmarshal($stream, $field, $records) {
         return $stream->getByte();
       }
     }');
-    self::$recordsFor[0][self::T_UNITEXT]= newinstance('rdbms.tds.TdsRecord', array(), '{
+    self::$recordsFor[0][self::T_UNITEXT]= newinstance('rdbms.tds.TdsRecord', [], '{
       public function unmarshal($stream, $field, $records) {
         $ptr= $stream->getByte();
         $stream->read($ptr + 8);    // Skip TEXTPTR + 8 Bytes TIMESTAMP

@@ -19,7 +19,7 @@ class TdsV5Protocol extends TdsProtocol {
    * @return  [:rdbms.tds.TdsRecord] handlers
    */
   protected function setupRecords() {
-    $records[self::T_NUMERIC]= newinstance('rdbms.tds.TdsRecord', array(), '{
+    $records[self::T_NUMERIC]= newinstance('rdbms.tds.TdsRecord', [], '{
       public function unmarshal($stream, $field, $records) {
         if (-1 === ($len= $stream->getByte()- 1)) return null;
         $pos= $stream->getByte();
@@ -35,14 +35,14 @@ class TdsV5Protocol extends TdsProtocol {
       }
     }');
     $records[self::T_DECIMAL]= $records[self::T_NUMERIC];
-    $records[self::T_BINARY]= newinstance('rdbms.tds.TdsRecord', array(), '{
+    $records[self::T_BINARY]= newinstance('rdbms.tds.TdsRecord', [], '{
       public function unmarshal($stream, $field, $records) {
         if (0 === ($len= $stream->getByte())) return null;
         $string= $stream->read($len);
         return iconv($field["conv"], \xp::ENCODING, substr($string, 0, strcspn($string, "\0")));
       }
     }');
-    $records[self::T_IMAGE]= newinstance('rdbms.tds.TdsRecord', array(), '{
+    $records[self::T_IMAGE]= newinstance('rdbms.tds.TdsRecord', [], '{
       public function unmarshal($stream, $field, $records) {
         $has= $stream->getByte();
         if ($has !== 16) return null; // Seems to always be 16 - obsolete?
@@ -62,14 +62,14 @@ class TdsV5Protocol extends TdsProtocol {
         );
       }
     }');
-    $records[self::T_VARBINARY]= newinstance('rdbms.tds.TdsRecord', array(), '{
+    $records[self::T_VARBINARY]= newinstance('rdbms.tds.TdsRecord', [], '{
       public function unmarshal($stream, $field, $records) {
         if (0 === ($len= $stream->getByte())) return null;
 
         return iconv($field["conv"], \xp::ENCODING, $stream->read($len));
       }
     }');
-    $records[self::T_LONGBINARY]= newinstance('rdbms.tds.TdsRecord', array(), '{
+    $records[self::T_LONGBINARY]= newinstance('rdbms.tds.TdsRecord', [], '{
       public function unmarshal($stream, $field, $records) {
         $len= $stream->getLong();
         return $stream->getString($len / 2);
