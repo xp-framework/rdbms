@@ -1,5 +1,6 @@
 <?php namespace rdbms\unittest\tds;
 
+use io\File;
 use rdbms\DSN;
 use rdbms\tds\FreeTdsLookup;
 
@@ -12,34 +13,23 @@ class FreeTdsConfigLocationTest extends \unittest\TestCase {
 
   #[@test]
   public function noAlternativesFound() {
-    $fixture= newinstance('rdbms.tds.FreeTdsLookup', array(), '{
-      protected function parse() {
-        throw new IllegalStateException("Should never be called!");
-      }
-      
-      protected function locateConf() {
-        return null;
-      }
-    }');
+    $fixture= newinstance('rdbms.tds.FreeTdsLookup', [], [
+      'parse' => function() { throw new IllegalStateException('Should never be called!'); },
+      'locateConf' => function() { return null; }
+    ]);
+
     $dsn= new DSN('sybase://test');
     $fixture->lookup($dsn);
-    $this->assertEquals($dsn, $dsn);
+    $this->assertEquals(new DSN('sybase://test'), $dsn);
   }
 
   #[@test]
   public function fileReturned() {
-    $fixture= newinstance('rdbms.tds.FreeTdsLookup', array(), '{
-      protected function parse() {
-        return array("test" => array(
-          "host" => $this->conf->getFilename(),
-          "port" => 1999
-        ));
-      }
-      
-      protected function locateConf() {
-        return new \io\File("it.worked");
-      }
-    }');
+    $fixture= newinstance('rdbms.tds.FreeTdsLookup', [],  [
+      'parse' => function() { return ['test' => ['host' => $this->conf->getFilename(), 'port' => 1999]]; },
+      'locateConf' => function() { return new File('it.worked'); }
+    ]);
+
     $dsn= new DSN('sybase://test');
     $fixture->lookup($dsn);
     $this->assertEquals(new DSN('sybase://it.worked:1999'), $dsn);

@@ -2,6 +2,7 @@
 
 use rdbms\tds\TdsDataStream;
 use peer\Socket;
+use lang\types\Bytes;
 
 /**
  * TestCase
@@ -67,7 +68,7 @@ class TdsDataStreamTest extends \unittest\TestCase {
    */
   protected function assertBytes($bytes, $str) {
     $field= $str->getClass()->getField('sock')->setAccessible(true);
-    $this->assertEquals(new \lang\types\Bytes($bytes), new \lang\types\Bytes($field->get($str)->bytes));
+    $this->assertEquals(new Bytes($bytes), new Bytes($field->get($str)->bytes));
   }
 
   #[@test, @expect('rdbms.tds.TdsProtocolException')]
