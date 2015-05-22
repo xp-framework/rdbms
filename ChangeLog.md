@@ -3,6 +3,8 @@ RDBMS support for the XP Framework: MySQL, Sybase, MSSQL, PostgreSQL, SQLite3, I
 
 ## ?.?.? / ????-??-??
 
+* Fixed TDS_ROWFMT handling - @thekid
+
 ## 6.2.0 / 2015-05-21
 
 * Changed TDS 5.0 protocol to support long identifiers with Sybase 15.

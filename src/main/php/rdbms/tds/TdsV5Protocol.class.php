@@ -244,7 +244,7 @@ class TdsV5Protocol extends TdsProtocol {
         }
         return $fields;
       } else if ("\xEE" === $token) {          // TDS_ROWFMT
-        $this->stream->read(1);
+        $this->stream->read(2);
         $nfields= $this->stream->getShort();
         $fields= [];
         for ($i= 0; $i < $nfields; $i++) {
