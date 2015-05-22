@@ -1,12 +1,9 @@
 <?php namespace rdbms\criterion;
 
-
-
 /**
  * Factory for criterion types
  *
- * @test     xp://net.xp_framework.unittest.rdbms.CriteriaTest
- * @purpose  Factory
+ * @test  xp://net.xp_framework.unittest.rdbms.CriteriaTest
  */
 class Restrictions extends \lang\Object {
 

@@ -1,6 +1,6 @@
 <?php namespace rdbms\criterion;
-use lang\IllegalArgumentException;
 
+use lang\IllegalArgumentException;
 
 /**
  * belongs to the Criterion API
@@ -25,8 +25,7 @@ use lang\IllegalArgumentException;
  *   ));
  * </code>
  *
- * @see     xp://rdbms.criterion.Projections
- * @purpose rdbms.criterion
+ * @see   xp://rdbms.criterion.Projections
  */
 class CountProjection extends SimpleProjection {
   

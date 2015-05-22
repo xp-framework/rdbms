@@ -48,11 +48,10 @@
  *   ));
  * </code>
  *
- * @test     xp://net.xp_framework.unittest.rdbms.ProjectionTest
- * @see      xp://rdbms.Criteria
- * @see      xp://rdbms.criterion.ProjectionList
- * @see      xp://rdbms.criterion.CountProjection
- * @purpose  Projection factory
+ * @test  xp://net.xp_framework.unittest.rdbms.ProjectionTest
+ * @see   xp://rdbms.Criteria
+ * @see   xp://rdbms.criterion.ProjectionList
+ * @see   xp://rdbms.criterion.CountProjection
  */
 class Projections extends \lang\Object {
 

@@ -1,11 +1,7 @@
 <?php namespace rdbms\criterion;
 
-
-
 /**
  * Between expression
- *
- * @purpose  Criterion
  */
 class BetweenExpression extends \lang\Object implements Criterion {
   public

@@ -1,12 +1,15 @@
 <?php namespace rdbms\criterion;
 
+use rdbms\DBConnection;
+use rdbms\Peer;
+
 /**
  * Represents a query criterion to be used in a Criteria query
  *
  * @see      xp://rdbms.Criteria#add
- * @purpose  Interface
  */
 interface Criterion {
+
   /**
    * Returns the fragment SQL
    *
@@ -15,5 +18,5 @@ interface Criterion {
    * @return  string
    * @throws  rdbms.SQLStateException
    */
-  public function asSql(\rdbms\DBConnection $conn, \rdbms\Peer $peer);
+  public function asSql(DBConnection $conn, Peer $peer);
 }

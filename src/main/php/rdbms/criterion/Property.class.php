@@ -1,19 +1,13 @@
 <?php namespace rdbms\criterion;
 
-
-
 /**
  * Factory for criterion types
  *
- * @purpose  Factory
  * @deprecated use rdbms.Column instead
  */
 class Property extends \lang\Object {
-  protected static 
-    $instances = array();
-
-  public 
-    $name      = '';
+  protected static $instances= [];
+  public $name;
 
   /**
    * Constructor

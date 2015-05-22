@@ -3,16 +3,12 @@
 define('LOGICAL_AND', 'and');
 define('LOGICAL_OR',  'or');
 
-
-
 /**
  * Logical expression
- *
- * @purpose  Criterion
  */
 class LogicalExpression extends \lang\Object implements Criterion {
   public
-    $criterions = array(),
+    $criterions = [],
     $op         = '';
 
   /**

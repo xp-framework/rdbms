@@ -1,15 +1,10 @@
 <?php namespace rdbms\criterion;
 
-
-
 /**
  * Negates another criterion
- *
- * @purpose  Criterion
  */
 class NegationExpression extends \lang\Object implements Criterion {
-  public
-    $criterion  = null;
+  public $criterion;
 
   /**
    * Constructor

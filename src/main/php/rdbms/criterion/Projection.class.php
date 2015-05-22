@@ -1,9 +1,9 @@
 <?php namespace rdbms\criterion;
+
 use rdbms\SQLRenderable;
 
-
 /**
- * interface for all Prjections - 
+ * Interface for all Prjections - 
  * Projections are built with thee static factory class rdbms.criterion.Projections
  * 
  * @see xp://rdbms.criterion.Projections
