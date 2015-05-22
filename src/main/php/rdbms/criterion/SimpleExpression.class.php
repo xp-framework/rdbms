@@ -1,9 +1,11 @@
 <?php namespace rdbms\criterion;
 
+use rdbms\DBConnection;
+use rdbms\Peer;
+use rdbms\SQLFragment;
+
 /**
  * Simple expression
- *
- * @purpose  Criterion
  */
 class SimpleExpression extends \lang\Object implements Criterion {
   public
@@ -88,8 +90,8 @@ class SimpleExpression extends \lang\Object implements Criterion {
    * @param   rdbms.Peer peer
    * @return  string
    */
-  public function asSql(\rdbms\DBConnection $conn, \rdbms\Peer $peer) {
-    $lhs= ($this->lhs instanceof \rdbms\SQLFragment) ? $this->lhs : $peer->column($this->lhs);
+  public function asSql(DBConnection $conn, Peer $peer) {
+    $lhs= ($this->lhs instanceof SQLFragment) ? $this->lhs : $peer->column($this->lhs);
     
     return $conn->prepare(
       '%c '.str_replace('?', $lhs->getType(), $this->op), 

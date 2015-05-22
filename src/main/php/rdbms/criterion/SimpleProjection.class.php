@@ -1,21 +1,18 @@
 <?php namespace rdbms\criterion;
 
-
+use rdbms\SQLRenderable;
+use rdbms\DBConnection;
 
 /**
- * belongs to the Criterion projection API
- * simple base class 
+ * Belongs to the Criterion projection API simple base class.
  * Do not use, use factory rdbms.criterion.Projections instead
  *
- * @see     xp://rdbms.criterion.Projections
- * @see     xp://rdbms.criterion.CountProjection
- * @see     xp://rdbms.criterion.ProjectionList
- * @purpose rdbms.criterion
+ * @see   xp://rdbms.criterion.Projections
+ * @see   xp://rdbms.criterion.CountProjection
+ * @see   xp://rdbms.criterion.ProjectionList
  */
 class SimpleProjection extends \lang\Object implements Projection {
-  protected
-    $field= '',
-    $command= '';
+  protected $field, $command;
 
   /**
    * constructor
@@ -24,7 +21,7 @@ class SimpleProjection extends \lang\Object implements Projection {
    * @param  string command from Projection::constlist
    * @param  string alias optional
    */
-  public function __construct(\rdbms\SQLRenderable $field, $command) {
+  public function __construct(SQLRenderable $field, $command) {
     $this->field= $field;
     $this->command= $command;
   }
@@ -37,7 +34,7 @@ class SimpleProjection extends \lang\Object implements Projection {
    * @return  string
    * @throws  rdbms.SQLStateException
    */
-  public function asSql(\rdbms\DBConnection $conn) {
+  public function asSql(DBConnection $conn) {
     return $conn->prepare($this->command, $this->field);
   }
 }
