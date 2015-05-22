@@ -1,7 +1,5 @@
 <?php namespace rdbms\tds;
 
-
-
 /**
  * TDS V7 protocol implementation
  *
@@ -17,7 +15,7 @@ class TdsV7Protocol extends TdsProtocol {
    * @return  [:rdbms.tds.TdsRecord] handlers
    */
   protected function setupRecords() {
-    $records[self::T_NUMERIC]= newinstance('rdbms.tds.TdsRecord', array(), '{
+    $records[self::T_NUMERIC]= newinstance('rdbms.tds.TdsRecord', [], '{
       public function unmarshal($stream, $field, $records) {
         $len= isset($field["len"]) ? $field["len"]- 1 : $stream->getByte()- 1;
         if (-1 === $len) return null;
@@ -29,7 +27,7 @@ class TdsV7Protocol extends TdsProtocol {
       }
     }');
     $records[self::T_DECIMAL]= $records[self::T_NUMERIC];
-    $records[self::T_VARIANT]= newinstance('rdbms.tds.TdsRecord', array(), '{
+    $records[self::T_VARIANT]= newinstance('rdbms.tds.TdsRecord', [], '{
       public function unmarshal($stream, $field, $records) {
         if (0 === ($len= $stream->getLong())) return null;
 
@@ -54,7 +52,7 @@ class TdsV7Protocol extends TdsProtocol {
         }
       }
     }');
-    $records[self::T_UNIQUE]= newinstance('rdbms.tds.TdsRecord', array(), '{
+    $records[self::T_UNIQUE]= newinstance('rdbms.tds.TdsRecord', [], '{
       public function unmarshal($stream, $field, $records) {
         $len= isset($field["len"]) ? $field["len"] : $stream->getByte();
         if (0 === $len) return null;
@@ -70,7 +68,7 @@ class TdsV7Protocol extends TdsProtocol {
         );
       }
     }');
-    $records[self::T_IMAGE]= newinstance('rdbms.tds.TdsRecord', array(), '{
+    $records[self::T_IMAGE]= newinstance('rdbms.tds.TdsRecord', [], '{
       public function unmarshal($stream, $field, $records) {
         $has= $stream->getByte();
         if ($has !== 16) return null;
@@ -79,20 +77,20 @@ class TdsV7Protocol extends TdsProtocol {
         return $stream->read($stream->getLong());
       }
     }');
-    $records[self::XT_BINARY]= newinstance('rdbms.tds.TdsRecord', array(), '{
+    $records[self::XT_BINARY]= newinstance('rdbms.tds.TdsRecord', [], '{
       public function unmarshal($stream, $field, $records) {
         if (0xFFFF === ($len= $stream->getShort())) return null;
         $string= $stream->read($len);
         return substr($string, 0, strcspn($string, "\0"));
       }
     }');
-    $records[self::XT_VARBINARY]= newinstance('rdbms.tds.TdsRecord', array(), '{
+    $records[self::XT_VARBINARY]= newinstance('rdbms.tds.TdsRecord', [], '{
       public function unmarshal($stream, $field, $records) {
         if (0xFFFF === ($len= $stream->getShort())) return null;
         return $stream->read($len);
       }
     }');
-    $records[self::XT_NVARCHAR]= newinstance('rdbms.tds.TdsRecord', array(), '{
+    $records[self::XT_NVARCHAR]= newinstance('rdbms.tds.TdsRecord', [], '{
       public function unmarshal($stream, $field, $records) {
         $len= $stream->getShort();
         return 0xFFFF === $len ? null : iconv("ucs-2le", \xp::ENCODING, $stream->read($len));
@@ -203,7 +201,7 @@ class TdsV7Protocol extends TdsProtocol {
 
     do {
       if ("\x81" === $token) {          // COLMETADATA
-        $fields= array();
+        $fields= [];
         $nfields= $this->stream->getShort();
         for ($i= 0; $i < $nfields; $i++) {
           $field= $this->stream->get('Cx1/Cx2/Cflags/Cstatus/Ctype', 5);
@@ -255,7 +253,7 @@ class TdsV7Protocol extends TdsProtocol {
         $this->envchange();
         return null;
       } else {
-        throw new \TdsProtocolException(
+        throw new TdsProtocolException(
           sprintf('Unexpected token 0x%02X', ord($token)),
           0,    // Number
           0,    // State
