@@ -24,7 +24,9 @@ interface SQLExpression {
    *
    * @param   rdbms.DBConnection $conn
    * @param   rdbms.Peer $peer
+   * @param   rdbms.join.Joinprocessor $jp optional
+   * @param   bool $buffered default TRUE
    * @return  rdbms.ResultSet
    */
-  public function executeSelect(DBConnection $conn, Peer $peer);
+  public function executeSelect(DBConnection $conn, Peer $peer, $jp= null, $buffered= true);
 }
