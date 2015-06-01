@@ -1,9 +1,8 @@
 <?php namespace rdbms\mysqlx;
 
-
-
 use io\File;
-
+use io\IOException;
+use peer\Socket;
 
 /**
  * Use a named pipe. Determines the pipe's name by checking for "mysql"
@@ -28,7 +27,7 @@ class NamedPipe extends LocalSocket {
     // Locate my.ini in %WINDIR%, C: or the MySQL install dir, the latter of
     // which we determine by querying the registry using the "REG" tool.
     do {
-      foreach (array(getenv('WINDIR'), 'C:') as $location) {
+      foreach ([getenv('WINDIR'), 'C:'] as $location) {
         $ini= new File($location, 'my.ini');
         if ($ini->exists()) break 2;
       }
@@ -56,11 +55,11 @@ class NamedPipe extends LocalSocket {
     if (null === $socket) $socket= $this->locate();
 
     if (!($fd= fopen($socket, 'r+'))) {
-      $e= new \io\IOException('Cannot open pipe "'.$socket.'"');
+      $e= new IOException('Cannot open pipe "'.$socket.'"');
       \xp::gc(__FILE__);
       throw $e;
     }
 
-    return new \peer\Socket(null, null, $fd);
+    return new Socket(null, null, $fd);
   }
 }

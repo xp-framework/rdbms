@@ -1,11 +1,9 @@
 <?php namespace rdbms\mysqlx;
 
-
+use rdbms\SQLException;
 
 /**
  * Result set
- *
- * @purpose  Resultset wrapper
  */
 class MySQLxResultSet extends \AbstractMySQLxResultSet {
 
@@ -17,7 +15,7 @@ class MySQLxResultSet extends \AbstractMySQLxResultSet {
    * @throws  rdbms.SQLException
    */
   public function seek($offset) { 
-    throw new \rdbms\SQLException('Cannot seek to offset '.$offset);
+    throw new SQLException('Cannot seek to offset '.$offset);
   }
   
   /**

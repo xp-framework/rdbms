@@ -1,9 +1,7 @@
 <?php namespace rdbms\mysqlx;
 
-
-
 use peer\BSDSocket;
-
+use io\File;
 
 /**
  * Use an AF_UNIX socket. The socket's location is determined in the 
@@ -32,14 +30,14 @@ class UnixSocket extends LocalSocket {
   protected function locate() {
 
     // 1. Check well-known locations, 2. environment
-    foreach (array('/tmp/mysql.sock', '/var/lib/mysql/mysql.sock', getenv('MYSQL_UNIX_PORT')) as $file) {
+    foreach (['/tmp/mysql.sock', '/var/lib/mysql/mysql.sock', getenv('MYSQL_UNIX_PORT')] as $file) {
       if (file_exists($file)) return $file;
     }
 
     // 3. Check config files
-    foreach (array(getenv('HOME').'/.my.cnf', '/etc/my.cnf', '/etc/mysql/my.cnf') as $ini) {
+    foreach ([getenv('HOME').'/.my.cnf', '/etc/my.cnf', '/etc/mysql/my.cnf'] as $ini) {
       if (!file_exists($ini)) continue;
-      $options= $this->parse(new \io\File($ini));
+      $options= $this->parse(new File($ini));
       if (isset($options['client']['socket'])) return $options['client']['socket'];
     }
 

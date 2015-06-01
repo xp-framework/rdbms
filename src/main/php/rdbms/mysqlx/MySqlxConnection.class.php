@@ -1,8 +1,18 @@
 <?php namespace rdbms\mysqlx;
 
+use lang\XPClass;
+use io\IOException;
+use peer\Socket;
 use rdbms\DBConnection;
-use rdbms\Transaction;
+use rdbms\DBEvent;
+use rdbms\DriverManager;
 use rdbms\StatementFormatter;
+use rdbms\SQLConnectException;
+use rdbms\SQLStateException;
+use rdbms\SQLDeadlockException;
+use rdbms\SQLStatementFailedException;
+use rdbms\SQLConnectionClosedException;
+use rdbms\Transaction;
 use rdbms\mysql\MysqlDialect;
 
 /**
@@ -16,7 +26,7 @@ class MySqlxConnection extends DBConnection {
   protected $affected= -1;
 
   static function __static() {
-    \rdbms\DriverManager::register('mysql+x', new \lang\XPClass(__CLASS__));
+    DriverManager::register('mysql+x', new XPClass(__CLASS__));
   }
 
   /**
@@ -34,7 +44,7 @@ class MySqlxConnection extends DBConnection {
     if ('.' === $host) {
       $sock= LocalSocket::forName(PHP_OS)->newInstance($this->dsn->getProperty('socket', null));
     } else {
-      $sock= new \peer\Socket($host, $this->dsn->getPort(3306));
+      $sock= new Socket($host, $this->dsn->getPort(3306));
     }
 
     $this->handle= new MySqlxProtocol($sock);
@@ -65,14 +75,14 @@ class MySqlxConnection extends DBConnection {
     if ($this->handle->connected) return true;                    // Already connected
     if (!$reconnect && (null === $this->handle->connected)) return false;   // Previously failed connecting
 
-    $this->_obs && $this->notifyObservers(new \rdbms\DBEvent(\rdbms\DBEvent::CONNECT, $reconnect));
+    $this->_obs && $this->notifyObservers(new DBEvent(DBEvent::CONNECT, $reconnect));
     try {
       $this->handle->connect($this->dsn->getUser(), $this->dsn->getPassword());
-      $this->_obs && $this->notifyObservers(new \rdbms\DBEvent(\rdbms\DBEvent::CONNECTED, $reconnect));
-    } catch (\io\IOException $e) {
+      $this->_obs && $this->notifyObservers(new DBEvent(DBEvent::CONNECTED, $reconnect));
+    } catch (IOException $e) {
       $this->handle->connected= null;
-      $this->_obs && $this->notifyObservers(new \rdbms\DBEvent(\rdbms\DBEvent::CONNECTED, $reconnect));
-      throw new \rdbms\SQLConnectException($e->getMessage(), $this->dsn);
+      $this->_obs && $this->notifyObservers(new DBEvent(DBEvent::CONNECTED, $reconnect));
+      throw new SQLConnectException($e->getMessage(), $this->dsn);
     }
 
     try {
@@ -85,7 +95,7 @@ class MySqlxConnection extends DBConnection {
       $modes= array_flip(explode(',', this(this($this->handle->consume($this->handle->query(
         "show variables like 'sql_mode'"
       )), 0), 1)));
-    } catch (\io\IOException $e) {
+    } catch (IOException $e) {
       // Ignore
     }
     
@@ -122,8 +132,8 @@ class MySqlxConnection extends DBConnection {
     try {
       $this->handle->exec('use '.$db);
       return true;
-    } catch (\io\IOException $e) {
-      throw new \rdbms\SQLStatementFailedException($e->getMessage());
+    } catch (IOException $e) {
+      throw new SQLStatementFailedException($e->getMessage());
     }
   }
 
@@ -134,7 +144,7 @@ class MySqlxConnection extends DBConnection {
    */
   public function identity($field= null) {
     $i= $this->query('select last_insert_id() as xp_id')->next('xp_id');
-    $this->_obs && $this->notifyObservers(new \rdbms\DBEvent(\rdbms\DBEvent::IDENTITY, $i));
+    $this->_obs && $this->notifyObservers(new DBEvent(DBEvent::IDENTITY, $i));
     return $i;
   }
 
@@ -157,11 +167,11 @@ class MySqlxConnection extends DBConnection {
    */
   protected function query0($sql, $buffered= true) {
     if (!$this->handle->connected) {
-      if (!($this->flags & DB_AUTOCONNECT)) throw new \rdbms\SQLStateException('Not connected');
+      if (!($this->flags & DB_AUTOCONNECT)) throw new SQLStateException('Not connected');
       $c= $this->connect();
       
       // Check for subsequent connection errors
-      if (false === $c) throw new \rdbms\SQLStateException('Previously failed to connect.');
+      if (false === $c) throw new SQLStateException('Previously failed to connect.');
     }
     
     try {
@@ -172,16 +182,16 @@ class MySqlxConnection extends DBConnection {
       switch ($e->error) {
         case 2006: // MySQL server has gone away
         case 2013: // Lost connection to MySQL server during query
-          throw new \rdbms\SQLConnectionClosedException('Statement failed: '.$message, $sql, $e->error);
+          throw new SQLConnectionClosedException('Statement failed: '.$message, $sql, $e->error);
 
         case 1213: // Deadlock
-          throw new \rdbms\SQLDeadlockException($message, $sql, $e->error);
+          throw new SQLDeadlockException($message, $sql, $e->error);
         
         default:   // Other error
-          throw new \rdbms\SQLStatementFailedException($message, $sql, $e->error);
+          throw new SQLStatementFailedException($message, $sql, $e->error);
       }
-    } catch (\io\IOException $e) {
-      throw new \rdbms\SQLStatementFailedException($e->getMessage());
+    } catch (IOException $e) {
+      throw new SQLStatementFailedException($e->getMessage());
     }
     
     if (!is_array($result)) {

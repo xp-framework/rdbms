@@ -2,7 +2,6 @@
 
 use peer\ProtocolException;
 
-
 /**
  * Indicate an error was detected in the protocol
  *
