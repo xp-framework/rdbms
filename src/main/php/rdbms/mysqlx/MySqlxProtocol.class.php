@@ -83,7 +83,8 @@ class MySqlxProtocol extends \lang\Object {
     $proto= ord($buf[0]);
     $p= strpos($buf, "\0");
     $version= substr($buf, 1, $p- 1);
-    if (10 !== $proto) {new \peer\ProtocolException('MySQL Protocol version #'.$proto.' not supported, server '.$version);
+    if (10 !== $proto) {
+      throw new ProtocolException('MySQL Protocol version #'.$proto.' not supported, server '.$version);
     }
 
     // Scramble
