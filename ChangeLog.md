@@ -3,6 +3,11 @@ RDBMS support for the XP Framework: MySQL, Sybase, MSSQL, PostgreSQL, SQLite3, I
 
 ## ?.?.? / ????-??-??
 
+* Changed the default for *autoconnect* to true, that is, if it is omitted
+  from the DSN, it will automatically connect. If the driver should not
+  automatically connect, add `?autoconnect=0` to the DSN.
+  (@thekid)
+
 ## 6.2.2 / 2015-06-01
 
 * Changed MySQL userland protocol to handle case when MySQL server disconnects
