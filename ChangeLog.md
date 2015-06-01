@@ -3,6 +3,10 @@ RDBMS support for the XP Framework: MySQL, Sybase, MSSQL, PostgreSQL, SQLite3, I
 
 ## ?.?.? / ????-??-??
 
+* Changed MySQL userland protocol to handle case when MySQL server disconnects
+  during connection setup phase and give a good error message.
+  (@thekid)
+
 ## 6.2.1 / 2015-05-22
 
 * Adjusted various places to new coding standards - @thekid

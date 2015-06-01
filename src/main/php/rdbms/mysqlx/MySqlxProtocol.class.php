@@ -1,8 +1,8 @@
 <?php namespace rdbms\mysqlx;
 
 use peer\Socket;
+use peer\ProtocolException;
 use util\Date;
-
 
 /**
  * MySQL protocol implementation
@@ -83,8 +83,7 @@ class MySqlxProtocol extends \lang\Object {
     $proto= ord($buf[0]);
     $p= strpos($buf, "\0");
     $version= substr($buf, 1, $p- 1);
-    if (10 !== $proto) {
-      throw new \peer\ProtocolException('MySQL Protocol version #'.$proto.' not supported, server '.$version);
+    if (10 !== $proto) {new \peer\ProtocolException('MySQL Protocol version #'.$proto.' not supported, server '.$version);
     }
 
     // Scramble
@@ -296,7 +295,7 @@ class MySqlxProtocol extends \lang\Object {
     
     if (null === $nfields) {
       $this->pkt= 0;
-      throw new \peer\ProtocolException('LOAD DATA LOCAL INFILE not implemented');
+      throw new ProtocolException('LOAD DATA LOCAL INFILE not implemented');
     } else if (0 === $nfields) {      // Results from an insert / update / delete query
       $affected= $this->length($data, $consumed, true);
       $identity= $this->length($data, $consumed, true);
@@ -433,10 +432,19 @@ class MySqlxProtocol extends \lang\Object {
 
     while (null === $len || self::MAX_PACKET_LENGTH === $len) {
       $a= $this->sock->readBinary(4);
+      if (strlen($a) < 4) {
+        if ($this->sock->eof()) {
+          $cause= 'Server disconnected';
+          $this->sock->close();
+        } else {
+          $cause= 'Server sent corrupt package `'.addcslashes($a, "\0..\377").'`';
+        }
+        throw new ProtocolException($cause);
+      }
       $len= ord($a[0]) + ord($a[1]) * 0x100 + ord($a[2]) * 0x10000;
       $pkt= ord($a[3]);
       if ($pkt != $this->pkt) {
-        throw new \peer\ProtocolException('Packet no. out of order, have '.$pkt.', expecting '.$this->pkt);
+        throw new ProtocolException('Packet no. out of order, have '.$pkt.', expecting '.$this->pkt);
       }
       $this->pkt= $this->pkt+ 1 & 0xFF;
       $buf.= $this->readFully($len);
