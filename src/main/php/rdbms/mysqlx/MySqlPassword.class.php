@@ -38,7 +38,6 @@ abstract class MySqlPassword extends \lang\Enum {
         $hp= self::hash($password);
         $hm= self::hash($message);
         $SEED_MAX= 0x3FFFFFFF;
-        bcscale(14);
 
         $seed1= $hp[0]->bitwiseXor($hm[0])->modulo($SEED_MAX);
         $seed2= $hp[1]->bitwiseXor($hm[1])->modulo($SEED_MAX);
@@ -46,13 +45,14 @@ abstract class MySqlPassword extends \lang\Enum {
         for ($i= 0, $s= strlen($message); $i < $s; $i++) {
           $seed1= $seed1->multiply0(3)->add0($seed2)->modulo($SEED_MAX);
           $seed2= $seed1->add0($seed2)->add0(33)->modulo($SEED_MAX);
-          $to.= chr($seed1->divide(new \math\BigFloat($SEED_MAX))->multiply(31)->intValue() + 64);
+          $div= new \math\BigFloat(bcdiv((string)$seed1, $SEED_MAX, 14));  // Explicitely pass precision, HHVM bug
+          $to.= chr($div->multiply(31)->intValue() + 64);
         }
         $seed1= $seed1->multiply0(3)->add0($seed2)->modulo($SEED_MAX);
         $seed2= $seed1->add0($seed2)->add0(33)->modulo($SEED_MAX);
 
-        $result= $to ^ str_repeat(chr($seed1->divide(new \math\BigFloat($SEED_MAX))->multiply(31)->intValue()), strlen($message));
-        bcscale(ini_get("precision") ?: 14);
+        $div= new \math\BigFloat(bcdiv((string)$seed1, $SEED_MAX, 14));    // Explicitely pass precision, HHVM bug
+        $result= $to ^ str_repeat(chr($div->multiply(31)->intValue()), strlen($message));
         return $result;
       }
     }');
