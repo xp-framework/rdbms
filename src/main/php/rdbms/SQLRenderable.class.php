@@ -1,14 +1,11 @@
 <?php namespace rdbms;
 
-
-
 /**
  * Represents a fragment that can be rendered to string. Base interface
  * for SQLFragment and Projection interfaces.
  *
- * @see      xp://rdbms.SQLFragment
- * @see      xp://rdbms.criterion.Projection
- * @purpose  Interface
+ * @see   xp://rdbms.SQLFragment
+ * @see   xp://rdbms.criterion.Projection
  */
 interface SQLRenderable {
 
@@ -19,5 +16,5 @@ interface SQLRenderable {
    * @return  string
    * @throws  rdbms.SQLStateException
    */
-  public function asSql(\DBConnection $conn);
+  public function asSql(DBConnection $conn);
 }
