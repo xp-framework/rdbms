@@ -1,6 +1,8 @@
 <?php namespace rdbms\unittest\sqlite3;
 
 use rdbms\sqlite3\SQLite3Connection;
+use unittest\actions\ExtensionAvailable;
+use unittest\actions\VerifyThat;
 
 /**
  * Testcase for rdbms.sqlite3.SQLite3Connection
@@ -10,7 +12,10 @@ use rdbms\sqlite3\SQLite3Connection;
  * @see   https://github.com/xp-framework/xp-framework/issues/111
  * @see   https://bugs.php.net/bug.php?id=55154
  */
-#[@action(new \unittest\actions\ExtensionAvailable('sqlite3'))]
+#[@action([
+#  new ExtensionAvailable('sqlite3'),
+#  new VerifyThat(function() { return !defined('HHVM_VERSION'); })
+#])]
 class SQLite3CreationTest extends \unittest\TestCase {
 
   #[@test]
