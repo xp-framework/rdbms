@@ -2,7 +2,7 @@
  
 use rdbms\DBConnection;
 use util\Date;
-use lang\types\String;
+use unittest\actions\RuntimeVersion;
 
 /**
  * Test rdbms tokenizer
@@ -147,11 +147,11 @@ abstract class TokenizerTest extends \unittest\TestCase {
     );
   }
 
-  #[@test]
+  #[@test, @action(new RuntimeVersion('<7.0.0-dev'))]]
   public function stringTypeToken() {
     $this->assertEquals(
       'select \'"Hello", Tom\'\'s friend said\' as strval',
-      $this->fixture->prepare('select %s as strval', new String('"Hello", Tom\'s friend said'))
+      $this->fixture->prepare('select %s as strval', new \lang\types\String('"Hello", Tom\'s friend said'))
     );
   }
 
