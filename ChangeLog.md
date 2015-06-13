@@ -3,6 +3,8 @@ RDBMS support for the XP Framework: MySQL, Sybase, MSSQL, PostgreSQL, SQLite3, I
 
 ## ?.?.? / ????-??-??
 
+* Fixed issue #5: Support for HHVM - @thekid
+
 ## 6.3.0 / 2015-06-02
 
 * Changed the default for *autoconnect* to true, that is, if it is omitted
