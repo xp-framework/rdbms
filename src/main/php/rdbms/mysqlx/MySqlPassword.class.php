@@ -33,7 +33,7 @@ abstract class MySqlPassword extends \lang\Enum {
       }
       
       public function scramble($password, $message) {
-        if ("" === $password || NULL === $password) return "";
+        if ("" === $password || null === $password) return "";
 
         $hp= self::hash($password);
         $hm= self::hash($message);
@@ -59,10 +59,10 @@ abstract class MySqlPassword extends \lang\Enum {
     self::$PROTOCOL_41= newinstance(__CLASS__, array(1, 'PROTOCOL_41'), '{
       static function __static() { }
       public function scramble($password, $message) {
-        if ("" === $password || NULL === $password) return "";
+        if ("" === $password || null === $password) return "";
 
-        $stage1= sha1($password, TRUE);
-        return sha1($message.sha1($stage1, TRUE), TRUE) ^ $stage1;
+        $stage1= sha1($password, true);
+        return sha1($message.sha1($stage1, true), true) ^ $stage1;
       }
     }');
   }
