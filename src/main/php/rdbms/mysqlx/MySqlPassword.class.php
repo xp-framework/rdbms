@@ -35,10 +35,10 @@ abstract class MySqlPassword extends \lang\Enum {
       public function scramble($password, $message) {
         if ("" === $password || NULL === $password) return "";
 
-        bcscale(14);
         $hp= self::hash($password);
         $hm= self::hash($message);
         $SEED_MAX= 0x3FFFFFFF;
+        bcscale(14);
 
         $seed1= $hp[0]->bitwiseXor($hm[0])->modulo($SEED_MAX);
         $seed2= $hp[1]->bitwiseXor($hm[1])->modulo($SEED_MAX);
