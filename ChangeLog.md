@@ -3,6 +3,8 @@ RDBMS support for the XP Framework: MySQL, Sybase, MSSQL, PostgreSQL, SQLite3, I
 
 ## ?.?.? / ????-??-??
 
+## 6.3.1 / 2015-06-13
+
 * Fixed issue #5: Support for HHVM - @thekid
 * Added forward compatibility with PHP7 - @thekid
 
