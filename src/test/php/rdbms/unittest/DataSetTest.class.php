@@ -5,7 +5,6 @@ use rdbms\DriverManager;
 use rdbms\DBObserver;
 use util\Date;
 use util\collections\Vector;
-use lang\types\String;
 use util\DateUtil;
 use rdbms\Statement;
 use rdbms\unittest\dataset\Job;
@@ -475,7 +474,7 @@ class DataSetTest extends TestCase {
 
   #[@test]
   public function percentSign() {
-    $observer= $this->getConnection()->addObserver(newinstance('rdbms.DBObserver', array(create('new util.collections.Vector<lang.types.String>')), '{
+    $observer= $this->getConnection()->addObserver(newinstance('rdbms.DBObserver', array(create('new util.collections.Vector<string>')), '{
       public $statements;
       public function __construct($statements) {
         $this->statements= $statements;
@@ -483,7 +482,7 @@ class DataSetTest extends TestCase {
       public static function instanceFor($arg) { }
       public function update($observable, $event= NULL) {
         if ($event instanceof DBEvent && "query" == $event->getName()) {
-          $this->statements[]= new \lang\types\String($event->getArgument());
+          $this->statements[]= $event->getArgument();
         }
       }
     }'));
@@ -492,7 +491,7 @@ class DataSetTest extends TestCase {
     $j->insert();
     
     $this->assertEquals(
-      new String('insert into JOBS.job (title) values ("Percent%20Sign")'),
+      'insert into JOBS.job (title) values ("Percent%20Sign")',
       $observer->statements[0]
     );
   }
