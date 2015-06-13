@@ -35,6 +35,7 @@ abstract class MySqlPassword extends \lang\Enum {
       public function scramble($password, $message) {
         if ("" === $password || NULL === $password) return "";
 
+        bcscale(14);
         $hp= self::hash($password);
         $hm= self::hash($message);
         $SEED_MAX= 0x3FFFFFFF;
@@ -50,7 +51,9 @@ abstract class MySqlPassword extends \lang\Enum {
         $seed1= $seed1->multiply0(3)->add0($seed2)->modulo($SEED_MAX);
         $seed2= $seed1->add0($seed2)->add0(33)->modulo($SEED_MAX);
 
-        return $to ^ str_repeat(chr($seed1->divide(new \math\BigFloat($SEED_MAX))->multiply(31)->intValue()), strlen($message));
+        $result= $to ^ str_repeat(chr($seed1->divide(new \math\BigFloat($SEED_MAX))->multiply(31)->intValue()), strlen($message));
+        bcscale(ini_get("precision") ?: 14);
+        return $result;
       }
     }');
     self::$PROTOCOL_41= newinstance(__CLASS__, array(1, 'PROTOCOL_41'), '{
