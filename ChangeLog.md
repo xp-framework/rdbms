@@ -3,6 +3,10 @@ RDBMS support for the XP Framework: MySQL, Sybase, MSSQL, PostgreSQL, SQLite3, I
 
 ## ?.?.? / ????-??-??
 
+* Overwrite default socket timeouts with -1 (no timeout). This way SQL
+  queries which take longer than 60 seconds will still execute'
+  (@thekid)
+
 ## 6.3.1 / 2015-06-13
 
 * Fixed issue #5: Support for HHVM - @thekid
