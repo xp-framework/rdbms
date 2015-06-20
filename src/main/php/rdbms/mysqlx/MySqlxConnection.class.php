@@ -45,6 +45,7 @@ class MySqlxConnection extends DBConnection {
       $sock= LocalSocket::forName(PHP_OS)->newInstance($this->dsn->getProperty('socket', null));
     } else {
       $sock= new Socket($host, $this->dsn->getPort(3306));
+      $sock->setTimeout(-1);
     }
 
     $this->handle= new MySqlxProtocol($sock);

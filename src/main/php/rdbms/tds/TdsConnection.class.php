@@ -29,7 +29,9 @@ abstract class TdsConnection extends DBConnection {
   public function __construct($dsn) { 
     parent::__construct($dsn);
     $this->formatter= new StatementFormatter($this, $this->getDialect());
-    $this->handle= $this->getProtocol(new Socket($this->dsn->getHost(), $this->dsn->getPort(1433)));
+    $sock= new Socket($this->dsn->getHost(), $this->dsn->getPort(1433));
+    $sock->setTimeout(-1);
+    $this->handle= $this->getProtocol($sock);
   }
   
   /**
