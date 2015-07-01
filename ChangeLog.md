@@ -3,6 +3,10 @@ RDBMS support for the XP Framework: MySQL, Sybase, MSSQL, PostgreSQL, SQLite3, I
 
 ## ?.?.? / ????-??-??
 
+* Changed rdbms.tds.TdsConnection's `toString()` to use a less-verbose way
+  of displaying which protocol is used.
+  (@thekid)
+
 ## 6.3.2 / 2015-06-24
 
 * Overwrite default socket timeouts with -1 (no timeout). This way SQL
