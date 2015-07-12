@@ -6,7 +6,9 @@ RDBMS support for the XP Framework: MySQL, Sybase, MSSQL, PostgreSQL, SQLite3, I
 ## 6.4.0 / 2015-07-12
 
 * Added forward compatibility with XP 6.4.0 - @thekid
-* Fixed `rdbms.finder.FinderMethod` to throw correct exception
+* Fixed `rdbms.finder.FinderMethod` to throw correct exception - @thekid
+* Changed rdbms.tds.TdsConnection's `toString()` to use a less-verbose way
+  of displaying which protocol is used.
   (@thekid)
 
 ## 6.3.2 / 2015-06-24
