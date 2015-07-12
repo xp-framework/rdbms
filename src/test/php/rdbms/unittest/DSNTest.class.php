@@ -13,7 +13,7 @@ class DSNTest extends \unittest\TestCase {
   public function stringRepresentationWithPassword() {
     $this->assertEquals(
       'rdbms.DSN@(sybase://sa:********@localhost:1999/CAFFEINE?autoconnect=1)',
-      create(new DSN('sybase://sa:password@localhost:1999/CAFFEINE?autoconnect=1'))->toString()
+      (new DSN('sybase://sa:password@localhost:1999/CAFFEINE?autoconnect=1'))->toString()
     );
   }
   
@@ -21,7 +21,7 @@ class DSNTest extends \unittest\TestCase {
   public function stringRepresentationWithoutPassword() {
     $this->assertEquals(
       'rdbms.DSN@(mysql://root@localhost/?log=default)',
-      create(new DSN('mysql://root@localhost/?log=default'))->toString()
+      (new DSN('mysql://root@localhost/?log=default'))->toString()
     );
   }
 
@@ -29,7 +29,7 @@ class DSNTest extends \unittest\TestCase {
   public function asStringRemovesPassword() {
     $this->assertEquals(
       'mysql://user:********@localhost/?log=default',
-      create(new DSN('mysql://user:foobar@localhost/?log=default'))->asString()
+      (new DSN('mysql://user:foobar@localhost/?log=default'))->asString()
     );
   }
 
@@ -37,7 +37,7 @@ class DSNTest extends \unittest\TestCase {
   public function asStringKeepsPasswordIfRequested() {
     $this->assertEquals(
       'mysql://user:foobar@localhost/?log=default',
-      create(new DSN('mysql://user:foobar@localhost/?log=default'))->asString(true)
+      (new DSN('mysql://user:foobar@localhost/?log=default'))->asString(true)
     );
   }
 
@@ -45,7 +45,7 @@ class DSNTest extends \unittest\TestCase {
   public function asStringSkipsUserEvenWithRaw() {
     $this->assertEquals(
       'mysql://localhost/?log=default',
-      create(new DSN('mysql://localhost/?log=default'))->asString(true)
+      (new DSN('mysql://localhost/?log=default'))->asString(true)
     );
   }
 
@@ -53,7 +53,7 @@ class DSNTest extends \unittest\TestCase {
   public function driver() {
     $this->assertEquals(
       'sybase', 
-      create(new DSN('sybase://TEST/'))->getDriver()
+      (new DSN('sybase://TEST/'))->getDriver()
     );
   }
 
@@ -66,7 +66,7 @@ class DSNTest extends \unittest\TestCase {
   public function host() {
     $this->assertEquals(
       'TEST', 
-      create(new DSN('sybase://TEST/'))->getHost()
+      (new DSN('sybase://TEST/'))->getHost()
     );
   }
   
@@ -74,7 +74,7 @@ class DSNTest extends \unittest\TestCase {
   public function port() {
     $this->assertEquals(
       1999, 
-      create(new DSN('sybase://TEST:1999/'))->getPort()
+      (new DSN('sybase://TEST:1999/'))->getPort()
     );
   }
 
@@ -82,20 +82,20 @@ class DSNTest extends \unittest\TestCase {
   public function portDefault() {
     $this->assertEquals(
       1999, 
-      create(new DSN('sybase://TEST:1999/'))->getPort(5000)
+      (new DSN('sybase://TEST:1999/'))->getPort(5000)
     );
   }
 
   #[@test]
   public function noPort() {
-    $this->assertNull(create(new DSN('sybase://TEST/'))->getPort());
+    $this->assertNull((new DSN('sybase://TEST/'))->getPort());
   }
 
   #[@test]
   public function noPortDefault() {
     $this->assertEquals(
       1999, 
-      create(new DSN('sybase://TEST/'))->getPort(1999)
+      (new DSN('sybase://TEST/'))->getPort(1999)
     );
   }
 
@@ -103,7 +103,7 @@ class DSNTest extends \unittest\TestCase {
   public function database() {
     $this->assertEquals(
       'CAFFEINE', 
-      create(new DSN('sybase://TEST/CAFFEINE'))->getDatabase()
+      (new DSN('sybase://TEST/CAFFEINE'))->getDatabase()
     );
   }
 
@@ -111,33 +111,33 @@ class DSNTest extends \unittest\TestCase {
   public function databaseDefault() {
     $this->assertEquals(
       'CAFFEINE', 
-      create(new DSN('sybase://TEST/CAFFEINE'))->getDatabase('master')
+      (new DSN('sybase://TEST/CAFFEINE'))->getDatabase('master')
     );
   }
 
   #[@test]
   public function noDatabase() {
-    $this->assertNull(create(new DSN('mysql://root@localhost'))->getDatabase());
+    $this->assertNull((new DSN('mysql://root@localhost'))->getDatabase());
   }
 
   #[@test]
   public function noDatabaseDefault() {
     $this->assertEquals(
       'master', 
-      create(new DSN('mysql://root@localhost'))->getDatabase('master')
+      (new DSN('mysql://root@localhost'))->getDatabase('master')
     );
   }
 
   #[@test]
   public function slashDatabase() {
-    $this->assertNull(create(new DSN('mysql://root@localhost/'))->getDatabase());
+    $this->assertNull((new DSN('mysql://root@localhost/'))->getDatabase());
   }
 
   #[@test]
   public function slashDatabaseDefault() {
     $this->assertEquals(
       'master', 
-      create(new DSN('mysql://root@localhost/'))->getDatabase('master')
+      (new DSN('mysql://root@localhost/'))->getDatabase('master')
     );
   }
 
@@ -145,7 +145,7 @@ class DSNTest extends \unittest\TestCase {
   public function fileDatabase() {
     $this->assertEquals(
       '/usr/local/fb/jobs.fdb', 
-      create(new DSN('ibase://localhost//usr/local/fb/jobs.fdb'))->getDatabase()
+      (new DSN('ibase://localhost//usr/local/fb/jobs.fdb'))->getDatabase()
     );
   }
 
@@ -153,7 +153,7 @@ class DSNTest extends \unittest\TestCase {
   public function user() {
     $this->assertEquals(
       'sa', 
-      create(new DSN('sybase://sa@TEST'))->getUser()
+      (new DSN('sybase://sa@TEST'))->getUser()
     );
   }
 
@@ -161,20 +161,20 @@ class DSNTest extends \unittest\TestCase {
   public function userDefault() {
     $this->assertEquals(
       'sa', 
-      create(new DSN('sybase://sa@TEST'))->getUser('reader')
+      (new DSN('sybase://sa@TEST'))->getUser('reader')
     );
   }
 
   #[@test]
   public function noUser() {
-    $this->assertNull(create(new DSN('sybase://TEST'))->getUser());
+    $this->assertNull((new DSN('sybase://TEST'))->getUser());
   }
 
   #[@test]
   public function noUserDefault() {
     $this->assertEquals(
       'reader', 
-      create(new DSN('sybase://TEST'))->getUser('reader')
+      (new DSN('sybase://TEST'))->getUser('reader')
     );
   }
 
@@ -182,7 +182,7 @@ class DSNTest extends \unittest\TestCase {
   public function password() {
     $this->assertEquals(
       'password', 
-      create(new DSN('sybase://sa:password@TEST'))->getPassword()
+      (new DSN('sybase://sa:password@TEST'))->getPassword()
     );
   }
 
@@ -190,33 +190,33 @@ class DSNTest extends \unittest\TestCase {
   public function passwordDefault() {
     $this->assertEquals(
       'password', 
-      create(new DSN('sybase://sa:password@TEST'))->getPassword('secret')
+      (new DSN('sybase://sa:password@TEST'))->getPassword('secret')
     );
   }
 
   #[@test]
   public function noPassword() {
-    $this->assertNull(create(new DSN('sybase://sa@TEST'))->getPassword());
+    $this->assertNull((new DSN('sybase://sa@TEST'))->getPassword());
   }
 
   #[@test]
   public function noPasswordDefault() {
     $this->assertEquals(
       'secret', 
-      create(new DSN('sybase://sa@TEST'))->getPassword('secret')
+      (new DSN('sybase://sa@TEST'))->getPassword('secret')
     );
   }
   
   #[@test]
   public function noFlags() {
-    $this->assertEquals(0, create(new DSN('sybase://sa@TEST'))->getFlags());
+    $this->assertEquals(0, (new DSN('sybase://sa@TEST'))->getFlags());
   }
 
   #[@test]
   public function definedFlags() {
     $this->assertEquals(
       DB_AUTOCONNECT, 
-      create(new DSN('sybase://sa@TEST?autoconnect=1'))->getFlags()
+      (new DSN('sybase://sa@TEST?autoconnect=1'))->getFlags()
     );
   }
   
@@ -224,7 +224,7 @@ class DSNTest extends \unittest\TestCase {
   public function stringPropertyValue() {
     $this->assertEquals(
       'default', 
-      create(new DSN('sybase://sa@TEST?log=default'))->getProperty('log')
+      (new DSN('sybase://sa@TEST?log=default'))->getProperty('log')
     );
   }
 
@@ -232,7 +232,7 @@ class DSNTest extends \unittest\TestCase {
   public function arrayPropertyValue() {
     $this->assertEquals(
       array('util.log.LogObserver' => 'default'), 
-      create(new DSN('pgsql://postgres:1433/db?observer[util.log.LogObserver]=default'))->getProperty('observer')
+      (new DSN('pgsql://postgres:1433/db?observer[util.log.LogObserver]=default'))->getProperty('observer')
     );
   }
 

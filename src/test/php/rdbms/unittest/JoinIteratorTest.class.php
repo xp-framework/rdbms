@@ -30,12 +30,12 @@ class JoinIteratorTest extends TestCase {
   
   #[@test, @expect('util.NoSuchElementException')]
   public function emptyResultNextTest() {
-    create(new JoinIterator(new JoinProcessor(Job::getPeer()), new MockResultSet()))->next();
+    (new JoinIterator(new JoinProcessor(Job::getPeer()), new MockResultSet()))->next();
   }
   
   #[@test]
   public function emptyResultHasNextTest() {
-    $this->assertFalse(create(new JoinIterator(new JoinProcessor(Job::getPeer()), new MockResultSet()))->hasNext());
+    $this->assertFalse((new JoinIterator(new JoinProcessor(Job::getPeer()), new MockResultSet()))->hasNext());
   }
   
   #[@test]

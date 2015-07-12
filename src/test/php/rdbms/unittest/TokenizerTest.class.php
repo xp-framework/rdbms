@@ -174,7 +174,7 @@ abstract class TokenizerTest extends \unittest\TestCase {
 
   #[@test]
   public function timeStampToken() {
-    $t= create(new Date('1977-12-14'))->getTime();
+    $t= (new Date('1977-12-14'))->getTime();
     $this->assertEquals(
       "select * from news where created= '1977-12-14 00:00:00'",
       $this->fixture->prepare('select * from news where created= %u', $t)

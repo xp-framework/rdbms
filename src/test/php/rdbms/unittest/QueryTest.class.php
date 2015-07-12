@@ -35,7 +35,7 @@ class QueryTest extends TestCase {
     $this->qa= new SelectQuery();
     $this->qa->setPeer(Job::getPeer());
     $this->qa->setCriteria(
-      create(new Criteria(Job::column('job_id')->equal(5)))->setProjection(
+      (new Criteria(Job::column('job_id')->equal(5)))->setProjection(
         \rdbms\criterion\Projections::ProjectionList()
         ->add(Job::column('job_id'))
         ->add(Job::column('title'))
@@ -45,7 +45,7 @@ class QueryTest extends TestCase {
     $this->qb= new SelectQuery();
     $this->qb->setPeer(Person::getPeer());
     $this->qb->setCriteria(
-      create(new Criteria())->setProjection(
+      (new Criteria())->setProjection(
         \rdbms\criterion\Projections::ProjectionList()
         ->add(Person::column('job_id'))
         ->add(Person::column('name'))
@@ -78,7 +78,7 @@ class QueryTest extends TestCase {
   
   #[@test]
   public function executeWithRestriction() {
-    $this->assertInstanceOf('rdbms.query.SelectQuery', create(new SelectQuery())->withRestriction(Job::column('job_id')->equal(5)));
+    $this->assertInstanceOf('rdbms.query.SelectQuery', (new SelectQuery())->withRestriction(Job::column('job_id')->equal(5)));
   }
   
   #[@test]

@@ -183,17 +183,17 @@ class CriteriaTest extends TestCase {
 
   #[@test]
   public function addReturnsThis() {
-    $this->assertInstanceOf('rdbms.Criteria', create(new Criteria())->add('job_id', 1, EQUAL));
+    $this->assertInstanceOf('rdbms.Criteria', (new Criteria())->add('job_id', 1, EQUAL));
   }
 
   #[@test]
   public function addOrderByReturnsThis() {
-    $this->assertInstanceOf('rdbms.Criteria', create(new Criteria())->add('job_id', 1, EQUAL)->addOrderBy('valid_from', DESCENDING));
+    $this->assertInstanceOf('rdbms.Criteria', (new Criteria())->add('job_id', 1, EQUAL)->addOrderBy('valid_from', DESCENDING));
   }
 
   #[@test]
   public function addGroupByReturnsThis() {
-    $this->assertInstanceOf('rdbms.Criteria', create(new Criteria())->add('job_id', 1, EQUAL)->addGroupBy('valid_from'));
+    $this->assertInstanceOf('rdbms.Criteria', (new Criteria())->add('job_id', 1, EQUAL)->addGroupBy('valid_from'));
   }
 
   #[@test]
@@ -251,12 +251,12 @@ class CriteriaTest extends TestCase {
 
   #[@test, @expect('rdbms.SQLStateException')]
   public function addGroupByNonExistantColumnString() {
-    create(new Criteria())->addGroupBy('not_existant')->toSQL($this->conn, $this->peer);
+    (new Criteria())->addGroupBy('not_existant')->toSQL($this->conn, $this->peer);
   }
 
   #[@test]
   public function fetchModeChaining() {
-    $this->assertInstanceOf('rdbms.Criteria', create(new Criteria())->setFetchmode(\rdbms\join\Fetchmode::join('PersonJob')));
+    $this->assertInstanceOf('rdbms.Criteria', (new Criteria())->setFetchmode(\rdbms\join\Fetchmode::join('PersonJob')));
   }
 
   #[@test]
@@ -264,7 +264,7 @@ class CriteriaTest extends TestCase {
     $crit= new Criteria();
     $this->assertFalse($crit->isJoin());
     $this->assertTrue($crit->setFetchmode(\rdbms\join\Fetchmode::join('PersonJob'))->isJoin());
-    $crit->fetchmode= array();
+    $crit->fetchmode= [];
     $this->assertFalse($crit->isJoin());
     $this->assertFalse($crit->setFetchmode(\rdbms\join\Fetchmode::select('PersonJob'))->isJoin());
   }
@@ -276,7 +276,7 @@ class CriteriaTest extends TestCase {
     $jp->enterJoinContext();
     $this->assertEquals(
       '1 = 1',
-      create(new Criteria())
+      (new Criteria())
       ->setFetchmode(\rdbms\join\Fetchmode::join('PersonJob'))
       ->toSQL($this->conn, $this->peer)
     );
@@ -290,11 +290,11 @@ class CriteriaTest extends TestCase {
     $jp->enterJoinContext();
     $this->assertEquals(
       'PersonJob_Department.department_id = 5 and start.job_id = 2',
-      create(new Criteria())
-      ->setFetchmode(\rdbms\join\Fetchmode::join('PersonJob'))
-      ->add(Job::column('PersonJob->Department->department_id')->equal(5))
-      ->add(Job::column('job_id')->equal(2))
-      ->toSQL($this->conn, $this->peer)
+      (new Criteria())
+        ->setFetchmode(\rdbms\join\Fetchmode::join('PersonJob'))
+        ->add(Job::column('PersonJob->Department->department_id')->equal(5))
+        ->add(Job::column('job_id')->equal(2))
+        ->toSQL($this->conn, $this->peer)
     );
     $jp->leaveJoinContext();
   }
@@ -307,13 +307,13 @@ class CriteriaTest extends TestCase {
     try {
       $this->assertEquals(
         'select  PersonJob.job_id, PersonJob_Department.department_id from JOBS.job as start, JOBS.Person as PersonJob, JOBS.Department as PersonJob_Department where start.job_id *= PersonJob.job_id and PersonJob.department_id *= PersonJob_Department.department_id and  1 = 1',
-        create(new Criteria())
-        ->setFetchmode(\rdbms\join\Fetchmode::join('PersonJob'))
-        ->setProjection(\rdbms\criterion\Projections::projectionList()
-          ->add(Job::column('PersonJob->job_id'))
-          ->add(Job::column('PersonJob->Department->department_id'))
-        )
-        ->getSelectQueryString($this->conn, $this->peer, $jp)
+        (new Criteria())
+          ->setFetchmode(\rdbms\join\Fetchmode::join('PersonJob'))
+          ->setProjection(\rdbms\criterion\Projections::projectionList()
+            ->add(Job::column('PersonJob->job_id'))
+            ->add(Job::column('PersonJob->Department->department_id'))
+          )
+          ->getSelectQueryString($this->conn, $this->peer, $jp)
       );
     } catch (\lang\Throwable $e) {
       // Fall through

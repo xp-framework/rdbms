@@ -45,7 +45,7 @@ class ProfilingObserverTest extends TestCase {
   }
 
   #[@test]
-  public function createNoArg() {
+  public function create_without_arg() {
     new ProfilingObserver();
   }
 
@@ -61,36 +61,36 @@ class ProfilingObserverTest extends TestCase {
   #  'Select * from world'
   #))]
   public function select_type($sql) {
-    $this->assertEquals('select', create(new ProfilingObserver())->typeOf($sql));
+    $this->assertEquals('select', (new ProfilingObserver())->typeOf($sql));
   }
 
   public function update_type() {
-    $this->assertEquals('update', create(new ProfilingObserver())->typeOf('update world set ...'));
+    $this->assertEquals('update', (new ProfilingObserver())->typeOf('update world set ...'));
   }
 
   public function insert_type() {
-    $this->assertEquals('insert', create(new ProfilingObserver())->typeOf('insert into world ...'));
+    $this->assertEquals('insert', (new ProfilingObserver())->typeOf('insert into world ...'));
   }
 
   public function delete_type() {
-    $this->assertEquals('delete', create(new ProfilingObserver())->typeOf('delete from world ...'));
+    $this->assertEquals('delete', (new ProfilingObserver())->typeOf('delete from world ...'));
   }
 
   public function set_type() {
-    $this->assertEquals('set', create(new ProfilingObserver())->typeOf('set showplan on'));
+    $this->assertEquals('set', (new ProfilingObserver())->typeOf('set showplan on'));
   }
 
   public function show_type() {
-    $this->assertEquals('show', create(new ProfilingObserver())->typeOf('show keys from ...'));
+    $this->assertEquals('show', (new ProfilingObserver())->typeOf('show keys from ...'));
   }
 
   public function unknown_type() {
-    $this->assertEquals('unknown', create(new ProfilingObserver())->typeOf('explain ...'));
+    $this->assertEquals('unknown', (new ProfilingObserver())->typeOf('explain ...'));
   }
 
   #[@test]
   public function emitTiming_without_actually_having_any_timing_does_not_fatal() {
-    create(new ProfilingObserver())->emitTimings();
+    (new ProfilingObserver())->emitTimings();
   }
 
   #[@test, @expect('lang.IllegalArgumentException')]
@@ -131,7 +131,7 @@ class ProfilingObserverTest extends TestCase {
   public function destructor_emits_timing() {
     $o= $this->observerWithSelect();
     $stream= new \io\streams\MemoryOutputStream();
-    $lc= create(new LogCategory('profiling'))->withAppender(new StreamAppender($stream));
+    $lc= (new LogCategory('profiling'))->withAppender(new StreamAppender($stream));
     $o->setTrace($lc);
     $o= null;
 

@@ -335,7 +335,7 @@ class FinderTest extends TestCase {
         'expire_at'   => null
       )
     )));
-    $all= create(new GenericFinder(Job::getPeer()))->getAll(new \rdbms\Criteria());
+    $all= (new GenericFinder(Job::getPeer()))->getAll(new \rdbms\Criteria());
     $this->assertEquals(2, sizeof($all));
     $this->assertInstanceOf('rdbms.unittest.dataset.Job', $all[0]);
     $this->assertInstanceOf('rdbms.unittest.dataset.Job', $all[1]);

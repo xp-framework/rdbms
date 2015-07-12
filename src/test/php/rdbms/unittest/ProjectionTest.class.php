@@ -79,7 +79,7 @@ class ProjectionTest extends TestCase {
       'count(*) as \'count\'',
       'count(*) as "count"',
       'count(*) as \'count\'',
-      create(new Criteria())->setProjection(Projections::count())
+      (new Criteria())->setProjection(Projections::count())
     );
   }
 
@@ -90,7 +90,7 @@ class ProjectionTest extends TestCase {
       'count(job_id) as \'count_job_id\'',
       'count(job_id) as "count_job_id"',
       'count(job_id) as \'count_job_id\'',
-      create(new Criteria())->setProjection(Projections::count(Job::column('job_id')), 'count_job_id')
+      (new Criteria())->setProjection(Projections::count(Job::column('job_id')), 'count_job_id')
     );
   }
 
@@ -101,7 +101,7 @@ class ProjectionTest extends TestCase {
       'count(job_id) as \'counting all\'',
       'count(job_id) as "counting all"',
       'count(job_id) as \'counting all\'',
-      create(new Criteria())->setProjection(Projections::count(Job::column('job_id')), "counting all")
+      (new Criteria())->setProjection(Projections::count(Job::column('job_id')), "counting all")
     );
   }
 
@@ -112,7 +112,7 @@ class ProjectionTest extends TestCase {
       'count(*) as \'counting all\'',
       'count(*) as "counting all"',
       'count(*) as \'counting all\'',
-      create(new Criteria())->setProjection(Projections::count('*'), "counting all")
+      (new Criteria())->setProjection(Projections::count('*'), "counting all")
     );
   }
 
@@ -123,7 +123,7 @@ class ProjectionTest extends TestCase {
       'avg(job_id)',
       'avg(job_id)',
       'avg(job_id)',
-      create(new Criteria())->setProjection(Projections::average(Job::column("job_id")))
+      (new Criteria())->setProjection(Projections::average(Job::column("job_id")))
     );
   }
 
@@ -134,7 +134,7 @@ class ProjectionTest extends TestCase {
       'sum(job_id)',
       'sum(job_id)',
       'sum(job_id)',
-      create(new Criteria())->setProjection(Projections::sum(Job::column("job_id")))
+      (new Criteria())->setProjection(Projections::sum(Job::column("job_id")))
     );
   }
 
@@ -145,7 +145,7 @@ class ProjectionTest extends TestCase {
       'min(job_id)',
       'min(job_id)',
       'min(job_id)',
-      create(new Criteria())->setProjection(Projections::min(Job::column("job_id")))
+      (new Criteria())->setProjection(Projections::min(Job::column("job_id")))
     );
   }
 
@@ -156,7 +156,7 @@ class ProjectionTest extends TestCase {
       'max(job_id)',
       'max(job_id)',
       'max(job_id)',
-      create(new Criteria())->setProjection(Projections::max(Job::column("job_id")))
+      (new Criteria())->setProjection(Projections::max(Job::column("job_id")))
     );
   }
 
@@ -167,7 +167,7 @@ class ProjectionTest extends TestCase {
       'job_id',
       'job_id',
       'job_id',
-      create(new Criteria())->setProjection(Projections::property(Job::column("job_id")))
+      (new Criteria())->setProjection(Projections::property(Job::column("job_id")))
     );
   }
 
@@ -178,7 +178,7 @@ class ProjectionTest extends TestCase {
       'job_id, title',
       'job_id, title',
       'job_id, title',
-      create(new Criteria())->setProjection(Projections::projectionList()
+      (new Criteria())->setProjection(Projections::projectionList()
         ->add(Projections::property(Job::column('job_id')))
         ->add(Projections::property(Job::column('title')))
     ));
@@ -195,7 +195,7 @@ class ProjectionTest extends TestCase {
       'job_id as \'id\', title',
       'job_id as "id", title',
       'job_id as \'id\', title',
-      create(new Criteria())->setProjection(Projections::projectionList()
+      (new Criteria())->setProjection(Projections::projectionList()
         ->add(Projections::property(Job::column('job_id')), 'id')
         ->add(Job::column('title'))
     ));

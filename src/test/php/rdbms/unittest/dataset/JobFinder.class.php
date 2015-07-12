@@ -38,7 +38,7 @@ class JobFinder extends Finder {
    */
   #[@finder(kind= COLLECTION)]
   public function newestJobs() {
-    return create(new \rdbms\Criteria())->addOrderBy('valid_from', DESCENDING);
+    return (new \rdbms\Criteria())->addOrderBy('valid_from', DESCENDING);
   }
 
   /**
