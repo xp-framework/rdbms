@@ -3,6 +3,9 @@ RDBMS support for the XP Framework: MySQL, Sybase, MSSQL, PostgreSQL, SQLite3, I
 
 ## ?.?.? / ????-??-??
 
+* Fixed `rdbms.finder.FinderMethod` to throw correct exception
+  (@thekid)
+
 ## 6.3.2 / 2015-06-24
 
 * Overwrite default socket timeouts with -1 (no timeout). This way SQL

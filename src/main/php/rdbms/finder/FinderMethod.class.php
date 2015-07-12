@@ -82,7 +82,7 @@ class FinderMethod extends \lang\Object {
     try {
       return $this->method->invoke($this->finder, $args);
     } catch (\lang\Throwable $e) {
-      throw new \FinderException($this->method->getName().' invocation failed', $e);
+      throw new FinderException($this->method->getName().' invocation failed', $e);
     }
   }
 }
