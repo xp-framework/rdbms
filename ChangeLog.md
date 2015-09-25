@@ -3,6 +3,8 @@ RDBMS support for the XP Framework: MySQL, Sybase, MSSQL, PostgreSQL, SQLite3, I
 
 ## ?.?.? / ????-??-??
 
+## 6.4.1 / 2015-09-25
+
 * Fixed problem with TDS packets longer than packet size - @thekid
 
 ## 6.4.0 / 2015-07-12
