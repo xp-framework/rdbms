@@ -231,7 +231,7 @@ class TdsDataStream extends \lang\Object {
    * @throws  rdbms.tds.TdsProtocolException
    */
   protected function read0($length) {
-    while (-1 === $length || strlen($this->buffer) < $length) {
+    while (-1 === $length || 0 === $this->header['status'] || strlen($this->buffer) < $length) {
       if (1 === $this->header['status']) return strlen($this->buffer);
 
       $bytes= $this->readFully(8);
