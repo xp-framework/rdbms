@@ -8,11 +8,11 @@ use rdbms\SQLDialect;
  */
 class PostgreSQLDialect extends SQLDialect {
   private static
-    $dateparts= array(
+    $dateparts= [
       'dayofweek' => 'dow',
       'dayofyear' => 'doy',
-    ),
-    $implementations= array(
+    ],
+    $implementations= [
       'rand_0'       => 'random()',
       'trim_1'       => "trim(both ' ' from %s)",
       'trim_2'       => 'trim(both %2s from %1s)',
@@ -22,13 +22,13 @@ class PostgreSQLDialect extends SQLDialect {
       'ltrim_2'      => 'ltrim(%s, %s)',
       'substring_3'  => 'substring(%s from %s for %s)',
       'substring_2'  => 'substring(%s from %s)',
-    );
+    ];
 
   public
     $escape       = "'",
-    $escapeRules  = array("'"  => "''"),
+    $escapeRules  = ["'"  => "''"],
     $escapeT      = '"',
-    $escapeTRules = array('"'  => '""'),
+    $escapeTRules = ['"'  => '""'],
     $dateFormat   = 'Y-m-d H:i:s';
       
   /**

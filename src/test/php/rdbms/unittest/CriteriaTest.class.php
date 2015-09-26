@@ -1,5 +1,7 @@
 <?php namespace rdbms\unittest;
  
+use lang\IllegalArgumentException;
+use rdbms\SQLStateException;
 use rdbms\Criteria;
 use rdbms\criterion\Restrictions;
 use rdbms\DriverManager;
@@ -44,12 +46,12 @@ class CriteriaTest extends TestCase {
 
   #[@test]
   public function simpleCriteria() {
-    $this->assertSql('where job_id = 1', new Criteria(array('job_id', 1, EQUAL)));
+    $this->assertSql('where job_id = 1', new Criteria(['job_id', 1, EQUAL]));
   }
 
-  #[@test, @expect('lang.IllegalArgumentException')]
+  #[@test, @expect(IllegalArgumentException::class)]
   public function nonExistantFieldCausesException() {
-    $criteria= new Criteria(array('non-existant-field', 1, EQUAL));
+    $criteria= new Criteria(['non-existant-field', 1, EQUAL]);
     $criteria->toSQL($this->conn, $this->peer);
   }
 
@@ -71,7 +73,7 @@ class CriteriaTest extends TestCase {
   #[@test]
   public function inCriteria() {
     $c= new Criteria();
-    $c->add('job_id', array(1, 2), IN);
+    $c->add('job_id', [1, 2], IN);
     
     $this->assertSql('where job_id in (1, 2)', $c);
   }
@@ -79,7 +81,7 @@ class CriteriaTest extends TestCase {
   #[@test]
   public function notInCriteria() {
     $c= new Criteria();
-    $c->add('job_id', array(1, 2), NOT_IN);
+    $c->add('job_id', [1, 2], NOT_IN);
     
     $this->assertSql('where job_id not in (1, 2)', $c);
   }
@@ -152,7 +154,7 @@ class CriteriaTest extends TestCase {
   public function restrictionsFactory() {
     $job_id= Job::column('job_id');
     $c= new Criteria(Restrictions::anyOf(
-      Restrictions::not($job_id->in(array(1, 2, 3))),
+      Restrictions::not($job_id->in([1, 2, 3])),
       Restrictions::allOf(
         Job::column('title')->like('Hello%'),
         Job::column('valid_from')->greaterThan(new \util\Date('2006-01-01'))
@@ -177,7 +179,7 @@ class CriteriaTest extends TestCase {
   public function constructorAcceptsVarArgArrays() {
     $this->assertSql(
       'where job_id = 1 and title = "Hello"', 
-      new Criteria(array('job_id', 1, EQUAL), array('title', 'Hello', EQUAL))
+      new Criteria(['job_id', 1, EQUAL], ['title', 'Hello', EQUAL])
     );
   }
 
@@ -244,12 +246,12 @@ class CriteriaTest extends TestCase {
     );
   }
 
-  #[@test, @expect('lang.IllegalArgumentException')]
+  #[@test, @expect(IllegalArgumentException::class)]
   public function createNonExistantColumn() {
     Job::column('not_existant');
   }
 
-  #[@test, @expect('rdbms.SQLStateException')]
+  #[@test, @expect(SQLStateException::class)]
   public function addGroupByNonExistantColumnString() {
     (new Criteria())->addGroupBy('not_existant')->toSQL($this->conn, $this->peer);
   }
@@ -272,7 +274,7 @@ class CriteriaTest extends TestCase {
   #[@test]
   public function testJoinWithoutCondition() {
     $jp= new \rdbms\join\JoinProcessor(Job::getPeer());
-    $jp->setFetchModes(array('PersonJob->Department' => 'join'));
+    $jp->setFetchModes(['PersonJob->Department' => 'join']);
     $jp->enterJoinContext();
     $this->assertEquals(
       '1 = 1',
@@ -286,7 +288,7 @@ class CriteriaTest extends TestCase {
   #[@test]
   public function testJoinWithCondition() {
     $jp= new \rdbms\join\JoinProcessor(Job::getPeer());
-    $jp->setFetchModes(array('PersonJob->Department' => 'join'));
+    $jp->setFetchModes(['PersonJob->Department' => 'join']);
     $jp->enterJoinContext();
     $this->assertEquals(
       'PersonJob_Department.department_id = 5 and start.job_id = 2',
@@ -302,7 +304,7 @@ class CriteriaTest extends TestCase {
   #[@test]
   public function testJoinWithProjection() {
     $jp= new \rdbms\join\JoinProcessor(Job::getPeer());
-    $jp->setFetchModes(array('PersonJob->Department' => 'join'));
+    $jp->setFetchModes(['PersonJob->Department' => 'join']);
     $jp->enterJoinContext();
     try {
       $this->assertEquals(

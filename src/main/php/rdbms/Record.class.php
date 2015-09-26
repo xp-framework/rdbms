@@ -12,7 +12,7 @@ class Record extends \lang\Object {
    *
    * @param   array params default NULL
    */
-  public function __construct($params= array()) {
+  public function __construct($params= []) {
     foreach (array_keys($params) as $key) {
       $k= substr(strrchr('#'.$key, '#'), 1);
       $this->{$k}= $params[$key];

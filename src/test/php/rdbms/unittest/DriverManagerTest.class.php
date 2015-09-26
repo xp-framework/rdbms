@@ -1,5 +1,8 @@
 <?php namespace rdbms\unittest;
 
+use rdbms\DriverNotSupportedException;
+use lang\FormatException;
+use lang\IllegalArgumentException;
 use rdbms\DriverManager;
 
 /**
@@ -8,7 +11,7 @@ use rdbms\DriverManager;
  * @see  xp://rdbms.DriverManager
  */
 class DriverManagerTest extends \unittest\TestCase {
-  protected $registered= array();
+  protected $registered= [];
 
   /**
    * Registers driver and tracks registration.
@@ -30,22 +33,22 @@ class DriverManagerTest extends \unittest\TestCase {
     }
   }
 
-  #[@test, @expect('rdbms.DriverNotSupportedException')]
+  #[@test, @expect(DriverNotSupportedException::class)]
   public function unsupportedDriver() {
     DriverManager::getConnection('unsupported://localhost');
   }
 
-  #[@test, @expect('lang.FormatException')]
+  #[@test, @expect(FormatException::class)]
   public function nullConnection() {
     DriverManager::getConnection(null);
   }
 
-  #[@test, @expect('lang.FormatException')]
+  #[@test, @expect(FormatException::class)]
   public function emptyConnection() {
     DriverManager::getConnection('');
   }
 
-  #[@test, @expect('lang.FormatException')]
+  #[@test, @expect(FormatException::class)]
   public function malformedConnection() {
     DriverManager::getConnection('not.a.dsn');
   }
@@ -58,7 +61,7 @@ class DriverManagerTest extends \unittest\TestCase {
     );
   }
 
-  #[@test, @expect('rdbms.DriverNotSupportedException')]
+  #[@test, @expect(DriverNotSupportedException::class)]
   public function unsupportedDriverInMySQLDriverFamily() {
     DriverManager::getConnection('mysql+unsupported://localhost');
   }
@@ -80,7 +83,7 @@ class DriverManagerTest extends \unittest\TestCase {
     );
   }
 
-  #[@test, @expect('lang.IllegalArgumentException')]
+  #[@test, @expect(IllegalArgumentException::class)]
   public function registerNonDbConnection() {
     $this->register('fail', $this->getClass());
   }
@@ -95,13 +98,13 @@ class DriverManagerTest extends \unittest\TestCase {
     $this->register('test+a', \lang\ClassLoader::defineClass(
       'rdbms.unittest.mock.AMockConnection', 
       'rdbms.unittest.mock.MockConnection', 
-      array(), 
+      [], 
       '{}'
     ));
     $this->register('test+b', \lang\ClassLoader::defineClass(
       'rdbms.unittest.mock.BMockConnection', 
       'rdbms.unittest.mock.MockConnection', 
-      array(), 
+      [], 
       '{}'
     ));
 

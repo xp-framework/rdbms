@@ -251,7 +251,7 @@ class MySqlxProtocol extends \lang\Object {
    */
   protected function field_41($f) {
     $consumed= 0;
-    $field= array();
+    $field= [];
     $field['catalog']= $this->lstr($f, $consumed);
     $field['db']= $this->lstr($f, $consumed);
     $field['table']= $this->lstr($f, $consumed);
@@ -269,7 +269,7 @@ class MySqlxProtocol extends \lang\Object {
    */
   protected function field_40($f) {
     $consumed= 0;
-    $field= array();
+    $field= [];
     $field['catalog']= $field['db']= null;
     $field['table']= $this->lstr($f, $consumed);
     $field['org_table']= null;
@@ -304,7 +304,7 @@ class MySqlxProtocol extends \lang\Object {
       return $affected;
     } else {                          // Result sets, process fields and EOF record
       $extra= $this->length($data, $consumed, true);
-      $fields= array();
+      $fields= [];
       for ($i= 0; $i < $nfields; $i++) {
         $fields[]= $this->{$this->fieldparser}($this->read());
       }
@@ -349,7 +349,7 @@ class MySqlxProtocol extends \lang\Object {
       return null;
     }
 
-    $record= array();
+    $record= [];
     $consumed= 0;
     foreach ($fields as $i => $field) {
       $value= $this->lstr($r, $consumed);
@@ -380,7 +380,7 @@ class MySqlxProtocol extends \lang\Object {
    * @return  [:var][] records
    */
   public function consume($fields) {
-    $records= array();
+    $records= [];
     while ($record= $this->fetch($fields)) {
       $records[]= $record;
     }

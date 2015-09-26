@@ -24,7 +24,7 @@ abstract class DriverImplementationsProvider extends \lang\Object {
    * @return  string[] implementations
    */
   public function implementationsFor($driver) {
-    return null === $this->parent ? array() : $this->parent->implementationsFor($driver);
+    return null === $this->parent ? [] : $this->parent->implementationsFor($driver);
   }
   
   /**

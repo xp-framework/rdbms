@@ -67,8 +67,8 @@
  */
 class DriverManager extends \lang\Object {
   protected static $instance= null;
-  public $drivers= array();
-  protected $lookup= array();
+  public $drivers= [];
+  protected $lookup= [];
   protected $provider= null;
 
   static function __static() {
@@ -114,7 +114,7 @@ class DriverManager extends \lang\Object {
       ));
     }
     self::$instance->drivers[$name]= $class;
-    self::$instance->lookup= array();
+    self::$instance->lookup= [];
   }
   
   /**
@@ -124,7 +124,7 @@ class DriverManager extends \lang\Object {
    */
   public static function remove($name) {
     unset(self::$instance->drivers[$name]);
-    self::$instance->lookup= array();
+    self::$instance->lookup= [];
   }
   
   /**

@@ -1,5 +1,6 @@
 <?php namespace rdbms\unittest\tds;
 
+use rdbms\tds\TdsProtocolException;
 use rdbms\tds\TdsDataStream;
 use peer\Socket;
 use lang\types\Bytes;
@@ -17,7 +18,7 @@ class TdsDataStreamTest extends \unittest\TestCase {
    */
   #[@beforeClass]
   public static function mockSocket() {
-    self::$sock= \lang\ClassLoader::defineClass('rdbms.unittest.tds.MockTdsSocket', 'peer.Socket', array(), '{
+    self::$sock= \lang\ClassLoader::defineClass('rdbms.unittest.tds.MockTdsSocket', 'peer.Socket', [], '{
       public $bytes;
       protected $offset= 0;
       
@@ -71,7 +72,7 @@ class TdsDataStreamTest extends \unittest\TestCase {
     $this->assertEquals(new Bytes($bytes), new Bytes($field->get($str)->bytes));
   }
 
-  #[@test, @expect('rdbms.tds.TdsProtocolException')]
+  #[@test, @expect(TdsProtocolException::class)]
   public function nullHeader() { 
     $this->newDataStream(null)->read(1);
   }
@@ -162,7 +163,7 @@ class TdsDataStreamTest extends \unittest\TestCase {
   public function get() {
     $str= $this->newDataStream($this->headerWith(4)."\x05\x06\x07\x08");
     $this->assertEquals(
-      array('length' => 0x05, 'flags' => 0x06, 'state' => 0x0807),
+      ['length' => 0x05, 'flags' => 0x06, 'state' => 0x0807],
       $str->get("Clength/Cflags/vstate", 4)
     );
   }

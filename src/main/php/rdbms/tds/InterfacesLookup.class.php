@@ -31,7 +31,7 @@ class InterfacesLookup extends \lang\Object implements ConnectionLookup {
   protected function parse() {
     $this->file->open(FILE_MODE_READ);
     $section= null;
-    $sections= array();
+    $sections= [];
     while (false !== ($line= $this->file->readLine())) {
       if ('' === $line || '#' === $line{0}) {
         continue;

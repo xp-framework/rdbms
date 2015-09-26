@@ -24,9 +24,9 @@ define('DB_NEWLINK',          0x0010);
 class DSN extends \lang\Object {
   public 
     $url      = null,
-    $dsn      = array(),
+    $dsn      = [],
     $flags    = 0,
-    $prop     = array();
+    $prop     = [];
     
   /**
    * Constructor

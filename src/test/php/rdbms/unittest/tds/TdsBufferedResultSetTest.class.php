@@ -17,7 +17,7 @@ class TdsBufferedResultSetTest extends \unittest\TestCase {
    */
   #[@beforeClass]
   public static function mockSocket() {
-    self::$proto= \lang\ClassLoader::defineClass('rdbms.unittest.tds.MockTdsProtocol', 'lang.Object', array(), '{
+    self::$proto= \lang\ClassLoader::defineClass('rdbms.unittest.tds.MockTdsProtocol', 'lang.Object', [], '{
       protected $records= array();
 
       public function __construct($records) {
@@ -37,19 +37,19 @@ class TdsBufferedResultSetTest extends \unittest\TestCase {
    * @return rdbms.tds.TdsBufferedResultSet
    */
   protected function newResultSet($result) {
-    $records= array();
+    $records= [];
     if ($result) {
       foreach ($result[0] as  $name => $value) {
-        $fields[]= array(
+        $fields[]= [
           'name'  => $name, 
           'type'  => is_int($value) ? TdsProtocol::T_INT4 : TdsProtocol::T_VARCHAR
-        );
+        ];
       }
       foreach ($result as $hash) {
         $records[]= array_values($hash);
       }
     } else {
-      $fields= array();
+      $fields= [];
     }
 
     return new TdsBufferedResultSet(self::$proto->newInstance($records), $fields);
@@ -57,51 +57,51 @@ class TdsBufferedResultSetTest extends \unittest\TestCase {
 
   #[@test]
   public function can_create_with_empty() { 
-    $this->newResultSet(array());
+    $this->newResultSet([]);
   }
 
   #[@test]
   public function can_create() { 
-    $this->newResultSet(array(
-      array(
+    $this->newResultSet([
+      [
         'id'   => 6100,
         'name' => 'Binford'
-      )
-    ));
+      ]
+    ]);
   }
 
   #[@test]
   public function next() { 
-    $records= array(
-    );
+    $records= [
+    ];
     $fixture= $this->newResultSet($records);
     $this->assertFalse($fixture->next());
   }
 
   #[@test]
   public function next_once() { 
-    $records= array(
-      array(
+    $records= [
+      [
         'id'   => 6100,
         'name' => 'Binford'
-      )
-    );
+      ]
+    ];
     $fixture= $this->newResultSet($records);
     $this->assertEquals($records[0], $fixture->next());
   }
 
   #[@test]
   public function next_twice() { 
-    $records= array(
-      array(
+    $records= [
+      [
         'id'   => 6100,
         'name' => 'Binford Lawnmower'
-      ),
-      array(
+      ],
+      [
         'id'   => 61000,
         'name' => 'Binford Moonrocket'
-      )
-    );
+      ]
+    ];
     $fixture= $this->newResultSet($records);
     $this->assertEquals($records[0], $fixture->next());
     $this->assertEquals($records[1], $fixture->next());
@@ -109,12 +109,12 @@ class TdsBufferedResultSetTest extends \unittest\TestCase {
 
   #[@test]
   public function next_returns_false_at_end() { 
-    $records= array(
-      array(
+    $records= [
+      [
         'id'   => 6100,
         'name' => 'Binford Lawnmower'
-      ),
-    );
+      ],
+    ];
     $fixture= $this->newResultSet($records);
     $fixture->next();
     $this->assertFalse($fixture->next());
@@ -122,12 +122,12 @@ class TdsBufferedResultSetTest extends \unittest\TestCase {
 
   #[@test]
   public function seek_to_0_before_start() {
-    $records= array(
-      array(
+    $records= [
+      [
         'id'   => 6100,
         'name' => 'Binford Lawnmower'
-      )
-    );
+      ]
+    ];
     $fixture= $this->newResultSet($records);
     $fixture->seek(0);
     $this->assertEquals($records[0], $fixture->next());
@@ -135,12 +135,12 @@ class TdsBufferedResultSetTest extends \unittest\TestCase {
 
   #[@test]
   public function seek_to_0_after_start() {
-    $records= array(
-      array(
+    $records= [
+      [
         'id'   => 6100,
         'name' => 'Binford Lawnmower'
-      )
-    );
+      ]
+    ];
     $fixture= $this->newResultSet($records);
     $fixture->next();
     $fixture->seek(0);
@@ -149,16 +149,16 @@ class TdsBufferedResultSetTest extends \unittest\TestCase {
 
   #[@test]
   public function seek_to_1() {
-    $records= array(
-      array(
+    $records= [
+      [
         'id'   => 6100,
         'name' => 'Binford Lawnmower'
-      ),
-      array(
+      ],
+      [
         'id'   => 61000,
         'name' => 'Binford Moonrocket'
-      )
-    );
+      ]
+    ];
     $fixture= $this->newResultSet($records);
     $fixture->seek(1);
     $this->assertEquals($records[1], $fixture->next());
@@ -166,16 +166,16 @@ class TdsBufferedResultSetTest extends \unittest\TestCase {
 
   #[@test, @expect(class= 'rdbms.SQLException', withMessage= 'Cannot seek to offset 1, out of bounds')]
   public function seek_to_offset_exceeding_length() {
-    $fixture= $this->newResultSet(array())->seek(1);
+    $fixture= $this->newResultSet([])->seek(1);
   }
 
   #[@test, @expect(class= 'rdbms.SQLException', withMessage= 'Cannot seek to offset -1, out of bounds')]
   public function seek_to_negative_offset() {
-    $fixture= $this->newResultSet(array())->seek(-1);
+    $fixture= $this->newResultSet([])->seek(-1);
   }
 
   #[@test, @expect(class= 'rdbms.SQLException', withMessage= 'Cannot seek to offset 0, out of bounds')]
   public function seek_to_zero_offset_on_empty() {
-    $fixture= $this->newResultSet(array())->seek(0);
+    $fixture= $this->newResultSet([])->seek(0);
   }
 }

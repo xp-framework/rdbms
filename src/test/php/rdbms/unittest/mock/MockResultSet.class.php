@@ -5,16 +5,16 @@
  */
 class MockResultSet extends \rdbms\ResultSet {
   protected $offset= 0;
-  protected $data= array();
+  protected $data= [];
 
   /**
    * Constructor
    *
    * @param   var[] data
    */
-  public function __construct($data= array()) {
+  public function __construct($data= []) {
     $s= sizeof($data);
-    parent::__construct($s, $s ? array_keys($data[0]) : array());
+    parent::__construct($s, $s ? array_keys($data[0]) : []);
     $this->data= $data;
   }
 

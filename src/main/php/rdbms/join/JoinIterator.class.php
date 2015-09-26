@@ -10,7 +10,7 @@
 class JoinIterator extends \lang\Object implements \util\XPIterator, JoinExtractable {
   private
     $resultObj= null,
-    $record= array(),
+    $record= [],
     $obj= null,
     $obj_key= '',
     $jp= null,

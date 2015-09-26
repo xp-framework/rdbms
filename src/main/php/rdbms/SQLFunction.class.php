@@ -7,7 +7,7 @@ class SQLFunction extends \lang\Object implements SQLFragment {
   public
     $func = '',
     $type = '%s',
-    $args = array();
+    $args = [];
 
   /**
    * Constructor
@@ -16,7 +16,7 @@ class SQLFunction extends \lang\Object implements SQLFragment {
    * @param   string type one of the %-tokens
    * @param   var[] arguments
    */
-  public function __construct($function, $type, $arguments= array()) {
+  public function __construct($function, $type, $arguments= []) {
     $this->func= $function;
     $this->type= $type;
     $this->args= $arguments;
@@ -32,7 +32,7 @@ class SQLFunction extends \lang\Object implements SQLFragment {
   public function asSql(DBConnection $conn) {
     $args= $this->args;
     array_unshift($args, $conn->getFormatter()->dialect->formatFunction($this));
-    return call_user_func_array(array($conn, 'prepare'), $args);
+    return call_user_func_array([$conn, 'prepare'], $args);
   }
 
   /**

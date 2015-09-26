@@ -16,11 +16,11 @@ define('DESCENDING',      'desc');
  */
 class Criteria extends \lang\Object implements SQLExpression {
   public 
-    $conditions   = array(),
-    $orderings    = array(),
-    $groupings    = array(),
+    $conditions   = [],
+    $orderings    = [],
+    $groupings    = [],
     $projection   = null,
-    $fetchmode    = array();
+    $fetchmode    = [];
 
   static function __static() {
     SimpleExpression::initialize();   // Defines global constants
@@ -105,7 +105,7 @@ class Criteria extends \lang\Object implements SQLExpression {
    * @return  rdbms.Criteria this object
    */
   public function addOrderBy($column, $order= ASCENDING) {
-    $this->orderings[]= array($column, $order);
+    $this->orderings[]= [$column, $order];
     return $this;
   }
 

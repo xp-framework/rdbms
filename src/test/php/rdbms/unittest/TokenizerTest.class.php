@@ -1,5 +1,6 @@
 <?php namespace rdbms\unittest;
  
+use rdbms\SQLStateException;
 use rdbms\DBConnection;
 use util\Date;
 use unittest\actions\RuntimeVersion;
@@ -98,27 +99,27 @@ abstract class TokenizerTest extends \unittest\TestCase {
     );
   }
 
-  #[@test, @expect('rdbms.SQLStateException')]
+  #[@test, @expect(SQLStateException::class)]
   public function unknownToken() {
     $this->fixture->prepare('select * from test where name like %X');
   }
 
-  #[@test, @expect('rdbms.SQLStateException')]
+  #[@test, @expect(SQLStateException::class)]
   public function unclosedDoubleQuotedString() {
     $this->fixture->prepare('select * from test where name = "unclosed');
   }
 
-  #[@test, @expect('rdbms.SQLStateException')]
+  #[@test, @expect(SQLStateException::class)]
   public function unclosedDoubleQuotedStringEndingWithEscape() {
     $this->fixture->prepare('select * from test where name = "unclosed""');
   }
   
-  #[@test, @expect('rdbms.SQLStateException')]
+  #[@test, @expect(SQLStateException::class)]
   public function unclosedSingleQuotedString() {
     $this->fixture->prepare("select * from test where name = 'unclosed");
   }
 
-  #[@test, @expect('rdbms.SQLStateException')]
+  #[@test, @expect(SQLStateException::class)]
   public function unclosedSingleQuotedStringEndingWithEscape() {
     $this->fixture->prepare("select * from test where name = 'unclosed''");
   }
@@ -193,11 +194,11 @@ abstract class TokenizerTest extends \unittest\TestCase {
   public function integerArrayToken() {
     $this->assertEquals(
       'select * from news where news_id in ()',
-      $this->fixture->prepare('select * from news where news_id in (%d)', array())
+      $this->fixture->prepare('select * from news where news_id in (%d)', [])
     );
     $this->assertEquals(
       'select * from news where news_id in (1, 2, 3)',
-      $this->fixture->prepare('select * from news where news_id in (%d)', array(1, 2, 3))
+      $this->fixture->prepare('select * from news where news_id in (%d)', [1, 2, 3])
     );
   }
 
@@ -207,7 +208,7 @@ abstract class TokenizerTest extends \unittest\TestCase {
     $d2= new Date('1977-12-15');
     $this->assertEquals(
       "select * from news where created in ('1977-12-14 00:00:00', '1977-12-15 00:00:00')",
-      $this->fixture->prepare('select * from news where created in (%s)', array($d1, $d2))
+      $this->fixture->prepare('select * from news where created in (%s)', [$d1, $d2])
     );
   }
   
@@ -235,7 +236,7 @@ abstract class TokenizerTest extends \unittest\TestCase {
     );
   }
   
-  #[@test, @expect('rdbms.SQLStateException')]
+  #[@test, @expect(SQLStateException::class)]
   public function accessNonexistant() {
     $this->fixture->prepare('%2$c', null);
   }

@@ -14,7 +14,7 @@ class MockConnection extends \rdbms\DBConnection {
     $affectedRows     = 1,
     $identityValue    = 1,
     $resultSets       = null,
-    $queryError       = array(),
+    $queryError       = [],
     $connectError     = null,
     $currentResultSet = 0,
     $sql              = null;
@@ -39,8 +39,8 @@ class MockConnection extends \rdbms\DBConnection {
    * @param   net.xp_framework.unittest.rdbms.mock.MockResultSet resultSet
    */
   public function setResultSet($resultSet) {
-    $this->queryError= array();
-    $this->resultSets= array($resultSet);
+    $this->queryError= [];
+    $this->resultSets= [$resultSet];
     $this->currentResultSet= 0;
   }
 
@@ -55,8 +55,8 @@ class MockConnection extends \rdbms\DBConnection {
    * @return  net.xp_framework.unittest.rdbms.mock.MockConnection this
    */
   public function clearResultSets() {
-    $this->queryError= array();
-    $this->resultSets= array();
+    $this->queryError= [];
+    $this->resultSets= [];
     $this->currentResultSet= 0;
     return $this;
   }
@@ -68,7 +68,7 @@ class MockConnection extends \rdbms\DBConnection {
    * @return  net.xp_framework.unittest.rdbms.mock.MockConnection this
    */
   public function addResultSet($resultSet) {
-    $this->queryError= array();
+    $this->queryError= [];
     $this->resultSets[]= $resultSet;
     return $this;
   }
@@ -89,7 +89,7 @@ class MockConnection extends \rdbms\DBConnection {
    * @param   int errMsg
    */
   public function makeQueryFail($errNo, $errMsg) {
-    $this->queryError= array($errNo, $errMsg);
+    $this->queryError= [$errNo, $errMsg];
   }
 
   /**
@@ -97,7 +97,7 @@ class MockConnection extends \rdbms\DBConnection {
    *
    */
   public function letServerDisconnect() {
-    $this->queryError= array(2013);
+    $this->queryError= [2013];
   }
 
   /**
@@ -246,7 +246,7 @@ class MockConnection extends \rdbms\DBConnection {
       }
 
       case 1: {   // letServerDisconnect() sets this
-        $this->queryError= array();
+        $this->queryError= [];
         $this->_connected= false;
         throw new \rdbms\SQLConnectionClosedException(
           'Statement failed: Read from server failed',
@@ -256,7 +256,7 @@ class MockConnection extends \rdbms\DBConnection {
       
       case 2: {   // makeQueryFail() sets this
         $error= $this->queryError;
-        $this->queryError= array();       // Reset so next query succeeds again
+        $this->queryError= [];       // Reset so next query succeeds again
         throw new \rdbms\SQLStatementFailedException(
           'Statement failed: '.$error[1],
           $sql, 

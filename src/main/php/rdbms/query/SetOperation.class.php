@@ -59,14 +59,14 @@ class SetOperation extends \lang\Object implements SelectQueryExecutable {
   const EXCEPT_ALL=    'except_all';
 
   static private
-    $sql= array(
+    $sql= [
       self::UNION         => '%s union %s',
       self::UNION_ALL     => '%s union all %s',
       self::INTERCEPT     => '%s intercept %s',
       self::INTERCEPT_ALL => '%s intercept all %s',
       self::EXCEPT        => '%s except %s',
       self::EXCEPT_ALL    => '%s except all %s',
-    );
+    ];
  
   private
     $arg1 = null,

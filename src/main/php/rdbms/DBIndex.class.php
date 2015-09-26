@@ -7,7 +7,7 @@
 class DBIndex extends \lang\Object {
   public
     $name=     '',
-    $keys=     array(),
+    $keys=     [],
     $unique=   false,
     $primary=  false;
 

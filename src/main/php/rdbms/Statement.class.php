@@ -21,7 +21,7 @@
  * @test  xp://net.xp_framework.unittest.rdbms.StatementTest
  */
 class Statement extends \lang\Object implements SQLExpression {
-  public $arguments= array();
+  public $arguments= [];
 
   /**
    * Constructor
@@ -75,6 +75,6 @@ class Statement extends \lang\Object implements SQLExpression {
       '$1.'.implode(', $1.', array_keys($peer->types)),
       $this->arguments[0]
     );
-    return call_user_func_array(array($conn, $buffered ? 'query' : 'open'), $this->arguments);
+    return call_user_func_array([$conn, $buffered ? 'query' : 'open'], $this->arguments);
   }
 } 

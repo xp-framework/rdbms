@@ -1,5 +1,9 @@
 <?php namespace rdbms\unittest;
 
+use lang\MethodNotImplementedException;
+use lang\IllegalArgumentException;
+use rdbms\finder\FinderException;
+use rdbms\finder\NoSuchEntityException;
 use unittest\TestCase;
 use rdbms\DriverManager;
 use rdbms\finder\GenericFinder;
@@ -66,17 +70,17 @@ class FinderTest extends TestCase {
     $this->assertInstanceOf('rdbms.finder.FinderMethod', $methods[0]);
     $this->assertEquals(ENTITY, $methods[0]->getKind());
     $this->assertEquals('byPrimary', $methods[0]->getName());
-    $this->assertInstanceOf('rdbms.SQLExpression', $methods[0]->invoke(array($pk= 1)));
+    $this->assertInstanceOf('rdbms.SQLExpression', $methods[0]->invoke([$pk= 1]));
   }
 
   #[@test]
   public function collectionMethods() {
-    static $invocation= array(
-      'all'         => array(),
-      'newestJobs'  => array(),
-      'expiredJobs' => array(),
-      'similarTo'   => array('Test')
-    );
+    static $invocation= [
+      'all'         => [],
+      'newestJobs'  => [],
+      'expiredJobs' => [],
+      'similarTo'   => ['Test']
+    ];
 
     $methods= $this->fixture->collectionMethods();
     $this->assertEquals(4, sizeof($methods)); // three declared plu all()
@@ -103,40 +107,40 @@ class FinderTest extends TestCase {
     $this->assertEquals(ENTITY, $method->getKind());
   }
   
-  #[@test, @expect('lang.MethodNotImplementedException')]
+  #[@test, @expect(MethodNotImplementedException::class)]
   public function nonExistantMethod() {
     $this->method('@@NON-EXISTANT@@');
   }
 
-  #[@test, @expect('lang.IllegalArgumentException')]
+  #[@test, @expect(IllegalArgumentException::class)]
   public function notAFinderMethod() {
     $this->method('getPeer');
   }
   
   #[@test]
   public function findByExistingPrimary() {
-    $this->getConnection()->setResultSet(new MockResultSet(array(
-      0 => array(   // First row
+    $this->getConnection()->setResultSet(new MockResultSet([
+      0 => [   // First row
         'job_id'      => 1,
         'title'       => $this->getName(),
         'valid_from'  => \util\Date::now(),
         'expire_at'   => null
-      )
-    )));
+      ]
+    ]));
     $entity= $this->fixture->find($this->fixture->byPrimary(1));
     $this->assertInstanceOf('rdbms.unittest.dataset.Job', $entity);
   }
 
   #[@test]
   public function findByExistingPrimaryFluent() {
-    $this->getConnection()->setResultSet(new MockResultSet(array(
-      0 => array(   // First row
+    $this->getConnection()->setResultSet(new MockResultSet([
+      0 => [   // First row
         'job_id'      => 1,
         'title'       => $this->getName(),
         'valid_from'  => \util\Date::now(),
         'expire_at'   => null
-      )
-    )));
+      ]
+    ]));
     $entity= $this->fixture->find()->byPrimary(1);
     $this->assertInstanceOf('rdbms.unittest.dataset.Job', $entity);
   }
@@ -146,169 +150,169 @@ class FinderTest extends TestCase {
     $this->assertNull($this->fixture->find($this->fixture->byPrimary(0)));
   }
 
-  #[@test, @expect('rdbms.finder.FinderException')]
+  #[@test, @expect(FinderException::class)]
   public function findUnexpectedResults() {
-    $this->getConnection()->setResultSet(new MockResultSet(array(
-      0 => array(   // First row
+    $this->getConnection()->setResultSet(new MockResultSet([
+      0 => [   // First row
         'job_id'      => 1,
         'title'       => $this->getName(),
         'valid_from'  => \util\Date::now(),
         'expire_at'   => null
-      ),
-      1 => array(   // Second row
+      ],
+      1 => [   // Second row
         'job_id'      => 2,
         'title'       => $this->getName().' #2',
         'valid_from'  => \util\Date::now(),
         'expire_at'   => null
-      )
-    )));
+      ]
+    ]));
     $this->fixture->find($this->fixture->byPrimary(1));
   }
 
   #[@test]
   public function getByExistingPrimary() {
-    $this->getConnection()->setResultSet(new MockResultSet(array(
-      0 => array(   // First row
+    $this->getConnection()->setResultSet(new MockResultSet([
+      0 => [   // First row
         'job_id'      => 1,
         'title'       => $this->getName(),
         'valid_from'  => \util\Date::now(),
         'expire_at'   => null
-      )
-    )));
+      ]
+    ]));
     $entity= $this->fixture->get($this->fixture->byPrimary(1));
     $this->assertInstanceOf('rdbms.unittest.dataset.Job', $entity);
   }
 
   #[@test]
   public function getByExistingPrimaryFluent() {
-    $this->getConnection()->setResultSet(new MockResultSet(array(
-      0 => array(   // First row
+    $this->getConnection()->setResultSet(new MockResultSet([
+      0 => [   // First row
         'job_id'      => 1,
         'title'       => $this->getName(),
         'valid_from'  => \util\Date::now(),
         'expire_at'   => null
-      )
-    )));
+      ]
+    ]));
     $entity= $this->fixture->get()->byPrimary(1);
     $this->assertInstanceOf('rdbms.unittest.dataset.Job', $entity);
   }
 
-  #[@test, @expect('rdbms.finder.NoSuchEntityException')]
+  #[@test, @expect(NoSuchEntityException::class)]
   public function getByNonExistantPrimary() {
     $this->fixture->get($this->fixture->byPrimary(0));
   }
 
-  #[@test, @expect('rdbms.finder.FinderException')]
+  #[@test, @expect(FinderException::class)]
   public function getUnexpectedResults() {
-    $this->getConnection()->setResultSet(new MockResultSet(array(
-      0 => array(   // First row
+    $this->getConnection()->setResultSet(new MockResultSet([
+      0 => [   // First row
         'job_id'      => 1,
         'title'       => $this->getName(),
         'valid_from'  => \util\Date::now(),
         'expire_at'   => null
-      ),
-      1 => array(   // Second row
+      ],
+      1 => [   // Second row
         'job_id'      => 2,
         'title'       => $this->getName().' #2',
         'valid_from'  => \util\Date::now(),
         'expire_at'   => null
-      )
-    )));
+      ]
+    ]));
     $this->fixture->get($this->fixture->byPrimary(1));
   }
 
   #[@test]
   public function findNewestJobs() {
-    $this->getConnection()->setResultSet(new MockResultSet(array(
-      0 => array(   // First row
+    $this->getConnection()->setResultSet(new MockResultSet([
+      0 => [   // First row
         'job_id'      => 1,
         'title'       => $this->getName(),
         'valid_from'  => \util\Date::now(),
         'expire_at'   => null
-      ),
-      1 => array(   // Second row
+      ],
+      1 => [   // Second row
         'job_id'      => 2,
         'title'       => $this->getName().' #2',
         'valid_from'  => \util\Date::now(),
         'expire_at'   => null
-      )
-    )));
+      ]
+    ]));
     $collection= $this->fixture->findAll($this->fixture->newestJobs());
     $this->assertEquals(2, sizeof($collection));
   }
 
   #[@test]
   public function findNewestJobsFluent() {
-    $this->getConnection()->setResultSet(new MockResultSet(array(
-      0 => array(   // First row
+    $this->getConnection()->setResultSet(new MockResultSet([
+      0 => [   // First row
         'job_id'      => 1,
         'title'       => $this->getName(),
         'valid_from'  => \util\Date::now(),
         'expire_at'   => null
-      ),
-      1 => array(   // Second row
+      ],
+      1 => [   // Second row
         'job_id'      => 2,
         'title'       => $this->getName().' #2',
         'valid_from'  => \util\Date::now(),
         'expire_at'   => null
-      )
-    )));
+      ]
+    ]));
     $collection= $this->fixture->findAll()->newestJobs();
     $this->assertEquals(2, sizeof($collection));
   }
 
   #[@test]
   public function getNewestJobs() {
-    $this->getConnection()->setResultSet(new MockResultSet(array(
-      0 => array(   // First row
+    $this->getConnection()->setResultSet(new MockResultSet([
+      0 => [   // First row
         'job_id'      => 1,
         'title'       => $this->getName(),
         'valid_from'  => \util\Date::now(),
         'expire_at'   => null
-      ),
-      1 => array(   // Second row
+      ],
+      1 => [   // Second row
         'job_id'      => 2,
         'title'       => $this->getName().' #2',
         'valid_from'  => \util\Date::now(),
         'expire_at'   => null
-      )
-    )));
+      ]
+    ]));
     $collection= $this->fixture->getAll($this->fixture->newestJobs());
     $this->assertEquals(2, sizeof($collection));
   }
 
   #[@test]
   public function getNewestJobsFluent() {
-    $this->getConnection()->setResultSet(new MockResultSet(array(
-      0 => array(   // First row
+    $this->getConnection()->setResultSet(new MockResultSet([
+      0 => [   // First row
         'job_id'      => 1,
         'title'       => $this->getName(),
         'valid_from'  => \util\Date::now(),
         'expire_at'   => null
-      ),
-      1 => array(   // Second row
+      ],
+      1 => [   // Second row
         'job_id'      => 2,
         'title'       => $this->getName().' #2',
         'valid_from'  => \util\Date::now(),
         'expire_at'   => null
-      )
-    )));
+      ]
+    ]));
     $collection= $this->fixture->getAll()->newestJobs();
     $this->assertEquals(2, sizeof($collection));
   }
 
-  #[@test, @expect('rdbms.finder.NoSuchEntityException')]
+  #[@test, @expect(NoSuchEntityException::class)]
   public function getNothingFound() {
     $this->fixture->getAll($this->fixture->newestJobs());
   }
 
-  #[@test, @expect('rdbms.finder.FinderException')]
+  #[@test, @expect(FinderException::class)]
   public function findWrapsSQLException() {
     $this->getConnection()->makeQueryFail(6010, 'Not enough power');
     $this->fixture->find(new \rdbms\Criteria());
   }
 
-  #[@test, @expect('rdbms.finder.FinderException')]
+  #[@test, @expect(FinderException::class)]
   public function findAllWrapsSQLException() {
     $this->getConnection()->makeQueryFail(6010, 'Not enough power');
     $this->fixture->findAll(new \rdbms\Criteria());
@@ -321,20 +325,20 @@ class FinderTest extends TestCase {
 
   #[@test]
   public function genericFinderGetAll() {
-    $this->getConnection()->setResultSet(new MockResultSet(array(
-      0 => array(   // First row
+    $this->getConnection()->setResultSet(new MockResultSet([
+      0 => [   // First row
         'job_id'      => 1,
         'title'       => $this->getName(),
         'valid_from'  => \util\Date::now(),
         'expire_at'   => null
-      ),
-      1 => array(   // Second row
+      ],
+      1 => [   // Second row
         'job_id'      => 2,
         'title'       => $this->getName().' #2',
         'valid_from'  => \util\Date::now(),
         'expire_at'   => null
-      )
-    )));
+      ]
+    ]));
     $all= (new GenericFinder(Job::getPeer()))->getAll(new \rdbms\Criteria());
     $this->assertEquals(2, sizeof($all));
     $this->assertInstanceOf('rdbms.unittest.dataset.Job', $all[0]);

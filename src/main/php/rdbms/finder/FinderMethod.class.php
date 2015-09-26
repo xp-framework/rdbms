@@ -78,7 +78,7 @@ class FinderMethod extends \lang\Object {
    * @param   var[] args default array()
    * @return  var
    */
-  public function invoke($args= array()) {
+  public function invoke($args= []) {
     try {
       return $this->method->invoke($this->finder, $args);
     } catch (\lang\Throwable $e) {

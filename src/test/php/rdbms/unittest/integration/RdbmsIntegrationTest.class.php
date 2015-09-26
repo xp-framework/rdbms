@@ -1,5 +1,9 @@
 <?php namespace rdbms\unittest\integration;
 
+use rdbms\SQLStateException;
+use rdbms\SQLConnectException;
+use rdbms\SQLStatementFailedException;
+use rdbms\SQLException;
 use util\Observer;
 use unittest\TestCase;
 use rdbms\DriverManager;
@@ -128,7 +132,7 @@ abstract class RdbmsIntegrationTest extends TestCase {
    * to the database
    *
    */
-  #[@test, @expect('rdbms.SQLStateException')]
+  #[@test, @expect(SQLStateException::class)]
   public function noQueryWhenNotConnected() {
     $this->conn->query('select 1');
   }
@@ -137,7 +141,7 @@ abstract class RdbmsIntegrationTest extends TestCase {
    * Test failing to connect throws rdbms.SQLConnectException
    *
    */
-  #[@test, @expect('rdbms.SQLConnectException')]
+  #[@test, @expect(SQLConnectException::class)]
   public function connectFailedThrowsException() {
     DriverManager::getConnection(str_replace(
       ':'.$this->db(false)->dsn->getPassword().'@', 
@@ -151,7 +155,7 @@ abstract class RdbmsIntegrationTest extends TestCase {
     $this->assertEquals(true, $this->conn->connect());
   }
 
-  #[@test, @expect('rdbms.SQLStateException')]
+  #[@test, @expect(SQLStateException::class)]
   public function noQueryWhenDisConnected() {
     $this->conn->connect();
     $this->conn->close();
@@ -161,7 +165,7 @@ abstract class RdbmsIntegrationTest extends TestCase {
   #[@test]
   public function simpleSelect() {
     $this->assertEquals(
-      array(array('foo' => 1)), 
+      [['foo' => 1]], 
       $this->db()->select('1 as foo')
     );
   }
@@ -170,7 +174,7 @@ abstract class RdbmsIntegrationTest extends TestCase {
   public function queryAndNext() {
     $q= $this->db()->query('select 1 as foo');
     $this->assertInstanceOf('rdbms.ResultSet', $q);
-    $this->assertEquals(array('foo' => 1), $q->next());
+    $this->assertEquals(['foo' => 1], $q->next());
   }
  
   #[@test]
@@ -184,7 +188,7 @@ abstract class RdbmsIntegrationTest extends TestCase {
   public function openAndNext() {
     $q= $this->db()->open('select 1 as foo');
     $this->assertInstanceOf('rdbms.ResultSet', $q);
-    $this->assertEquals(array('foo' => 1), $q->next());
+    $this->assertEquals(['foo' => 1], $q->next());
   }
 
   #[@test]
@@ -248,7 +252,7 @@ abstract class RdbmsIntegrationTest extends TestCase {
     $this->assertEquals($first+ 1, $this->db()->identity('unittest_pk_seq'));
   }
   
-  #[@test, @expect('rdbms.SQLStatementFailedException')]
+  #[@test, @expect(SQLStatementFailedException::class)]
   public function malformedStatement() {
     $this->db()->query('select insert into delete.');
   }
@@ -645,7 +649,7 @@ abstract class RdbmsIntegrationTest extends TestCase {
 
   #[@test]
   public function observe() {
-    $observer= newinstance('util.Observer', array(), '{
+    $observer= newinstance('util.Observer', [], '{
       protected $observations= array();
       
       public function numberOfObservations() {
@@ -690,7 +694,7 @@ abstract class RdbmsIntegrationTest extends TestCase {
     $tran->rollback();
     
     $this->assertEquals(
-      array(), 
+      [], 
       $db->select('* from %c',$this->tableName())
     );
   }
@@ -706,7 +710,7 @@ abstract class RdbmsIntegrationTest extends TestCase {
     $tran->commit();
     
     $this->assertEquals(
-      array(array('pk' => 1, 'username' => 'should_be_here')), 
+      [['pk' => 1, 'username' => 'should_be_here']], 
       $db->select('* from %c', $this->tableName())
     );
   }
@@ -727,17 +731,17 @@ abstract class RdbmsIntegrationTest extends TestCase {
     $db= $this->db();
 
     $q= $db->open('select * from %c', $this->tableName());
-    $this->assertEquals(array('pk' => 1, 'username' => 'kiesel'), $q->next());
+    $this->assertEquals(['pk' => 1, 'username' => 'kiesel'], $q->next());
 
     $this->assertEquals(1, $db->query('select 1 as num')->next('num'));
   }
 
-  #[@test, @expect('rdbms.SQLException')]
+  #[@test, @expect(SQLException::class)]
   public function arithmeticOverflowWithQuery() {
     $this->db()->query('select cast(10000000000000000 as int)')->next();
   }
 
-  #[@test, @expect('rdbms.SQLException')]
+  #[@test, @expect(SQLException::class)]
   public function arithmeticOverflowWithOpen() {
     $this->db()->open('select cast(10000000000000000 as int)')->next();
   }
@@ -745,7 +749,7 @@ abstract class RdbmsIntegrationTest extends TestCase {
   #[@test]
   public function readingRowFailsWithQuery() {
     $q= $this->db()->query($this->rowFailureFixture());
-    $records= array();
+    $records= [];
     do {
       try {
         $r= $q->next('i');
@@ -754,13 +758,13 @@ abstract class RdbmsIntegrationTest extends TestCase {
         $records[]= false;
       }
     } while ($r);
-    $this->assertEquals(array(1, false), $records);
+    $this->assertEquals([1, false], $records);
   }
 
   #[@test]
   public function readingRowFailsWithOpen() {
     $q= $this->db()->open($this->rowFailureFixture());
-    $records= array();
+    $records= [];
     do {
       try {
         $r= $q->next('i');
@@ -769,6 +773,6 @@ abstract class RdbmsIntegrationTest extends TestCase {
         $records[]= false;
       }
     } while ($r);
-    $this->assertEquals(array(1, false), $records);
+    $this->assertEquals([1, false], $records);
   }
 }

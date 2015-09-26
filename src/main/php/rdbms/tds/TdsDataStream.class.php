@@ -202,7 +202,7 @@ class TdsDataStream extends \lang\Object {
    * @return  int message type
    */
   public function begin() {
-    $this->header= array('status' => 0, 'length' => -1);
+    $this->header= ['status' => 0, 'length' => -1];
     $this->buffer= '';
     $this->read0(1);
     return $this->header['type'];

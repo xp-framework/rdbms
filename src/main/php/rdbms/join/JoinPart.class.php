@@ -23,9 +23,9 @@ class JoinPart extends \lang\Object {
     $table=     null,
     $id=        '',
     $role=      '',
-    $relatives= array(),
-    $pkeys=     array(),
-    $attrs=     array();
+    $relatives= [],
+    $pkeys=     [],
+    $attrs=     [];
 
   /**
    * Constructor
@@ -37,8 +37,8 @@ class JoinPart extends \lang\Object {
   public function __construct($id, \rdbms\Peer $peer) {
     $this->id= $id;
     $this->peer= $peer;
-    $this->pkeys= array();
-    $this->attrs= array();
+    $this->pkeys= [];
+    $this->attrs= [];
 
     foreach (array_keys($peer->types) as $attr) $this->attrs[$attr]= new JoinTableAttribute($this->id, $attr);
 
@@ -58,7 +58,7 @@ class JoinPart extends \lang\Object {
    * @return  string[]
    */
   public function getAttributes() {
-    $r= array();
+    $r= [];
     foreach ($this->attrs as $attr) $r[]= $attr->toSqlString();
     foreach ($this->relatives as $tjp) foreach ($tjp->getAttributes() as $attr) $r[]= $attr;
     return $r;
@@ -80,9 +80,9 @@ class JoinPart extends \lang\Object {
    * @return  rdbms.join.JoinRelation[]
    */
   public function getJoinRelations() {
-    $r= array();
+    $r= [];
     foreach ($this->relatives as $tjp) {
-      $conditions= array();
+      $conditions= [];
       foreach ($this->peer->relations[$tjp->role]['key'] as $source => $target) $conditions[]= $this->id.'.'.$source.' = '.$tjp->id.'.'.$target;
       $rel= new JoinRelation($this->table, $tjp->getTable());
       $rel->setConditions($conditions);
@@ -143,7 +143,7 @@ class JoinPart extends \lang\Object {
    * @return  string[]
    */
   private function attributes(array $record) {
-    $recordchunk= array();
+    $recordchunk= [];
     foreach ($this->attrs as $attr) $recordchunk[$attr->getAlias()]= $record[$attr->getAlias()];
     return array_combine(array_keys($this->peer->types), $recordchunk);
   }

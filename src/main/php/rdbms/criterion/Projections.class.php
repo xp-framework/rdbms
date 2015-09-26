@@ -61,7 +61,7 @@ class Projections extends \lang\Object {
    * @param   rdbms.SQLRenderable[] properties
    * @return  rdbms.criterion.ProjectionList
    */
-  public static function projectionList($properties= array()) {
+  public static function projectionList($properties= []) {
     $pl= new ProjectionList();
     foreach ($properties as $property) $pl->add($property);
     return $pl;

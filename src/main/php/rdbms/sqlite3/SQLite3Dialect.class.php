@@ -14,10 +14,10 @@ class SQLite3Dialect extends SQLiteDialect {
    * @param   db handel conn
    */
   public function registerCallbackFunctions($conn) {
-    $conn->createFunction('cast', array($this, '_cast'), 2);
-    $conn->createFunction('sign', array($this, '_sign'), 1);
-    $conn->createFunction('dateadd', array($this, '_dateadd'), 3);
-    $conn->createFunction('locate',  array($this, '_locate'), 3);
-    $conn->createFunction('nullif',  array($this, '_nullif'), 2);
+    $conn->createFunction('cast', [$this, '_cast'], 2);
+    $conn->createFunction('sign', [$this, '_sign'], 1);
+    $conn->createFunction('dateadd', [$this, '_dateadd'], 3);
+    $conn->createFunction('locate',  [$this, '_locate'], 3);
+    $conn->createFunction('nullif',  [$this, '_nullif'], 2);
   }
 }

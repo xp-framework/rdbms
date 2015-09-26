@@ -34,7 +34,7 @@ class SybaseIntegrationTest extends RdbmsIntegrationTest {
     if ($m->hasAnnotation('version')) {
       $server= $this->db()->query('select @@version_number as v')->next('v');
       if ($server < ($required= $m->getAnnotation('version'))) {
-        throw new \unittest\PrerequisitesNotMetError('Server version not sufficient: '.$server, null, array($required));
+        throw new \unittest\PrerequisitesNotMetError('Server version not sufficient: '.$server, null, [$required]);
       }
     }
   }    
@@ -177,7 +177,7 @@ class SybaseIntegrationTest extends RdbmsIntegrationTest {
     $this->assertEquals(1, $q->next('result'));
   }
 
-  #[@test, @expect('rdbms.SQLStatementFailedException')]
+  #[@test, @expect(SQLStatementFailedException::class)]
   public function dataTruncationWarning() {
     $conn= $this->db();
     $conn->query('
@@ -200,6 +200,6 @@ class SybaseIntegrationTest extends RdbmsIntegrationTest {
     } catch (SQLStatementFailedException $expected) {
       // OK
     }
-    $this->assertEquals(array(0 => array('working' => 1)), $conn->select('1 as working'));
+    $this->assertEquals([0 => ['working' => 1]], $conn->select('1 as working'));
   }
 }

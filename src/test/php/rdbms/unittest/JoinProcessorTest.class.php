@@ -1,5 +1,6 @@
 <?php namespace rdbms\unittest;
  
+use lang\IllegalArgumentException;
 use rdbms\Criteria;
 use rdbms\DriverManager;
 use unittest\TestCase;
@@ -28,49 +29,49 @@ class JoinProcessorTest extends TestCase {
   #[@test]
   public function getAttributeStringTest() {
     $jp= new JoinProcessor(Job::getPeer());
-    $jp->setFetchModes(array('PersonJob->Department' => 'join'));
+    $jp->setFetchModes(['PersonJob->Department' => 'join']);
     $this->assertEquals(
       $jp->getAttributeString(),
       JoinProcessor::FIRST.'.job_id as '.JoinProcessor::FIRST.'_job_id, '
       .JoinProcessor::FIRST.'.title as '.JoinProcessor::FIRST.'_title, '
       .JoinProcessor::FIRST.'.valid_from as '.JoinProcessor::FIRST.'_valid_from, '
       .JoinProcessor::FIRST.'.expire_at as '.JoinProcessor::FIRST.'_expire_at, '
-      .JoinProcessor::pathToKey(array('PersonJob')).'.person_id as '.JoinProcessor::pathToKey(array('PersonJob')).'_person_id, '
-      .JoinProcessor::pathToKey(array('PersonJob')).'.name as '.JoinProcessor::pathToKey(array('PersonJob')).'_name, '
-      .JoinProcessor::pathToKey(array('PersonJob')).'.job_id as '.JoinProcessor::pathToKey(array('PersonJob')).'_job_id, '
-      .JoinProcessor::pathToKey(array('PersonJob')).'.department_id as '.JoinProcessor::pathToKey(array('PersonJob')).'_department_id, '
-      .JoinProcessor::pathToKey(array('PersonJob', 'Department')).'.department_id as '.JoinProcessor::pathToKey(array('PersonJob', 'Department')).'_department_id, '
-      .JoinProcessor::pathToKey(array('PersonJob', 'Department')).'.name as '.JoinProcessor::pathToKey(array('PersonJob', 'Department')).'_name, '
-      .JoinProcessor::pathToKey(array('PersonJob', 'Department')).'.chief_id as '.JoinProcessor::pathToKey(array('PersonJob', 'Department')).'_chief_id'
+      .JoinProcessor::pathToKey(['PersonJob']).'.person_id as '.JoinProcessor::pathToKey(['PersonJob']).'_person_id, '
+      .JoinProcessor::pathToKey(['PersonJob']).'.name as '.JoinProcessor::pathToKey(['PersonJob']).'_name, '
+      .JoinProcessor::pathToKey(['PersonJob']).'.job_id as '.JoinProcessor::pathToKey(['PersonJob']).'_job_id, '
+      .JoinProcessor::pathToKey(['PersonJob']).'.department_id as '.JoinProcessor::pathToKey(['PersonJob']).'_department_id, '
+      .JoinProcessor::pathToKey(['PersonJob', 'Department']).'.department_id as '.JoinProcessor::pathToKey(['PersonJob', 'Department']).'_department_id, '
+      .JoinProcessor::pathToKey(['PersonJob', 'Department']).'.name as '.JoinProcessor::pathToKey(['PersonJob', 'Department']).'_name, '
+      .JoinProcessor::pathToKey(['PersonJob', 'Department']).'.chief_id as '.JoinProcessor::pathToKey(['PersonJob', 'Department']).'_chief_id'
     );
   }
 
   #[@test]
   public function getJoinStringTest() {
     $jp= new JoinProcessor(Job::getPeer());
-    $jp->setFetchModes(array('PersonJob' => 'join'));
-    $jp->setFetchModes(array('PersonJob->Department' => 'join'));
+    $jp->setFetchModes(['PersonJob' => 'join']);
+    $jp->setFetchModes(['PersonJob->Department' => 'join']);
     $this->assertEquals(
-      'JOBS.job as '.JoinProcessor::FIRST.' LEFT OUTER JOIN JOBS.Person as '.JoinProcessor::pathToKey(array('PersonJob')).' on ('.JoinProcessor::FIRST.'.job_id = '.JoinProcessor::pathToKey(array('PersonJob')).'.job_id) LEFT JOIN JOBS.Department as '.JoinProcessor::pathToKey(array('PersonJob', 'Department')).' on ('.JoinProcessor::pathToKey(array('PersonJob')).'.department_id = '.JoinProcessor::pathToKey(array('PersonJob', 'Department')).'.department_id) where ',
+      'JOBS.job as '.JoinProcessor::FIRST.' LEFT OUTER JOIN JOBS.Person as '.JoinProcessor::pathToKey(['PersonJob']).' on ('.JoinProcessor::FIRST.'.job_id = '.JoinProcessor::pathToKey(['PersonJob']).'.job_id) LEFT JOIN JOBS.Department as '.JoinProcessor::pathToKey(['PersonJob', 'Department']).' on ('.JoinProcessor::pathToKey(['PersonJob']).'.department_id = '.JoinProcessor::pathToKey(['PersonJob', 'Department']).'.department_id) where ',
       $jp->getJoinString()
     );
   }
 
-  #[@test, @expect('lang.IllegalArgumentException')]
+  #[@test, @expect(IllegalArgumentException::class)]
   public function emptyModeTest() {
     $jp= new JoinProcessor(Job::getPeer());
-    $jp->setFetchModes(array());
+    $jp->setFetchModes([]);
   }
 
-  #[@test, @expect('lang.IllegalArgumentException')]
+  #[@test, @expect(IllegalArgumentException::class)]
   public function noJoinModeTest() {
     $jp= new JoinProcessor(Job::getPeer());
-    $jp->setFetchModes(array('JobPerson.Department' => 'select'));
+    $jp->setFetchModes(['JobPerson.Department' => 'select']);
   }
 
-  #[@test, @expect('lang.IllegalArgumentException')]
+  #[@test, @expect(IllegalArgumentException::class)]
   public function noSuchRoleTest() {
     $jp= new JoinProcessor(Job::getPeer());
-    $jp->setFetchModes(array('UnknownRole' => 'join'));
+    $jp->setFetchModes(['UnknownRole' => 'join']);
   }
 }

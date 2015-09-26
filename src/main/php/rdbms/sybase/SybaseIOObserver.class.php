@@ -12,8 +12,8 @@ use util\log\BoundLogObserver;
  */
 class SybaseIOObserver extends \lang\Object implements BoundLogObserver {
   protected
-    $messages = array(),
-    $queries  = array();
+    $messages = [],
+    $queries  = [];
 
   /**
    * Constrcutor.
@@ -37,11 +37,11 @@ class SybaseIOObserver extends \lang\Object implements BoundLogObserver {
   public function _msghandler($msgnumber, $severity, $state, $line, $text) {
 
     // Filter 'IO statistics'-messages by their msgnumber
-    if (in_array($msgnumber, array(3614, 3615))) {
-      $this->messages[]= array(
+    if (in_array($msgnumber, [3614, 3615])) {
+      $this->messages[]= [
         'msgnumber' => $msgnumber,
         'text'      => rtrim($text)
-      );
+      ];
     }
     
     // Indicate we did not process the message
@@ -70,8 +70,8 @@ class SybaseIOObserver extends \lang\Object implements BoundLogObserver {
     // Passthrough event to appropriate function, if existant
     if (method_exists($this, 'on'.$arg->getName())) {
       call_user_func_array(
-        array($this, 'on'.$arg->getName()),
-        array($obs, $arg)
+        [$this, 'on'.$arg->getName()],
+        [$obs, $arg]
       );
     }
   }
@@ -84,11 +84,11 @@ class SybaseIOObserver extends \lang\Object implements BoundLogObserver {
    */
   public function onConnect($obs, $arg) {
     ini_set('sybct.min_server_severity', 0);
-    sybase_set_message_handler(array($this, '_msghandler'), $obs->handle);
+    sybase_set_message_handler([$this, '_msghandler'], $obs->handle);
     sybase_query('set statistics io on', $obs->handle);
     
     // Reset query- and message-cache
-    $this->queries= $this->messages= array();
+    $this->queries= $this->messages= [];
   }
   
   /**
@@ -152,6 +152,6 @@ class SybaseIOObserver extends \lang\Object implements BoundLogObserver {
       );
     }
 
-    $this->queries= $this->messages= array();
+    $this->queries= $this->messages= [];
   }
 } 

@@ -18,30 +18,30 @@ class Job extends DataSet implements JoinExtractable {
     $expire_at          = null;
 
   protected
-    $cache= array(
-      'PersonJob' => array(),
-    );
+    $cache= [
+      'PersonJob' => [],
+    ];
 
   static function __static() { 
     with ($peer= self::getPeer()); {
       $peer->setTable('JOBS.job');
       $peer->setConnection('jobs');
       $peer->setIdentity('job_id');
-      $peer->setPrimary(array('job_id'));
-      $peer->setTypes(array(
-        'job_id'      => array('%d', \rdbms\FieldType::NUMERIC, false),
-        'title'       => array('%s', \rdbms\FieldType::VARCHAR, false),
-        'valid_from'  => array('%s', \rdbms\FieldType::DATETIME, true),
-        'expire_at'   => array('%s', \rdbms\FieldType::DATETIME, false),
-      ));
-      $peer->setRelations(array(
-        'PersonJob' => array(
+      $peer->setPrimary(['job_id']);
+      $peer->setTypes([
+        'job_id'      => ['%d', \rdbms\FieldType::NUMERIC, false],
+        'title'       => ['%s', \rdbms\FieldType::VARCHAR, false],
+        'valid_from'  => ['%s', \rdbms\FieldType::DATETIME, true],
+        'expire_at'   => ['%s', \rdbms\FieldType::DATETIME, false],
+      ]);
+      $peer->setRelations([
+        'PersonJob' => [
           'classname' => 'rdbms.unittest.dataset.Person',
-          'key'       => array(
+          'key'       => [
             'job_id' => 'job_id',
-          ),
-        ),
-      ));
+          ],
+        ],
+      ]);
     }
   }  
 
@@ -73,7 +73,7 @@ class Job extends DataSet implements JoinExtractable {
    * @throws  rdbms.SQLException in case an error occurs
    */
   public static function getByJob_id($job_id) {
-    $r= self::getPeer()->doSelect(new \rdbms\Criteria(array('job_id', $job_id, EQUAL)));
+    $r= self::getPeer()->doSelect(new \rdbms\Criteria(['job_id', $job_id, EQUAL]));
     return $r ? $r[0] : null;    }
 
   /**
@@ -165,7 +165,7 @@ class Job extends DataSet implements JoinExtractable {
       ->getMethod('getPeer')
       ->invoke()
       ->doSelect(new \rdbms\Criteria(
-        array('job_id', $this->getJob_id(), EQUAL)
+        ['job_id', $this->getJob_id(), EQUAL]
     ));
   }
 
@@ -182,7 +182,7 @@ class Job extends DataSet implements JoinExtractable {
       ->getMethod('getPeer')
       ->invoke()
       ->iteratorFor(new \rdbms\Criteria(
-        array('job_id', $this->getJob_id(), EQUAL)
+        ['job_id', $this->getJob_id(), EQUAL]
     ));
   }
 }

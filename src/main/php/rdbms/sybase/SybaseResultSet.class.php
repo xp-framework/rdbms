@@ -17,7 +17,7 @@ class SybaseResultSet extends ResultSet {
    * @param   resource handle
    */
   public function __construct($result, \util\TimeZone $tz= null) {
-    $fields= array();
+    $fields= [];
     if (is_resource($result)) {
       for ($i= 0, $num= sybase_num_fields($result); $i < $num; $i++) {
         $field= sybase_fetch_field($result, $i);

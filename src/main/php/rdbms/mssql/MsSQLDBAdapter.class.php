@@ -12,7 +12,7 @@ use rdbms\DBTableAttribute;
  */
 class MsSQLDBAdapter extends DBAdapter {
   public
-    $map= array();
+    $map= [];
     
   /**
    * Constructor
@@ -20,7 +20,7 @@ class MsSQLDBAdapter extends DBAdapter {
    * @param   Object conn database connection
    */
   public function __construct($conn) {
-    $this->map= array(
+    $this->map= [
       'binary'        => DBTableAttribute::DB_ATTRTYPE_BINARY,
       'bit'           => DBTableAttribute::DB_ATTRTYPE_BIT,
       'char'          => DBTableAttribute::DB_ATTRTYPE_CHAR,
@@ -49,7 +49,7 @@ class MsSQLDBAdapter extends DBAdapter {
       'tinyint'       => DBTableAttribute::DB_ATTRTYPE_TINYINT,
       'varbinary'     => DBTableAttribute::DB_ATTRTYPE_VARBINARY,
       'varchar'       => DBTableAttribute::DB_ATTRTYPE_VARCHAR
-    );
+    ];
     parent::__construct($conn);
   }
   
@@ -59,7 +59,7 @@ class MsSQLDBAdapter extends DBAdapter {
    * @return  string[] databases
    */
   public function getDatabases() {
-    $dbs= array();
+    $dbs= [];
     $q= $this->conn->query('select name from master..sysdatabases');
     while ($name= $q->next('name')) {
       $dbs[]= $name;
@@ -220,7 +220,7 @@ class MsSQLDBAdapter extends DBAdapter {
    * @return  rdbms.DBTable[] array of DBTable objects
    */
   public function getTables($database= null) {
-    $t= array();
+    $t= [];
     $database= $this->database($database);
     try {
       $this->prepareTemporaryIndexesTable();
@@ -312,7 +312,7 @@ class MsSQLDBAdapter extends DBAdapter {
     $cstring= $db_constraint['definition'];
     $bracestrings= $this->subBracerString($cstring);
     $strings= explode(' ', $cstring);
-    $attributes= array();
+    $attributes= [];
     foreach ($bracestrings as $bracestring) $attributes[]= $this->extractParams($bracestring);
 
     $constraint= new \rdbms\DBForeignKeyConstraint();
@@ -330,7 +330,7 @@ class MsSQLDBAdapter extends DBAdapter {
    */
   private function subBracerString(&$string) {
     $rstring= '';
-    $braceredString= array();
+    $braceredString= [];
     $pos= 0;
     while ($pos < strlen($string)) {
       switch ($string{$pos}) {
@@ -381,7 +381,7 @@ class MsSQLDBAdapter extends DBAdapter {
    * @return  string[] paramstrings
    */
   private function extractParams($string) {
-    $paramArray= array();
+    $paramArray= [];
     $paramString= '';
     $pos= 0;
     while ($pos < strlen($string)) {

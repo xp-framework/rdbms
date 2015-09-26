@@ -88,7 +88,7 @@ class SQLFunctions extends \lang\Object {
    * @return  rdbms.SQLFunction
    */
   public static function length($col) {
-    return new SQLFunction('length', '%d', array($col));
+    return new SQLFunction('length', '%d', [$col]);
   }
 
   /**
@@ -98,7 +98,7 @@ class SQLFunctions extends \lang\Object {
    * @return  rdbms.SQLFunction
    */
   public static function bitLength($col) {
-    return new SQLFunction('bit_length', '%d', array($col));
+    return new SQLFunction('bit_length', '%d', [$col]);
   }
 
   /**
@@ -108,7 +108,7 @@ class SQLFunctions extends \lang\Object {
    * @return  rdbms.SQLFunction
    */
   public static function upper($col) {
-    return new SQLFunction('upper', '%s', array($col));
+    return new SQLFunction('upper', '%s', [$col]);
   }
 
   /**
@@ -118,7 +118,7 @@ class SQLFunctions extends \lang\Object {
    * @return  rdbms.SQLFunction
    */
   public static function lower($col) {
-    return new SQLFunction('lower', '%s', array($col));
+    return new SQLFunction('lower', '%s', [$col]);
   }
 
   /**
@@ -128,7 +128,7 @@ class SQLFunctions extends \lang\Object {
    * @return  rdbms.SQLFunction
    */
   public static function ascii($col1) {
-    return new SQLFunction('ascii', '%s', array($col1));
+    return new SQLFunction('ascii', '%s', [$col1]);
   }
 
   /**
@@ -138,7 +138,7 @@ class SQLFunctions extends \lang\Object {
    * @return  rdbms.SQLFunction
    */
   public static function char($col1) {
-    return new SQLFunction('char', '%s', array($col1));
+    return new SQLFunction('char', '%s', [$col1]);
   }
 
   /**
@@ -148,7 +148,7 @@ class SQLFunctions extends \lang\Object {
    * @return  rdbms.SQLFunction
    */
   public static function len($col1) {
-    return new SQLFunction('len', '%d', array($col1));
+    return new SQLFunction('len', '%d', [$col1]);
   }
 
   /**
@@ -158,7 +158,7 @@ class SQLFunctions extends \lang\Object {
    * @return  rdbms.SQLFunction
    */
   public static function reverse($col1) {
-    return new SQLFunction('reverse', '%s', array($col1));
+    return new SQLFunction('reverse', '%s', [$col1]);
   }
 
   /**
@@ -168,7 +168,7 @@ class SQLFunctions extends \lang\Object {
    * @return  rdbms.SQLFunction
    */
   public static function space($col1) {
-    return new SQLFunction('space', '%s', array($col1));
+    return new SQLFunction('space', '%s', [$col1]);
   }
 
   /**
@@ -192,7 +192,7 @@ class SQLFunctions extends \lang\Object {
    * @return  rdbms.SQLFunction
    */
   public static function soundex($val) {
-    return new SQLFunction('soundex', '%s', array($val));
+    return new SQLFunction('soundex', '%s', [$val]);
   }
 
   /**
@@ -202,7 +202,7 @@ class SQLFunctions extends \lang\Object {
    * @return  rdbms.SQLFunction
    */
   public static function second($col) {
-    return new SQLFunction('second', '%d', array($col));
+    return new SQLFunction('second', '%d', [$col]);
   }
 
   /**
@@ -212,7 +212,7 @@ class SQLFunctions extends \lang\Object {
    * @return  rdbms.SQLFunction
    */
   public static function minute($col) {
-    return new SQLFunction('minute', '%d', array($col));
+    return new SQLFunction('minute', '%d', [$col]);
   }
 
   /**
@@ -222,7 +222,7 @@ class SQLFunctions extends \lang\Object {
    * @return  rdbms.SQLFunction
    */
   public static function hour($col) {
-    return new SQLFunction('hour', '%d', array($col));
+    return new SQLFunction('hour', '%d', [$col]);
   }
 
   /**
@@ -232,7 +232,7 @@ class SQLFunctions extends \lang\Object {
    * @return  rdbms.SQLFunction
    */
   public static function day($col) {
-    return new SQLFunction('day', '%d', array($col));
+    return new SQLFunction('day', '%d', [$col]);
   }
 
   /**
@@ -242,7 +242,7 @@ class SQLFunctions extends \lang\Object {
    * @return  rdbms.SQLFunction
    */
   public static function month($col) {
-    return new SQLFunction('month', '%d', array($col));
+    return new SQLFunction('month', '%d', [$col]);
   }
 
   /**
@@ -252,7 +252,7 @@ class SQLFunctions extends \lang\Object {
    * @return  rdbms.SQLFunction
    */
   public static function year($col) {
-    return new SQLFunction('year', '%d', array($col));
+    return new SQLFunction('year', '%d', [$col]);
   }
 
   /**
@@ -262,7 +262,7 @@ class SQLFunctions extends \lang\Object {
    * @return  rdbms.SQLFunction
    */
   public static function week($col) {
-    return new SQLFunction('week', '%d', array($col));
+    return new SQLFunction('week', '%d', [$col]);
   }
 
   /**
@@ -284,7 +284,7 @@ class SQLFunctions extends \lang\Object {
    * @return  rdbms.SQLFunction
    */
   public static function dateadd($datepart, $offset, $date) {
-    return new SQLFunction('dateadd', '%s', array($datepart, $offset, $date));
+    return new SQLFunction('dateadd', '%s', [$datepart, $offset, $date]);
   }
 
   /**
@@ -296,7 +296,7 @@ class SQLFunctions extends \lang\Object {
    * @return  rdbms.SQLFunction
    */
   public static function datediff($type, $date1, $date2) {
-    return new SQLFunction('datediff', '%d', array($type, $date1, $date2));
+    return new SQLFunction('datediff', '%d', [$type, $date1, $date2]);
   }
 
   /**
@@ -308,7 +308,7 @@ class SQLFunctions extends \lang\Object {
    * @return  rdbms.SQLFunction
    */
   public static function datename($type, $date) {
-    return new SQLFunction('datename', '%s', array($type, $date));
+    return new SQLFunction('datename', '%s', [$type, $date]);
   }
 
   /**
@@ -320,7 +320,7 @@ class SQLFunctions extends \lang\Object {
    * @return  rdbms.SQLFunction
    */
   public static function datepart($type, $date) {
-    return new SQLFunction('datepart', '%s', array($type, $date));
+    return new SQLFunction('datepart', '%s', [$type, $date]);
   }
 
   /**
@@ -330,7 +330,7 @@ class SQLFunctions extends \lang\Object {
    * @return  rdbms.SQLFunction
    */
   public static function abs($col) {
-    return new SQLFunction('abs', '%d', array($col));
+    return new SQLFunction('abs', '%d', [$col]);
   }
 
   /**
@@ -341,7 +341,7 @@ class SQLFunctions extends \lang\Object {
    * @return  rdbms.SQLFunction
    */
   public static function acos($col) {
-    return new SQLFunction('acos', '%f', array($col));
+    return new SQLFunction('acos', '%f', [$col]);
   }
 
   /**
@@ -352,7 +352,7 @@ class SQLFunctions extends \lang\Object {
    * @return  rdbms.SQLFunction
    */
   public static function asin($col) {
-    return new SQLFunction('asin', '%f', array($col));
+    return new SQLFunction('asin', '%f', [$col]);
   }
 
   /**
@@ -376,7 +376,7 @@ class SQLFunctions extends \lang\Object {
    * @return  rdbms.SQLFunction
    */
   public static function ceil($val) {
-    return new SQLFunction('ceil', '%d', array($val));
+    return new SQLFunction('ceil', '%d', [$val]);
   }
 
   /**
@@ -386,7 +386,7 @@ class SQLFunctions extends \lang\Object {
    * @return  rdbms.SQLFunction
    */
   public static function cos($val) {
-    return new SQLFunction('cos', '%f', array($val));
+    return new SQLFunction('cos', '%f', [$val]);
   }
 
   /**
@@ -396,7 +396,7 @@ class SQLFunctions extends \lang\Object {
    * @return  rdbms.SQLFunction
    */
   public static function cot($val) {
-    return new SQLFunction('cot', '%f', array($val));
+    return new SQLFunction('cot', '%f', [$val]);
   }
 
   /**
@@ -406,7 +406,7 @@ class SQLFunctions extends \lang\Object {
    * @return  rdbms.SQLFunction
    */
   public static function degrees($val) {
-    return new SQLFunction('degrees', '%f', array($val));
+    return new SQLFunction('degrees', '%f', [$val]);
   }
 
   /**
@@ -417,7 +417,7 @@ class SQLFunctions extends \lang\Object {
    * @return  rdbms.SQLFunction
    */
   public static function exp($val) {
-    return new SQLFunction('exp', '%f', array($val));
+    return new SQLFunction('exp', '%f', [$val]);
   }
 
   /**
@@ -428,7 +428,7 @@ class SQLFunctions extends \lang\Object {
    * @return  rdbms.SQLFunction
    */
   public static function floor($val) {
-    return new SQLFunction('floor', '%d', array($val));
+    return new SQLFunction('floor', '%d', [$val]);
   }
 
   /**
@@ -439,7 +439,7 @@ class SQLFunctions extends \lang\Object {
    * @return  rdbms.SQLFunction
    */
   public static function log($val) {
-    return new SQLFunction('log', '%f', array($val));
+    return new SQLFunction('log', '%f', [$val]);
   }
 
   /**
@@ -450,7 +450,7 @@ class SQLFunctions extends \lang\Object {
    * @return  rdbms.SQLFunction
    */
   public static function log10($val) {
-    return new SQLFunction('log10', '%f', array($val));
+    return new SQLFunction('log10', '%f', [$val]);
   }
 
   /**
@@ -470,7 +470,7 @@ class SQLFunctions extends \lang\Object {
    * @return  rdbms.SQLFunction
    */
   public static function power($val, $power) {
-    return new SQLFunction('power', '%f', array($val, $power));
+    return new SQLFunction('power', '%f', [$val, $power]);
   }
 
   /**
@@ -481,7 +481,7 @@ class SQLFunctions extends \lang\Object {
    * @return  rdbms.SQLFunction
    */
   public static function radians($val) {
-    return new SQLFunction('radians', '%f', array($val));
+    return new SQLFunction('radians', '%f', [$val]);
   }
 
   /**
@@ -503,7 +503,7 @@ class SQLFunctions extends \lang\Object {
    * @return  rdbms.SQLFunction
    */
   public static function round($val, $precision= 0) {
-    return new SQLFunction('round', '%f', array($val, $precision));
+    return new SQLFunction('round', '%f', [$val, $precision]);
   }
 
   /**
@@ -514,7 +514,7 @@ class SQLFunctions extends \lang\Object {
    * @return  rdbms.SQLFunction
    */
   public static function sign($val) {
-    return new SQLFunction('sign', '%d', array($val));
+    return new SQLFunction('sign', '%d', [$val]);
   }
 
   /**
@@ -524,7 +524,7 @@ class SQLFunctions extends \lang\Object {
    * @return  rdbms.SQLFunction
    */
   public static function sin($val) {
-    return new SQLFunction('sin', '%f', array($val));
+    return new SQLFunction('sin', '%f', [$val]);
   }
 
   /**
@@ -534,7 +534,7 @@ class SQLFunctions extends \lang\Object {
    * @return  rdbms.SQLFunction
    */
   public static function sqrt($col) {
-    return new SQLFunction('sqrt', '%f', array($col));
+    return new SQLFunction('sqrt', '%f', [$col]);
   }
 
   /**
@@ -544,7 +544,7 @@ class SQLFunctions extends \lang\Object {
    * @return  rdbms.SQLFunction
    */
   public static function tan($col) {
-    return new SQLFunction('tan', '%f', array($col));
+    return new SQLFunction('tan', '%f', [$col]);
   }
 
   /**
@@ -557,7 +557,7 @@ class SQLFunctions extends \lang\Object {
    */
   public static function cast($col1, $typename) {
     $typename= (strpos($typename, '(') === false) ? $typename : substr($typename, 0, strpos($typename, '('));
-    static $datatypes= array(
+    static $datatypes= [
       'bigint'     => '%d',
       'binary'     => '%s',
       'blob'       => '%s',
@@ -577,9 +577,9 @@ class SQLFunctions extends \lang\Object {
       'timestamp'  => '%s',
       'varbinary'  => '%s',
       'varchar'    => '%s',
-    );
+    ];
     if (!isset($datatypes[$typename])) throw new IllegalArgumentException($typename.': unknowen typename');
-    return new SQLFunction('cast', $datatypes[$typename], array($col1, $typename));
+    return new SQLFunction('cast', $datatypes[$typename], [$col1, $typename]);
   }
 
   /**
@@ -589,7 +589,7 @@ class SQLFunctions extends \lang\Object {
    * @return  rdbms.SQLFunction
    */
   public static function str($col) {
-    return new SQLFunction('str', '%s', array($col));
+    return new SQLFunction('str', '%s', [$col]);
   }
 
   /**
@@ -612,7 +612,7 @@ class SQLFunctions extends \lang\Object {
    * @return  rdbms.SQLFunction
    */
   public static function nullif($col1, $col2) {
-    return new SQLFunction('nullif', self::getTypeToken($col1), array($col1, $col2));
+    return new SQLFunction('nullif', self::getTypeToken($col1), [$col1, $col2]);
   }
   
   /**
@@ -637,7 +637,7 @@ class SQLFunctions extends \lang\Object {
    * @return  rdbms.SQLFunction
    */
   public static function add($col1, $col2) {
-    return new SQLFunction('add', '%f', array($col1, $col2));
+    return new SQLFunction('add', '%f', [$col1, $col2]);
   }
   
   /**
@@ -648,7 +648,7 @@ class SQLFunctions extends \lang\Object {
    * @return  rdbms.SQLFunction
    */
   public static function sub($col1, $col2) {
-    return new SQLFunction('sub', '%f', array($col1, $col2));
+    return new SQLFunction('sub', '%f', [$col1, $col2]);
   }
   
   /**
@@ -659,7 +659,7 @@ class SQLFunctions extends \lang\Object {
    * @return  rdbms.SQLFunction
    */
   public static function mul($col1, $col2) {
-    return new SQLFunction('mul', '%f', array($col1, $col2));
+    return new SQLFunction('mul', '%f', [$col1, $col2]);
   }
   
   /**
@@ -670,7 +670,7 @@ class SQLFunctions extends \lang\Object {
    * @return  rdbms.SQLFunction
    */
   public static function div($col1, $col2) {
-    return new SQLFunction('div', '%f', array($col1, $col2));
+    return new SQLFunction('div', '%f', [$col1, $col2]);
   }
   
   /**
@@ -681,7 +681,7 @@ class SQLFunctions extends \lang\Object {
    * @return  rdbms.SQLFunction
    */
   public static function bitAnd($col1, $col2) {
-    return new SQLFunction('bitAnd', '%d', array($col1, $col2));
+    return new SQLFunction('bitAnd', '%d', [$col1, $col2]);
   }
   
   /**
@@ -692,7 +692,7 @@ class SQLFunctions extends \lang\Object {
    * @return  rdbms.SQLFunction
    */
   public static function bitOr($col1, $col2) {
-    return new SQLFunction('bitOr', '%F', array($col1, $col2));
+    return new SQLFunction('bitOr', '%F', [$col1, $col2]);
   }
   
   /**
@@ -702,7 +702,7 @@ class SQLFunctions extends \lang\Object {
    * @return  rdbms.SQLFunction
    */
   public static function bitNot($col1) {
-    return new SQLFunction('bitNot', '%d', array($col1));
+    return new SQLFunction('bitNot', '%d', [$col1]);
   }
   
   /**
@@ -713,6 +713,6 @@ class SQLFunctions extends \lang\Object {
    * @return  rdbms.SQLFunction
    */
   public static function bitXor($col1, $col2) {
-    return new SQLFunction('bitXor', '%d', array($col1, $col2));
+    return new SQLFunction('bitXor', '%d', [$col1, $col2]);
   }
 }

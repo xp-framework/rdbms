@@ -137,7 +137,7 @@ class DBTableAttribute extends \lang\Object {
    * @return  string type
    */
   public function getTypeString() {
-    static $map= array(
+    static $map= [
       'DB_ATTRTYPE_BINARY',   
       'DB_ATTRTYPE_BIT',     
       'DB_ATTRTYPE_CHAR',    
@@ -168,7 +168,7 @@ class DBTableAttribute extends \lang\Object {
       'DB_ATTRTYPE_VARCHAR',
       'DB_ATTRTYPE_ENUM',
       'DB_ATTRTYPE_DATE'
-    );
+    ];
     return $map[$this->type];
   }
   

@@ -13,7 +13,7 @@ abstract class MySqlPassword extends \lang\Enum {
     $PROTOCOL_41= null;
   
   static function __static() {
-    self::$PROTOCOL_40= newinstance(__CLASS__, array(0, 'PROTOCOL_40'), '{
+    self::$PROTOCOL_40= newinstance(__CLASS__, [0, 'PROTOCOL_40'], '{
       static function __static() { }
       
       public static function hash($in) {
@@ -56,7 +56,7 @@ abstract class MySqlPassword extends \lang\Enum {
         return $result;
       }
     }');
-    self::$PROTOCOL_41= newinstance(__CLASS__, array(1, 'PROTOCOL_41'), '{
+    self::$PROTOCOL_41= newinstance(__CLASS__, [1, 'PROTOCOL_41'], '{
       static function __static() { }
       public function scramble($password, $message) {
         if ("" === $password || null === $password) return "";

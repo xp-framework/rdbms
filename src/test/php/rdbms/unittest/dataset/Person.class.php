@@ -18,44 +18,44 @@ class Person extends DataSet implements JoinExtractable {
     $department_id      = 0;
 
   protected
-    $cache= array(
-      'Department' => array(),
-      'Job' => array(),
-      'DepartmentChief' => array(),
-    );
+    $cache= [
+      'Department' => [],
+      'Job' => [],
+      'DepartmentChief' => [],
+    ];
 
   static function __static() { 
     with ($peer= self::getPeer()); {
       $peer->setTable('JOBS.Person');
       $peer->setConnection('jobs');
       $peer->setIdentity('person_id');
-      $peer->setPrimary(array('person_id'));
-      $peer->setTypes(array(
-        'person_id'     => array('%d', \rdbms\FieldType::NUMERIC, false),
-        'name'          => array('%s', \rdbms\FieldType::VARCHAR, false),
-        'job_id'        => array('%d', \rdbms\FieldType::NUMERIC, false),
-        'department_id' => array('%d', \rdbms\FieldType::NUMERIC, false),
-      ));
-      $peer->setRelations(array(
-        'Department' => array(
+      $peer->setPrimary(['person_id']);
+      $peer->setTypes([
+        'person_id'     => ['%d', \rdbms\FieldType::NUMERIC, false],
+        'name'          => ['%s', \rdbms\FieldType::VARCHAR, false],
+        'job_id'        => ['%d', \rdbms\FieldType::NUMERIC, false],
+        'department_id' => ['%d', \rdbms\FieldType::NUMERIC, false],
+      ]);
+      $peer->setRelations([
+        'Department' => [
           'classname' => 'rdbms.unittest.dataset.Department',
-          'key'       => array(
+          'key'       => [
             'department_id' => 'department_id',
-          ),
-        ),
-        'Job' => array(
+          ],
+        ],
+        'Job' => [
           'classname' => 'rdbms.unittest.dataset.Job',
-          'key'       => array(
+          'key'       => [
             'job_id' => 'job_id',
-          ),
-        ),
-        'DepartmentChief' => array(
+          ],
+        ],
+        'DepartmentChief' => [
           'classname' => 'rdbms.unittest.dataset.Department',
-          'key'       => array(
+          'key'       => [
             'person_id' => 'chief_id',
-          ),
-        ),
-      ));
+          ],
+        ],
+      ]);
     }
   }  
 
@@ -87,7 +87,7 @@ class Person extends DataSet implements JoinExtractable {
    * @throws  rdbms.SQLException in case an error occurs
    */
   public static function getByPerson_id($person_id) {
-    $r= self::getPeer()->doSelect(new \rdbms\Criteria(array('person_id', $person_id, EQUAL)));
+    $r= self::getPeer()->doSelect(new \rdbms\Criteria(['person_id', $person_id, EQUAL]));
     return $r ? $r[0] : null;    }
 
   /**
@@ -98,7 +98,7 @@ class Person extends DataSet implements JoinExtractable {
    * @throws  rdbms.SQLException in case an error occurs
    */
   public static function getByJob_id($job_id) {
-    return self::getPeer()->doSelect(new \rdbms\Criteria(array('job_id', $job_id, EQUAL)));    }
+    return self::getPeer()->doSelect(new \rdbms\Criteria(['job_id', $job_id, EQUAL]));    }
 
   /**
    * Gets an instance of this object by index "department"
@@ -108,7 +108,7 @@ class Person extends DataSet implements JoinExtractable {
    * @throws  rdbms.SQLException in case an error occurs
    */
   public static function getByDepartment_id($department_id) {
-    return self::getPeer()->doSelect(new \rdbms\Criteria(array('department_id', $department_id, EQUAL)));    }
+    return self::getPeer()->doSelect(new \rdbms\Criteria(['department_id', $department_id, EQUAL]));    }
 
   /**
    * Retrieves person_id
@@ -200,7 +200,7 @@ class Person extends DataSet implements JoinExtractable {
         ->getMethod('getPeer')
         ->invoke()
         ->doSelect(new \rdbms\Criteria(
-        array('department_id', $this->getDepartment_id(), EQUAL)
+        ['department_id', $this->getDepartment_id(), EQUAL]
     ));
     return $r ? $r[0] : null;
   }
@@ -219,7 +219,7 @@ class Person extends DataSet implements JoinExtractable {
         ->getMethod('getPeer')
         ->invoke()
         ->doSelect(new \rdbms\Criteria(
-        array('job_id', $this->getJob_id(), EQUAL)
+        ['job_id', $this->getJob_id(), EQUAL]
     ));
     return $r ? $r[0] : null;
   }
@@ -237,7 +237,7 @@ class Person extends DataSet implements JoinExtractable {
       ->getMethod('getPeer')
       ->invoke()
       ->doSelect(new \rdbms\Criteria(
-        array('chief_id', $this->getPerson_id(), EQUAL)
+        ['chief_id', $this->getPerson_id(), EQUAL]
     ));
   }
 
@@ -254,7 +254,7 @@ class Person extends DataSet implements JoinExtractable {
       ->getMethod('getPeer')
       ->invoke()
       ->iteratorFor(new \rdbms\Criteria(
-        array('chief_id', $this->getPerson_id(), EQUAL)
+        ['chief_id', $this->getPerson_id(), EQUAL]
     ));
   }
 }

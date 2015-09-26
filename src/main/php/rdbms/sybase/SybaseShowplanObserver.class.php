@@ -13,11 +13,11 @@ use rdbms\DBObserver;
  */
 class SybaseShowplanObserver extends \lang\Object implements \util\log\BoundLogObserver {
   protected
-    $messages     = array(),
-    $queries      = array();
+    $messages     = [],
+    $queries      = [];
   
   protected static
-    $messagecodes = array();
+    $messagecodes = [];
   
   static function __static() {
     self::$messagecodes= array_merge(
@@ -51,10 +51,10 @@ class SybaseShowplanObserver extends \lang\Object implements \util\log\BoundLogO
 
     // Filter 'optimizer'-messages by their msgnumber
     if (in_array($msgnumber, self::$messagecodes)) {
-      $this->messages[]= array(
+      $this->messages[]= [
         'msgnumber' => $msgnumber,
         'text'      => rtrim($text)
-      );
+      ];
     }
     
     // Indicate we did not process the message
@@ -83,8 +83,8 @@ class SybaseShowplanObserver extends \lang\Object implements \util\log\BoundLogO
     // Passthrough event to appropriate function, if existant
     if (method_exists($this, 'on'.$arg->getName())) {
       call_user_func_array(
-        array($this, 'on'.$arg->getName()),
-        array($obs, $arg)
+        [$this, 'on'.$arg->getName()],
+        [$obs, $arg]
       );
     }
   }
@@ -97,11 +97,11 @@ class SybaseShowplanObserver extends \lang\Object implements \util\log\BoundLogO
    */
   public function onConnect($obs, $arg) {
     ini_set('sybct.min_server_severity', 0);
-    sybase_set_message_handler(array($this, '_msghandler'), $obs->handle);
+    sybase_set_message_handler([$this, '_msghandler'], $obs->handle);
     sybase_query('set showplan on', $obs->handle);
 
     // Reset query- and message-cache
-    $this->queries= $this->messages= array();
+    $this->queries= $this->messages= [];
   }
   
   /**
@@ -131,6 +131,6 @@ class SybaseShowplanObserver extends \lang\Object implements \util\log\BoundLogO
     }
     
     $this->cat->infof("Showplan output is:\n%s", $showplan);
-    $this->queries= $this->messages= array();
+    $this->queries= $this->messages= [];
   }
 } 

@@ -11,7 +11,7 @@ use rdbms\DBTableAttribute;
  * @see   xp://rdbms.mysql.MySQLConnection
  */
 class MySQLiDBAdapter extends DBAdapter {
-  public static $map= array(
+  public static $map= [
     'varchar'    => DBTableAttribute::DB_ATTRTYPE_VARCHAR,
     'varbinary'  => DBTableAttribute::DB_ATTRTYPE_VARCHAR,
     'char'       => DBTableAttribute::DB_ATTRTYPE_CHAR,
@@ -36,7 +36,7 @@ class MySQLiDBAdapter extends DBAdapter {
     'blob'       => DBTableAttribute::DB_ATTRTYPE_TEXT,
     'mediumblob' => DBTableAttribute::DB_ATTRTYPE_TEXT,
     'longblob'   => DBTableAttribute::DB_ATTRTYPE_TEXT
-  );
+  ];
 
   /**
    * Get databases
@@ -44,7 +44,7 @@ class MySQLiDBAdapter extends DBAdapter {
    * @return  string[] databases
    */
   public function getDatabases() {
-    $dbs= array();
+    $dbs= [];
     $q= $this->conn->query('show databases');
     while ($name= $q->next()) {
       $dbs[]= $name[key($name)];
@@ -59,7 +59,7 @@ class MySQLiDBAdapter extends DBAdapter {
    * @return  rdbms.DBTable[] array of DBTable objects
    */
   public function getTables($database= null) {
-    $t= array();
+    $t= [];
     $database= $this->database($database);
     $q= $this->conn->query(
       'show tables from %c',
@@ -137,7 +137,7 @@ class MySQLiDBAdapter extends DBAdapter {
       if ($record['Key_name'] != $key) {
         $index= $t->addIndex(new \rdbms\DBIndex(
           $record['Key_name'],
-          array()
+          []
         ));
         $key= $record['Key_name'];
       }
@@ -204,9 +204,9 @@ class MySQLiDBAdapter extends DBAdapter {
    */
   private function parseForeignKeyString($string) {
     $constraint=   new \rdbms\DBForeignKeyConstraint();
-    $quotstrings=  array();
-    $bracestrings= array();
-    $attributes=   array();
+    $quotstrings=  [];
+    $bracestrings= [];
+    $attributes=   [];
     $pos= 10;
     while (++$pos < strlen($string)) {
       switch ($string{$pos}) {
@@ -300,7 +300,7 @@ class MySQLiDBAdapter extends DBAdapter {
    * @return  string[] paramstrings
    */
   private function extractParams($string) {
-    $paramArray= array();
+    $paramArray= [];
     $paramString= '';
     $pos= 0;
     while ($pos < strlen($string)) {
@@ -341,7 +341,7 @@ class MySQLiDBAdapter extends DBAdapter {
    * @return  string[] constraint strings
    */
   private function filterConstraints($params) {
-    $constraintArray= array();
+    $constraintArray= [];
     foreach ($params as $param) if ('CONSTRAINT' == substr($param, 0, 10)) $constraintArray[]= $param;
     return $constraintArray;
   }

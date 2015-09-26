@@ -41,7 +41,7 @@ class TdsProtocolException extends \peer\ProtocolException {
    * @return  string
    */
   public function compoundMessage() {
-    $addr= array_filter(array($this->server, $this->proc, $this->line));
+    $addr= array_filter([$this->server, $this->proc, $this->line]);
     return sprintf(
       'Exception %s (#%d, state %d, class %d: %s%s)',
       $this->getClassName(),

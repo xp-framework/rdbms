@@ -114,9 +114,9 @@ class MySQLConnection extends DBConnection {
     // (\) as an escape character within strings. With this mode enabled, 
     // backslash becomes any ordinary character like any other. 
     // (Implemented in MySQL 5.0.1)
-    isset($modes['NO_BACKSLASH_ESCAPES']) && $this->formatter->dialect->setEscapeRules(array(
+    isset($modes['NO_BACKSLASH_ESCAPES']) && $this->formatter->dialect->setEscapeRules([
       '"'   => '""'
-    ));
+    ]);
 
     return parent::connect();
   }

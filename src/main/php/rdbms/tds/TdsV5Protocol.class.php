@@ -154,7 +154,7 @@ class TdsV5Protocol extends TdsProtocol {
    */
   protected function handleEnvChange($type, $old, $new, $initial= false) {
     if ($initial && 3 === $type) {
-      $this->servercs= strtr($new, array('iso_' => 'iso-8859-', 'utf8' => 'utf-8'));
+      $this->servercs= strtr($new, ['iso_' => 'iso-8859-', 'utf8' => 'utf-8']);
     }
     // DEBUG Console::writeLine($initial ? 'I' : 'E', $type, ' ', $old, ' -> ', $new);
   }

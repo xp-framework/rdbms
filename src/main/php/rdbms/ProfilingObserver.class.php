@@ -22,7 +22,7 @@ class ProfilingObserver extends \lang\Object implements Observer, Traceable {
   private $timer  = null;
   private $lastq  = null;
   private $dsn    = null;
-  private $timing = array();
+  private $timing = [];
   
   /**
    * Creates a new log observer with a given log category.
@@ -54,7 +54,7 @@ class ProfilingObserver extends \lang\Object implements Observer, Traceable {
     $sql= strtolower(ltrim($sql));
     $verb= substr($sql, 0, strpos($sql, ' '));
 
-    if (in_array($verb, array('update', 'insert', 'select', 'delete', 'set', 'show'))) {
+    if (in_array($verb, ['update', 'insert', 'select', 'delete', 'set', 'show'])) {
       return $verb;
     }
 

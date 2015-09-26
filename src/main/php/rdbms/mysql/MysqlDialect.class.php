@@ -8,12 +8,12 @@ use rdbms\SQLDialect;
  */
 class MysqlDialect extends SQLDialect {
   private static
-    $dateparts= array(
+    $dateparts= [
       'dayofyear'   => false,
       'weekday'     => false,
       'millisecond' => false,
-    ),
-    $implementations= array(
+    ],
+    $implementations= [
       'str_1'        => 'cast(%s as char)',
       'len_1'        => 'length(%s)',
       'getdate_0'    => 'sysdate()',
@@ -21,16 +21,16 @@ class MysqlDialect extends SQLDialect {
       'datediff_3'   => 'timestampdiff(%t, %s, %s)',
       'datename_2'   => 'cast(extract(%t from %s) as char)',
       'datepart_2'   => 'extract(%t from %s)',
-    );
+    ];
 
   public
     $escape       = "'",
-    $escapeRules  = array(
+    $escapeRules  = [
       "'"   => "''",
       '\\'  => '\\\\'
-    ),
+    ],
     $escapeT      = '`',
-    $escapeTRules = array('`'   => '``'),
+    $escapeTRules = ['`'   => '``'],
     $dateFormat   = 'Y-m-d H:i:s';
       
   /**

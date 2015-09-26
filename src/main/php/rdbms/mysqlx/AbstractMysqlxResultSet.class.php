@@ -17,7 +17,7 @@ abstract class AbstractMysqlxResultSet extends ResultSet {
    * @return  [:var] record
    */
   protected function record($record, $field= null) {
-    $return= array();
+    $return= [];
     foreach ($this->fields as $i => $info) {
       $type= $info['type'];
       $value= $record[$i];

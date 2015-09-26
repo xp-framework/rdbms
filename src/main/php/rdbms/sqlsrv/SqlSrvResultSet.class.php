@@ -22,7 +22,7 @@ class SqlSrvResultSet extends ResultSet {
    * @param   resource handle
    */
   public function __construct($result, \util\TimeZone $tz= null) {
-    $fields= array();
+    $fields= [];
     if (is_resource($result)) {
       foreach (sqlsrv_field_metadata($result) as $meta) {
         $fields[$meta['Name']]= $meta;

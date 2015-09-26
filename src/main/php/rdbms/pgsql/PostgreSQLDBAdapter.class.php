@@ -17,7 +17,7 @@ class PostgreSQLDBAdapter extends DBAdapter {
    * @param   rdbms.DBConnection conn
    */
   public function __construct($conn) {
-    $this->map= array(
+    $this->map= [
       'varchar'    => DBTableAttribute::DB_ATTRTYPE_VARCHAR,
       'char'       => DBTableAttribute::DB_ATTRTYPE_CHAR,
       'int'        => DBTableAttribute::DB_ATTRTYPE_INT,
@@ -39,7 +39,7 @@ class PostgreSQLDBAdapter extends DBAdapter {
       'money'      => DBTableAttribute::DB_ATTRTYPE_MONEY,
       'numeric'    => DBTableAttribute::DB_ATTRTYPE_NUMERIC,
       'bool'       => DBTableAttribute::DB_ATTRTYPE_BIT
-    );
+    ];
     parent::__construct($conn);
   }
   
@@ -49,7 +49,7 @@ class PostgreSQLDBAdapter extends DBAdapter {
    * @return  string[] databases
    */
   public function getDatabases() {
-    $dbs= array();
+    $dbs= [];
     $q= $this->conn->query("Select db.datname as name from pg_database as db join pg_user as u on (db.datdba= u.usesysid) where u.usename=current_user;");
     while ($name= $q->next()) {
       $dbs[]= $name[key($name)];
@@ -65,7 +65,7 @@ class PostgreSQLDBAdapter extends DBAdapter {
    * @return  rdbms.DBTable[] array of DBTable objects
    */
   public function getTables($database= null) {
-    $t= array();
+    $t= [];
     $database= $this->database($database);
     $q= $this->conn->query(
       "select * from information_schema.tables where table_schema='public' and table_catalog=%s", 
@@ -135,7 +135,7 @@ class PostgreSQLDBAdapter extends DBAdapter {
     $key= null;
     while ($record= $q->next()) {
       if ($record['name'] != $key) {
-        $index= $t->addIndex(new \rdbms\DBIndex($record['name'], array()));
+        $index= $t->addIndex(new \rdbms\DBIndex($record['name'], []));
         $key= $record['name'];
       }
       $index->unique= (true);
@@ -160,7 +160,7 @@ class PostgreSQLDBAdapter extends DBAdapter {
     $key= null;
     while ($record= $q->next()) {
       if ($record['name'] != $key) {
-        $index= $t->addIndex(new \rdbms\DBIndex($record['name'], array()));
+        $index= $t->addIndex(new \rdbms\DBIndex($record['name'], []));
         $key= $record['name'];
       }
       $index->unique= (true);

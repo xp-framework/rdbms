@@ -1,5 +1,6 @@
 <?php namespace rdbms\unittest;
 
+use lang\IllegalArgumentException;
 use unittest\TestCase;
 use rdbms\DBEvent;
 use rdbms\ProfilingObserver;
@@ -49,7 +50,7 @@ class ProfilingObserverTest extends TestCase {
     new ProfilingObserver();
   }
 
-  #[@test, @values(array(
+  #[@test, @values([
   #  'select * from world',
   #  ' select * from world',
   #  '  select * from world',
@@ -59,7 +60,7 @@ class ProfilingObserverTest extends TestCase {
   #  "\tselect * from world",
   #  'SELECT * from world',
   #  'Select * from world'
-  #))]
+  #])]
   public function select_type($sql) {
     $this->assertEquals('select', (new ProfilingObserver())->typeOf($sql));
   }
@@ -93,7 +94,7 @@ class ProfilingObserverTest extends TestCase {
     (new ProfilingObserver())->emitTimings();
   }
 
-  #[@test, @expect('lang.IllegalArgumentException')]
+  #[@test, @expect(IllegalArgumentException::class)]
   public function update_with_anyarg() {
     $o= new ProfilingObserver();
     $o->update(1);

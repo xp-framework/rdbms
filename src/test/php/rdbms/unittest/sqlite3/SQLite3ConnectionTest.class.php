@@ -1,5 +1,8 @@
 <?php namespace rdbms\unittest\sqlite3;
 
+use rdbms\SQLStatementFailedException;
+use lang\IllegalStateException;
+use rdbms\SQLStateException;
 use rdbms\sqlite3\SQLite3Connection;
 
 /**
@@ -36,7 +39,7 @@ class SQLite3ConnectionTest extends \unittest\TestCase {
     $this->assertFalse($this->conn->close());
   }
 
-  #[@test, @expect('rdbms.SQLStatementFailedException')]
+  #[@test, @expect(SQLStatementFailedException::class)]
   public function selectdb() {
     $this->conn->selectdb('foo');
   }
@@ -47,7 +50,7 @@ class SQLite3ConnectionTest extends \unittest\TestCase {
     $result= $this->conn->query('select 1 as one');
     
     $this->assertInstanceOf('rdbms.sqlite3.SQLite3ResultSet', $result);
-    $this->assertEquals(array('one' => 1), $result->next());
+    $this->assertEquals(['one' => 1], $result->next());
   }
 
   #[@test]
@@ -56,7 +59,7 @@ class SQLite3ConnectionTest extends \unittest\TestCase {
     $this->assertTrue($this->conn->query('pragma user_version = 1'));
   }
 
-  #[@test, @expect('rdbms.SQLStatementFailedException')]
+  #[@test, @expect(SQLStatementFailedException::class)]
   public function query_throws_exception_for_broken_statement() {
     $this->conn->connect();
     $this->conn->query('select something with wrong syntax');
@@ -66,7 +69,7 @@ class SQLite3ConnectionTest extends \unittest\TestCase {
    * Unbuffered queries are not supported
    *
    */
-  #[@test, @expect('lang.IllegalStateException')]
+  #[@test, @expect(IllegalStateException::class)]
   public function open_throws_exception() {
     $this->conn->connect();
     $this->conn->open('select 1');
@@ -102,22 +105,22 @@ class SQLite3ConnectionTest extends \unittest\TestCase {
   #[@test]
   public function select_from_prefilled_table_yields_correct_column_types() {
     $this->create_table_and_fill();
-    $this->assertEquals(array(array(
+    $this->assertEquals([[
       'col1' => 1,
       'str2' => 'Hello World',
       'col3' => 1.5,
       'col4' => 12345.67
-    )), $this->conn->select('* from testthewest'));
+    ]], $this->conn->select('* from testthewest'));
   }
 
-  #[@test, @expect('lang.IllegalStateException')]
+  #[@test, @expect(IllegalStateException::class)]
   public function unbuffered_query_not_supported() {
     $this->conn->setFlag(DB_UNBUFFERED);
     $this->conn->connect();
     $this->conn->query('select 1');
   }
 
-  #[@test, @expect('rdbms.SQLStateException')]
+  #[@test, @expect(SQLStateException::class)]
   public function identity_throws_exception_when_not_connected() {
     $this->conn->identity();
   }

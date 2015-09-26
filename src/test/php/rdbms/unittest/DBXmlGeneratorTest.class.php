@@ -21,7 +21,7 @@ class DBXmlGeneratorTest extends TestCase {
   #[@beforeClass]
   public static function onlyWithXmlModule() {
     if (!class_exists('xml\Tree')) {
-      throw new \unittest\PrerequisitesNotMetError('XML Module not available', NULL, array('loaded'));
+      throw new \unittest\PrerequisitesNotMetError('XML Module not available', NULL, ['loaded']);
     }
   }
 
@@ -30,11 +30,11 @@ class DBXmlGeneratorTest extends TestCase {
    */
   public function setUp() {
     $generated= DBXmlGenerator::createFromTable(
-      $this->newTable('deviceinfo', array(
-        'deviceinfo_id' => array(DB_ATTRTYPE_INT, 255), 
-        'serial_number' => array(DB_ATTRTYPE_INT, 16),
-        'text'          => array(DB_ATTRTYPE_TEXT, 255)
-      )),
+      $this->newTable('deviceinfo', [
+        'deviceinfo_id' => [DB_ATTRTYPE_INT, 255], 
+        'serial_number' => [DB_ATTRTYPE_INT, 16],
+        'text'          => [DB_ATTRTYPE_TEXT, 255]
+      ]),
       'localhost',
       'FOOBAR'
     );
@@ -61,13 +61,13 @@ class DBXmlGeneratorTest extends TestCase {
     }
     $t->indexes[]= new DBIndex(
       'PRIMARY',
-      array('deviceinfo_id')
+      ['deviceinfo_id']
     );
     $t->indexes[0]->unique= true;
     $t->indexes[0]->primary= true;
     $t->indexes[]= new DBIndex(
       'deviceinfo_I_serial',
-      array('serial_number')
+      ['serial_number']
     );
     return $t;
   }

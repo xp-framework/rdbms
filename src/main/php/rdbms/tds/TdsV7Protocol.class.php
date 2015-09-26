@@ -132,17 +132,17 @@ class TdsV7Protocol extends TdsProtocol {
    * @throws  io.IOException
    */
   protected function login($user, $password) {
-    $params= array(
-      'hostname'   => array(true, 'localhost'),
-      'username'   => array(true, $user),
-      'password'   => array(false, $this->scramble($password), strlen($password)),
-      'appname'    => array(true, 'XP-Framework'),
-      'servername' => array(true, 'localhost'),
-      'unused'     => array(false, '', 0),
-      'library'    => array(true, $this->getClassName()),
-      'language'   => array(true, 'us_english'),
-      'database'   => array(true, 'master')
-    );
+    $params= [
+      'hostname'   => [true, 'localhost'],
+      'username'   => [true, $user],
+      'password'   => [false, $this->scramble($password), strlen($password)],
+      'appname'    => [true, 'XP-Framework'],
+      'servername' => [true, 'localhost'],
+      'unused'     => [false, '', 0],
+      'library'    => [true, $this->getClassName()],
+      'language'   => [true, 'us_english'],
+      'database'   => [true, 'master']
+    ];
     
     // Initial packet
     $login= pack(
