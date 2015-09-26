@@ -1,5 +1,7 @@
 <?php namespace rdbms\unittest;
  
+use lang\IllegalArgumentException;
+use rdbms\SQLStateException;
 use rdbms\Criteria;
 use rdbms\criterion\Restrictions;
 use rdbms\DriverManager;
@@ -47,7 +49,7 @@ class CriteriaTest extends TestCase {
     $this->assertSql('where job_id = 1', new Criteria(['job_id', 1, EQUAL]));
   }
 
-  #[@test, @expect('lang.IllegalArgumentException')]
+  #[@test, @expect(IllegalArgumentException::class)]
   public function nonExistantFieldCausesException() {
     $criteria= new Criteria(['non-existant-field', 1, EQUAL]);
     $criteria->toSQL($this->conn, $this->peer);
@@ -244,12 +246,12 @@ class CriteriaTest extends TestCase {
     );
   }
 
-  #[@test, @expect('lang.IllegalArgumentException')]
+  #[@test, @expect(IllegalArgumentException::class)]
   public function createNonExistantColumn() {
     Job::column('not_existant');
   }
 
-  #[@test, @expect('rdbms.SQLStateException')]
+  #[@test, @expect(SQLStateException::class)]
   public function addGroupByNonExistantColumnString() {
     (new Criteria())->addGroupBy('not_existant')->toSQL($this->conn, $this->peer);
   }

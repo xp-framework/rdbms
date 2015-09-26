@@ -1,5 +1,8 @@
 <?php namespace rdbms\unittest;
 
+use rdbms\SQLException;
+use util\NoSuchElementException;
+use lang\IllegalArgumentException;
 use unittest\TestCase;
 use rdbms\DriverManager;
 use rdbms\DBObserver;
@@ -121,7 +124,7 @@ class DataSetTest extends TestCase {
     $this->assertNull(Job::getByJob_id(self::IRRELEVANT_NUMBER));
   }
 
-  #[@test, @expect('rdbms.SQLException')]
+  #[@test, @expect(SQLException::class)]
   public function failedQueryInGetByJob_id() {
     $mock= $this->getConnection();
     $mock->makeQueryFail(1, 'Select failed');
@@ -190,7 +193,7 @@ class DataSetTest extends TestCase {
     $this->assertEquals(14121977, $j->getJob_id());
   }
   
-  #[@test, @expect('rdbms.SQLException')]
+  #[@test, @expect(SQLException::class)]
   public function failedQueryInInsert() {
     $mock= $this->getConnection();
     $mock->makeQueryFail(1205, 'Deadlock');
@@ -328,7 +331,7 @@ class DataSetTest extends TestCase {
     $this->assertTrue($iterator->hasNext());
   }
 
-  #[@test, @expect('util.NoSuchElementException')]
+  #[@test, @expect(NoSuchElementException::class)]
   public function nextCallOnEmptyResultSet() {
     $this->setResults(new MockResultSet());
     $peer= Job::getPeer();
@@ -336,7 +339,7 @@ class DataSetTest extends TestCase {
     $iterator->next();
   }
 
-  #[@test, @expect('util.NoSuchElementException')]
+  #[@test, @expect(NoSuchElementException::class)]
   public function nextCallPastEndOfResultSet() {
     $this->setResults(new MockResultSet([
       0 => [
@@ -410,7 +413,7 @@ class DataSetTest extends TestCase {
     $this->assertEquals('job_id', $c->getName());
   }
 
-  #[@test, @expect('lang.IllegalArgumentException')]
+  #[@test, @expect(IllegalArgumentException::class)]
   public function nonExistantColumn() {
     Job::column('non_existant');
   }
@@ -420,7 +423,7 @@ class DataSetTest extends TestCase {
     $this->assertInstanceOf('rdbms.Column', Job::column('PersonJob->person_id'));
   }
 
-  #[@test, @expect('lang.IllegalArgumentException')]
+  #[@test, @expect(IllegalArgumentException::class)]
   public function nonExistantRelativeColumn() {
     Job::column('PersonJob->non_existant');
   }
@@ -430,12 +433,12 @@ class DataSetTest extends TestCase {
     $this->assertInstanceOf('rdbms.Column', Job::column('PersonJob->Department->department_id'));
   }
 
-  #[@test, @expect('lang.IllegalArgumentException')]
+  #[@test, @expect(IllegalArgumentException::class)]
   public function nonExistantfarRelativeColumn() {
     Job::column('PersonJob->Department->non_existant');
   }
 
-  #[@test, @expect('lang.IllegalArgumentException')]
+  #[@test, @expect(IllegalArgumentException::class)]
   public function nonExistantRelative() {
     Job::column('NonExistant->person_id');
   }

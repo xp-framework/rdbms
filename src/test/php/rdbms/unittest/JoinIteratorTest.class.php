@@ -1,5 +1,6 @@
 <?php namespace rdbms\unittest;
  
+use util\NoSuchElementException;
 use rdbms\DSN;
 use rdbms\Criteria;
 use rdbms\mysql\MySQLConnection;
@@ -28,7 +29,7 @@ class JoinIteratorTest extends TestCase {
     \rdbms\ConnectionManager::getInstance()->register(new MySQLConnection(new DSN('mysql://localhost:3306/')), 'jobs');
   }
   
-  #[@test, @expect('util.NoSuchElementException')]
+  #[@test, @expect(NoSuchElementException::class)]
   public function emptyResultNextTest() {
     (new JoinIterator(new JoinProcessor(Job::getPeer()), new MockResultSet()))->next();
   }

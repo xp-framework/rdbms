@@ -1,5 +1,6 @@
 <?php namespace rdbms\unittest;
 
+use lang\IllegalArgumentException;
 use unittest\TestCase;
 use util\Date;
 use rdbms\SQLFunction;
@@ -53,7 +54,7 @@ class SQLDialectTest extends TestCase {
     $this->assertEquals('pi()', $dialect->formatFunction(new SQLFunction('pi', '%s')));
   }
 
-  #[@test, @values('dialects'), @expect('lang.IllegalArgumentException')]
+  #[@test, @values('dialects'), @expect(IllegalArgumentException::class)]
   public function unknown_function($dialect) {
     $dialect->formatFunction(new SQLFunction('foo', 1, 2, 3, 4, 5));
   }
@@ -63,7 +64,7 @@ class SQLDialectTest extends TestCase {
     $this->assertEquals('month', $dialect->datepart('month'));
   }
 
-  #[@test, @values('dialects'), @expect('lang.IllegalArgumentException')]
+  #[@test, @values('dialects'), @expect(IllegalArgumentException::class)]
   public function unknown_datepart($dialect) {
     $dialect->datepart('month_foo_bar_buz');
   }
@@ -73,12 +74,12 @@ class SQLDialectTest extends TestCase {
     $this->assertEquals('int', $dialect->datatype('int'));
   }
 
-  #[@test, @values('dialects'), @expect('lang.IllegalArgumentException')]
+  #[@test, @values('dialects'), @expect(IllegalArgumentException::class)]
   public function unknown_datatype($dialect) {
     $dialect->datatype('int_foo_bar_buz');
   }
 
-  #[@test, @values('dialects'), @expect('lang.IllegalArgumentException')]
+  #[@test, @values('dialects'), @expect(IllegalArgumentException::class)]
   public function join_by_empty($dialect) {
     $dialect->makeJoinBy([]);
   }

@@ -1,5 +1,6 @@
 <?php namespace rdbms\unittest\tds;
 
+use rdbms\tds\TdsProtocolException;
 use rdbms\tds\TdsDataStream;
 use peer\Socket;
 use lang\types\Bytes;
@@ -71,7 +72,7 @@ class TdsDataStreamTest extends \unittest\TestCase {
     $this->assertEquals(new Bytes($bytes), new Bytes($field->get($str)->bytes));
   }
 
-  #[@test, @expect('rdbms.tds.TdsProtocolException')]
+  #[@test, @expect(TdsProtocolException::class)]
   public function nullHeader() { 
     $this->newDataStream(null)->read(1);
   }

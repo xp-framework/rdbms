@@ -1,5 +1,6 @@
 <?php namespace rdbms\unittest;
 
+use lang\FormatException;
 use rdbms\DSN;
 
 /**
@@ -57,7 +58,7 @@ class DSNTest extends \unittest\TestCase {
     );
   }
 
-  #[@test, @expect('lang.FormatException')]
+  #[@test, @expect(FormatException::class)]
   public function noDriver() {
     new DSN('');
   }

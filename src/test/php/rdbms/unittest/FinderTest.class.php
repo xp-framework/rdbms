@@ -1,5 +1,9 @@
 <?php namespace rdbms\unittest;
 
+use lang\MethodNotImplementedException;
+use lang\IllegalArgumentException;
+use rdbms\finder\FinderException;
+use rdbms\finder\NoSuchEntityException;
 use unittest\TestCase;
 use rdbms\DriverManager;
 use rdbms\finder\GenericFinder;
@@ -103,12 +107,12 @@ class FinderTest extends TestCase {
     $this->assertEquals(ENTITY, $method->getKind());
   }
   
-  #[@test, @expect('lang.MethodNotImplementedException')]
+  #[@test, @expect(MethodNotImplementedException::class)]
   public function nonExistantMethod() {
     $this->method('@@NON-EXISTANT@@');
   }
 
-  #[@test, @expect('lang.IllegalArgumentException')]
+  #[@test, @expect(IllegalArgumentException::class)]
   public function notAFinderMethod() {
     $this->method('getPeer');
   }
@@ -146,7 +150,7 @@ class FinderTest extends TestCase {
     $this->assertNull($this->fixture->find($this->fixture->byPrimary(0)));
   }
 
-  #[@test, @expect('rdbms.finder.FinderException')]
+  #[@test, @expect(FinderException::class)]
   public function findUnexpectedResults() {
     $this->getConnection()->setResultSet(new MockResultSet([
       0 => [   // First row
@@ -193,12 +197,12 @@ class FinderTest extends TestCase {
     $this->assertInstanceOf('rdbms.unittest.dataset.Job', $entity);
   }
 
-  #[@test, @expect('rdbms.finder.NoSuchEntityException')]
+  #[@test, @expect(NoSuchEntityException::class)]
   public function getByNonExistantPrimary() {
     $this->fixture->get($this->fixture->byPrimary(0));
   }
 
-  #[@test, @expect('rdbms.finder.FinderException')]
+  #[@test, @expect(FinderException::class)]
   public function getUnexpectedResults() {
     $this->getConnection()->setResultSet(new MockResultSet([
       0 => [   // First row
@@ -297,18 +301,18 @@ class FinderTest extends TestCase {
     $this->assertEquals(2, sizeof($collection));
   }
 
-  #[@test, @expect('rdbms.finder.NoSuchEntityException')]
+  #[@test, @expect(NoSuchEntityException::class)]
   public function getNothingFound() {
     $this->fixture->getAll($this->fixture->newestJobs());
   }
 
-  #[@test, @expect('rdbms.finder.FinderException')]
+  #[@test, @expect(FinderException::class)]
   public function findWrapsSQLException() {
     $this->getConnection()->makeQueryFail(6010, 'Not enough power');
     $this->fixture->find(new \rdbms\Criteria());
   }
 
-  #[@test, @expect('rdbms.finder.FinderException')]
+  #[@test, @expect(FinderException::class)]
   public function findAllWrapsSQLException() {
     $this->getConnection()->makeQueryFail(6010, 'Not enough power');
     $this->fixture->findAll(new \rdbms\Criteria());

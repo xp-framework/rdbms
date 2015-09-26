@@ -1,5 +1,6 @@
 <?php namespace rdbms\unittest;
  
+use lang\IllegalArgumentException;
 use rdbms\Criteria;
 use rdbms\DriverManager;
 use unittest\TestCase;
@@ -56,19 +57,19 @@ class JoinProcessorTest extends TestCase {
     );
   }
 
-  #[@test, @expect('lang.IllegalArgumentException')]
+  #[@test, @expect(IllegalArgumentException::class)]
   public function emptyModeTest() {
     $jp= new JoinProcessor(Job::getPeer());
     $jp->setFetchModes([]);
   }
 
-  #[@test, @expect('lang.IllegalArgumentException')]
+  #[@test, @expect(IllegalArgumentException::class)]
   public function noJoinModeTest() {
     $jp= new JoinProcessor(Job::getPeer());
     $jp->setFetchModes(['JobPerson.Department' => 'select']);
   }
 
-  #[@test, @expect('lang.IllegalArgumentException')]
+  #[@test, @expect(IllegalArgumentException::class)]
   public function noSuchRoleTest() {
     $jp= new JoinProcessor(Job::getPeer());
     $jp->setFetchModes(['UnknownRole' => 'join']);

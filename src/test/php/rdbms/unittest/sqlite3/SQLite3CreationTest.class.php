@@ -1,5 +1,6 @@
 <?php namespace rdbms\unittest\sqlite3;
 
+use rdbms\SQLConnectException;
 use rdbms\sqlite3\SQLite3Connection;
 use unittest\actions\ExtensionAvailable;
 use unittest\actions\VerifyThat;
@@ -24,25 +25,25 @@ class SQLite3CreationTest extends \unittest\TestCase {
     $conn->connect();
   }
 
-  #[@test, @expect('rdbms.SQLConnectException')]
+  #[@test, @expect(SQLConnectException::class)]
   public function connect_persistent_is_not_supported() {
     $conn= new SQLite3Connection(new \rdbms\DSN('sqlite+3://./:memory:/?persistent=1'));
     $conn->connect();
   }
 
-  #[@test, @expect('rdbms.SQLConnectException')]
+  #[@test, @expect(SQLConnectException::class)]
   public function connect_does_not_support_remote_hosts() {
     $conn= new SQLite3Connection(new \rdbms\DSN('sqlite+3://some.host/:memory:'));
     $conn->connect();
   }
 
-  #[@test, @expect('rdbms.SQLConnectException')]
+  #[@test, @expect(SQLConnectException::class)]
   public function connect_fails_for_invalid_filenames() {
     $conn= new SQLite3Connection(new \rdbms\DSN('sqlite+3://./'));
     $conn->connect();
   }
 
-  #[@test, @expect('rdbms.SQLConnectException')]
+  #[@test, @expect(SQLConnectException::class)]
   public function connect_does_not_support_streams() {
     $conn= new SQLite3Connection(new \rdbms\DSN('sqlite+3://./res://database.db'));
     $conn->connect();

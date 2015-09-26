@@ -1,5 +1,6 @@
 <?php namespace rdbms\unittest;
  
+use rdbms\SQLStateException;
 use rdbms\DBConnection;
 use util\Date;
 use unittest\actions\RuntimeVersion;
@@ -98,27 +99,27 @@ abstract class TokenizerTest extends \unittest\TestCase {
     );
   }
 
-  #[@test, @expect('rdbms.SQLStateException')]
+  #[@test, @expect(SQLStateException::class)]
   public function unknownToken() {
     $this->fixture->prepare('select * from test where name like %X');
   }
 
-  #[@test, @expect('rdbms.SQLStateException')]
+  #[@test, @expect(SQLStateException::class)]
   public function unclosedDoubleQuotedString() {
     $this->fixture->prepare('select * from test where name = "unclosed');
   }
 
-  #[@test, @expect('rdbms.SQLStateException')]
+  #[@test, @expect(SQLStateException::class)]
   public function unclosedDoubleQuotedStringEndingWithEscape() {
     $this->fixture->prepare('select * from test where name = "unclosed""');
   }
   
-  #[@test, @expect('rdbms.SQLStateException')]
+  #[@test, @expect(SQLStateException::class)]
   public function unclosedSingleQuotedString() {
     $this->fixture->prepare("select * from test where name = 'unclosed");
   }
 
-  #[@test, @expect('rdbms.SQLStateException')]
+  #[@test, @expect(SQLStateException::class)]
   public function unclosedSingleQuotedStringEndingWithEscape() {
     $this->fixture->prepare("select * from test where name = 'unclosed''");
   }
@@ -235,7 +236,7 @@ abstract class TokenizerTest extends \unittest\TestCase {
     );
   }
   
-  #[@test, @expect('rdbms.SQLStateException')]
+  #[@test, @expect(SQLStateException::class)]
   public function accessNonexistant() {
     $this->fixture->prepare('%2$c', null);
   }

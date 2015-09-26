@@ -177,7 +177,7 @@ class SybaseIntegrationTest extends RdbmsIntegrationTest {
     $this->assertEquals(1, $q->next('result'));
   }
 
-  #[@test, @expect('rdbms.SQLStatementFailedException')]
+  #[@test, @expect(SQLStatementFailedException::class)]
   public function dataTruncationWarning() {
     $conn= $this->db();
     $conn->query('
