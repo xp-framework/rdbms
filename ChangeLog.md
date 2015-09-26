@@ -3,6 +3,10 @@ RDBMS support for the XP Framework: MySQL, Sybase, MSSQL, PostgreSQL, SQLite3, I
 
 ## ?.?.? / ????-??-??
 
+## 6.4.2 / 2015-09-26
+
+* Merged PR #6: Use short array syntax / ::class in annotations - @thekid
+
 ## 6.4.1 / 2015-09-25
 
 * Fixed problem with TDS packets longer than packet size - @thekid
