@@ -9,7 +9,7 @@
  */
 class DBForeignKeyConstraint extends DBConstraint {
   public
-    $keys=   array(),
+    $keys=   [],
     $source= '';
 
   /**

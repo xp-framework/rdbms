@@ -36,7 +36,7 @@ abstract class DBConnection extends Observable {
     $this->setTimeout($dsn->getProperty('timeout', 0));   // 0 means no timeout
     
     // Keep this for BC reasons
-    $observers= $dsn->getProperty('observer', array());
+    $observers= $dsn->getProperty('observer', []);
     if (null !== ($cat= $dsn->getProperty('log'))) { 
       $observers['util.log.LogObserver']= $cat; 
     }
@@ -47,7 +47,7 @@ abstract class DBConnection extends Observable {
 
       // Check if class implements BoundLogObserver: in that case use factory method to acquire instance
       if (\lang\XPClass::forName('util.log.BoundLogObserver')->isAssignableFrom($class)) {
-        $this->addObserver($class->getMethod('instanceFor')->invoke(null, array($param)));
+        $this->addObserver($class->getMethod('instanceFor')->invoke(null, [$param]));
 
       // Otherwise, just use the constructor
       } else {
@@ -192,7 +192,7 @@ abstract class DBConnection extends Observable {
   public function insert() {
     $args= func_get_args();
     $args[0]= 'insert '.$args[0];
-    call_user_func_array(array($this, 'query'), $args);
+    call_user_func_array([$this, 'query'], $args);
     return $this->affectedRows();
   }
   
@@ -213,7 +213,7 @@ abstract class DBConnection extends Observable {
   public function update() {
     $args= func_get_args();
     $args[0]= 'update '.$args[0];
-    call_user_func_array(array($this, 'query'), $args);
+    call_user_func_array([$this, 'query'], $args);
     return $this->affectedRows();
   }
   
@@ -227,7 +227,7 @@ abstract class DBConnection extends Observable {
   public function delete() {
     $args= func_get_args();
     $args[0]= 'delete '.$args[0];
-    call_user_func_array(array($this, 'query'), $args);
+    call_user_func_array([$this, 'query'], $args);
     return $this->affectedRows();
   }
   
@@ -241,9 +241,9 @@ abstract class DBConnection extends Observable {
   public function select() {
     $args= func_get_args();
     $args[0]= 'select '.$args[0];
-    $r= call_user_func_array(array($this, 'query'), $args);
+    $r= call_user_func_array([$this, 'query'], $args);
 
-    $rows= array();
+    $rows= [];
     while ($row= $r->next()) $rows[]= $row;
     return $rows;
   }
@@ -257,7 +257,7 @@ abstract class DBConnection extends Observable {
    */
   public function query() { 
     $args= func_get_args();
-    $sql= call_user_func_array(array($this, 'prepare'), $args);
+    $sql= call_user_func_array([$this, 'prepare'], $args);
 
     $this->_obs && $this->notifyObservers(new DBEvent(DBEvent::QUERY, $sql));
     $result= $this->query0($sql);
@@ -274,7 +274,7 @@ abstract class DBConnection extends Observable {
    */
   public function open() { 
     $args= func_get_args();
-    $sql= call_user_func_array(array($this, 'prepare'), $args);
+    $sql= call_user_func_array([$this, 'prepare'], $args);
 
     $this->_obs && $this->notifyObservers(new DBEvent(DBEvent::QUERY, $sql));
     $result= $this->query0($sql, false);

@@ -17,7 +17,7 @@ class SQLite3ResultSet extends ResultSet {
    * @param   resource handle
    */
   public function __construct($result) {
-    $fields= array();
+    $fields= [];
     if ($result instanceof \SQLite3Result) {
       for ($i= 0, $num= $result->numColumns(); $i < $num; $i++) {
         $fields[$result->columnName($i)]= $result->columnType($i); // Types are unknown

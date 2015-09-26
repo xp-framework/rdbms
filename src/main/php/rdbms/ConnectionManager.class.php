@@ -10,7 +10,7 @@ use rdbms\DSN;
  */
 class ConnectionManager extends \lang\Object implements Configurable {
   protected static $instance= null;
-  public $pool= array();
+  public $pool= [];
 
   static function __static() {
     self::$instance= new self();
@@ -132,7 +132,7 @@ class ConnectionManager extends \lang\Object implements Configurable {
    * @throws  rdbms.ConnectionNotRegisteredException in case there's no connection for these names
    */
   public function getByHost($hostName, $num= -1) {
-    $results= array();
+    $results= [];
     foreach ($this->pool as $id => $value) {
       list ($user, $host)= explode('@', $id);
       if ($hostName == $host) $results[]= $this->conn($id, $value);

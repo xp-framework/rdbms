@@ -39,7 +39,7 @@ class SQLiteIntegrationTest extends RdbmsIntegrationTest {
   #[@test]
   public function simpleSelect() {
     $this->assertEquals(
-      array(array('foo' => 1)), 
+      [['foo' => 1]], 
       $this->db()->select('cast(1, "int") as foo')
     );
   }

@@ -16,7 +16,7 @@
  */
 class Peer extends \lang\Object {
   protected static 
-    $instance   = array();
+    $instance   = [];
 
   public
     $identifier = '',
@@ -24,9 +24,9 @@ class Peer extends \lang\Object {
     $connection = '',
     $sequence   = null,
     $identity   = null,
-    $primary    = array(),
-    $types      = array(),
-    $relations  = array();
+    $primary    = [],
+    $types      = [],
+    $relations  = [];
 
   protected
     $conn       = null;
@@ -237,7 +237,7 @@ class Peer extends \lang\Object {
    * @throws  rdbms.SQLException in case an error occurs
    */
   public function doSelect(SQLExpression $criteria, $max= 0) {
-    $r= array();
+    $r= [];
     for ($i= 1, $it= $this->iteratorFor($criteria, false); $it->hasNext() && (!$max || $i <= $max); $i++) {
       $r[]= $it->next();
     }
@@ -284,7 +284,7 @@ class Peer extends \lang\Object {
    * @param   array record optional
    * @return  rdbms.DataSet
    */    
-  public function newObject($record= array()) {
+  public function newObject($record= []) {
     return new $this->identifier($record);
   }
   
@@ -294,7 +294,7 @@ class Peer extends \lang\Object {
    * @param   array record optional
    * @return  rdbms.Record
    */    
-  public function newRecord($record= array()) {
+  public function newRecord($record= []) {
     return new Record($record);
   }
   

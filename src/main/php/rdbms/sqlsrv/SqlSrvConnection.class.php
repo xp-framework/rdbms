@@ -61,13 +61,13 @@ class SqlSrvConnection extends DBConnection {
     if (-1 != ($port= $this->dsn->getPort(-1))) {
        $spec.= ', '.$port;
     }
-    $this->handle= sqlsrv_connect($spec, $a= array(
+    $this->handle= sqlsrv_connect($spec, $a= [
       'Database'     => $this->dsn->getDatabase(),
       'LoginTimeout' => $this->timeout,
       'UID'          => $this->dsn->getUser(),
       'PWD'          => $this->dsn->getPassword(),
       'MultipleActiveResultSets' => false
-    ));
+    ]);
 
     if (!is_resource($this->handle)) {
       throw new \rdbms\SQLConnectException($this->errors(), $this->dsn);

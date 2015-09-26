@@ -9,9 +9,9 @@
 class MockDialect extends \rdbms\SQLDialect {
   public
     $escape       = '"',
-    $escapeRules  = array('"' => '""'),
+    $escapeRules  = ['"' => '""'],
     $escapeT      = '"',
-    $escapeTRules = array('"' => '""'),
+    $escapeTRules = ['"' => '""'],
     $dateFormat   = 'Y-m-d h:iA';
       
   /**

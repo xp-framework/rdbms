@@ -17,7 +17,7 @@ class SQLiteResultSet extends ResultSet {
    * @param   resource handle
    */
   public function __construct($result) {
-    $fields= array();
+    $fields= [];
     if (is_resource($result)) {
       for ($i= 0, $num= sqlite_num_fields($result); $i < $num; $i++) {
         $fields[sqlite_field_name($result, $i)]= false; // Types are unknown

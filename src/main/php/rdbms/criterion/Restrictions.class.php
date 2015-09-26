@@ -139,7 +139,7 @@ class Restrictions extends \lang\Object {
    * @return  rdbms.criterion.Criterion
    */
   public static function anyOf($first, $second) {
-    $args= array($first, $second);
+    $args= [$first, $second];
     for ($i= 2, $n= func_num_args(); $i < $n; $i++) {
       $args[]= func_get_arg($i);
     }
@@ -155,7 +155,7 @@ class Restrictions extends \lang\Object {
    * @return  rdbms.criterion.Criterion
    */
   public static function allOf($first, $second) {
-    $args= array($first, $second);
+    $args= [$first, $second];
     for ($i= 2, $n= func_num_args(); $i < $n; $i++) {
       $args[]= func_get_arg($i);
     }

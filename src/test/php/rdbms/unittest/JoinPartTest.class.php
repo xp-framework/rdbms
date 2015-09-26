@@ -34,12 +34,12 @@ class JoinPartTest extends TestCase {
     $joinpart= new JoinPart('job', Job::getPeer());
     $this->assertEquals(
       $joinpart->getAttributes(),
-      array(
+      [
         'job.job_id as job_job_id',
         'job.title as job_title',
         'job.valid_from as job_valid_from',
         'job.expire_at as job_expire_at' ,
-      )
+      ]
     );
   }
 
@@ -64,7 +64,7 @@ class JoinPartTest extends TestCase {
     $this->assertInstanceOf('rdbms.join.JoinTable', $j_p->getTarget());
     $this->assertEquals(
       $j_p->getConditions(),
-      array('j.job_id = p.job_id')
+      ['j.job_id = p.job_id']
     );
   }
 
@@ -97,16 +97,16 @@ class JoinPartTest extends TestCase {
     $toDepartment->addRelative($toChief, 'DepartmentChief');
 
     $job= Job::getPeer()->objectFor(
-      array(
+      [
         'job_id'     => '21',
         'title'      => 'clean the toilette',
         'valid_from' => new \util\Date(),
         'expire_at'  => '',
-      )
+      ]
     );
     $toPerson->extract(
       $job,
-      array(
+      [
         'p_person_id'     => '11',
         'p_name'          => 'Schultz',
         'p_job_id'        => '21',
@@ -118,7 +118,7 @@ class JoinPartTest extends TestCase {
         'c_name'          => 'Friebe',
         'c_job_id'        => '22',
         'c_department_id' => '31',
-      ),
+      ],
       'JobPerson'
     );
     

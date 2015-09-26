@@ -34,7 +34,7 @@ class QueuedConnectionManagerTest extends ConnectionManagerTest {
   #[@test]
   public function queueReturnsDSN() {
     $dsn= 'mock://user:pass@host/db';
-    $cm= $this->instanceWith(array());
+    $cm= $this->instanceWith([]);
     
     $this->assertEquals(new DSN($dsn), $cm->queue($dsn));
   }
@@ -42,7 +42,7 @@ class QueuedConnectionManagerTest extends ConnectionManagerTest {
   #[@test]
   public function queueReturnsDSNWhenPreviouslyRegistered() {
     $dsn= 'mock://user:pass@host/db';
-    $cm= $this->instanceWith(array());
+    $cm= $this->instanceWith([]);
     $cm->queue($dsn);
 
     $this->assertEquals(new DSN($dsn), $cm->queue($dsn));
@@ -52,7 +52,7 @@ class QueuedConnectionManagerTest extends ConnectionManagerTest {
   public function queueOverwritesPreviouslyRegistered() {
     $conn1= 'mock://user:pass@host/db1';
     $conn2= 'mock://user:pass@host/db2';
-    $cm= $this->instanceWith(array());
+    $cm= $this->instanceWith([]);
 
     $this->assertEquals(new DSN($conn1), $cm->queue($conn1));
     $this->assertEquals(new DSN($conn2), $cm->queue($conn2));

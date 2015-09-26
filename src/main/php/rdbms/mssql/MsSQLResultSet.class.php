@@ -17,7 +17,7 @@ class MsSQLResultSet extends ResultSet {
    * @param   resource handle
    */
   public function __construct($result, \util\TimeZone $tz= null) {
-    $fields= array();
+    $fields= [];
     if (is_resource($result)) {
       for ($i= 0, $num= mssql_num_fields($result); $i < $num; $i++) {
         $field= mssql_fetch_field($result, $i);

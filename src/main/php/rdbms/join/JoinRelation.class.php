@@ -14,7 +14,7 @@ class JoinRelation extends \lang\Object {
   private
     $source= null,
     $target= null,
-    $conditions= array();
+    $conditions= [];
 
   /**
    * Constructor
@@ -23,7 +23,7 @@ class JoinRelation extends \lang\Object {
    * @param   string alias
    * @param   string[] optional conditions
    */
-  public function __construct(JoinTable $source, JoinTable $target, $conditions= array()) {
+  public function __construct(JoinTable $source, JoinTable $target, $conditions= []) {
     $this->source= $source;
     $this->target= $target;
     $this->conditions= $conditions;

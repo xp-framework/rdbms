@@ -76,7 +76,7 @@ class MsSQLIntegrationTest extends RdbmsIntegrationTest {
   #[@test]
   public function selectNVarchars() {
     $this->assertEquals(
-      array('one' => 'Test1', 'two' => 'Test2'),
+      ['one' => 'Test1', 'two' => 'Test2'],
       $this->db()->query('select cast("Test1" as nvarchar) as one, cast("Test2" as nvarchar) as two')->next()
     );
   }
@@ -89,7 +89,7 @@ class MsSQLIntegrationTest extends RdbmsIntegrationTest {
   #[@test]
   public function selectVarcharVariants() {
     $this->assertEquals(
-      array('one' => 'Test1', 'two' => 'Test2'), 
+      ['one' => 'Test1', 'two' => 'Test2'], 
       $this->db()->query('select cast("Test1" as sql_variant) as one, cast("Test2" as sql_variant) as two')->next()
     );
   }
@@ -107,7 +107,7 @@ class MsSQLIntegrationTest extends RdbmsIntegrationTest {
   #[@test]
   public function selectNumericVariantWithFollowingVarchar() {
     $this->assertEquals(
-      array('n' => 10, 'v' => 'Test'),
+      ['n' => 10, 'v' => 'Test'],
       $this->db()->query('select cast(convert(numeric, 10) as sql_variant) as n, "Test" as v')->next()
     );
   }

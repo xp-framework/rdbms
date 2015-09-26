@@ -8,7 +8,7 @@ use rdbms\DriverManager;
  * @see  xp://rdbms.DriverManager
  */
 class DriverManagerTest extends \unittest\TestCase {
-  protected $registered= array();
+  protected $registered= [];
 
   /**
    * Registers driver and tracks registration.
@@ -95,13 +95,13 @@ class DriverManagerTest extends \unittest\TestCase {
     $this->register('test+a', \lang\ClassLoader::defineClass(
       'rdbms.unittest.mock.AMockConnection', 
       'rdbms.unittest.mock.MockConnection', 
-      array(), 
+      [], 
       '{}'
     ));
     $this->register('test+b', \lang\ClassLoader::defineClass(
       'rdbms.unittest.mock.BMockConnection', 
       'rdbms.unittest.mock.MockConnection', 
-      array(), 
+      [], 
       '{}'
     ));
 

@@ -9,10 +9,10 @@ use rdbms\SQLDialect;
  */
 class InterBaseDialect extends SQLDialect {
   private static
-    $dateparts= array(
+    $dateparts= [
       'microsecond' => false,
-    ),
-    $implementations= array(
+    ],
+    $implementations= [
       'str_1'      => 'convert(varchar, %s)',
       'cast_2'     => 'convert(%2$c, %1$s)',
       'atan_2'     => 'atn2(%d, %d)',
@@ -20,13 +20,13 @@ class InterBaseDialect extends SQLDialect {
       'degrees_1'  => 'convert(float, degrees(%d))',
       'radians_1'  => 'convert(float, radians(%d))',
       'sign_1'     => 'convert(int, sign(%d))',
-    );
+    ];
     
   public
     $escape       = "'",
-    $escapeRules  = array("'" => "''"),
+    $escapeRules  = ["'" => "''"],
     $escapeT      = "'",
-    $escapeTRules = array("'" => "''"),
+    $escapeTRules = ["'" => "''"],
     $dateFormat   = 'Y-m-d H:i:s';
       
   /**

@@ -10,7 +10,7 @@
  */
 abstract class SQLDialect extends \lang\Object {
   private static
-    $dateparts= array(
+    $dateparts= [
       'day'         => 'day',
       'dayofyear'   => 'dayofyear',
       'hour'        => 'hour',
@@ -23,8 +23,8 @@ abstract class SQLDialect extends \lang\Object {
       'week'        => 'week',
       'weekday'     => 'weekday',
       'year'        => 'year',
-    ),
-    $datatypes= array(
+    ],
+    $datatypes= [
       'bigint'     => 'bigint',
       'binary'     => 'binary',
       'blob'       => 'blob',
@@ -44,8 +44,8 @@ abstract class SQLDialect extends \lang\Object {
       'timestamp'  => 'timestamp',
       'varbinary'  => 'varbinary',
       'varchar'    => 'varchar',
-    ),
-    $implementations= array(
+    ],
+    $implementations= [
       'abs_1'        => 'abs(%d)',
       'acos_1'       => 'acos(%d)',
       'ascii_1'      => 'ascii(%s)',
@@ -111,13 +111,13 @@ abstract class SQLDialect extends \lang\Object {
       'bitOr_2'      => '%d | %d',
       'bitNot_1'     => '~%d',
       'bitXor_2'     => '%d ^ %d'
-    );
+    ];
 
   public
     $escapeT      = '',
-    $escapeTRules = array(),
+    $escapeTRules = [],
     $escape       = '',
-    $escapeRules  = array(),
+    $escapeRules  = [],
     $dateFormat   = '';
 
   /**

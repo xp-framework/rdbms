@@ -34,7 +34,7 @@
  * @see   xp://rdbms.criterion.Projections
  */
 class ProjectionList extends \lang\Object implements Projection {
-  protected $projections= array();
+  protected $projections= [];
 
   /**
    * Add a new row to the result set.
@@ -46,10 +46,10 @@ class ProjectionList extends \lang\Object implements Projection {
    * @return   rdbms.criterion.ProjectionList
    */
   public function add(\rdbms\SQLRenderable $projection, $alias= '') {
-    $this->projections[]= array(
+    $this->projections[]= [
       'alias'      => (empty($alias) && ($projection instanceof CountProjection) ? 'count' : $alias),
       'projection' => ($projection instanceof Projection) ? $projection : $projection= Projections::property($projection)
-    );
+    ];
     return $this;
   }
 

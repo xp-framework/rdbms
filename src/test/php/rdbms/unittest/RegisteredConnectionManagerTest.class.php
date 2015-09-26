@@ -40,7 +40,7 @@ class RegisteredConnectionManagerTest extends ConnectionManagerTest {
   #[@test]
   public function registerReturnsConnection() {
     $conn= DriverManager::getConnection('mock://user:pass@host/db');
-    $cm= $this->instanceWith(array());
+    $cm= $this->instanceWith([]);
     
     $this->assertEquals($conn, $cm->register($conn));
   }
@@ -48,7 +48,7 @@ class RegisteredConnectionManagerTest extends ConnectionManagerTest {
   #[@test]
   public function registerReturnsConnectionWhenPreviouslyRegistered() {
     $conn= DriverManager::getConnection('mock://user:pass@host/db');
-    $cm= $this->instanceWith(array());
+    $cm= $this->instanceWith([]);
     $cm->register($conn);
 
     $this->assertEquals($conn, $cm->register($conn));
@@ -58,7 +58,7 @@ class RegisteredConnectionManagerTest extends ConnectionManagerTest {
   public function registerOverwritesPreviouslyRegistered() {
     $conn1= DriverManager::getConnection('mock://user:pass@host/db1');
     $conn2= DriverManager::getConnection('mock://user:pass@host/db2');
-    $cm= $this->instanceWith(array());
+    $cm= $this->instanceWith([]);
 
     $this->assertEquals($conn1, $cm->register($conn1));
     $this->assertEquals($conn2, $cm->register($conn2));

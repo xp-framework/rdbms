@@ -19,7 +19,7 @@ class SQLDialectTest extends TestCase {
   const SYBASE= 'sybase';
   const MYSQL= 'mysql';
 
-  protected $conn= array();
+  protected $conn= [];
     
   /**
    * Fill conn and dialectClass members
@@ -36,9 +36,9 @@ class SQLDialectTest extends TestCase {
    * @return  var[]
    */
   public function dialects() {
-    $r= array();
+    $r= [];
     foreach ($this->conn as $name => $conn) {
-      $r[]= array($conn->getFormatter()->dialect, $name);
+      $r[]= [$conn->getFormatter()->dialect, $name];
     }
     return $r;
   }
@@ -80,38 +80,38 @@ class SQLDialectTest extends TestCase {
 
   #[@test, @values('dialects'), @expect('lang.IllegalArgumentException')]
   public function join_by_empty($dialect) {
-    $dialect->makeJoinBy(array());
+    $dialect->makeJoinBy([]);
   }
 
   #[@test, @values('dialects')]
   public function join_two_tables($dialect, $name) {
-    static $asserts= array(
+    static $asserts= [
       self::MYSQL  => 'table0 as t0 LEFT OUTER JOIN table1 as t1 on (t0.id1_1 = t0.id1_1 and t0.id1_2 = t0.id1_2) where ',
       self::SYBASE => 'table0 as t0, table1 as t1 where t0.id1_1 *= t0.id1_1 and t0.id1_2 *= t0.id1_2 and ',
-    );
+    ];
 
     $t0= new JoinTable('table0', 't0');
     $t1= new JoinTable('table1', 't1');
 
-    $this->assertEquals($asserts[$name], $dialect->makeJoinBy(array(
-      new JoinRelation($t0, $t1, array('t0.id1_1 = t0.id1_1', 't0.id1_2 = t0.id1_2'))
-    )));
+    $this->assertEquals($asserts[$name], $dialect->makeJoinBy([
+      new JoinRelation($t0, $t1, ['t0.id1_1 = t0.id1_1', 't0.id1_2 = t0.id1_2'])
+    ]));
   }
 
   #[@test, @values('dialects')]
   public function join_three_tables($dialect, $name) {
-    static $asserts= array(
+    static $asserts= [
       self::MYSQL  => 'table0 as t0 LEFT OUTER JOIN table1 as t1 on (t0.id1_1 = t0.id1_1 and t0.id1_2 = t0.id1_2) LEFT JOIN table2 as t2 on (t1.id2_1 = t2.id2_1) where ',
       self::SYBASE => 'table0 as t0, table1 as t1, table2 as t2 where t0.id1_1 *= t0.id1_1 and t0.id1_2 *= t0.id1_2 and t1.id2_1 *= t2.id2_1 and ',
-    );
+    ];
 
     $t0= new JoinTable('table0', 't0');
     $t1= new JoinTable('table1', 't1');
     $t2= new JoinTable('table2', 't2');
 
-    $this->assertEquals($asserts[$name], $dialect->makeJoinBy(array(
-      new JoinRelation($t0, $t1, array('t0.id1_1 = t0.id1_1', 't0.id1_2 = t0.id1_2')),
-      new JoinRelation($t1, $t2, array('t1.id2_1 = t2.id2_1'))
-    )));
+    $this->assertEquals($asserts[$name], $dialect->makeJoinBy([
+      new JoinRelation($t0, $t1, ['t0.id1_1 = t0.id1_1', 't0.id1_2 = t0.id1_2']),
+      new JoinRelation($t1, $t2, ['t1.id2_1 = t2.id2_1'])
+    ]));
   }
 }

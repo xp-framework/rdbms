@@ -33,7 +33,7 @@ class DBTest extends TestCase {
    */
   protected function assertQuery() {
     $version= '$Revision$';
-    $this->conn->setResultSet(new MockResultSet(array(array('version' => $version))));
+    $this->conn->setResultSet(new MockResultSet([['version' => $version]]));
     if (
       ($r= $this->conn->query('select %s as version', $version)) &&
       ($this->assertInstanceOf('rdbms.ResultSet', $r)) && 

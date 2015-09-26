@@ -17,7 +17,7 @@ class InterbaseResultSet extends ResultSet {
    * @param   resource handle
    */
   public function __construct($result, \util\TimeZone $tz= null) {
-    $fields= array();
+    $fields= [];
     if (is_resource($result)) {
       for ($i= 0, $num= ibase_num_fields($result); $i < $num; $i++) {
         $field= ibase_field_info($result, $i);

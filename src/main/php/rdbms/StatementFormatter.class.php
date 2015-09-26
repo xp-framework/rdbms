@@ -72,7 +72,7 @@ class StatementFormatter extends \lang\Object {
 
         $statement.= $this->dialect->escapeString(
           strtr(substr($fmt, $offset+ 1, $strlen- $offset- 1), 
-          array('%%' => '%', $quote.$quote => $quote)
+          ['%%' => '%', $quote.$quote => $quote]
         ));
         $offset= $strlen+ 1;
         continue;
@@ -119,7 +119,7 @@ class StatementFormatter extends \lang\Object {
    */
   public function prepare($type, $var) {
     $r= '';
-    $traversable= is_array($var) ? $var : array($var);
+    $traversable= is_array($var) ? $var : [$var];
     foreach ($traversable as $arg) {
       if (null === $arg) {
         $r.= 'NULL, '; 

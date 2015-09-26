@@ -38,7 +38,7 @@ class FreeTdsLookup extends \lang\Object implements ConnectionLookup {
   protected function parse() {
     $this->conf->open(FILE_MODE_READ);
     $section= null;
-    $sections= array();
+    $sections= [];
     while (false !== ($line= $this->conf->readLine())) {
       $line= trim($line);
       if ('' === $line || ';' === $line{0} || '#' === $line{0}) {

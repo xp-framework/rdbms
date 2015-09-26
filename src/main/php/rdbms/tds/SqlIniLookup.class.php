@@ -31,7 +31,7 @@ class SqlIniLookup extends \lang\Object implements ConnectionLookup {
   protected function parse() {
     $this->ini->open(FILE_MODE_READ);
     $section= null;
-    $sections= array();
+    $sections= [];
     while (false !== ($line= $this->ini->readLine())) {
       if ('' === $line || ';' === $line{0}) {
         continue;

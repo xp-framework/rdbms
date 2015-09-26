@@ -14,7 +14,7 @@ class JoinProcessor extends \lang\Object {
   const FIRST= 'start';
 
   private
-    $joinparts=   array();
+    $joinparts=   [];
   
   private static
     $isJoinContext= 0;
@@ -130,7 +130,7 @@ class JoinProcessor extends \lang\Object {
    * @param   string[] curpath
    * @throws  lang.IllegalArgumentException
    */
-  private function transformFetchmode(array $path, JoinPart $sjp, $curpath= array()) {
+  private function transformFetchmode(array $path, JoinPart $sjp, $curpath= []) {
     if (0 == sizeof($path)) return;
     $role= array_shift($path);
 

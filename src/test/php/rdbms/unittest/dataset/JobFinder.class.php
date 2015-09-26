@@ -28,7 +28,7 @@ class JobFinder extends Finder {
    */
   #[@finder(kind= ENTITY)]
   public function byPrimary($pk) {
-    return new \rdbms\Criteria(array('job_id', $pk, EQUAL));
+    return new \rdbms\Criteria(['job_id', $pk, EQUAL]);
   }
   
   /**
@@ -48,7 +48,7 @@ class JobFinder extends Finder {
    */
   #[@finder(kind= COLLECTION)]
   public function expiredJobs() {
-    return new \rdbms\Criteria(array('expire_at', \util\Date::now(), GREATER_THAN));
+    return new \rdbms\Criteria(['expire_at', \util\Date::now(), GREATER_THAN]);
   }
 
   /**

@@ -193,11 +193,11 @@ abstract class TokenizerTest extends \unittest\TestCase {
   public function integerArrayToken() {
     $this->assertEquals(
       'select * from news where news_id in ()',
-      $this->fixture->prepare('select * from news where news_id in (%d)', array())
+      $this->fixture->prepare('select * from news where news_id in (%d)', [])
     );
     $this->assertEquals(
       'select * from news where news_id in (1, 2, 3)',
-      $this->fixture->prepare('select * from news where news_id in (%d)', array(1, 2, 3))
+      $this->fixture->prepare('select * from news where news_id in (%d)', [1, 2, 3])
     );
   }
 
@@ -207,7 +207,7 @@ abstract class TokenizerTest extends \unittest\TestCase {
     $d2= new Date('1977-12-15');
     $this->assertEquals(
       "select * from news where created in ('1977-12-14 00:00:00', '1977-12-15 00:00:00')",
-      $this->fixture->prepare('select * from news where created in (%s)', array($d1, $d2))
+      $this->fixture->prepare('select * from news where created in (%s)', [$d1, $d2])
     );
   }
   

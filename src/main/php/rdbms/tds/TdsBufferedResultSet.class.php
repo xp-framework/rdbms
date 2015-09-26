@@ -10,7 +10,7 @@ use util\TimeZone;
  * @test xp://net.xp_framework.unittest.rdbms.tds.TdsBufferedResultSetTest
  */
 class TdsBufferedResultSet extends AbstractTdsResultSet {
-  protected $records= array();
+  protected $records= [];
   protected $offset= 0;
   protected $length= 0;
 

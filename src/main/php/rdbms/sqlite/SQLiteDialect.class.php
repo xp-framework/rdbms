@@ -9,13 +9,13 @@ use rdbms\SQLDialect;
 class SQLiteDialect extends SQLDialect {
   public
     $escape       = "'",
-    $escapeRules  = array("'"  => "''"),
+    $escapeRules  = ["'"  => "''"],
     $escapeT      = "'",
-    $escapeRulesT = array("'"  => "''"),
+    $escapeRulesT = ["'"  => "''"],
     $dateFormat   = 'Y-m-d H:i:s';
       
   private static
-    $dateparts= array(
+    $dateparts= [
       'day'         => '"d"',
       'dayofyear'   => '"z"',
       'hour'        => '"H"',
@@ -28,9 +28,9 @@ class SQLiteDialect extends SQLDialect {
       'week'        => false,
       'weekday'     => false,
       'year'        => 'Y',
-    ),
+    ],
     // http://www.sqlite.org/lang_expr.html
-    $implementations= array(
+    $implementations= [
       'abs_1'        => 'php("abs", %d)',
       'acos_1'       => 'php("acos", %d)',
       'ascii_1'      => 'php("ord", %s)',
@@ -87,7 +87,7 @@ class SQLiteDialect extends SQLDialect {
       'trim_3'       => 'php("trim", %s, %s)',
       'upper_1'      => 'php("strtoupper", %s)',
       'year_1'       => 'php("idate", "Y", php("strtotime", %s))',
-    );
+    ];
 
   /**
    * register sql standard functions for a connection
@@ -95,11 +95,11 @@ class SQLiteDialect extends SQLDialect {
    * @param   db handel conn
    */
   public function registerCallbackFunctions($conn) {
-    sqlite_create_function($conn, 'cast', array($this, '_cast'), 2);
-    sqlite_create_function($conn, 'sign', array($this, '_sign'), 1);
-    sqlite_create_function($conn, 'dateadd', array($this, '_dateadd'), 3);
-    sqlite_create_function($conn, 'locate',  array($this, '_locate'), 3);
-    sqlite_create_function($conn, 'nullif',  array($this, '_nullif'), 2);
+    sqlite_create_function($conn, 'cast', [$this, '_cast'], 2);
+    sqlite_create_function($conn, 'sign', [$this, '_sign'], 1);
+    sqlite_create_function($conn, 'dateadd', [$this, '_dateadd'], 3);
+    sqlite_create_function($conn, 'locate',  [$this, '_locate'], 3);
+    sqlite_create_function($conn, 'nullif',  [$this, '_nullif'], 2);
   }
 
   /**
@@ -110,7 +110,7 @@ class SQLiteDialect extends SQLDialect {
    * @return  var
    */
   public function _cast($s, $type) {
-    static $identifiers= array(
+    static $identifiers= [
       'bigint'     => "\3",
       'date'       => "\2",
       'datetime'   => "\2",
@@ -120,7 +120,7 @@ class SQLiteDialect extends SQLDialect {
       'int'        => "\3",
       'integer'    => "\3",
       'smallint'   => "\3",
-    );
+    ];
     return is_null($s) ? null : $identifiers[strtolower($type)].$s;
   }
 

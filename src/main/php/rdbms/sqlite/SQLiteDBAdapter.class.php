@@ -12,7 +12,7 @@ use rdbms\DBTableAttribute;
  */
 class SQLiteDBAdapter extends DBAdapter {
   protected
-    $map    = array();
+    $map    = [];
     
   /**
    * Constructor
@@ -20,7 +20,7 @@ class SQLiteDBAdapter extends DBAdapter {
    * @param   rdbms.DBConnection conn database connection
    */
   public function __construct($conn) {
-    $this->map= array(
+    $this->map= [
       'varchar'    => DBTableAttribute::DB_ATTRTYPE_VARCHAR,
       'char'       => DBTableAttribute::DB_ATTRTYPE_CHAR,
       'int'        => DBTableAttribute::DB_ATTRTYPE_INT,
@@ -37,7 +37,7 @@ class SQLiteDBAdapter extends DBAdapter {
       'enum'       => DBTableAttribute::DB_ATTRTYPE_ENUM,
       'decimal'    => DBTableAttribute::DB_ATTRTYPE_DECIMAL,
       'float'      => DBTableAttribute::DB_ATTRTYPE_FLOAT
-    );
+    ];
     parent::__construct($conn);
   }
  
@@ -47,7 +47,7 @@ class SQLiteDBAdapter extends DBAdapter {
    * @return  string[]
    */
   public function getDatabases() {
-    $dbs= array();
+    $dbs= [];
     $q= $this->conn->query('pragma database_list');
     while ($name= $q->next('file')) {
       $dbs[]= basename($name);
@@ -62,7 +62,7 @@ class SQLiteDBAdapter extends DBAdapter {
    * @return  rdbms.DBTable[] array of DBTable objects
    */
   public function getTables($database= null) {
-    $t= array();
+    $t= [];
     $q= $this->conn->query('select tbl_name from sqlite_master where type= "table"');
     while ($table= $q->next('tbl_name')) {
       $t[]= $this->getTable($table);
@@ -109,7 +109,7 @@ class SQLiteDBAdapter extends DBAdapter {
   public function getTable($table, $database= null) {
     $t= new \rdbms\DBTable($table);
 
-    $primaryKey= array();
+    $primaryKey= [];
     $q= $this->conn->query('pragma table_info(%s)', $table);
     
     while ($record= $q->next()) {
@@ -130,7 +130,7 @@ class SQLiteDBAdapter extends DBAdapter {
     while ($index= $q->next()) {
       $dbindex= $t->addIndex(new \rdbms\DBIndex(
         $index['name'],
-        array()
+        []
       ));
       
       $dbindex->unique= (bool)$index['unique'];

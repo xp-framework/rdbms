@@ -79,7 +79,7 @@ abstract class Finder extends \lang\Object {
    * @return  rdbms.finder.FinderMethod[]
    */
   protected function finderMethods($kind) {
-    $r= array();
+    $r= [];
     foreach ($this->getClass()->getMethods() as $m) {
       if (
         $m->hasAnnotation('finder') &&

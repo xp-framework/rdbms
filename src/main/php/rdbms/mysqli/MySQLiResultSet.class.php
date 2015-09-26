@@ -17,7 +17,7 @@ class MySQLiResultSet extends ResultSet {
    * @param   resource handle
    */
   public function __construct($result, \util\TimeZone $tz= null) {
-    $fields= array();
+    $fields= [];
     if (is_object($result)) {
       while ($field= $result->fetch_field()) {
         $fields[$field->name]= $field->type;

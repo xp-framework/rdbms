@@ -6,7 +6,7 @@
  * @test  xp://net.xp_framework.unittest.rdbms.mysql.MySqlxBufferedResultSetTest
  */
 class MySqlxBufferedResultSet extends AbstractMysqlxResultSet {
-  protected $records= array();
+  protected $records= [];
   protected $offset= 0;
   protected $length= 0;
 

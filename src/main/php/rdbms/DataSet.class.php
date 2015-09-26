@@ -75,11 +75,11 @@ use rdbms\join\JoinExtractable;
 abstract class DataSet extends \lang\Object implements JoinExtractable {
   public
     $_new         = true,
-    $_changed     = array();
+    $_changed     = [];
   
   protected
-    $cache= array(),
-    $cached= array();
+    $cache= [],
+    $cached= [];
 
   /**
    * Constructor. Supports the array syntax, where an associative
@@ -274,7 +274,7 @@ abstract class DataSet extends \lang\Object implements JoinExtractable {
       // in the list of changed attributes
       $this->{$peer->identity}= $id;
     }
-    $this->_changed= array();
+    $this->_changed= [];
     return $id;
   }
 
@@ -287,7 +287,7 @@ abstract class DataSet extends \lang\Object implements JoinExtractable {
    */  
   public function doUpdate(SQLExpression $criteria) {
     $affected= $this->getPeer()->doUpdate($this->_changed, $criteria);
-    $this->_changed= array();
+    $this->_changed= [];
     return $affected;
   }
 
@@ -300,7 +300,7 @@ abstract class DataSet extends \lang\Object implements JoinExtractable {
    */  
   public function doDelete(SQLExpression $criteria) {
     $affected= $this->getPeer()->doDelete($criteria);
-    $this->_changed= array();
+    $this->_changed= [];
     return $affected;
   }
   
@@ -335,7 +335,7 @@ abstract class DataSet extends \lang\Object implements JoinExtractable {
       $criteria->add($key, $this->{$key}, EQUAL);
     }
     $affected= $peer->doUpdate($this->_changed, $criteria);
-    $this->_changed= array();
+    $this->_changed= [];
     return $affected;
   }
   
@@ -372,7 +372,7 @@ abstract class DataSet extends \lang\Object implements JoinExtractable {
       $criteria->add($key, $this->{$key}, EQUAL);
     }
     $affected= $peer->doDelete($criteria);
-    $this->_changed= array();
+    $this->_changed= [];
     return $affected;
   }
 }

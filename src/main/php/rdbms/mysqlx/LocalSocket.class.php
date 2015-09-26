@@ -40,7 +40,7 @@ abstract class LocalSocket extends \lang\Object {
   protected function parse($cnf) {
     $cnf->open(FILE_MODE_READ);
     $section= null;
-    $sections= array();
+    $sections= [];
     while (false !== ($line= $cnf->readLine())) {
       if ('' === $line || '#' === $line{0}) {
         continue;

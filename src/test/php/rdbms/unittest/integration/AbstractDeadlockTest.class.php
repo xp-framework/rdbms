@@ -105,8 +105,8 @@ abstract class AbstractDeadlockTest extends TestCase {
     with ($rt= Runtime::getInstance()); {
       $proc= $rt->getExecutable()->newInstance(array_merge(
         $rt->startupOptions()->asArguments(),
-        array($rt->bootstrapScript('class')),
-        array('rdbms.unittest.integration.SQLRunner', $this->dsn)
+        [$rt->bootstrapScript('class')],
+        ['rdbms.unittest.integration.SQLRunner', $this->dsn]
       ));
       $this->assertEquals('! Started', $proc->out->readLine());
       return $proc;
@@ -135,10 +135,10 @@ abstract class AbstractDeadlockTest extends TestCase {
     $a->in->close();
     $b->in->close();
     
-    $result= array(
+    $result= [
       $a->out->readLine(),
       $b->out->readLine()
-    );
+    ];
     sort($result);
     
     // Cleanup
@@ -146,6 +146,6 @@ abstract class AbstractDeadlockTest extends TestCase {
     
     // Assert one process succeeds, the other catches a deadlock exception
     // We can't tell which one will do what, though.
-    $this->assertEquals(array('+ OK', '- rdbms.SQLDeadlockException'), $result);
+    $this->assertEquals(['+ OK', '- rdbms.SQLDeadlockException'], $result);
   }
 }

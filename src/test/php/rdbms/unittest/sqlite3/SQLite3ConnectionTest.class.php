@@ -47,7 +47,7 @@ class SQLite3ConnectionTest extends \unittest\TestCase {
     $result= $this->conn->query('select 1 as one');
     
     $this->assertInstanceOf('rdbms.sqlite3.SQLite3ResultSet', $result);
-    $this->assertEquals(array('one' => 1), $result->next());
+    $this->assertEquals(['one' => 1], $result->next());
   }
 
   #[@test]
@@ -102,12 +102,12 @@ class SQLite3ConnectionTest extends \unittest\TestCase {
   #[@test]
   public function select_from_prefilled_table_yields_correct_column_types() {
     $this->create_table_and_fill();
-    $this->assertEquals(array(array(
+    $this->assertEquals([[
       'col1' => 1,
       'str2' => 'Hello World',
       'col3' => 1.5,
       'col4' => 12345.67
-    )), $this->conn->select('* from testthewest'));
+    ]], $this->conn->select('* from testthewest'));
   }
 
   #[@test, @expect('lang.IllegalStateException')]

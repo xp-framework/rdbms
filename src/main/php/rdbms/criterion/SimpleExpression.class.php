@@ -54,10 +54,10 @@ class SimpleExpression extends \lang\Object implements Criterion {
    * @param   string op default EQUAL
    */
   public function __construct($lhs, $value, $op= EQUAL) {
-    static $nullMapping= array(
+    static $nullMapping= [
       EQUAL     => IS,
       NOT_EQUAL => IS_NOT
-    );
+    ];
 
     // Automatically convert '= NULL' to 'is NULL', former is not valid ANSI-SQL
     if (null === $value && isset($nullMapping[$op])) {

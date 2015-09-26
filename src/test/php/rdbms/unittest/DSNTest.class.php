@@ -231,7 +231,7 @@ class DSNTest extends \unittest\TestCase {
   #[@test]
   public function arrayPropertyValue() {
     $this->assertEquals(
-      array('util.log.LogObserver' => 'default'), 
+      ['util.log.LogObserver' => 'default'], 
       (new DSN('pgsql://postgres:1433/db?observer[util.log.LogObserver]=default'))->getProperty('observer')
     );
   }

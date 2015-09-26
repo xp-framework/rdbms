@@ -9,9 +9,9 @@
 class DBTable extends \lang\Object {
   public 
     $name=          '',
-    $attributes=    array(),
-    $indexes=       array(),
-    $fgConstraints= array();
+    $attributes=    [],
+    $indexes=       [],
+    $fgConstraints= [];
 
   /**
    * Constructor
