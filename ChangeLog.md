@@ -3,6 +3,10 @@ RDBMS support for the XP Framework: MySQL, Sybase, MSSQL, PostgreSQL, SQLite3, I
 
 ## ?.?.? / ????-??-??
 
+## 6.4.3 / 2015-11-30
+
+* Merged PR #7: Add missing types (Sybase, MySQL) - @kiesel
+
 ## 6.4.2 / 2015-09-26
 
 * Merged PR #6: Use short array syntax / ::class in annotations - @thekid
