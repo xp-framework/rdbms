@@ -37,7 +37,8 @@ class MySQLDBAdapter extends DBAdapter {
     'blob'       => DBTableAttribute::DB_ATTRTYPE_TEXT,
     'mediumblob' => DBTableAttribute::DB_ATTRTYPE_TEXT,
     'longblob'   => DBTableAttribute::DB_ATTRTYPE_TEXT,
-    'time'       => DBTableAttribute::DB_ATTRTYPE_TEXT
+    'time'       => DBTableAttribute::DB_ATTRTYPE_TEXT,
+    'year'       => DBTableAttribute::DB_ATTRTYPE_NUMERIC,
   ];
 
   /**

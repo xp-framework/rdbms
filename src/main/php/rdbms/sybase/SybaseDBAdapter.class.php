@@ -45,6 +45,7 @@ class SybaseDBAdapter extends DBAdapter {
       'smallint'      => DBTableAttribute::DB_ATTRTYPE_SMALLINT,
       'smallmoney'    => DBTableAttribute::DB_ATTRTYPE_SMALLMONEY,
       'sysname'       => DBTableAttribute::DB_ATTRTYPE_SYSNAME,
+      'longsysname'   => DBTableAttribute::DB_ATTRTYPE_SYSNAME,
       'text'          => DBTableAttribute::DB_ATTRTYPE_TEXT,
       'timestamp'     => DBTableAttribute::DB_ATTRTYPE_TIMESTAMP,
       'tinyint'       => DBTableAttribute::DB_ATTRTYPE_TINYINT,
