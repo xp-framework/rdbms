@@ -3,6 +3,12 @@ RDBMS support for the XP Framework: MySQL, Sybase, MSSQL, PostgreSQL, SQLite3, I
 
 ## ?.?.? / ????-??-??
 
+## 6.4.4 / 2014-12-09
+
+* Rewrote code to ue `literal()` instead of `xp::reflect()`. See
+  xp-framework/rfc#298
+  (@thekid)
+
 ## 6.4.3 / 2015-11-30
 
 * Merged PR #7: Add missing types (Sybase, MySQL) - @kiesel
