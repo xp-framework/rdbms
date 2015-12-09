@@ -3,13 +3,13 @@
 /**
  * Peer
  *
- * <code>
- *   // Retrieve Peer object for the specified dataset class
- *   $peer= Peer::forName('net.xp_framework.db.caffeine.XPNews');
- *   
- *   // select * from news where news_id < 100
- *   $news= $peer->doSelect(new Criteria(array('news_id', 100, LESS_THAN)));
- * </code>
+ * ```php
+ * // Retrieve Peer object for the specified dataset class
+ * $peer= Peer::forName('net.xp_framework.db.caffeine.XPNews');
+ * 
+ * // select * from news where news_id < 100
+ * $news= $peer->doSelect(new Criteria(array('news_id', 100, LESS_THAN)));
+ * ```
  *
  * @test  xp://net.xp_framework.unittest.rdbms.DataSetTest
  * @see   xp://rdbms.DataSet
@@ -164,7 +164,7 @@ class Peer extends \lang\Object {
    * @return  rdbms.Peer
    */
   public static function forName($classname) {
-    return self::getInstance(\xp::reflect($classname));
+    return self::getInstance(literal($classname));
   }
 
   /**
