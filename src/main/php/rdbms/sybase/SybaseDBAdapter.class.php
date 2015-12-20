@@ -283,15 +283,10 @@ class SybaseDBAdapter extends DBAdapter {
   public function getTable($table, $database= null) {
     try {
       $this->prepareTemporaryIndexesTable();
-      $t= $this->dbTableObjectFor($table, $database);
-    } catch (\rdbms\SQLException $e) {
-      unset($t);
-    } ensure($e); {
+      return $this->dbTableObjectFor($table, $database);
+    } finally {
       $this->dropTemporaryIndexesTable();
-      if ($e) throw $e;
     }
-    
-    return $t;
   }
 
   /**
