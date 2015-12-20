@@ -317,11 +317,8 @@ class CriteriaTest extends TestCase {
           )
           ->getSelectQueryString($this->conn, $this->peer, $jp)
       );
-    } catch (\lang\Throwable $e) {
-      // Fall through
-    } ensure($e); {
+    } finally {
       $jp->leaveJoinContext();
-      if ($e) throw $e;
     }
   }
 }

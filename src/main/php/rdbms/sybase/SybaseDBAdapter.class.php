@@ -263,15 +263,11 @@ class SybaseDBAdapter extends DBAdapter {
         ',
         $database
       );
-      if ($q) while ($record= $q->next()) {
+      while ($record= $q->next()) {
         $t[]= $this->dbTableObjectFor($record['name'], $database);
       }
-      
-    } catch (\rdbms\SQLException $e) {
-      unset($t);
-    } ensure($e); {
+    } finally {
       $this->dropTemporaryIndexesTable();
-      if ($e) throw $e;
     }
     
     return $t;
