@@ -1,5 +1,8 @@
 <?php namespace rdbms\unittest;
 
+use rdbms\Peer;
+use rdbms\finder\FinderMethod;
+use rdbms\SQLExpression;
 use lang\MethodNotImplementedException;
 use lang\IllegalArgumentException;
 use rdbms\finder\FinderException;
@@ -55,7 +58,7 @@ class FinderTest extends TestCase {
 
   #[@test]
   public function peerObject() {
-    $this->assertInstanceOf('rdbms.Peer', $this->fixture->getPeer());
+    $this->assertInstanceOf(Peer::class, $this->fixture->getPeer());
   }
 
   #[@test]
@@ -67,10 +70,10 @@ class FinderTest extends TestCase {
   public function entityMethods() {
     $methods= $this->fixture->entityMethods();
     $this->assertEquals(1, sizeof($methods));
-    $this->assertInstanceOf('rdbms.finder.FinderMethod', $methods[0]);
+    $this->assertInstanceOf(FinderMethod::class, $methods[0]);
     $this->assertEquals(ENTITY, $methods[0]->getKind());
     $this->assertEquals('byPrimary', $methods[0]->getName());
-    $this->assertInstanceOf('rdbms.SQLExpression', $methods[0]->invoke([$pk= 1]));
+    $this->assertInstanceOf(SQLExpression::class, $methods[0]->invoke([$pk= 1]));
   }
 
   #[@test]
@@ -85,11 +88,11 @@ class FinderTest extends TestCase {
     $methods= $this->fixture->collectionMethods();
     $this->assertEquals(4, sizeof($methods)); // three declared plu all()
     foreach ($methods as $method) {
-      $this->assertInstanceOf('rdbms.finder.FinderMethod', $method);
+      $this->assertInstanceOf(FinderMethod::class, $method);
       $name= $method->getName();
       $this->assertEquals(COLLECTION, $method->getKind(), $name);
       $this->assertEquals(true, isset($invocation[$name]), $name);
-      $this->assertInstanceOf('rdbms.SQLExpression', $method->invoke($invocation[$name]), $name);
+      $this->assertInstanceOf(SQLExpression::class, $method->invoke($invocation[$name]), $name);
     }
   }
 
@@ -102,7 +105,7 @@ class FinderTest extends TestCase {
   #[@test]
   public function byPrimaryMethod() {
     $method= $this->fixture->method('byPrimary');
-    $this->assertInstanceOf('rdbms.finder.FinderMethod', $method);
+    $this->assertInstanceOf(FinderMethod::class, $method);
     $this->assertEquals('byPrimary', $method->getName());
     $this->assertEquals(ENTITY, $method->getKind());
   }
@@ -128,7 +131,7 @@ class FinderTest extends TestCase {
       ]
     ]));
     $entity= $this->fixture->find($this->fixture->byPrimary(1));
-    $this->assertInstanceOf('rdbms.unittest.dataset.Job', $entity);
+    $this->assertInstanceOf(Job::class, $entity);
   }
 
   #[@test]
@@ -142,7 +145,7 @@ class FinderTest extends TestCase {
       ]
     ]));
     $entity= $this->fixture->find()->byPrimary(1);
-    $this->assertInstanceOf('rdbms.unittest.dataset.Job', $entity);
+    $this->assertInstanceOf(Job::class, $entity);
   }
 
   #[@test]
@@ -180,7 +183,7 @@ class FinderTest extends TestCase {
       ]
     ]));
     $entity= $this->fixture->get($this->fixture->byPrimary(1));
-    $this->assertInstanceOf('rdbms.unittest.dataset.Job', $entity);
+    $this->assertInstanceOf(Job::class, $entity);
   }
 
   #[@test]
@@ -194,7 +197,7 @@ class FinderTest extends TestCase {
       ]
     ]));
     $entity= $this->fixture->get()->byPrimary(1);
-    $this->assertInstanceOf('rdbms.unittest.dataset.Job', $entity);
+    $this->assertInstanceOf(Job::class, $entity);
   }
 
   #[@test, @expect(NoSuchEntityException::class)]
@@ -341,7 +344,7 @@ class FinderTest extends TestCase {
     ]));
     $all= (new GenericFinder(Job::getPeer()))->getAll(new \rdbms\Criteria());
     $this->assertEquals(2, sizeof($all));
-    $this->assertInstanceOf('rdbms.unittest.dataset.Job', $all[0]);
-    $this->assertInstanceOf('rdbms.unittest.dataset.Job', $all[1]);
+    $this->assertInstanceOf(Job::class, $all[0]);
+    $this->assertInstanceOf(Job::class, $all[1]);
   }
 }

@@ -64,7 +64,7 @@ class MsSQLIntegrationTest extends RdbmsIntegrationTest {
     $cmp= new \util\Date('2009-08-14 12:45:00');
     $result= $this->db()->query('select convert(datetime, %s, 120) as value', $cmp)->next('value');
 
-    $this->assertInstanceOf('util.Date', $result);
+    $this->assertInstanceOf(Date::class, $result);
     $this->assertEquals($cmp->toString('Y-m-d'), $result->toString('Y-m-d'));
   }
 

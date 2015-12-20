@@ -1,5 +1,6 @@
 <?php namespace rdbms\unittest;
 
+use rdbms\DBConnection;
 use rdbms\ConnectionNotRegisteredException;
 use rdbms\DriverNotSupportedException;
 use unittest\TestCase;
@@ -35,7 +36,7 @@ abstract class ConnectionManagerTest extends TestCase {
   #[@test]
   public function acquireExistingConnectionViaGetByHost() {
     $cm= $this->instanceWith(['mydb' => 'mock://user:pass@host/db?autoconnect=1']);
-    $this->assertInstanceOf('rdbms.DBConnection', $cm->getByHost('mydb', 0));
+    $this->assertInstanceOf(DBConnection::class, $cm->getByHost('mydb', 0));
   }
   
   #[@test, @expect(ConnectionNotRegisteredException::class)]
@@ -47,7 +48,7 @@ abstract class ConnectionManagerTest extends TestCase {
   #[@test]
   public function acquireExistingConnectionViaGet() {
     $cm= $this->instanceWith(['mydb' => 'mock://user:pass@host/db?autoconnect=1']);
-    $this->assertInstanceOf('rdbms.DBConnection', $cm->getByHost('mydb', 0));
+    $this->assertInstanceOf(DBConnection::class, $cm->getByHost('mydb', 0));
   }
   
   #[@test, @expect(ConnectionNotRegisteredException::class)]

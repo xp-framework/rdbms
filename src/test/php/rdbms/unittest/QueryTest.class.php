@@ -1,5 +1,6 @@
 <?php namespace rdbms\unittest;
  
+use rdbms\unittest\mock\MockConnection;
 use unittest\TestCase;
 use rdbms\query\SelectQuery;
 use rdbms\query\UpdateQuery;
@@ -73,12 +74,12 @@ class QueryTest extends TestCase {
     $q= new SelectQuery();
     $this->assertNull($q->getConnection());
     $q->setPeer(Job::getPeer());
-    $this->assertInstanceOf('rdbms.unittest.mock.MockConnection', $q->getConnection());
+    $this->assertInstanceOf(MockConnection::class, $q->getConnection());
   }
   
   #[@test]
   public function executeWithRestriction() {
-    $this->assertInstanceOf('rdbms.query.SelectQuery', (new SelectQuery())->withRestriction(Job::column('job_id')->equal(5)));
+    $this->assertInstanceOf(SelectQuery::class, (new SelectQuery())->withRestriction(Job::column('job_id')->equal(5)));
   }
   
   #[@test]

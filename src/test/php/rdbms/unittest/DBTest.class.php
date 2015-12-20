@@ -1,5 +1,6 @@
 <?php namespace rdbms\unittest;
  
+use rdbms\ResultSet;
 use rdbms\SQLConnectException;
 use rdbms\SQLStateException;
 use rdbms\SQLConnectionClosedException;
@@ -40,7 +41,7 @@ class DBTest extends TestCase {
     $this->conn->setResultSet(new MockResultSet([['version' => $version]]));
     if (
       ($r= $this->conn->query('select %s as version', $version)) &&
-      ($this->assertInstanceOf('rdbms.ResultSet', $r)) && 
+      ($this->assertInstanceOf(ResultSet::class, $r)) && 
       ($field= $r->next('version'))
     ) $this->assertEquals($field, $version);
   }

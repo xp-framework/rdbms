@@ -3,6 +3,13 @@ RDBMS support for the XP Framework: MySQL, Sybase, MSSQL, PostgreSQL, SQLite3, I
 
 ## ?.?.? / ????-??-??
 
+## 6.5.0 / 2015-12-20
+
+* **Heads up: Dropped PHP 5.4 support**. *Note: As the main source is not
+  touched, unofficial PHP 5.4 support is still available though not tested
+  with Travis-CI*.
+  (@thekid)
+
 ## 6.4.4 / 2014-12-09
 
 * Rewrote code to ue `literal()` instead of `xp::reflect()`. See

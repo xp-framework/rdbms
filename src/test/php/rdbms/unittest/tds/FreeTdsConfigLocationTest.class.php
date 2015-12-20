@@ -13,7 +13,7 @@ class FreeTdsConfigLocationTest extends \unittest\TestCase {
 
   #[@test]
   public function noAlternativesFound() {
-    $fixture= newinstance('rdbms.tds.FreeTdsLookup', [], [
+    $fixture= newinstance(FreeTdsLookup::class, [], [
       'parse' => function() { throw new IllegalStateException('Should never be called!'); },
       'locateConf' => function() { return null; }
     ]);
@@ -25,7 +25,7 @@ class FreeTdsConfigLocationTest extends \unittest\TestCase {
 
   #[@test]
   public function fileReturned() {
-    $fixture= newinstance('rdbms.tds.FreeTdsLookup', [],  [
+    $fixture= newinstance(FreeTdsLookup::class, [],  [
       'parse' => function() { return ['test' => ['host' => $this->conf->getFilename(), 'port' => 1999]]; },
       'locateConf' => function() { return new File('it.worked'); }
     ]);

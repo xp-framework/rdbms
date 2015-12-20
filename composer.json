@@ -6,8 +6,15 @@
   "description" : "RDBMS support for the XP Framework",
   "keywords": ["module", "xp"],
   "require" : {
-    "xp-framework/core": "~6.0",
-    "php" : ">=5.4.0"
+    "xp-framework/core": "^6.5",
+    "xp-framework/logging": "^6.5",
+    "xp-framework/networking": "^6.6",
+    "xp-framework/math": "^6.6",
+    "php" : ">=5.5.0"
+  },
+  "require-dev" : {
+    "xp-framework/collections": "^6.5",
+    "xp-framework/unittest": "^6.5"
   },
   "autoload" : {
     "files" : ["src/main/php/autoload.php"]

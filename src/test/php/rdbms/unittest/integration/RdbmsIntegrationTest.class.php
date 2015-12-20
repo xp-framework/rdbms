@@ -1,5 +1,8 @@
 <?php namespace rdbms\unittest\integration;
 
+use rdbms\ResultSet;
+use util\Date;
+use rdbms\DBEvent;
 use rdbms\SQLStateException;
 use rdbms\SQLConnectException;
 use rdbms\SQLStatementFailedException;
@@ -173,28 +176,28 @@ abstract class RdbmsIntegrationTest extends TestCase {
   #[@test]
   public function queryAndNext() {
     $q= $this->db()->query('select 1 as foo');
-    $this->assertInstanceOf('rdbms.ResultSet', $q);
+    $this->assertInstanceOf(ResultSet::class, $q);
     $this->assertEquals(['foo' => 1], $q->next());
   }
  
   #[@test]
   public function queryAndNextWithField() {
     $q= $this->db()->query('select 1 as foo');
-    $this->assertInstanceOf('rdbms.ResultSet', $q);
+    $this->assertInstanceOf(ResultSet::class, $q);
     $this->assertEquals(1, $q->next('foo'));
   }
 
   #[@test]
   public function openAndNext() {
     $q= $this->db()->open('select 1 as foo');
-    $this->assertInstanceOf('rdbms.ResultSet', $q);
+    $this->assertInstanceOf(ResultSet::class, $q);
     $this->assertEquals(['foo' => 1], $q->next());
   }
 
   #[@test]
   public function openAndNextWithField() {
     $q= $this->db()->open('select 1 as foo');
-    $this->assertInstanceOf('rdbms.ResultSet', $q);
+    $this->assertInstanceOf(ResultSet::class, $q);
     $this->assertEquals(1, $q->next('foo'));
   }
  
@@ -202,7 +205,7 @@ abstract class RdbmsIntegrationTest extends TestCase {
   public function emptyQuery() {
     $this->createTable();
     $q= $this->db()->query('select * from %c where 1 = 0', $this->tableName());
-    $this->assertInstanceOf('rdbms.ResultSet', $q);
+    $this->assertInstanceOf(ResultSet::class, $q);
     $this->assertEquals(false, $q->next());
   }
 
@@ -365,7 +368,7 @@ abstract class RdbmsIntegrationTest extends TestCase {
     $cmp= new \util\Date('2009-08-14 12:45:00');
     $result= $this->db()->query('select cast(%s as date) as value', $cmp)->next('value');
     
-    $this->assertInstanceOf('util.Date', $result);
+    $this->assertInstanceOf(Date::class, $result);
     $this->assertEquals($cmp->toString('Y-m-d'), $result->toString('Y-m-d'));
   }
 
@@ -649,7 +652,7 @@ abstract class RdbmsIntegrationTest extends TestCase {
 
   #[@test]
   public function observe() {
-    $observer= newinstance('util.Observer', [], '{
+    $observer= newinstance(Observer::class, [], '{
       protected $observations= array();
       
       public function numberOfObservations() {
@@ -672,15 +675,15 @@ abstract class RdbmsIntegrationTest extends TestCase {
     $this->assertEquals(2, $observer->numberOfObservations());
     
     with ($o0= $observer->observationAt(0)); {
-      $this->assertInstanceOf('rdbms.DBEvent', $o0);
+      $this->assertInstanceOf(DBEvent::class, $o0);
       $this->assertEquals('query', $o0->getName());
       $this->assertEquals('select 1', $o0->getArgument());
     }
 
     with ($o1= $observer->observationAt(1)); {
-      $this->assertInstanceOf('rdbms.DBEvent', $o1);
+      $this->assertInstanceOf(DBEvent::class, $o1);
       $this->assertEquals('queryend', $o1->getName());
-      $this->assertInstanceOf('rdbms.ResultSet', $o1->getArgument());
+      $this->assertInstanceOf(ResultSet::class, $o1->getArgument());
     }
   }
 

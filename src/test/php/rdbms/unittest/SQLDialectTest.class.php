@@ -46,7 +46,7 @@ class SQLDialectTest extends TestCase {
 
   #[@test, @values('dialects')]
   public function dialect_member($dialect) {
-    $this->assertInstanceOf('rdbms.SQLDialect', $dialect);
+    $this->assertInstanceOf(SQLDialect::class, $dialect);
   }
 
   #[@test, @values('dialects')]

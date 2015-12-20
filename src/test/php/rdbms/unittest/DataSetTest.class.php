@@ -1,5 +1,8 @@
 <?php namespace rdbms\unittest;
 
+use rdbms\Peer;
+use rdbms\ResultIterator;
+use rdbms\Column;
 use rdbms\SQLException;
 use util\NoSuchElementException;
 use lang\IllegalArgumentException;
@@ -50,7 +53,7 @@ class DataSetTest extends TestCase {
   #[@test]
   public function peerObject() {
     $peer= Job::getPeer();
-    $this->assertInstanceOf('rdbms.Peer', $peer);
+    $this->assertInstanceOf(Peer::class, $peer);
     $this->assertEquals('rdbms\unittest\dataset\job', strtolower($peer->identifier));
     $this->assertEquals('jobs', $peer->connection);
     $this->assertEquals('JOBS.job', $peer->table);
@@ -77,7 +80,7 @@ class DataSetTest extends TestCase {
       ]
     ]));
     $job= Job::getByJob_id(1);
-    $this->assertInstanceOf('rdbms.unittest.dataset.Job', $job);
+    $this->assertInstanceOf(Job::class, $job);
     $this->assertEquals(1, $job->getJob_id());
     $this->assertEquals('Unit tester', $job->getTitle());
     $this->assertEquals($now, $job->getValid_from());
@@ -222,7 +225,7 @@ class DataSetTest extends TestCase {
 
     $this->assertInstanceOf('var[]', $jobs);
     $this->assertEquals(1, sizeof($jobs));
-    $this->assertInstanceOf('rdbms.unittest.dataset.Job', $jobs[0]);
+    $this->assertInstanceOf(Job::class, $jobs[0]);
   }
 
   #[@test]
@@ -258,9 +261,9 @@ class DataSetTest extends TestCase {
 
     $this->assertInstanceOf('var[]', $jobs);
     $this->assertEquals(2, sizeof($jobs));
-    $this->assertInstanceOf('rdbms.unittest.dataset.Job', $jobs[0]);
+    $this->assertInstanceOf(Job::class, $jobs[0]);
     $this->assertEquals(1, $jobs[0]->getJob_id());
-    $this->assertInstanceOf('rdbms.unittest.dataset.Job', $jobs[1]);
+    $this->assertInstanceOf(Job::class, $jobs[1]);
     $this->assertEquals(9, $jobs[1]->getJob_id());
   }
   
@@ -284,7 +287,7 @@ class DataSetTest extends TestCase {
     $peer= Job::getPeer();
     $iterator= $peer->iteratorFor(new \rdbms\Criteria(['expire_at', null, EQUAL]));
 
-    $this->assertInstanceOf('rdbms.ResultIterator', $iterator);
+    $this->assertInstanceOf(ResultIterator::class, $iterator);
     
     // Make sure hasNext() does not forward the resultset pointer
     $this->assertTrue($iterator->hasNext());
@@ -292,13 +295,13 @@ class DataSetTest extends TestCase {
     $this->assertTrue($iterator->hasNext());
     
     $job= $iterator->next();
-    $this->assertInstanceOf('rdbms.unittest.dataset.Job', $job);
+    $this->assertInstanceOf(Job::class, $job);
     $this->assertEquals(654, $job->getJob_id());
 
     $this->assertTrue($iterator->hasNext());
 
     $job= $iterator->next();
-    $this->assertInstanceOf('rdbms.unittest.dataset.Job', $job);
+    $this->assertInstanceOf(Job::class, $job);
     $this->assertEquals(329, $job->getJob_id());
 
     $this->assertFalse($iterator->hasNext());
@@ -325,7 +328,7 @@ class DataSetTest extends TestCase {
     $iterator= $peer->iteratorFor(new \rdbms\Criteria(['expire_at', null, EQUAL]));
 
     $job= $iterator->next();
-    $this->assertInstanceOf('rdbms.unittest.dataset.Job', $job);
+    $this->assertInstanceOf(Job::class, $job);
     $this->assertEquals(654, $job->getJob_id());
 
     $this->assertTrue($iterator->hasNext());
@@ -369,12 +372,12 @@ class DataSetTest extends TestCase {
 
     $peer= Job::getPeer();
     $iterator= $peer->iteratorFor(new Statement('select object(j) from job j where 1 = 1'));
-    $this->assertInstanceOf('rdbms.ResultIterator', $iterator);
+    $this->assertInstanceOf(ResultIterator::class, $iterator);
 
     $this->assertTrue($iterator->hasNext());
 
     $job= $iterator->next();
-    $this->assertInstanceOf('rdbms.unittest.dataset.Job', $job);
+    $this->assertInstanceOf(Job::class, $job);
     $this->assertEquals(654, $job->getJob_id());
     $this->assertEquals('Java Unit tester', $job->getTitle());
 
@@ -409,7 +412,7 @@ class DataSetTest extends TestCase {
   #[@test]
   public function column() {
     $c= Job::column('job_id');
-    $this->assertInstanceOf('rdbms.Column', $c);
+    $this->assertInstanceOf(Column::class, $c);
     $this->assertEquals('job_id', $c->getName());
   }
 
@@ -420,7 +423,7 @@ class DataSetTest extends TestCase {
 
   #[@test]
   public function relativeColumn() {
-    $this->assertInstanceOf('rdbms.Column', Job::column('PersonJob->person_id'));
+    $this->assertInstanceOf(Column::class, Job::column('PersonJob->person_id'));
   }
 
   #[@test, @expect(IllegalArgumentException::class)]
@@ -430,7 +433,7 @@ class DataSetTest extends TestCase {
 
   #[@test]
   public function farRelativeColumn() {
-    $this->assertInstanceOf('rdbms.Column', Job::column('PersonJob->Department->department_id'));
+    $this->assertInstanceOf(Column::class, Job::column('PersonJob->Department->department_id'));
   }
 
   #[@test, @expect(IllegalArgumentException::class)]
@@ -477,7 +480,7 @@ class DataSetTest extends TestCase {
 
   #[@test]
   public function percentSign() {
-    $observer= $this->getConnection()->addObserver(newinstance('rdbms.DBObserver', [create('new util.collections.Vector<string>')], '{
+    $observer= $this->getConnection()->addObserver(newinstance(DBObserver::class, [create('new util.collections.Vector<string>')], '{
       public $statements;
       public function __construct($statements) {
         $this->statements= $statements;

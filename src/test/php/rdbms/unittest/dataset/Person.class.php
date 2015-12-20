@@ -65,7 +65,7 @@ class Person extends DataSet implements JoinExtractable {
    * @return  rdbms.Peer
    */
   public static function getPeer() {
-    return \rdbms\Peer::forName(__CLASS__);
+    return \rdbms\Peer::forName(self::class);
   }
 
   /**

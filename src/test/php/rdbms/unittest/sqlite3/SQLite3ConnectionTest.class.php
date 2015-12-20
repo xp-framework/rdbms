@@ -1,5 +1,6 @@
 <?php namespace rdbms\unittest\sqlite3;
 
+use rdbms\sqlite3\SQLite3ResultSet;
 use rdbms\SQLStatementFailedException;
 use lang\IllegalStateException;
 use rdbms\SQLStateException;
@@ -49,7 +50,7 @@ class SQLite3ConnectionTest extends \unittest\TestCase {
     $this->conn->connect();
     $result= $this->conn->query('select 1 as one');
     
-    $this->assertInstanceOf('rdbms.sqlite3.SQLite3ResultSet', $result);
+    $this->assertInstanceOf(SQLite3ResultSet::class, $result);
     $this->assertEquals(['one' => 1], $result->next());
   }
 
@@ -80,7 +81,7 @@ class SQLite3ConnectionTest extends \unittest\TestCase {
     $this->conn->connect();
     $result= $this->conn->query('select 1 where 1 = 0');
 
-    $this->assertInstanceOf('rdbms.sqlite3.SQLite3ResultSet', $result);
+    $this->assertInstanceOf(SQLite3ResultSet::class, $result);
     $this->assertFalse($result->next());
   }
 

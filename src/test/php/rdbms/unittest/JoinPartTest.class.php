@@ -1,5 +1,7 @@
 <?php namespace rdbms\unittest;
  
+use rdbms\join\JoinTable;
+use rdbms\join\JoinRelation;
 use rdbms\DSN;
 use rdbms\Criteria;
 use rdbms\mysql\MySQLConnection;
@@ -46,7 +48,7 @@ class JoinPartTest extends TestCase {
   #[@test]
   public function getTableTest() {
     $joinpart= new JoinPart('job', Job::getPeer());
-    $this->assertInstanceOf('rdbms.join.JoinTable', $joinpart->getTable());
+    $this->assertInstanceOf(JoinTable::class, $joinpart->getTable());
     $this->assertEquals($joinpart->getTable()->toSqlString(), 'JOBS.job as job');
   }
 
@@ -59,9 +61,9 @@ class JoinPartTest extends TestCase {
 
     $this->assertInstanceOf('var[]', $jobpart->getJoinRelations());
     $j_p= current($jobpart->getJoinRelations());
-    $this->assertInstanceOf('rdbms.join.JoinRelation', $j_p);
-    $this->assertInstanceOf('rdbms.join.JoinTable', $j_p->getSource());
-    $this->assertInstanceOf('rdbms.join.JoinTable', $j_p->getTarget());
+    $this->assertInstanceOf(JoinRelation::class, $j_p);
+    $this->assertInstanceOf(JoinTable::class, $j_p->getSource());
+    $this->assertInstanceOf(JoinTable::class, $j_p->getTarget());
     $this->assertEquals(
       $j_p->getConditions(),
       ['j.job_id = p.job_id']
@@ -122,8 +124,8 @@ class JoinPartTest extends TestCase {
       'JobPerson'
     );
     
-    $this->assertInstanceOf('rdbms.unittest.dataset.Person', $job->getCachedObj('JobPerson', '#11'));
-    $this->assertInstanceOf('rdbms.unittest.dataset.Department', $job->getCachedObj('JobPerson', '#11')->getCachedObj('Department', '#31'));
-    $this->assertInstanceOf('rdbms.unittest.dataset.Person', $job->getCachedObj('JobPerson', '#11')->getCachedObj('Department', '#31')->getCachedObj('DepartmentChief', '#12'));
+    $this->assertInstanceOf(Person::class, $job->getCachedObj('JobPerson', '#11'));
+    $this->assertInstanceOf(Department::class, $job->getCachedObj('JobPerson', '#11')->getCachedObj('Department', '#31'));
+    $this->assertInstanceOf(Person::class, $job->getCachedObj('JobPerson', '#11')->getCachedObj('Department', '#31')->getCachedObj('DepartmentChief', '#12'));
   }
 }

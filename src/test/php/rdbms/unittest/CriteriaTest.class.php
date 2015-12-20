@@ -185,17 +185,17 @@ class CriteriaTest extends TestCase {
 
   #[@test]
   public function addReturnsThis() {
-    $this->assertInstanceOf('rdbms.Criteria', (new Criteria())->add('job_id', 1, EQUAL));
+    $this->assertInstanceOf(Criteria::class, (new Criteria())->add('job_id', 1, EQUAL));
   }
 
   #[@test]
   public function addOrderByReturnsThis() {
-    $this->assertInstanceOf('rdbms.Criteria', (new Criteria())->add('job_id', 1, EQUAL)->addOrderBy('valid_from', DESCENDING));
+    $this->assertInstanceOf(Criteria::class, (new Criteria())->add('job_id', 1, EQUAL)->addOrderBy('valid_from', DESCENDING));
   }
 
   #[@test]
   public function addGroupByReturnsThis() {
-    $this->assertInstanceOf('rdbms.Criteria', (new Criteria())->add('job_id', 1, EQUAL)->addGroupBy('valid_from'));
+    $this->assertInstanceOf(Criteria::class, (new Criteria())->add('job_id', 1, EQUAL)->addGroupBy('valid_from'));
   }
 
   #[@test]
@@ -258,7 +258,7 @@ class CriteriaTest extends TestCase {
 
   #[@test]
   public function fetchModeChaining() {
-    $this->assertInstanceOf('rdbms.Criteria', (new Criteria())->setFetchmode(\rdbms\join\Fetchmode::join('PersonJob')));
+    $this->assertInstanceOf(Criteria::class, (new Criteria())->setFetchmode(\rdbms\join\Fetchmode::join('PersonJob')));
   }
 
   #[@test]
