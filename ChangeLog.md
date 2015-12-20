@@ -3,6 +3,10 @@ RDBMS support for the XP Framework: MySQL, Sybase, MSSQL, PostgreSQL, SQLite3, I
 
 ## ?.?.? / ????-??-??
 
+## 6.5.1 / 2015-12-20
+
+* Merged PR #9: Rewrite code to avoid ensure() statements - @thekid
+
 ## 6.5.0 / 2015-12-20
 
 * **Heads up: Dropped PHP 5.4 support**. *Note: As the main source is not
