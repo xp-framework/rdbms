@@ -243,18 +243,15 @@ class MsSQLDBAdapter extends DBAdapter {
         ',
         $database
       );
-      if ($q) while ($record= $q->next()) {
+      while ($record= $q->next()) {
         $t[]= $this->dbTableObjectFor($record['name'], $database);
       }
-      
-    } catch (\rdbms\SQLException $e) {
-      unset($t);
-    } ensure($e); {
       $this->dropTemporaryIndexesTable();
-      if ($e) throw $e;
+      return $t;
+    } catch (\rdbms\SQLException $e) {
+      $this->dropTemporaryIndexesTable();
+      throw $e;
     }
-    
-    return $t;
   }
 
   /**
@@ -268,14 +265,12 @@ class MsSQLDBAdapter extends DBAdapter {
     try {
       $this->prepareTemporaryIndexesTable();
       $t= $this->dbTableObjectFor($table, $database);
-    } catch (\rdbms\SQLException $e) {
-      unset($t);
-    } ensure($e); {
       $this->dropTemporaryIndexesTable();
-      if ($e) throw $e;
+      return $t;
+    } catch (\rdbms\SQLException $e) {
+      $this->dropTemporaryIndexesTable();
+      throw $e;
     }
-    
-    return $t;
   }
 
   /**
