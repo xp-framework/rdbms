@@ -5,7 +5,7 @@ use rdbms\SQLException;
 /**
  * Result set
  */
-class MySQLxResultSet extends \AbstractMySQLxResultSet {
+class MySQLxResultSet extends AbstractMysqlxResultSet {
 
   /**
    * Seek

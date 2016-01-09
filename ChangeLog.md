@@ -3,6 +3,10 @@ RDBMS support for the XP Framework: MySQL, Sybase, MSSQL, PostgreSQL, SQLite3, I
 
 ## ?.?.? / ????-??-??
 
+## 6.5.3 / 2016-01-09
+
+* Fixed unbuffered queries in `mysqlx` driver causing fatal errors - @thekid
+
 ## 6.5.2 / 2016-01-09
 
 * Fixed issue #10: Call to undefined function rdbms\mysqlx\this() - @thekid
