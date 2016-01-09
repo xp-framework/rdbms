@@ -93,9 +93,8 @@ class MySqlxConnection extends DBConnection {
       // - See: http://bugs.mysql.com/bug.php?id=10214
       // - Possible values: http://dev.mysql.com/doc/refman/5.0/en/server-sql-mode.html
       // "modes is a list of different modes separated by comma (,) characters."
-      $modes= array_flip(explode(',', this(this($this->handle->consume($this->handle->query(
-        "show variables like 'sql_mode'"
-      )), 0), 1)));
+      $query= $this->handle->consume($this->handle->query("show variables like 'sql_mode'"));
+      $modes= array_flip(explode(',', $query[0][1]));
     } catch (IOException $e) {
       // Ignore
     }
