@@ -39,7 +39,7 @@ class Statement extends \lang\Object implements SQLExpression {
    * @return  string
    */
   public function toString() {
-    return $this->getClassName()."@{\n  ".$this->arguments[0]."\n}";
+    return nameof($this)."@{\n  ".$this->arguments[0]."\n}";
   }
       
   /**

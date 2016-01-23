@@ -68,6 +68,6 @@ class DBEvent extends \lang\Object {
    * @return  string
    */
   public function toString() {
-    return $this->getClassName().'('.$this->name.') {'.\xp::stringOf($this->arg).'}';
+    return nameof($this).'('.$this->name.') {'.\xp::stringOf($this->arg).'}';
   }
 }

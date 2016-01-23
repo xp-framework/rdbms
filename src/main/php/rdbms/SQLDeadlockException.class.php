@@ -19,7 +19,7 @@ class SQLDeadlockException extends SQLStatementFailedException {
       "Exception %s (deadlock#%s: %s) {\n".
       "  %s\n".
       "}\n",
-      $this->getClassName(),
+      nameof($this),
       $this->errorcode,
       $this->message,
       $this->sql

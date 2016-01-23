@@ -41,7 +41,7 @@ class SQLConnectException extends SQLException {
       "Exception %s (%s) {\n".
       "  Unable to connect to %s@%s%s - using password: %s\n".
       "}\n",
-      $this->getClassName(),
+      nameof($this),
       $this->message,
       $this->dsn->getUser(),
       $this->dsn->getHost(),

@@ -53,7 +53,7 @@ class SQLStatementFailedException extends SQLException {
       "Exception %s (errorcode %s: %s) {\n".
       "  %s\n".
       "}\n",
-      $this->getClassName(),
+      nameof($this),
       $this->errorcode,
       $this->message,
       $this->sql

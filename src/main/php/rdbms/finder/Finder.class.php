@@ -38,7 +38,7 @@ use lang\MethodNotImplementedException;
  * <code>
  *   $jf= new JobFinder();
  *
- *   Console::writeLine($jf->getClassName(), ' provides the following list methods:');
+ *   Console::writeLine(nameof($jf), ' provides the following list methods:');
  *   foreach ($jf->collectionMethods() as $m) {
  *     Console::writeLine('- ', $m->getName());
  *   }

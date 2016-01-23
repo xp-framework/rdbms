@@ -31,7 +31,7 @@ abstract class RdbmsIntegrationTest extends TestCase {
     );
 
     if (null === $this->dsn) {
-      throw new \unittest\PrerequisitesNotMetError('No credentials for '.$this->getClassName());
+      throw new \unittest\PrerequisitesNotMetError('No credentials for '.nameof($this));
     }
 
     try {

@@ -283,6 +283,6 @@ class TdsDataStream extends \lang\Object {
    * @return  string
    */
   public function toString() {
-    return $this->getClassName().'(#'.$this->packetSize.")@{\n".self::dump($this->buffer)."\n}";
+    return nameof($this).'(#'.$this->packetSize.")@{\n".self::dump($this->buffer)."\n}";
   }
 }

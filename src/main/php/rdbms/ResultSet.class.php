@@ -78,7 +78,7 @@ abstract class ResultSet extends \lang\Object implements Closeable, \IteratorAgg
    * @return  string
    */
   public function toString() {
-    return $this->getClassName().'('.\xp::stringOf($this->handle).')@'.\xp::stringOf($this->fields);
+    return nameof($this).'('.\xp::stringOf($this->handle).')@'.\xp::stringOf($this->fields);
   }
 
   /**

@@ -33,6 +33,6 @@ abstract class DriverImplementationsProvider extends \lang\Object {
    * @return  string
    */
   public function toString() {
-    return $this->getClassName().(null === $this->parent ? '' : ', '.$this->parent->toString());
+    return nameof($this).(null === $this->parent ? '' : ', '.$this->parent->toString());
   }
 }

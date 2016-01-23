@@ -92,7 +92,7 @@ abstract class DBConnection extends Observable {
   public function toString() {
     return sprintf(
       '%s(->%s%s%s)',
-      $this->getClassName(),
+      nameof($this),
       $this->dsn->asString(),
       $this->tz ? ', tz='.$this->tz->toString() : '',
       $this->handle ? ', conn='.get_resource_type($this->handle).' #'.(int)$this->handle : ''

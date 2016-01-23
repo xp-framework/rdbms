@@ -28,6 +28,7 @@ class FinderMethod extends \lang\Object {
   public function __construct($finder, $method) {
     $this->finder= $finder;
     $this->method= $method;
+
   }
   
   /**
@@ -65,9 +66,9 @@ class FinderMethod extends \lang\Object {
   public function toString() {
     return sprintf(
       '%s(%s %s::%s())',
-      $this->getClassName(),
+      nameof($this),
       $this->getKind(),
-      $this->finder->getClassName(),
+      nameof($this->finder),
       $this->method->getName()
     );
   }

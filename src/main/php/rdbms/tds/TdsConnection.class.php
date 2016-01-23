@@ -218,6 +218,6 @@ abstract class TdsConnection extends DBConnection {
    * @return  string
    */
   public function toString() {
-    return $this->getClassName().'(->'.$this->dsn->toString().', '.$this->handle->getClassName().')';
+    return nameof($this).'(->'.$this->dsn->toString().', '.nameof($this->handle).')';
   }
 }

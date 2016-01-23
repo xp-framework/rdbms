@@ -167,7 +167,7 @@ class Criteria extends \lang\Object implements SQLExpression {
    * @return  string
    */
   public function toString() {
-    $s= $this->getClassName()."@{\n";
+    $s= nameof($this)."@{\n";
     foreach ($this->conditions as $condition) {
       $s.= '  '.\xp::stringOf($condition)."\n";
     }

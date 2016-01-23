@@ -302,7 +302,7 @@ abstract class TdsProtocol extends \lang\Object {
     $this->stream= new TdsDataStream($s, $this->defaultPacketSize());
 
     // Cache record handlers per instance
-    $impl= $this->getClassName();
+    $impl= nameof($this);
     if (!isset(self::$recordsFor[$impl])) {
       self::$recordsFor[$impl]= $this->setupRecords() + self::$recordsFor[0];
     }
@@ -673,6 +673,6 @@ abstract class TdsProtocol extends \lang\Object {
    * @return  string
    */
   public function toString() {
-    return $this->getClassName().'('.\xp::stringOf($this->stream).')';
+    return nameof($this).'('.\xp::stringOf($this->stream).')';
   }
 }

@@ -86,6 +86,6 @@ class SQLFunction extends \lang\Object implements SQLFragment {
    * @return  string
    */
   public function toString() {
-    return $this->getClassName().'<'.$this->type.' '.$this->func.' ('.\xp::stringOf($this->args).')>';
+    return nameof($this).'<'.$this->type.' '.$this->func.' ('.\xp::stringOf($this->args).')>';
   }
 }

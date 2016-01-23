@@ -61,7 +61,7 @@ class Column extends \lang\Object implements SQLFragment {
    * @return  string
    */
   public function toString() {
-    return $this->getClassName().'<'.$this->type.' '.$this->peer->identifier.'.'.$this->name.'>';
+    return nameof($this).'<'.$this->type.' '.$this->peer->identifier.'.'.$this->name.'>';
   }
 
   /**

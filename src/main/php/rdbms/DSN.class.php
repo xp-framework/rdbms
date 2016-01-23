@@ -150,7 +150,7 @@ class DSN extends \lang\Object {
    * @return  string
    */
   public function toString() {
-    return $this->getClassName().'@('.$this->asString().')';
+    return nameof($this).'@('.$this->asString().')';
   }
 
   /**

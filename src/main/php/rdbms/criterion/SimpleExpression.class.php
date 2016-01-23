@@ -76,7 +76,7 @@ class SimpleExpression extends \lang\Object implements Criterion {
   public function toString() {
     return sprintf(
       '%s({%s %s} %% %s)',
-      $this->getClassName(),
+      nameof($this),
       \xp::stringOf($this->lhs),
       $this->op,
       \xp::stringOf($this->value)

@@ -64,7 +64,7 @@ class DBForeignKeyConstraint extends DBConstraint {
    * @return  string
    */
   public function toString() {
-    $s= $this->getClassName()."@{\n";
+    $s= nameof($this)."@{\n";
     foreach ($this->keys as $target => $source) {
       $s.= '  '.$target.' => '.$this->source.'.'.$source."\n";
     }

@@ -29,7 +29,7 @@ class SQLRunner extends \lang\Object {
       
       $tran->commit();
     } catch (\rdbms\SQLException $e) {
-      Console::$out->writeLine('- ', $e->getClassName());
+      Console::$out->writeLine('- ', nameof($e));
     }
   }
 }

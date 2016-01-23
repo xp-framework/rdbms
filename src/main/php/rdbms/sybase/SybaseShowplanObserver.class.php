@@ -123,7 +123,7 @@ class SybaseShowplanObserver extends \lang\Object implements \util\log\BoundLogO
    * @param   var dbevent
    */
   public function onQueryEnd($obs, $arg) {
-    $this->cat->info($this->getClassName().'::onQueryEnd() Query was:', (sizeof($this->queries) == 1 ? $this->queries[0] : $this->queries));
+    $this->cat->info(nameof($this).'::onQueryEnd() Query was:', (sizeof($this->queries) == 1 ? $this->queries[0] : $this->queries));
 
     $showplan= '';
     foreach (array_keys($this->messages) as $idx) {

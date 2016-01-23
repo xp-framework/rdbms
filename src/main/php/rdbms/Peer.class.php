@@ -195,7 +195,7 @@ class Peer extends \lang\Object {
   public function toString() {
     return sprintf(
       '%s@(%s accessing %s on connection "%s"){%s}', 
-      $this->getClassName(),
+      nameof($this),
       $this->identifier,
       $this->table,
       $this->connection,

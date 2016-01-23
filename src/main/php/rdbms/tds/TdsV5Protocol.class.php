@@ -117,7 +117,7 @@ class TdsV5Protocol extends TdsProtocol {
       0x01,       // Disallow dump/load and bulk insert
       0x00,       // SQL Interface type
       0x00,       // Type of network connection
-      $this->getClassName(), min(30, strlen($this->getClassName())),
+      nameof($this), min(30, strlen(nameof($this))),
       'localhost', min(30, strlen('localhost')),
       0, strlen($password),               // Remote passwords
       $password, strlen($password)+ 2,    // Long version of password

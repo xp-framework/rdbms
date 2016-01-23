@@ -139,7 +139,7 @@ class TdsV7Protocol extends TdsProtocol {
       'appname'    => [true, 'XP-Framework'],
       'servername' => [true, 'localhost'],
       'unused'     => [false, '', 0],
-      'library'    => [true, $this->getClassName()],
+      'library'    => [true, nameof($this)],
       'language'   => [true, 'us_english'],
       'database'   => [true, 'master']
     ];

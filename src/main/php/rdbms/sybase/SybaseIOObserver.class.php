@@ -110,7 +110,7 @@ class SybaseIOObserver extends \lang\Object implements BoundLogObserver {
    * @param   var dbevent
    */
   public function onQueryEnd($obs, $arg) {
-    $this->cat->info($this->getClassName().'::onQueryEnd() Query was:', (sizeof($this->queries) == 1 ? $this->queries[0] : $this->queries));
+    $this->cat->info(nameof($this).'::onQueryEnd() Query was:', (sizeof($this->queries) == 1 ? $this->queries[0] : $this->queries));
     $result= $arg->getArgument();
     
     $sc= 0; $reads= 0;

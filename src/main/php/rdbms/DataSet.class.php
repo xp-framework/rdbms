@@ -176,7 +176,7 @@ abstract class DataSet extends \lang\Object implements JoinExtractable {
    */
   public function set($field, $value) {
     if (!isset(Peer::forInstance($this)->types[$field])) {
-      throw new \lang\IllegalArgumentException('Field "'.$field.'" does not exist for DataSet '.$this->getClassName());
+      throw new \lang\IllegalArgumentException('Field "'.$field.'" does not exist for DataSet '.nameof($this));
     }
     return $this->_change($field, $value);
   }
@@ -189,7 +189,7 @@ abstract class DataSet extends \lang\Object implements JoinExtractable {
    */
   public function get($field) {
     if (!isset(Peer::forInstance($this)->types[$field])) {
-      throw new \lang\IllegalArgumentException('Field "'.$field.'" does not exist for DataSet '.$this->getClassName());
+      throw new \lang\IllegalArgumentException('Field "'.$field.'" does not exist for DataSet '.nameof($this));
     }
     return $this->{$field};
   }
@@ -246,7 +246,7 @@ abstract class DataSet extends \lang\Object implements JoinExtractable {
     $fmt= '  [%-'.$max.'s %2s%2s] %s';
     
     // Build string representation.
-    $s= $this->getClassName().'@('.$this->hashCode()."){\n";
+    $s= nameof($this).'@('.$this->hashCode()."){\n";
     foreach (array_keys($peer->types) as $key) {
       $s.= sprintf(
         $fmt, 

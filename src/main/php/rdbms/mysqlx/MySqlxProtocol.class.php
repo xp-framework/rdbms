@@ -486,6 +486,6 @@ class MySqlxProtocol extends \lang\Object {
    * @return  string
    */
   public function toString() {
-    return $this->getClassName().'('.\xp::stringOf($this->sock->getHandle()).', P@'.$this->pkt.')';
+    return nameof($this).'('.\xp::stringOf($this->sock->getHandle()).', P@'.$this->pkt.')';
   }
 }
