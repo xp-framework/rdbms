@@ -29,7 +29,7 @@ class InterfacesLookup extends \lang\Object implements ConnectionLookup {
    * @return  [:[:string]] sections
    */
   protected function parse() {
-    $this->file->open(FILE_MODE_READ);
+    $this->file->open(File::READ);
     $section= null;
     $sections= [];
     while (false !== ($line= $this->file->readLine())) {

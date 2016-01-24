@@ -29,7 +29,7 @@ class SqlIniLookup extends \lang\Object implements ConnectionLookup {
    * @return  [:[:string]] sections
    */
   protected function parse() {
-    $this->ini->open(FILE_MODE_READ);
+    $this->ini->open(File::READ);
     $section= null;
     $sections= [];
     while (false !== ($line= $this->ini->readLine())) {

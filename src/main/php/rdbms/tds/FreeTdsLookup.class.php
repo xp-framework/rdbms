@@ -36,7 +36,7 @@ class FreeTdsLookup extends \lang\Object implements ConnectionLookup {
    * @return  [:[:string]] sections
    */
   protected function parse() {
-    $this->conf->open(FILE_MODE_READ);
+    $this->conf->open(File::READ);
     $section= null;
     $sections= [];
     while (false !== ($line= $this->conf->readLine())) {
