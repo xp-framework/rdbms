@@ -269,6 +269,9 @@ class TdsV5Protocol extends TdsProtocol {
       } else if ("\xE3" === $token) {   // ENVCHANGE, e.g. from "use [db]" queries
         $this->envchange();
         return null;
+      } else if ("\x79" === $token) {   // RETURN_STATUS (eg. from stored procedures)
+        $result = $this->stream->getLong();
+        $token= $this->stream->getToken();
       } else {
         throw new TdsProtocolException(
           sprintf('Unexpected token 0x%02X', ord($token)),
