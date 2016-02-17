@@ -15,8 +15,8 @@ class TdsV7Protocol extends TdsProtocol {
    * @return  [:rdbms.tds.TdsRecord] handlers
    */
   protected function setupRecords() {
-    $records[self::T_NUMERIC]= newinstance('rdbms.tds.TdsRecord', [], '{
-      public function unmarshal($stream, $field, $records) {
+    $records[self::T_NUMERIC]= newinstance('rdbms.tds.TdsRecord', [], [
+      'unmarshal' => function ($stream, $field, $records) {
         $len= isset($field["len"]) ? $field["len"]- 1 : $stream->getByte()- 1;
         if (-1 === $len) return null;
         $pos= $stream->getByte();
@@ -25,10 +25,10 @@ class TdsV7Protocol extends TdsProtocol {
         }
         return $this->toNumber($n, $field["scale"], $field["prec"]);
       }
-    }');
+    ]);
     $records[self::T_DECIMAL]= $records[self::T_NUMERIC];
-    $records[self::T_VARIANT]= newinstance('rdbms.tds.TdsRecord', [], '{
-      public function unmarshal($stream, $field, $records) {
+    $records[self::T_VARIANT]= newinstance('rdbms.tds.TdsRecord', [], [
+      'unmarshal' => function ($stream, $field, $records) {
         if (0 === ($len= $stream->getLong())) return null;
 
         $base= $stream->getByte();
@@ -51,9 +51,9 @@ class TdsV7Protocol extends TdsProtocol {
           throw new ProtocolException("Unknown variant base type 0x".dechex($base));
         }
       }
-    }');
-    $records[self::T_UNIQUE]= newinstance('rdbms.tds.TdsRecord', [], '{
-      public function unmarshal($stream, $field, $records) {
+    ]);
+    $records[self::T_UNIQUE]= newinstance('rdbms.tds.TdsRecord', [], [
+      'unmarshal' => function ($stream, $field, $records) {
         $len= isset($field["len"]) ? $field["len"] : $stream->getByte();
         if (0 === $len) return null;
 
@@ -67,35 +67,35 @@ class TdsV7Protocol extends TdsProtocol {
           ord($bytes{10}), ord($bytes{11}), ord($bytes{12}), ord($bytes{13}), ord($bytes{14}), ord($bytes{15})
         );
       }
-    }');
-    $records[self::T_IMAGE]= newinstance('rdbms.tds.TdsRecord', [], '{
-      public function unmarshal($stream, $field, $records) {
+    ]);
+    $records[self::T_IMAGE]= newinstance('rdbms.tds.TdsRecord', [], [
+      'unmarshal' => function ($stream, $field, $records) {
         $has= $stream->getByte();
         if ($has !== 16) return null;
 
         $stream->read(24);  // Skip 16 Byte TEXTPTR, 8 Byte TIMESTAMP
         return $stream->read($stream->getLong());
       }
-    }');
-    $records[self::XT_BINARY]= newinstance('rdbms.tds.TdsRecord', [], '{
-      public function unmarshal($stream, $field, $records) {
+    ]);
+    $records[self::XT_BINARY]= newinstance('rdbms.tds.TdsRecord', [], [
+      'unmarshal' => function ($stream, $field, $records) {
         if (0xFFFF === ($len= $stream->getShort())) return null;
         $string= $stream->read($len);
         return substr($string, 0, strcspn($string, "\0"));
       }
-    }');
-    $records[self::XT_VARBINARY]= newinstance('rdbms.tds.TdsRecord', [], '{
-      public function unmarshal($stream, $field, $records) {
+    ]);
+    $records[self::XT_VARBINARY]= newinstance('rdbms.tds.TdsRecord', [], [
+      'unmarshal' => function ($stream, $field, $records) {
         if (0xFFFF === ($len= $stream->getShort())) return null;
         return $stream->read($len);
       }
-    }');
-    $records[self::XT_NVARCHAR]= newinstance('rdbms.tds.TdsRecord', [], '{
-      public function unmarshal($stream, $field, $records) {
+    ]);
+    $records[self::XT_NVARCHAR]= newinstance('rdbms.tds.TdsRecord', [], [
+      'unmarshal' => function ($stream, $field, $records) {
         $len= $stream->getShort();
         return 0xFFFF === $len ? null : iconv("ucs-2le", \xp::ENCODING, $stream->read($len));
       }
-    }');
+    ]);
     return $records;
   }
 
