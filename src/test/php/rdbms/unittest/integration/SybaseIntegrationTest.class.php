@@ -203,4 +203,19 @@ class SybaseIntegrationTest extends RdbmsIntegrationTest {
     }
     $this->assertEquals([0 => ['working' => 1]], $conn->select('1 as working'));
   }
+
+  #[@test]
+  public function sp_helpconstraint() {
+    $this->assertTrue($this->db()->query('sp_helpconstraint %c', $this->tableName()));
+  }
+
+  #[@test]
+  public function sp_helpconstraint_and_query() {
+    $q= $this->db()->query('
+      sp_helpconstraint %c
+      select 1 as "result"',
+      $this->tableName()
+    );
+    $this->assertEquals(1, $q->next('result'));
+  }
 }
