@@ -1,6 +1,6 @@
 <?php namespace rdbms\unittest;
  
-use util\HashmapIterator;
+use rdbms\CachedResults;
 use rdbms\unittest\dataset\Person;
 use util\NoSuchElementException;
 use rdbms\DSN;
@@ -167,7 +167,7 @@ class JoinIteratorTest extends TestCase {
     $this->assertTrue($ji->hasNext());
     $this->assertInstanceOf(Job::class, $job= $ji->next());
     $this->assertInstanceOf('var[]', $job->getPersonJobList());
-    $this->assertInstanceOf(HashmapIterator::class, $pji= $job->getPersonJobIterator());
+    $this->assertInstanceOf(CachedResults::class, $pji= $job->getPersonJobIterator());
 
     $this->assertTrue($pji->hasNext());
     $this->assertInstanceOf(Person::class, $pji->next());
@@ -178,7 +178,7 @@ class JoinIteratorTest extends TestCase {
     $this->assertTrue($ji->hasNext());
     $this->assertInstanceOf(Job::class, $job= $ji->next());
     $this->assertInstanceOf('var[]', $job->getPersonJobList());
-    $this->assertInstanceOf(HashmapIterator::class, $pji= $job->getPersonJobIterator());
+    $this->assertInstanceOf(CachedResults::class, $pji= $job->getPersonJobIterator());
     $this->assertTrue($pji->hasNext());
     $this->assertInstanceOf(Person::class, $pji->next());
     $this->assertFalse($pji->hasNext());
@@ -186,7 +186,7 @@ class JoinIteratorTest extends TestCase {
     $this->assertTrue($ji->hasNext());
     $this->assertInstanceOf(Job::class, $job= $ji->next());
     $this->assertInstanceOf('var[]', $job->getPersonJobList());
-    $this->assertInstanceOf(HashmapIterator::class, $pji= $job->getPersonJobIterator());
+    $this->assertInstanceOf(CachedResults::class, $pji= $job->getPersonJobIterator());
     $this->assertFalse($pji->hasNext());
 
     $this->assertFalse($ji->hasNext());

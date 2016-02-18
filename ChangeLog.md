@@ -3,6 +3,9 @@ RDBMS support for the XP Framework: MySQL, Sybase, MSSQL, PostgreSQL, SQLite3, I
 
 ## ?.?.? / ????-??-??
 
+* Replaced deprecated util.HashmapIterator with a local class.
+  (@thekid)
+
 ## 6.5.5 / 2016-01-24
 
 * Changed code base to no longer use deprecated FILE_MODE_* constants

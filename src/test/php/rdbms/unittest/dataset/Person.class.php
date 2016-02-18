@@ -2,7 +2,7 @@
  
 use rdbms\DataSet;
 use rdbms\join\JoinExtractable;
-use util\HashmapIterator;
+use rdbms\CachedResults;
 
 /**
  * Class wrapper for table person, database JOBS
@@ -245,11 +245,11 @@ class Person extends DataSet implements JoinExtractable {
    * Retrieves an iterator for all Department entities referencing
    * this entity by chief_id=>person_id
    *
-   * @return  rdbms.ResultIterator<net.xp_framework.unittest.rdbms.dataset.Department>
+   * @return  util.XPIterator
    * @throws  rdbms.SQLException in case an error occurs
    */
   public function getDepartmentChiefIterator() {
-    if ($this->cached['DepartmentChief']) return new HashmapIterator($this->cache['DepartmentChief']);
+    if ($this->cached['DepartmentChief']) return new CachedResults($this->cache['DepartmentChief']);
     return \lang\XPClass::forName('rdbms.unittest.dataset.Department')
       ->getMethod('getPeer')
       ->invoke()

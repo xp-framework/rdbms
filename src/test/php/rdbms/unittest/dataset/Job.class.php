@@ -2,7 +2,7 @@
  
 use rdbms\DataSet;
 use rdbms\join\JoinExtractable;
-use util\HashmapIterator;
+use rdbms\CachedResults;
 
 /**
  * Class wrapper for table job, database JOBS
@@ -173,11 +173,11 @@ class Job extends DataSet implements JoinExtractable {
    * Retrieves an iterator for all Person entities referencing
    * this entity by job_id=>job_id
    *
-   * @return  rdbms.ResultIterator<net.xp_framework.unittest.rdbms.dataset.Person>
+   * @return  util.XPIterator
    * @throws  rdbms.SQLException in case an error occurs
    */
   public function getPersonJobIterator() {
-    if ($this->cached['PersonJob']) return new HashmapIterator($this->cache['PersonJob']);
+    if ($this->cached['PersonJob']) return new CachedResults($this->cache['PersonJob']);
     return \lang\XPClass::forName('rdbms.unittest.dataset.Person')
       ->getMethod('getPeer')
       ->invoke()
