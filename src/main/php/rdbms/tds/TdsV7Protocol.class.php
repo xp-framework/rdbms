@@ -224,7 +224,7 @@ class TdsV7Protocol extends TdsProtocol {
           } else if (isset(self::$fixed[$field['type']])) {
             $field['size']= self::$fixed[$field['type']];
           } else if (self::T_VARIANT === $field['type']) {
-            $field['variant']= new \lang\types\Bytes($this->stream->read(4));   // XXX Always {I\037\000\000}?
+            $field['variant']= new \util\Bytes($this->stream->read(4));   // XXX Always {I\037\000\000}?
           } else if (self::T_IMAGE === $field['type']) {
             $field['size']= $this->stream->getLong();
             $field['table']= $this->stream->read($this->stream->getShort());

@@ -3,7 +3,8 @@
 use rdbms\tds\TdsProtocolException;
 use rdbms\tds\TdsDataStream;
 use peer\Socket;
-use lang\types\Bytes;
+use util\Bytes;
+use lang\ClassLoader;
 
 /**
  * TestCase
@@ -18,7 +19,7 @@ class TdsDataStreamTest extends \unittest\TestCase {
    */
   #[@beforeClass]
   public static function mockSocket() {
-    self::$sock= \lang\ClassLoader::defineClass('rdbms.unittest.tds.MockTdsSocket', 'peer.Socket', [], '{
+    self::$sock= ClassLoader::defineClass('rdbms.unittest.tds.MockTdsSocket', 'peer.Socket', [], '{
       public $bytes;
       protected $offset= 0;
       

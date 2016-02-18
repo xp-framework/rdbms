@@ -3,13 +3,11 @@
 use util\log\Logger;
 use util\Observable;
 use util\TimeZone;
-
+use lang\XPClass;
 
 /**
  * Provide an interface from which all other database connection
  * classes extend.
- *
- * @purpose  Base class for database connections
  */
 abstract class DBConnection extends Observable {
   public 
@@ -43,13 +41,12 @@ abstract class DBConnection extends Observable {
     
     // Add observers
     foreach ($observers as $observer => $param) {
-      $class= \lang\XPClass::forName($observer);
+      $class= XPClass::forName($observer);
 
-      // Check if class implements BoundLogObserver: in that case use factory method to acquire instance
-      if (\lang\XPClass::forName('util.log.BoundLogObserver')->isAssignableFrom($class)) {
+      // Check if class implements BoundLogObserver: in that case use factory method to acquire
+      // instance. Otherwise, just use the constructor
+      if (XPClass::forName('util.log.BoundLogObserver')->isAssignableFrom($class)) {
         $this->addObserver($class->getMethod('instanceFor')->invoke(null, [$param]));
-
-      // Otherwise, just use the constructor
       } else {
         $this->addObserver($class->newInstance($param));
       }

@@ -10,7 +10,7 @@ use rdbms\SQLException;
 use util\Observer;
 use unittest\TestCase;
 use rdbms\DriverManager;
-use lang\types\Bytes;
+use util\Bytes;
 
 /**
  * Base class for Rdbms tests
@@ -137,6 +137,7 @@ abstract class RdbmsIntegrationTest extends TestCase {
    */
   #[@test, @expect(SQLStateException::class)]
   public function noQueryWhenNotConnected() {
+    $this->conn->flags ^= DB_AUTOCONNECT;
     $this->conn->query('select 1');
   }
   
@@ -160,6 +161,7 @@ abstract class RdbmsIntegrationTest extends TestCase {
 
   #[@test, @expect(SQLStateException::class)]
   public function noQueryWhenDisConnected() {
+    $this->conn->flags ^= DB_AUTOCONNECT;
     $this->conn->connect();
     $this->conn->close();
     $this->conn->query('select 1');
