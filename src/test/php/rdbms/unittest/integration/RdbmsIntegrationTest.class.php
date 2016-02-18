@@ -10,7 +10,7 @@ use rdbms\SQLException;
 use util\Observer;
 use unittest\TestCase;
 use rdbms\DriverManager;
-use lang\types\Bytes;
+use util\Bytes;
 
 /**
  * Base class for Rdbms tests

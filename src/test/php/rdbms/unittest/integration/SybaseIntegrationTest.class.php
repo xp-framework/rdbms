@@ -1,7 +1,8 @@
 <?php namespace rdbms\unittest\integration;
 
 use rdbms\SQLStatementFailedException;
-use lang\types\Bytes;
+use util\Bytes;
+use unittest\PrerequisitesNotMetError;
 
 /**
  * Sybase integration test
@@ -34,7 +35,7 @@ class SybaseIntegrationTest extends RdbmsIntegrationTest {
     if ($m->hasAnnotation('version')) {
       $server= $this->db()->query('select @@version_number as v')->next('v');
       if ($server < ($required= $m->getAnnotation('version'))) {
-        throw new \unittest\PrerequisitesNotMetError('Server version not sufficient: '.$server, null, [$required]);
+        throw new PrerequisitesNotMetError('Server version not sufficient: '.$server, null, [$required]);
       }
     }
   }    
