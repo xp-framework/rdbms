@@ -3,6 +3,8 @@ RDBMS support for the XP Framework: MySQL, Sybase, MSSQL, PostgreSQL, SQLite3, I
 
 ## ?.?.? / ????-??-??
 
+* **Heads up: Bumped XP version requirement to XP 6.11.0** - @thekid
+* Added forward compatibility with XP 7.0 - @thekid
 * Replaced deprecated util.HashmapIterator with a local class.
   (@thekid)
 
