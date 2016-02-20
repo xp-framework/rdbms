@@ -133,28 +133,18 @@ abstract class RdbmsIntegrationTest extends TestCase {
     return $this->db()->prepare('select cast(i as int) as i from %c', $this->tableName());
   }
 
-  /**
-   * Test query throws rdbms.SQLStateException when not connected
-   * to the database
-   *
-   */
   #[@test, @expect(SQLStateException::class)]
   public function noQueryWhenNotConnected() {
     $this->conn->flags ^= DB_AUTOCONNECT;
     $this->conn->query('select 1');
   }
   
-  /**
-   * Test failing to connect throws rdbms.SQLConnectException
-   *
-   */
   #[@test, @expect(SQLConnectException::class)]
   public function connectFailedThrowsException() {
-    DriverManager::getConnection(str_replace(
-      ':'.$this->db(false)->dsn->getPassword().'@', 
-      ':hopefully-wrong-password@', 
-      $this->dsn
-    ))->connect();
+    $dsn= clone $this->dsn;
+    $dsn->url->setPassword('wrong-password');
+
+    DriverManager::getConnection($this->dsn)->connect();
   }
   
   #[@test]
