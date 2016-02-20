@@ -1,5 +1,7 @@
 <?php namespace rdbms\unittest\integration;
 
+use util\Date;
+
 /**
  * MSSQL integration test
  *
@@ -51,7 +53,7 @@ class MsSQLIntegrationTest extends RdbmsIntegrationTest {
 
   #[@test]
   public function selectDate() {
-    $cmp= new \util\Date('2009-08-14 12:45:00');
+    $cmp= new Date('2009-08-14 12:45:00');
     $result= $this->db()->query('select convert(datetime, %s, 120) as value', $cmp)->next('value');
 
     $this->assertInstanceOf(Date::class, $result);
@@ -109,7 +111,7 @@ class MsSQLIntegrationTest extends RdbmsIntegrationTest {
 
   #[@test]
   public function selectDateVariant() {
-    $cmp= new \util\Date('2009-08-14 12:45:00');
+    $cmp= new Date('2009-08-14 12:45:00');
     $this->assertEquals($cmp, $this->db()->query('select cast(convert(datetime, %s, 102) as sql_variant) as value', $cmp)->next('value'));
   }
 
