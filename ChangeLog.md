@@ -3,6 +3,9 @@ RDBMS support for the XP Framework: MySQL, Sybase, MSSQL, PostgreSQL, SQLite3, I
 
 ## ?.?.? / ????-??-??
 
+* Fixed SQL cast expression being shadowed by cast function in SQLite3
+  by renaming the latter to `marshal`.
+  (@thekid)
 * Changed rdbms.DriverManager::getConnection() to accept DSN instances
   as well as strings
   (@thekid)
