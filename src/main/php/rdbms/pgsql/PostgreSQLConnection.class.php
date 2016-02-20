@@ -61,7 +61,9 @@ class PostgreSQLConnection extends DBConnection {
     }
 
     if (!is_resource($this->handle)) {
-      throw new \rdbms\SQLConnectException(rtrim(pg_last_error()), $this->dsn);
+      $e= new \rdbms\SQLConnectException(rtrim(pg_last_error()), $this->dsn);
+      \xp::gc(__FILE__);
+      throw $e;
     }
     
     $this->_obs && $this->notifyObservers(new \rdbms\DBEvent(\rdbms\DBEvent::CONNECTED, $reconnect));

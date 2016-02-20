@@ -66,16 +66,6 @@ class SQLite3ConnectionTest extends \unittest\TestCase {
     $this->conn->query('select something with wrong syntax');
   }
 
-  /**
-   * Unbuffered queries are not supported
-   *
-   */
-  #[@test, @expect(IllegalStateException::class)]
-  public function open_throws_exception() {
-    $this->conn->connect();
-    $this->conn->open('select 1');
-  }
-
   #[@test]
   public function query_returns_result_for_empty_resultset() {
     $this->conn->connect();
@@ -114,11 +104,11 @@ class SQLite3ConnectionTest extends \unittest\TestCase {
     ]], $this->conn->select('* from testthewest'));
   }
 
-  #[@test, @expect(IllegalStateException::class)]
-  public function unbuffered_query_not_supported() {
+  #[@test]
+  public function unbuffered_queries_simulated() {
     $this->conn->setFlag(DB_UNBUFFERED);
     $this->conn->connect();
-    $this->conn->query('select 1');
+    $this->assertEquals([1 => 1], $this->conn->query('select 1')->next());
   }
 
   #[@test, @expect(SQLStateException::class)]

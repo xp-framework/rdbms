@@ -106,7 +106,7 @@ class SQLite3Connection extends DBConnection {
    * @return  bool success
    */
   public function close() {
-    if ($this->handle && $r= $this->handle->close()) {
+    if ($this->handle && $r= @$this->handle->close()) {
       $this->handle= null;
       return $r;
     }
@@ -165,18 +165,15 @@ class SQLite3Connection extends DBConnection {
       if (false === $c) throw new \rdbms\SQLStateException('Previously failed to connect.');
     }
     
-    if (!$buffered || $this->flags & DB_UNBUFFERED) {
-      throw new \lang\IllegalStateException('Unbuffered queries not supported.');
-    } else {
-      $result= @$this->handle->query($sql);
-    }
-    
+    $result= $this->handle->query($sql);
     if (false === $result) {
-      throw new \rdbms\SQLStatementFailedException(
+      $e= new \rdbms\SQLStatementFailedException(
         'Statement failed: '.$this->handle->lastErrorMsg().' @ '.$this->dsn->getDatabase(),
         $sql, 
         $this->handle->lastErrorCode()
       );
+      \xp::gc(__FILE__);
+      throw $e;
     }
     return $result->numColumns() ? new SQLite3ResultSet($result) : true;
   }
@@ -193,16 +190,6 @@ class SQLite3Connection extends DBConnection {
     }
     $transaction->db= $this;
     return $transaction;
-  }
-  
-  /**
-   * Retrieve transaction state
-   *
-   * @param   string name
-   * @return  var state
-   */
-  public function transtate($name) {
-    raise('lang.MethodNotImplementedException', __FUNCTION__.' is not supported.');
   }
   
   /**

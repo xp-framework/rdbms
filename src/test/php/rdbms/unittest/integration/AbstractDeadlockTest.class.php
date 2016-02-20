@@ -1,22 +1,21 @@
 <?php namespace rdbms\unittest\integration;
 
 use unittest\TestCase;
+use unittest\PrerequisitesNotMetError;
 use lang\Runtime;
 use rdbms\DriverManager;
+use util\Properties;
+use lang\Throwable;
 
 /**
  * Abstract deadlock test
  *
  */
 abstract class AbstractDeadlockTest extends TestCase {
-  protected $dsn= null;
+  private $dsn;
 
-  /**
-   * Retrieve DSN
-   *
-   * @return  string
-   */
-  abstract public function _dsn();
+  /** @return string */
+  protected function driverName() { return 'sybase'; }
 
   /**
    * Retrieve database connection object
@@ -30,33 +29,29 @@ abstract class AbstractDeadlockTest extends TestCase {
       return $db;
     }
   }
-  
-  /**
-   * Sets up test case
-   *
-   */
+
+  /** @return void */
   public function setUp() {
-    $this->dsn= \util\Properties::fromString($this->getClass()->getPackage()->getResource('database.ini'))->readString(
-      $this->_dsn(),
-      'dsn',
-      null
-    );
+    $driver= $this->driverName();
+    $this->dsn= getenv(strtoupper($driver).'_DSN') ?: Properties::fromString(typeof($this)
+      ->getPackage()
+      ->getResource('database.ini'))
+      ->readString($driver, 'dsn', null)
+    ;
 
     if (null === $this->dsn) {
-      throw new \unittest\PrerequisitesNotMetError('No credentials for '.nameof($this));
+      throw new PrerequisitesNotMetError('No credentials for '.nameof($this));
     }
 
     try {
       $this->dropTables();
       $this->createTables();
-    } catch (\lang\Throwable $e) {
-      throw new \unittest\PrerequisitesNotMetError($e->getMessage(), $e);
+    } catch (Throwable $e) {
+      throw new PrerequisitesNotMetError($e->getMessage(), $e);
     }
   }
-  
-  /**
-   * Tear down test case
-   */
+
+  /** @return void */
   public function tearDown() {
     $this->dropTables();
   }

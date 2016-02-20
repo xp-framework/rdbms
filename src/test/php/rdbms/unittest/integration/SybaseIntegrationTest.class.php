@@ -18,6 +18,8 @@ class SybaseIntegrationTest extends RdbmsIntegrationTest {
    * Before class method: set minimun server severity;
    * otherwise server messages end up on the error stack
    * and will let the test fail (no error policy).
+   *
+   * @return void
    */
   #[@beforeClass]
   public static function setMinimumServerSeverity() {
@@ -40,23 +42,11 @@ class SybaseIntegrationTest extends RdbmsIntegrationTest {
     }
   }    
 
-  /**
-   * Creates table name
-   *
-   * @return  string
-   */
-  protected function tableName() {
-    return '#unittest';
-  }
+  /** @return string */
+  protected function tableName() { return '#unittest'; }
 
-  /**
-   * Retrieve dsn
-   *
-   * @return  string
-   */
-  public function _dsn() {
-    return 'sybase';
-  }
+  /** @return string */
+  protected function driverName() { return 'sybase'; }
   
   /**
    * Create autoincrement table

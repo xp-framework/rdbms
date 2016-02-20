@@ -1,7 +1,8 @@
 <?php namespace rdbms\unittest\integration;
 
-use rdbms\ResultSet;
 use util\Date;
+use rdbms\ResultSet;
+use rdbms\DSN;
 use rdbms\DBEvent;
 use rdbms\SQLStateException;
 use rdbms\SQLConnectException;
@@ -9,56 +10,62 @@ use rdbms\SQLStatementFailedException;
 use rdbms\SQLException;
 use util\Observer;
 use unittest\TestCase;
+use unittest\PrerequisitesNotMetError;
 use rdbms\DriverManager;
 use util\Bytes;
+use util\Properties;
+use lang\Throwable;
+use lang\MethodNotImplementedException;
 
 /**
- * Base class for Rdbms tests
- *
+ * Base class for all RDBMS integration tests
  */
 abstract class RdbmsIntegrationTest extends TestCase {
-  protected $dsn= null;
-  protected $conn= null;
+  private $dsn, $conn;
 
-  /**
-   * Set up testcase
-   */
+  /** @return void */
   public function setUp() {
-    $this->dsn= \util\Properties::fromString($this->getClass()->getPackage()->getResource('database.ini'))->readString(
-      $this->_dsn(),
-      'dsn',
-      null
-    );
+    $driver= $this->driverName();
+    $this->dsn= getenv(strtoupper($driver).'_DSN') ?: Properties::fromString(typeof($this)
+      ->getPackage()
+      ->getResource('database.ini'))
+      ->readString($driver, 'dsn', null)
+    ;
 
     if (null === $this->dsn) {
-      throw new \unittest\PrerequisitesNotMetError('No credentials for '.nameof($this));
+      throw new PrerequisitesNotMetError('No credentials for '.nameof($this));
     }
 
     try {
       $this->conn= DriverManager::getConnection($this->dsn);
-    } catch (\lang\Throwable $t) {
-      throw new \unittest\PrerequisitesNotMetError($t->getMessage(), $t);
+    } catch (Throwable $t) {
+      throw new PrerequisitesNotMetError($t->getMessage(), $t);
     }
   }
 
-  /**
-   * Tear down test case, close connection.
-   */
+  /** @return void */
   public function tearDown() {
     $this->conn->close();
   }
 
   /**
-   * Retrieve dsn section
+   * Creates table name. Override in subclasses if necessary!
    *
    * @return  string
    */
-  abstract public function _dsn();
+  protected function tableName() { return 'unittest'; }
+
+  /**
+   * Retrieve driver name
+   *
+   * @return  string
+   */
+  abstract protected function driverName();
 
   /**
    * Retrieve database connection object
    *
-   * @param   bool connect default TRUE
+   * @param   bool $connect default TRUE
    * @return  rdbms.DBConnection
    */
   protected function db($connect= true) {
@@ -79,17 +86,9 @@ abstract class RdbmsIntegrationTest extends TestCase {
   }
 
   /**
-   * Creates table name
-   *
-   * @return  string
-   */
-  protected function tableName() {
-    return 'unittest';
-  }
-
-  /**
    * Create autoincrement table
    *
+   * @return void
    */
   protected function createTable() {
     $this->removeTable($this->tableName());
@@ -104,7 +103,7 @@ abstract class RdbmsIntegrationTest extends TestCase {
    * @param   string name
    */
   protected function createAutoIncrementTable($name) {
-    raise('lang.MethodNotImplementedException', __FUNCTION__);
+    throw new MethodNotImplementedException($name, __FUNCTION__);
   }
 
   /**
@@ -113,7 +112,7 @@ abstract class RdbmsIntegrationTest extends TestCase {
    * @param   string name
    */
   protected function createTransactionsTable($name) {
-    raise('lang.MethodNotImplementedException', __FUNCTION__);
+    throw new MethodNotImplementedException($name, __FUNCTION__);
   }
 
   /**
@@ -130,28 +129,19 @@ abstract class RdbmsIntegrationTest extends TestCase {
     return $this->db()->prepare('select cast(i as int) as i from %c', $this->tableName());
   }
 
-  /**
-   * Test query throws rdbms.SQLStateException when not connected
-   * to the database
-   *
-   */
   #[@test, @expect(SQLStateException::class)]
   public function noQueryWhenNotConnected() {
     $this->conn->flags ^= DB_AUTOCONNECT;
     $this->conn->query('select 1');
   }
   
-  /**
-   * Test failing to connect throws rdbms.SQLConnectException
-   *
-   */
   #[@test, @expect(SQLConnectException::class)]
   public function connectFailedThrowsException() {
-    DriverManager::getConnection(str_replace(
-      ':'.$this->db(false)->dsn->getPassword().'@', 
-      ':hopefully-wrong-password@', 
-      $this->dsn
-    ))->connect();
+    $dsn= new DSN($this->dsn);
+    $dsn->url->setUser('wrong-user');
+    $dsn->url->setPassword('wrong-password');
+
+    DriverManager::getConnection($dsn)->connect();
   }
   
   #[@test]
@@ -654,21 +644,18 @@ abstract class RdbmsIntegrationTest extends TestCase {
 
   #[@test]
   public function observe() {
-    $observer= newinstance(Observer::class, [], '{
-      protected $observations= array();
-      
-      public function numberOfObservations() {
+    $observer= newinstance(Observer::class, [], [
+      'observations' => [],
+      'numberOfObservations' => function() {
         return sizeof($this->observations);
+      },
+      'observationAt' => function($i) {
+        return $this->observations[$i]['arg'];
+      },
+      'update' => function($obs, $arg= null) {
+        $this->observations[]= ['observable' => $obs, 'arg' => $arg];
       }
-      
-      public function observationAt($i) {
-        return $this->observations[$i]["arg"];
-      }
-      
-      public function update($obs, $arg= NULL) {
-        $this->observations[]= array("observable" => $obs, "arg" => $arg);
-      }
-    }');
+    ]);
     
     $db= $this->db();
     $db->addObserver($observer);

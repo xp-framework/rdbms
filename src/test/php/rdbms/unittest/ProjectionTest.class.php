@@ -5,7 +5,7 @@ use util\Date;
 use rdbms\sybase\SybaseConnection;
 use rdbms\mysql\MySQLConnection;
 use rdbms\pgsql\PostgreSQLConnection;
-use rdbms\sqlite\SQLiteConnection;
+use rdbms\sqlite3\SQLite3Connection;
 use rdbms\criterion\Restrictions;
 use rdbms\criterion\Projections;
 use rdbms\Criteria;
@@ -32,7 +32,7 @@ class ProjectionTest extends TestCase {
     $this->syconn= new SybaseConnection(new \rdbms\DSN('sybase://localhost:1999/'));
     $this->myconn= new MySQLConnection(new \rdbms\DSN('mysql://localhost/'));
     $this->pgconn= new PostgreSQLConnection(new \rdbms\DSN('pgsql://localhost/'));
-    $this->sqconn= new SQLiteConnection(new \rdbms\DSN('sqlite://tmpdir/tmpdb'));
+    $this->sqconn= new SQLite3Connection(new \rdbms\DSN('sqlite://tmpdir/tmpdb'));
     $this->peer= Job::getPeer();
   }
   

@@ -130,12 +130,12 @@ class DriverManager extends \lang\Object {
   /**
    * Get a connection by a DSN string
    *
-   * @param   string str
+   * @param   string|rdbms.DSN $dsn
    * @return  rdbms.DBConnection
    * @throws  rdbms.DriverNotSupportedException
    */
-  public static function getConnection($str) {
-    $dsn= new DSN((string)$str);
+  public static function getConnection($dsn) {
+    $dsn= $dsn instanceof DSN ? $dsn : new DSN((string)$dsn);
     $driver= $dsn->getDriver();
 
     // Lookup driver by identifier, if no direct match is found, choose from 

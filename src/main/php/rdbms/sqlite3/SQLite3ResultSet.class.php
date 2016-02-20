@@ -1,13 +1,12 @@
 <?php namespace rdbms\sqlite3;
 
 use rdbms\ResultSet;
-
+use rdbms\SQLException;
 
 /**
  * Result set
  *
- * @ext      sqlite
- * @purpose  Resultset wrapper
+ * @ext   sqlite
  */
 class SQLite3ResultSet extends ResultSet {
 
@@ -35,7 +34,7 @@ class SQLite3ResultSet extends ResultSet {
    */
   public function seek($offset) {
     if (!sqlite_seek($this->handle, $offset)) {
-      throw new \rdbms\SQLException('Cannot seek to offset '.$offset);
+      throw new SQLException('Cannot seek to offset '.$offset);
     }
     return true;
   }
@@ -57,8 +56,7 @@ class SQLite3ResultSet extends ResultSet {
     }
 
     foreach ($row as $key => $value) {
-      if (null === $value || !isset($this->fields[$key])) continue;
-      
+      if (null === $value || '' === $value || !isset($this->fields[$key])) continue;
       switch ($value{0}) {
         case "\2":
           $row[$key]= new \util\Date(substr($value, 1));
@@ -74,7 +72,7 @@ class SQLite3ResultSet extends ResultSet {
       }
     }
     
-    if ($field) return $value; else return $row;
+    if ($field) return $row[$field]; else return $row;
   }
 
   /**
@@ -83,9 +81,15 @@ class SQLite3ResultSet extends ResultSet {
    * @return  bool success
    */
   public function close() { 
-    if ($this->handle instanceof \SQLite3Result) return;
-    $r= $this->handle->finalize();
-    $this->handle= null;
-    return $r;
+    if ($this->handle instanceof \SQLite3Result) {
+      $r= $this->handle->finalize();
+      $this->handle= null;
+      return $r;
+    }
+    return false;
+  }
+
+  public function __destruct() {
+    $this->close();
   }
 }
