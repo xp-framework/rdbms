@@ -129,9 +129,10 @@ class TdsV7Protocol extends TdsProtocol {
    *
    * @param   string user
    * @param   string password
+   * @param   string charset
    * @throws  io.IOException
    */
-  protected function login($user, $password) {
+  protected function login($user, $password, $charset= null) {
     $params= [
       'hostname'   => [true, 'localhost'],
       'username'   => [true, $user],

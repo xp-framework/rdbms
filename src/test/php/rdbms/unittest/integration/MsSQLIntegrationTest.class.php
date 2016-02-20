@@ -133,13 +133,29 @@ class MsSQLIntegrationTest extends RdbmsIntegrationTest {
   }
 
   #[@test, @ignore('MsSQL does not know unsigned ints')]
-  public function selectUnsignedInt() {
-    parent::selectUnsignedInt();
-  }
+  public function selectUnsignedInt() { }
 
   #[@test, @ignore('MsSQL does not know unsigned bigints')]
-  public function selectMaxUnsignedBigInt() {
-    parent::selectMaxUnsignedBigInt();
+  public function selectMaxUnsignedBigInt() { }
+
+  #[@test]
+  public function selectEmptyString() {
+    $this->assertNull($this->db()->query('select "" as value')->next('value'));
+  }
+
+  #[@test]
+  public function selectEmptyVarChar() {
+    $this->assertNull($this->db()->query('select cast("" as varchar(255)) as value')->next('value'));
+  }
+
+  #[@test]
+  public function selectEmptyImage() {
+    $this->assertNull($this->db()->query('select cast("" as image) as value')->next('value'));
+  }
+
+  #[@test]
+  public function selectEmptyVarBinary() {
+    $this->assertNull($this->db()->query('select cast("" as varbinary) as value')->next('value'));
   }
 
   #[@test, @expect(class = 'rdbms.SQLStatementFailedException', withMessage= '/More power/')]
