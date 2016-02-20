@@ -34,6 +34,8 @@ install:
       }
       $tcp.Alter();
       Start-Service -Name "MSSQL`$$instancename";
+  - sqlcmd -S SQL2014 -Q "create database test'
+  - set MSSQL_DSN=mssql://sa:Password12!@localhost:1433/test
 
 test_script:
   - php -d extension_dir=.\xp\ext -d extension=php_openssl.dll .\xp\composer.phar install --prefer-dist
