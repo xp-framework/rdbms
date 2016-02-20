@@ -141,7 +141,7 @@ abstract class RdbmsIntegrationTest extends TestCase {
     $dsn->url->setUser('wrong-user');
     $dsn->url->setPassword('wrong-password');
 
-    DriverManager::getConnection($this->dsn)->connect();
+    DriverManager::getConnection($dsn)->connect();
   }
   
   #[@test]
