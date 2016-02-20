@@ -88,4 +88,8 @@ class SQLite3ResultSet extends ResultSet {
     }
     return false;
   }
+
+  public function __destruct() {
+    $this->close();
+  }
 }
