@@ -16,9 +16,9 @@ install:
   - appveyor DownloadFile https://bintray.com/artifact/download/xp-runners/windows/xp-runners_7.3.3.zip -FileName xp.zip
   - 7z x php.zip -y
   - 7z x xp.zip -y
+  - cd ..
 
 test_script:
-  - dir /s
   - php .\xp\composer.phar install --prefer-dist
   - echo vendor/autoload.php > composer.pth
   - xp test src/test/php
