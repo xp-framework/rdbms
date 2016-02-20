@@ -5,6 +5,9 @@ RDBMS support for the XP Framework: MySQL, Sybase, MSSQL, PostgreSQL, SQLite3, I
 
 ## 6.6.0 / 2016-02-20
 
+* Merged PR #11: Add support for 0x79 tokens - stored procedure return 
+  status for Sybase and MSSQL userland drivers
+  (@kiesel, @thekid)
 * **Heads up: Bumped XP version requirement to XP 6.11.0** - @thekid
 * Added forward compatibility with XP 7.0 - @thekid
 * Replaced deprecated util.HashmapIterator with a local class.
