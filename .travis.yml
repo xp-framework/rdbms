@@ -26,4 +26,5 @@ before_script:
 
 script:
   - export MYSQL_DSN=mysql+x://root@127.0.0.1/test
+  - export SQLITE_DSN=SQLITE_DSN=sqlite://./test
   - ./unittest src/test/php
