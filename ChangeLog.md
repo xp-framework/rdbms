@@ -3,6 +3,8 @@ RDBMS support for the XP Framework: MySQL, Sybase, MSSQL, PostgreSQL, SQLite3, I
 
 ## ?.?.? / ????-??-??
 
+* Merged PR #14: Run MySQL, PostgreSQL and SQLite integration tests
+  (@thekid)
 * Fixed SQL cast expression being shadowed by cast function in SQLite3
   by renaming the latter to `marshal`.
   (@thekid)
