@@ -24,9 +24,11 @@ abstract class RdbmsIntegrationTest extends TestCase {
 
   /** @return void */
   public function setUp() {
-    $this->dsn= $this->dsn() ?: Properties::fromString($this->getClass()->getPackage()
+    $driver= $this->driverName();
+    $this->dsn= getenv(strtoupper($driver).'_DSN') ?: Properties::fromString(typeof($this)
+      ->getPackage()
       ->getResource('database.ini'))
-      ->readString($this->_dsn(), 'dsn', $this->dsn())
+      ->readString($driver, 'dsn', null)
     ;
 
     if (null === $this->dsn) {
@@ -46,23 +48,23 @@ abstract class RdbmsIntegrationTest extends TestCase {
   }
 
   /**
-   * Returns DSN string
-   *
-   * @return string
-   */
-  protected function dsn() { return null; }
-
-  /**
-   * Retrieve dsn section
+   * Creates table name. Override in subclasses if necessary!
    *
    * @return  string
    */
-  abstract public function _dsn();
+  protected function tableName() { return 'unittest'; }
+
+  /**
+   * Retrieve driver name
+   *
+   * @return  string
+   */
+  abstract protected function driverName();
 
   /**
    * Retrieve database connection object
    *
-   * @param   bool connect default TRUE
+   * @param   bool $connect default TRUE
    * @return  rdbms.DBConnection
    */
   protected function db($connect= true) {
@@ -83,17 +85,9 @@ abstract class RdbmsIntegrationTest extends TestCase {
   }
 
   /**
-   * Creates table name
-   *
-   * @return  string
-   */
-  protected function tableName() {
-    return 'unittest';
-  }
-
-  /**
    * Create autoincrement table
    *
+   * @return void
    */
   protected function createTable() {
     $this->removeTable($this->tableName());

@@ -7,21 +7,8 @@
  */
 class MySQLIntegrationTest extends RdbmsIntegrationTest {
 
-  /**
-   * Retrieve dsn
-   *
-   * @return  string
-   */
-  public function _dsn() {
-    return 'mysql';
-  }
-
-  /**
-   * Returns DSN string
-   *
-   * @return string
-   */
-  protected function dsn() { return getenv('TRAVIS') ? 'mysql+x://root@127.0.0.1/test' : null; }
+  /** @return string */
+  protected function driverName() { return 'mysql'; }
 
   /**
    * Create autoincrement table

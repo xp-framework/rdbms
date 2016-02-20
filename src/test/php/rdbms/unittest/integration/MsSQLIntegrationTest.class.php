@@ -13,31 +13,21 @@ class MsSQLIntegrationTest extends RdbmsIntegrationTest {
    * Before class method: set minimun server severity;
    * otherwise server messages end up on the error stack
    * and will let the test fail (no error policy).
+   *
+   * @return void
    */
   #[@beforeClass]
   public static function setMinimumServerSeverity() {
     if (function_exists('mssql_min_message_severity')) {
       mssql_min_message_severity(12);
     }
-  }    
-
-  /**
-   * Creates table name
-   *
-   * @return  string
-   */
-  protected function tableName() {
-    return '#unittest';
   }
 
-  /**
-   * Retrieve dsn
-   *
-   * @return  string
-   */
-  public function _dsn() {
-    return 'mssql';
-  }
+  /** @return  string */
+  protected function tableName() { return '#unittest'; }
+
+  /** @return string */
+  protected function driverName() { return 'mssql'; }
   
   /**
    * Create autoincrement table

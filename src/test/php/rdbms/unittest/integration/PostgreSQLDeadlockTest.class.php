@@ -6,12 +6,6 @@
  */
 class PostgreSQLDeadlockTest extends AbstractDeadlockTest {
 
-  /**
-   * Retrieve DSN
-   *
-   * @return  string
-   */
-  public function _dsn() {
-    return 'pgsql';
-  }
+  /** @return string */
+  protected function driverName() { return 'pgsql'; }
 }

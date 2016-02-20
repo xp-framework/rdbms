@@ -25,4 +25,5 @@ before_script:
   - echo "date.timezone=Europe/Berlin" >> xp.ini
 
 script:
+  - export MYSQL_DSN=mysql+x://root@127.0.0.1/test
   - ./unittest src/test/php

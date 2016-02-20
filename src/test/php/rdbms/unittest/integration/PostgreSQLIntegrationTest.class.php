@@ -7,14 +7,8 @@
  */
 class PostgreSQLIntegrationTest extends RdbmsIntegrationTest {
   
-  /**
-   * Retrieve dsn
-   *
-   * @return  string
-   */
-  public function _dsn() {
-    return 'pgsql';
-  }
+  /** @return string */
+  protected function driverName() { return 'pgsql'; }
   
   /**
    * Create autoincrement table

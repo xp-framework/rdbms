@@ -6,16 +6,10 @@
  * @ext       sqlite
  */
 class SQLiteIntegrationTest extends RdbmsIntegrationTest {
-  
-  /**
-   * Retrieve dsn
-   *
-   * @return  string
-   */
-  public function _dsn() {
-    return 'sqlite';
-  }
-  
+
+  /** @return string */
+  protected function driverName() { return 'sqlite'; }
+
   /**
    * Create autoincrement table
    *

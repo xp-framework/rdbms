@@ -6,12 +6,6 @@
  */
 class MySQLDeadlockTest extends AbstractDeadlockTest {
 
-  /**
-   * Retrieve DSN
-   *
-   * @return  string
-   */
-  public function _dsn() {
-    return 'mysql';
-  }
+  /** @return string */
+  protected function driverName() { return 'mysql'; }
 }
