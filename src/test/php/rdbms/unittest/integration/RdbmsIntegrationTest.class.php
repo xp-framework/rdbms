@@ -15,6 +15,7 @@ use rdbms\DriverManager;
 use util\Bytes;
 use util\Properties;
 use lang\Throwable;
+use lang\MethodNotImplementedException;
 
 /**
  * Base class for all RDBMS integration tests
@@ -102,7 +103,7 @@ abstract class RdbmsIntegrationTest extends TestCase {
    * @param   string name
    */
   protected function createAutoIncrementTable($name) {
-    raise('lang.MethodNotImplementedException', __FUNCTION__);
+    throw new MethodNotImplementedException($name, __FUNCTION__);
   }
 
   /**
@@ -111,7 +112,7 @@ abstract class RdbmsIntegrationTest extends TestCase {
    * @param   string name
    */
   protected function createTransactionsTable($name) {
-    raise('lang.MethodNotImplementedException', __FUNCTION__);
+    throw new MethodNotImplementedException($name, __FUNCTION__);
   }
 
   /**
@@ -140,7 +141,7 @@ abstract class RdbmsIntegrationTest extends TestCase {
     $dsn->url->setUser('wrong-user');
     $dsn->url->setPassword('wrong-password');
 
-    DriverManager::getConnection($dsn)->connect();
+    DriverManager::getConnection($this->dsn)->connect();
   }
   
   #[@test]

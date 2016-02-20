@@ -167,6 +167,6 @@ class ConnectionManager extends \lang\Object implements Configurable {
       return $this->pool[$name];
     }
     
-    raise('rdbms.DriverNotSupportedException', 'Neither a connection string nor a rdbms.DBConnection given.');
+    throw new DriverNotSupportedException('Neither a connection string nor a rdbms.DBConnection given.');
   }
 }
