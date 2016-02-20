@@ -15,7 +15,7 @@ php:
   - hhvm
 
 before_install:
-  - mysql -e 'create database IF NOT EXISTS test;'' -uroot
+  - mysql -e 'create database IF NOT EXISTS test;' -uroot
   - psql -c 'create database travis_ci_test;' -U postgres
 
 before_script:

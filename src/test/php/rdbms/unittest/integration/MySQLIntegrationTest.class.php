@@ -31,254 +31,154 @@ class MySQLIntegrationTest extends RdbmsIntegrationTest {
   }
 
   #[@test, @ignore('Numeric not supported by MySQL')]
-  public function selectNumericNull() {
-    parent::selectNumericNull();
-  }
+  public function selectNumericNull() { }
 
   #[@test, @ignore('Numeric not supported by MySQL')]
-  public function selectNumeric() {
-    parent::selectNumeric();
-  }
+  public function selectNumeric() { }
 
   #[@test, @ignore('Numeric not supported by MySQL')]
-  public function selectNumericZero() {
-    parent::selectNumericZero();
-  }
+  public function selectNumericZero() { }
 
   #[@test, @ignore('Numeric not supported by MySQL')]
-  public function selectNegativeNumeric() {
-    parent::selectNegativeNumeric();
-  }
+  public function selectNegativeNumeric() { }
 
   #[@test, @ignore('NumericWithScale not supported by MySQL')]
-  public function selectNumericWithScaleNull() {
-    parent::selectNumericWithScaleNull();
-  }
+  public function selectNumericWithScaleNull() { }
 
   #[@test, @ignore('NumericWithScale not supported by MySQL')]
-  public function selectNumericWithScale() {
-    parent::selectNumericWithScale();
-  }
+  public function selectNumericWithScale() { }
 
   #[@test, @ignore('NumericWithScale not supported by MySQL')]
-  public function selectNumericWithScaleZero() {
-    parent::selectNumericWithScaleZero();
-  }
+  public function selectNumericWithScaleZero() { }
 
   #[@test, @ignore('NumericWithScale not supported by MySQL')]
-  public function selectNegativeNumericWithScale() {
-    parent::selectNegativeNumericWithScale();
-  }
+  public function selectNegativeNumericWithScale() { }
 
   #[@test, @ignore('Numeric not supported by MySQL')]
-  public function select64BitLongMaxPlus1Numeric() {
-    parent::select64BitLongMaxPlus1Numeric();
-  }
+  public function select64BitLongMaxPlus1Numeric() { }
 
   #[@test, @ignore('Numeric not supported by MySQL')]
-  public function select64BitLongMinMinus1Numeric() {
-    parent::select64BitLongMinMinus1Numeric();
-  }
+  public function select64BitLongMinMinus1Numeric() { }
 
   #[@test, @ignore('Decimal not supported by MySQL')]
-  public function selectDecimalNull() {
-    parent::selectDecimalNull();
-  }
+  public function selectDecimalNull() { }
 
   #[@test, @ignore('Decimal not supported by MySQL')]
-  public function selectDecimal() {
-    parent::selectDecimal();
-  }
+  public function selectDecimal() { }
 
   #[@test, @ignore('Decimal not supported by MySQL')]
-  public function selectDecimalZero() {
-    parent::selectDecimalZero();
-  }
+  public function selectDecimalZero() { }
 
   #[@test, @ignore('Decimal not supported by MySQL')]
-  public function selectNegativeDecimal() {
-    parent::selectNegativeDecimal();
-  }
+  public function selectNegativeDecimal() { }
 
   #[@test, @ignore('DecimalWithScale not supported by MySQL')]
-  public function selectDecimalWithScaleNull() {
-    parent::selectDecimalWithScaleNull();
-  }
+  public function selectDecimalWithScaleNull() { }
 
   #[@test, @ignore('DecimalWithScale not supported by MySQL')]
-  public function selectDecimalWithScale() {
-    parent::selectDecimalWithScale();
-  }
+  public function selectDecimalWithScale() { }
 
   #[@test, @ignore('DecimalWithScale not supported by MySQL')]
-  public function selectDecimalWithScaleZero() {
-    parent::selectDecimalWithScaleZero();
-  }
+  public function selectDecimalWithScaleZero() { }
 
   #[@test, @ignore('DecimalWithScale not supported by MySQL')]
-  public function selectNegativeDecimalWithScale() {
-    parent::selectNegativeDecimalWithScale();
-  }
+  public function selectNegativeDecimalWithScale() { }
 
   #[@test, @ignore('Cast to float not supported by MySQL')]
-  public function selectFloat() {
-    parent::selectFloat();
-  }
+  public function selectFloat() { }
 
   #[@test, @ignore('Cast to float not supported by MySQL')]
-  public function selectFloatOne() {
-    parent::selectFloatOne();
-  }
+  public function selectFloatOne() { }
 
   #[@test, @ignore('Cast to float not supported by MySQL')]
-  public function selectFloatZero() {
-    parent::selectFloatZero();
-  }
+  public function selectFloatZero() { }
 
   #[@test, @ignore('Cast to float not supported by MySQL')]
-  public function selectNegativeFloat() {
-    parent::selectNegativeFloat();
-  }
+  public function selectNegativeFloat() { }
 
   #[@test, @ignore('Cast to real not supported by MySQL')]
-  public function selectReal() {
-    parent::selectReal();
-  }
+  public function selectReal() { }
 
   #[@test, @ignore('Cast to real not supported by MySQL')]
-  public function selectRealOne() {
-    parent::selectRealOne();
-  }
+  public function selectRealOne() { }
 
   #[@test, @ignore('Cast to real not supported by MySQL')]
-  public function selectRealZero() {
-    parent::selectRealZero();
-  }
+  public function selectRealZero() { }
 
   #[@test, @ignore('Cast to real not supported by MySQL')]
-  public function selectNegativeReal() {
-    parent::selectNegativeReal();
-  }
+  public function selectNegativeReal() { }
 
   #[@test, @ignore('Cast to varchar not supported by MySQL')]
-  public function selectEmptyVarChar() {
-    parent::selectEmptyVarChar();
-  }
+  public function selectEmptyVarChar() { }
 
   #[@test, @ignore('Cast to varchar not supported by MySQL')]
-  public function selectVarChar() {
-    parent::selectVarChar();
-  }
+  public function selectVarChar() { }
 
   #[@test, @ignore('Cast to varchar not supported by MySQL')]
-  public function selectNullVarChar() {
-    parent::selectNullVarChar();
-  }
+  public function selectNullVarChar() { }
 
   #[@test, @ignore('Money not supported by MySQL')]
-  public function selectMoney() {
-    parent::selectMoney();
-  }
+  public function selectMoney() { }
 
   #[@test, @ignore('Money not supported by MySQL')]
-  public function selectHugeMoney() {
-    parent::selectHugeMoney();
-  }
+  public function selectHugeMoney() { }
 
   #[@test, @ignore('Money not supported by MySQL')]
-  public function selectMoneyOne() {
-    parent::selectMoneyOne();
-  }
+  public function selectMoneyOne() { }
 
   #[@test, @ignore('Money not supported by MySQL')]
-  public function selectMoneyZero() {
-    parent::selectMoneyZero();
-  }
+  public function selectMoneyZero() { }
 
   #[@test, @ignore('Money not supported by MySQL')]
-  public function selectNegativeMoney() {
-    parent::selectNegativeMoney();
-  }
+  public function selectNegativeMoney() { }
 
   #[@test, @ignore('Cast to text not supported by MySQL')]
-  public function selectEmptyText() {
-    parent::selectEmptyText();
-  }
+  public function selectEmptyText() { }
 
   #[@test, @ignore('Cast to text not supported by MySQL')]
-  public function selectText() {
-    parent::selectText();
-  }
+  public function selectText() { }
 
   #[@test, @ignore('Cast to text not supported by MySQL')]
-  public function selectUmlautText() {
-    parent::selectUmlautText();
-  }
+  public function selectUmlautText() { }
 
   #[@test, @ignore('Cast to text not supported by MySQL')]
-  public function selectNulltext() {
-    parent::selectNulltext();
-  }
+  public function selectNulltext() { }
 
   #[@test, @ignore('Cast to Image not supported by MySQL')]
-  public function selectEmptyImage() {
-    parent::selectEmptyImage();
-  }
+  public function selectEmptyImage() { }
 
   #[@test, @ignore('Cast to Image not supported by MySQL')]
-  public function selectImage() {
-    parent::selectImage();
-  }
+  public function selectImage() { }
 
   #[@test, @ignore('Cast to Image not supported by MySQL')]
-  public function selectUmlautImage() {
-    parent::selectUmlautImage();
-  }
+  public function selectUmlautImage() { }
 
   #[@test, @ignore('Cast to Image not supported by MySQL')]
-  public function selectNullImage() {
-    parent::selectNullImage();
-  }
+  public function selectNullImage() { }
 
   #[@test, @ignore('Cast to binary not supported by MySQL')]
-  public function selectEmptyBinary() {
-    parent::selectEmptyBinary();
-  }
+  public function selectEmptyBinary() { }
 
   #[@test, @ignore('Cast to binary not supported by MySQL')]
-  public function selectBinary() {
-    parent::selectBinary();
-  }
+  public function selectBinary() { }
 
   #[@test, @ignore('Cast to binary not supported by MySQL')]
-  public function selectUmlautBinary() {
-    parent::selectUmlautBinary();
-  }
+  public function selectUmlautBinary() { }
 
   #[@test, @ignore('Cast to binary not supported by MySQL')]
-  public function selectNullBinary() {
-    parent::selectNullBinary();
-  }
+  public function selectNullBinary() { }
 
   #[@test, @ignore('Cast to varbinary not supported by MySQL')]
-  public function selectEmptyVarBinary() {
-    parent::selectEmptyVarBinary();
-  }
+  public function selectEmptyVarBinary() { }
 
   #[@test, @ignore('Cast to varbinary not supported by MySQL')]
-  public function selectVarBinary() {
-    parent::selectVarBinary();
-  }
+  public function selectVarBinary() { }
 
   #[@test, @ignore('Cast to varbinary not supported by MySQL')]
-  public function selectUmlautVarBinary() {
-    parent::selectUmlautVarBinary();
-  }
+  public function selectUmlautVarBinary() { }
 
   #[@test, @ignore('Cast to varbinary not supported by MySQL')]
-  public function selectNullVarBinary() {
-    parent::selectNullVarBinary();
-  }
+  public function selectNullVarBinary() { }
 
   #[@test]
   public function selectEmptyChar() {
@@ -291,14 +191,10 @@ class MySQLIntegrationTest extends RdbmsIntegrationTest {
   }
 
   #[@test, @ignore('No known way to test this in MySQL')]
-  public function readingRowFailsWithQuery() {
-    parent::readingRowFailsWithQuery();
-  }
+  public function readingRowFailsWithQuery() { }
 
   #[@test, @ignore('No known way to test this in MySQL')]
-  public function readingRowFailsWithOpen() {
-    parent::readingRowFailsWithOpen();
-  }
+  public function readingRowFailsWithOpen() { }
 
   #[@test]
   public function selectSignedInt() {
@@ -306,37 +202,23 @@ class MySQLIntegrationTest extends RdbmsIntegrationTest {
   }
 
   #[@test, @ignore('MySQL does not know unsigned bigints')]
-  public function selectMaxUnsignedBigInt() {
-    parent::selectMaxUnsignedBigInt();
-  }
+  public function selectMaxUnsignedBigInt() { }
 
   #[@test, @ignore('Cast to tinyint not supported by MySQL')]
-  public function selectTinyint() {
-    parent::selectTinyint();
-  }
+  public function selectTinyint() { }
 
   #[@test, @ignore('Cast to tinyint not supported by MySQL')]
-  public function selectTinyintOne() {
-    parent::selectTinyintOne();
-  }
+  public function selectTinyintOne() { }
 
   #[@test, @ignore('Cast to tinyint not supported by MySQL')]
-  public function selectTinyintZero() {
-    parent::selectTinyintZero();
-  }
+  public function selectTinyintZero() { }
 
   #[@test, @ignore('Cast to smallint not supported by MySQL')]
-  public function selectSmallint() {
-    parent::selectSmallint();
-  }
+  public function selectSmallint() { }
 
   #[@test, @ignore('Cast to smallint not supported by MySQL')]
-  public function selectSmallintOne() {
-    parent::selectSmallintOne();
-  }
+  public function selectSmallintOne() { }
 
   #[@test, @ignore('Cast to smallint not supported by MySQL')]
-  public function selectSmallintZero() {
-    parent::selectSmallintZero();
-  }
+  public function selectSmallintZero() { }
 }
