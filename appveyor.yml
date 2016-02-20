@@ -34,7 +34,7 @@ install:
       }
       $tcp.Alter();
       Start-Service -Name "MSSQL`$$instancename";
-  - sqlcmd -S SQL2014 -Q "create database test"
+  - sqlcmd -S tcp:localhost,1433 -U sa -P Password12! -Q "create database test"
   - set MSSQL_DSN=mssql://sa:Password12!@localhost:1433/test
 
 test_script:
