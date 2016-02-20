@@ -6,6 +6,7 @@ sudo: false
 
 services:
   - mysql
+  - postgresql
 
 php:
   - 5.5
@@ -14,7 +15,8 @@ php:
   - hhvm
 
 before_install:
-  - mysql -e "create database IF NOT EXISTS test;" -uroot
+  - mysql -e 'create database IF NOT EXISTS test;'' -uroot
+  - psql -c 'create database travis_ci_test;' -U postgres
 
 before_script:
   - wget 'https://github.com/xp-framework/xp-runners/releases/download/v6.3.0/setup' -O - | php
@@ -26,5 +28,6 @@ before_script:
 
 script:
   - export MYSQL_DSN=mysql+x://root@127.0.0.1/test
-  - export SQLITE_DSN=SQLITE_DSN=sqlite://./test
+  - export SQLITE_DSN=sqlite://./test
+  - export PGSQL_DSN=pgsql://127.0.0.1/travis_ci_test
   - ./unittest src/test/php
