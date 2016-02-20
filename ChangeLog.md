@@ -3,6 +3,10 @@ RDBMS support for the XP Framework: MySQL, Sybase, MSSQL, PostgreSQL, SQLite3, I
 
 ## ?.?.? / ????-??-??
 
+* Changed rdbms.DriverManager::getConnection() to accept DSN instances
+  as well as strings
+  (@thekid)
+
 ## 6.6.0 / 2016-02-20
 
 * Merged PR #11: Add support for 0x79 tokens - stored procedure return 
