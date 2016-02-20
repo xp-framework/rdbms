@@ -1,0 +1,25 @@
+build: false  
+shallow_clone: true  
+platform: x86  
+
+cache:
+  - .\xp -> appveyor.yml 
+
+init:
+  - set PATH=.\xp
+  - set COMPOSER_NO_INTERACTION=1
+
+install:
+  - mkdir .\xp
+  - cd .\xp
+  - appveyor DownloadFile http://windows.php.net/downloads/releases/archives/php-7.0.2-nts-Win32-VC14-x86.zip
+  - appveyor DownloadFile https://getcomposer.org/composer.phar
+  - appveyor DownloadFile https://bintray.com/artifact/download/xp-runners/windows/xp-runners_7.3.3.zip
+  - 7z x php-5.4.43-nts-Win32-VC9-x86.zip -y
+  - 7x x xp-runners_7.3.3.zip -y
+  - dir /s
+
+test_script:
+  - php composer.phar install --prefer-dist
+  - echo vendor/autoload.php > composer.pth
+  - xp test src/test/php
