@@ -19,6 +19,21 @@ install:
   - if %CACHED%==0 7z x php.zip -y
   - if %CACHED%==0 7z x xp.zip -y
   - if %CACHED%==0 cd ..
+  - ps: |
+      [reflection.assembly]::LoadWithPartialName("Microsoft.SqlServer.Smo") | Out-Null;
+      [reflection.assembly]::LoadWithPartialName("Microsoft.SqlServer.SqlWmiManagement") | Out-Null;
+      $port = 1433
+      $instancename = 'SQL2014';
+      $wmi = New-Object('Microsoft.SqlServer.Management.Smo.Wmi.ManagedComputer');
+      $tcp = $wmi.GetSmoObject("ManagedComputer[@Name='${env:computername}']/ServerInstance[@Name='${instancename}']/ServerProtocol[@Name='Tcp']");
+      $tcp.IsEnabled = $true;
+      foreach ($ipAddress in $tcp.IPAddresses)
+      {
+        $ipAddress.IPAddressProperties["TcpDynamicPorts"].Value = ""
+        $ipAddress.IPAddressProperties["TcpPort"].Value = "${port}"
+      }
+      $tcp.Alter();
+      Start-Service -Name "MSSQL`$$instancename";
 
 test_script:
   - php -d extension_dir=.\xp\ext -d extension=php_openssl.dll .\xp\composer.phar install --prefer-dist
