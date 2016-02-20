@@ -4,6 +4,9 @@ language: php
 
 sudo: false
 
+services:
+  - mysql
+
 php:
   - 5.5
   - 5.6
