@@ -95,7 +95,7 @@ class SQLiteDialect extends SQLDialect {
    * @param   db handel conn
    */
   public function registerCallbackFunctions($conn) {
-    sqlite_create_function($conn, 'cast', [$this, '_cast'], 2);
+    sqlite_create_function($conn, 'marshal', [$this, '_marshal'], 2);
     sqlite_create_function($conn, 'sign', [$this, '_sign'], 1);
     sqlite_create_function($conn, 'dateadd', [$this, '_dateadd'], 3);
     sqlite_create_function($conn, 'locate',  [$this, '_locate'], 3);
@@ -109,7 +109,7 @@ class SQLiteDialect extends SQLDialect {
    * @param   var type
    * @return  var
    */
-  public function _cast($s, $type) {
+  public function _marshal($s, $type) {
     static $identifiers= [
       'bigint'     => "\3",
       'date'       => "\2",

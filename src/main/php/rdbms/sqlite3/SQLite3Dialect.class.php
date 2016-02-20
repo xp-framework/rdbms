@@ -14,7 +14,7 @@ class SQLite3Dialect extends SQLiteDialect {
    * @param   db handel conn
    */
   public function registerCallbackFunctions($conn) {
-    $conn->createFunction('cast', [$this, '_cast'], 2);
+    $conn->createFunction('marshal', [$this, '_marshal'], 2);
     $conn->createFunction('sign', [$this, '_sign'], 1);
     $conn->createFunction('dateadd', [$this, '_dateadd'], 3);
     $conn->createFunction('locate',  [$this, '_locate'], 3);
