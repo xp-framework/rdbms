@@ -144,7 +144,7 @@ class MsSQLIntegrationTest extends RdbmsIntegrationTest {
 
   #[@test, @expect(class = 'rdbms.SQLStatementFailedException', withMessage= '/More power/')]
   public function raiseError() {
-    $this->db()->query('raiserror 61000 "More power"');
+    $this->db()->query('raiserror ("More power", 16, 1)');
   }
 
   #[@test]
