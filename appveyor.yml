@@ -6,7 +6,7 @@ cache:
   - .\xp -> appveyor.yml 
 
 init:
-  - set PATH=.\xp
+  - set PATH=%PATH%;.\xp
   - set COMPOSER_NO_INTERACTION=1
 
 install:
