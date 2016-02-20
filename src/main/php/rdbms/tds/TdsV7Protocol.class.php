@@ -133,7 +133,7 @@ class TdsV7Protocol extends TdsProtocol {
    * @param  bool initial if this ENVCHANGE was part of the login response
    */
   protected function handleEnvChange($type, $old, $new, $initial= false) {
-    Console::writeLine($initial ? 'I' : 'E', $type, ' ', $old, ' -> ', $new);
+    \util\cmd\Console::writeLine($initial ? 'I' : 'E', $type, ' ', $old, ' -> ', $new);
   }
 
   /**
