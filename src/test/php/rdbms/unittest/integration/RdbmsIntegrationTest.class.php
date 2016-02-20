@@ -1,7 +1,8 @@
 <?php namespace rdbms\unittest\integration;
 
-use rdbms\ResultSet;
 use util\Date;
+use rdbms\ResultSet;
+use rdbms\DSN;
 use rdbms\DBEvent;
 use rdbms\SQLStateException;
 use rdbms\SQLConnectException;
@@ -141,10 +142,11 @@ abstract class RdbmsIntegrationTest extends TestCase {
   
   #[@test, @expect(SQLConnectException::class)]
   public function connectFailedThrowsException() {
-    $dsn= clone $this->dsn;
+    $dsn= new DSN($this->dsn);
+    $dsn->url->setUser('wrong-user');
     $dsn->url->setPassword('wrong-password');
 
-    DriverManager::getConnection($this->dsn)->connect();
+    DriverManager::getConnection($dsn)->connect();
   }
   
   #[@test]
