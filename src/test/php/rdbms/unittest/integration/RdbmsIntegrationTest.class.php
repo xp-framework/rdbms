@@ -9,44 +9,47 @@ use rdbms\SQLStatementFailedException;
 use rdbms\SQLException;
 use util\Observer;
 use unittest\TestCase;
+use unittest\PrerequisitesNotMetError;
 use rdbms\DriverManager;
 use util\Bytes;
+use util\Properties;
+use lang\Throwable;
 
 /**
- * Base class for Rdbms tests
- *
+ * Base class for all RDBMS integration tests
  */
 abstract class RdbmsIntegrationTest extends TestCase {
-  protected $dsn= null;
-  protected $conn= null;
+  private $dsn, $conn;
 
-  /**
-   * Set up testcase
-   */
+  /** @return void */
   public function setUp() {
-    $this->dsn= \util\Properties::fromString($this->getClass()->getPackage()->getResource('database.ini'))->readString(
-      $this->_dsn(),
-      'dsn',
-      null
-    );
+    $this->dsn= $this->dsn() ?: Properties::fromString($this->getClass()->getPackage()
+      ->getResource('database.ini'))
+      ->readString($this->_dsn(), 'dsn', $this->dsn())
+    ;
 
     if (null === $this->dsn) {
-      throw new \unittest\PrerequisitesNotMetError('No credentials for '.nameof($this));
+      throw new PrerequisitesNotMetError('No credentials for '.nameof($this));
     }
 
     try {
       $this->conn= DriverManager::getConnection($this->dsn);
-    } catch (\lang\Throwable $t) {
-      throw new \unittest\PrerequisitesNotMetError($t->getMessage(), $t);
+    } catch (Throwable $t) {
+      throw new PrerequisitesNotMetError($t->getMessage(), $t);
     }
   }
 
-  /**
-   * Tear down test case, close connection.
-   */
+  /** @return void */
   public function tearDown() {
     $this->conn->close();
   }
+
+  /**
+   * Returns DSN string
+   *
+   * @return string
+   */
+  protected function dsn() { return null; }
 
   /**
    * Retrieve dsn section

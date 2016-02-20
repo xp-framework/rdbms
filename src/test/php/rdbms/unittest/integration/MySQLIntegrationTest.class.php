@@ -17,6 +17,13 @@ class MySQLIntegrationTest extends RdbmsIntegrationTest {
   }
 
   /**
+   * Returns DSN string
+   *
+   * @return string
+   */
+  protected function dsn() { return getenv('TRAVIS') ? 'mysql://root@127.0.0.1/test' : null; }
+
+  /**
    * Create autoincrement table
    *
    * @param   string name
