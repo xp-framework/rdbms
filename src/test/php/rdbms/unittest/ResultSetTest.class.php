@@ -53,6 +53,11 @@ class ResultSetTest extends \unittest\TestCase {
   }
 
   #[@test]
+  public function isSuccess_always_returns_false() {
+    $this->assertFalse(self::$resultSet->newInstance([])->isSuccess());
+  }
+
+  #[@test]
   public function next_on_empty_results() {
     $q= self::$resultSet->newInstance([]);
     $this->assertEquals(false, $q->next());
