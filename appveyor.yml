@@ -1,0 +1,43 @@
+build: false  
+shallow_clone: true  
+
+cache:
+  - .\xp -> appveyor.yml 
+  - vendor -> composer.json
+
+init:
+  - set PATH=%PATH%;.\xp
+  - set COMPOSER_NO_INTERACTION=1
+  - set CACHED=0
+
+install:
+  - if exist .\xp (set CACHED=1) else (mkdir .\xp)
+  - if %CACHED%==0 cd .\xp
+  - if %CACHED%==0 appveyor DownloadFile http://windows.php.net/downloads/releases/archives/php-7.0.2-nts-Win32-VC14-x86.zip -FileName php.zip
+  - if %CACHED%==0 appveyor DownloadFile https://getcomposer.org/composer.phar
+  - if %CACHED%==0 appveyor DownloadFile https://bintray.com/artifact/download/xp-runners/windows/xp-runners_7.3.3.zip -FileName xp.zip
+  - if %CACHED%==0 7z x php.zip -y
+  - if %CACHED%==0 7z x xp.zip -y
+  - if %CACHED%==0 cd ..
+  - ps: |
+      [reflection.assembly]::LoadWithPartialName("Microsoft.SqlServer.Smo") | Out-Null;
+      [reflection.assembly]::LoadWithPartialName("Microsoft.SqlServer.SqlWmiManagement") | Out-Null;
+      $port = 1433
+      $instancename = 'SQL2014';
+      $wmi = New-Object('Microsoft.SqlServer.Management.Smo.Wmi.ManagedComputer');
+      $tcp = $wmi.GetSmoObject("ManagedComputer[@Name='${env:computername}']/ServerInstance[@Name='${instancename}']/ServerProtocol[@Name='Tcp']");
+      $tcp.IsEnabled = $true;
+      foreach ($ipAddress in $tcp.IPAddresses)
+      {
+        $ipAddress.IPAddressProperties["TcpDynamicPorts"].Value = ""
+        $ipAddress.IPAddressProperties["TcpPort"].Value = "${port}"
+      }
+      $tcp.Alter();
+      Start-Service -Name "MSSQL`$$instancename";
+  - sqlcmd -S tcp:localhost,1433 -U sa -P Password12! -Q "create database test"
+  - set MSSQL_DSN=mssql://sa:Password12!@localhost:1433/test
+
+test_script:
+  - php -d extension_dir=.\xp\ext -d extension=php_openssl.dll .\xp\composer.phar install --prefer-dist
+  - echo vendor/autoload.php > composer.pth
+  - xp test src/test/php

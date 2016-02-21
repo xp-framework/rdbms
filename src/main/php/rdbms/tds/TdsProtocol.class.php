@@ -12,6 +12,7 @@ use peer\ProtocolException;
  * @see   https://github.com/mono/mono/tree/master/mcs/class/Mono.Data.Tds/Mono.Data.Tds.Protocol
  */
 abstract class TdsProtocol extends \lang\Object {
+  protected $servercs= 'cp850';
   protected $stream= null;
   protected $done= false;
   protected $records= [];
@@ -115,7 +116,13 @@ abstract class TdsProtocol extends \lang\Object {
     self::$recordsFor[0][self::XT_VARCHAR]= newinstance('rdbms.tds.TdsRecord', [], '{
       public function unmarshal($stream, $field, $records) {
         $len= $stream->getShort();
-        return 0xFFFF === $len ? null : $stream->read($len);
+        if (0xFFFF === $len) {
+          return null;
+        } else if (\xp::ENCODING === $field["conv"]) {
+          return $stream->read($len);
+        } else {
+          return iconv($field["conv"], \xp::ENCODING, $stream->read($len));
+        }
       }
     }');
     self::$recordsFor[0][self::XT_NVARCHAR]= self::$recordsFor[0][self::XT_VARCHAR];
@@ -461,7 +468,10 @@ abstract class TdsProtocol extends \lang\Object {
    * @param  bool initial if this ENVCHANGE was part of the login response
    */
   protected function handleEnvChange($type, $old, $new, $initial= false) {
-    // Intentionally empty
+    if ($initial && 3 === $type) {
+      $this->servercs= strtr($new, ['iso_' => 'iso-8859-', 'utf8' => 'utf-8']);
+    }
+    // DEBUG Console::writeLine($initial ? 'I' : 'E', $type, ' ', $old, ' -> ', $new);
   }
 
   /**
@@ -512,6 +522,7 @@ abstract class TdsProtocol extends \lang\Object {
   /**
    * Process an ENVCHANGE token, e.g. "\015\003\005iso_1\005cp850"
    *
+   * @return void
    */
   protected function envchange() {
     $len= $this->stream->getShort();
@@ -644,7 +655,6 @@ abstract class TdsProtocol extends \lang\Object {
         \util\cmd\Console::$err->writeLinef('Unknown field type 0x%02x', $type);
         continue;
       }
-
       $record[$i]= $this->records[$type]->unmarshal($this->stream, $field, $this->records);
     }
     return $record;

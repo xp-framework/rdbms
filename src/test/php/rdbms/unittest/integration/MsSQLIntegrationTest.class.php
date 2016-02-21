@@ -1,5 +1,7 @@
 <?php namespace rdbms\unittest\integration;
 
+use util\Date;
+
 /**
  * MSSQL integration test
  *
@@ -51,7 +53,7 @@ class MsSQLIntegrationTest extends RdbmsIntegrationTest {
 
   #[@test]
   public function selectDate() {
-    $cmp= new \util\Date('2009-08-14 12:45:00');
+    $cmp= new Date('2009-08-14 12:45:00');
     $result= $this->db()->query('select convert(datetime, %s, 120) as value', $cmp)->next('value');
 
     $this->assertInstanceOf(Date::class, $result);
@@ -109,7 +111,7 @@ class MsSQLIntegrationTest extends RdbmsIntegrationTest {
 
   #[@test]
   public function selectDateVariant() {
-    $cmp= new \util\Date('2009-08-14 12:45:00');
+    $cmp= new Date('2009-08-14 12:45:00');
     $this->assertEquals($cmp, $this->db()->query('select cast(convert(datetime, %s, 102) as sql_variant) as value', $cmp)->next('value'));
   }
 
@@ -131,18 +133,34 @@ class MsSQLIntegrationTest extends RdbmsIntegrationTest {
   }
 
   #[@test, @ignore('MsSQL does not know unsigned ints')]
-  public function selectUnsignedInt() {
-    parent::selectUnsignedInt();
-  }
+  public function selectUnsignedInt() { }
 
   #[@test, @ignore('MsSQL does not know unsigned bigints')]
-  public function selectMaxUnsignedBigInt() {
-    parent::selectMaxUnsignedBigInt();
+  public function selectMaxUnsignedBigInt() { }
+
+  #[@test]
+  public function selectEmptyString() {
+    $this->assertEquals('', $this->db()->query('select "" as value')->next('value'));
+  }
+
+  #[@test]
+  public function selectEmptyVarChar() {
+    $this->assertEquals('', $this->db()->query('select cast("" as varchar(255)) as value')->next('value'));
+  }
+
+  #[@test]
+  public function selectEmptyImage() {
+    $this->assertNull($this->db()->query('select cast("" as image) as value')->next('value'));
+  }
+
+  #[@test]
+  public function selectEmptyVarBinary() {
+    $this->assertNull($this->db()->query('select cast("" as varbinary) as value')->next('value'));
   }
 
   #[@test, @expect(class = 'rdbms.SQLStatementFailedException', withMessage= '/More power/')]
   public function raiseError() {
-    $this->db()->query('raiserror 61000 "More power"');
+    $this->db()->query('raiserror ("More power", 16, 1)');
   }
 
   #[@test]
