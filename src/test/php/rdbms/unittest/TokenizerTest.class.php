@@ -148,14 +148,6 @@ abstract class TokenizerTest extends \unittest\TestCase {
     );
   }
 
-  #[@test, @action(new RuntimeVersion('<7.0.0-dev'))]]
-  public function stringTypeToken() {
-    $this->assertEquals(
-      'select \'"Hello", Tom\'\'s friend said\' as strval',
-      $this->fixture->prepare('select %s as strval', new \lang\types\String('"Hello", Tom\'s friend said'))
-    );
-  }
-
   #[@test]
   public function labelToken() {
     $this->assertEquals(
