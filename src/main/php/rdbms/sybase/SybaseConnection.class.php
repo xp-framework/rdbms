@@ -3,6 +3,7 @@
 use rdbms\DBConnection;
 use rdbms\Transaction;
 use rdbms\StatementFormatter;
+use rdbms\QuerySucceeded;
 
 /**
  * Connection to Sybase databases using client libraries
@@ -136,7 +137,7 @@ class SybaseConnection extends DBConnection {
    *
    * @param   string sql
    * @param   bool buffered default TRUE
-   * @return  rdbms.sybase.SybaseResultSet or TRUE if no resultset was created
+   * @return  rdbms.ResultSet
    * @throws  rdbms.SQLException
    */
   protected function query0($sql, $buffered= true) {
@@ -178,12 +179,11 @@ class SybaseConnection extends DBConnection {
         default:      // Other error
           throw new \rdbms\SQLStatementFailedException($message, $sql, $code);
       }
+    } else if (true === $result) {
+      return new QuerySucceeded(sybase_affected_rows($this->handle));
+    } else {
+      return new SybaseResultSet($result, $this->tz);
     }
-    
-    return (true === $result
-      ? $result
-      : new SybaseResultSet($result, $this->tz)
-    );
   }
   
   /**

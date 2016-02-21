@@ -55,9 +55,9 @@ class SQLite3ConnectionTest extends \unittest\TestCase {
   }
 
   #[@test]
-  public function query_returns_true_on_empty_resultset() {
+  public function query_returns_success_on_empty_resultset() {
     $this->conn->connect();
-    $this->assertTrue($this->conn->query('pragma user_version = 1'));
+    $this->assertTrue($this->conn->query('pragma user_version = 1')->isSuccess());
   }
 
   #[@test, @expect(SQLStatementFailedException::class)]

@@ -34,6 +34,12 @@ abstract class ResultSet extends \lang\Object implements Closeable, \IteratorAgg
     $this->tz= $tz;
   }
 
+  /** @return bool */
+  public function isSuccess() { return false; }
+
+  /** @return int */
+  public function affected() { return -1; }
+
   /**
    * Seek to a specified position within the resultset
    *

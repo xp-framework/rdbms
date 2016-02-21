@@ -3,6 +3,7 @@
 use peer\Socket;
 use io\IOException;
 use rdbms\DBConnection;
+use rdbms\QuerySucceeded;
 use rdbms\Transaction;
 use rdbms\DBEvent;
 use rdbms\SQLConnectException;
@@ -129,7 +130,7 @@ abstract class TdsConnection extends DBConnection {
    *
    * @param   string sql
    * @param   bool buffered default TRUE
-   * @return  rdbms.ResultSet or TRUE if no resultset was created
+   * @return  rdbms.ResultSet
    * @throws  rdbms.SQLException
    */
   protected function query0($sql, $buffered= true) {
@@ -159,7 +160,7 @@ abstract class TdsConnection extends DBConnection {
     
     if (!is_array($result)) {
       $this->affected= $result;
-      return true;
+      return new QuerySucceeded($result);
     }
 
     $this->affected= -1;
