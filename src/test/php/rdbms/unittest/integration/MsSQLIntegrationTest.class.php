@@ -140,12 +140,12 @@ class MsSQLIntegrationTest extends RdbmsIntegrationTest {
 
   #[@test]
   public function selectEmptyString() {
-    $this->assertNull($this->db()->query('select "" as value')->next('value'));
+    $this->assertEquals('', $this->db()->query('select "" as value')->next('value'));
   }
 
   #[@test]
   public function selectEmptyVarChar() {
-    $this->assertNull($this->db()->query('select cast("" as varchar(255)) as value')->next('value'));
+    $this->assertEquals('', $this->db()->query('select cast("" as varchar(255)) as value')->next('value'));
   }
 
   #[@test]
