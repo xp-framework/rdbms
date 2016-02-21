@@ -3,6 +3,7 @@
 use rdbms\DBConnection;
 use rdbms\Transaction;
 use rdbms\StatementFormatter;
+use rdbms\QuerySucceeded;
 
 /**
  * Connection to SQLite Databases; specify the path to the database
@@ -153,7 +154,7 @@ class SQLite3Connection extends DBConnection {
    *
    * @param   string sql
    * @param   bool buffered default TRUE
-   * @return  rdbms.sqlite.SQLite3ResultSet or FALSE to indicate failure
+   * @return  rdbms.ResultSet
    * @throws  rdbms.SQLException
    */
   protected function query0($sql, $buffered= true) {
@@ -174,8 +175,11 @@ class SQLite3Connection extends DBConnection {
       );
       \xp::gc(__FILE__);
       throw $e;
+    } else if ($result->numColumns()) {
+      return new SQLite3ResultSet($result);
+    } else {
+      return new QuerySucceeded($this->handle->changes());
     }
-    return $result->numColumns() ? new SQLite3ResultSet($result) : true;
   }
 
   /**

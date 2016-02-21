@@ -3,7 +3,7 @@
 use rdbms\DBConnection;
 use rdbms\Transaction;
 use rdbms\StatementFormatter;
-
+use rdbms\QuerySucceeded;
 
 /**
  * Connection to MySQL Databases
@@ -177,7 +177,7 @@ class MySQLConnection extends DBConnection {
    *
    * @param   string sql
    * @param   bool buffered default TRUE
-   * @return  rdbms.ResultSet or TRUE if no resultset was created
+   * @return  rdbms.ResultSet
    * @throws  rdbms.SQLException
    */
   protected function query0($sql, $buffered= true) {
@@ -209,12 +209,11 @@ class MySQLConnection extends DBConnection {
         default:   // Other error
           throw new \rdbms\SQLStatementFailedException($message, $sql, $code);
       }
+    } else if (true === $result) {
+      return new QuerySucceeded(mysql_affected_rows($this->handle));
+    } else {
+      return new MySQLResultSet($result, $this->tz);
     }
-    
-    return (true === $result
-      ? $result
-      : new MySQLResultSet($result, $this->tz)
-    );
   }
 
   /**

@@ -164,7 +164,7 @@ abstract class DBConnection extends Observable {
    * Prepare an SQL statement
    *
    * @param   string fmt
-   * @param   var* args
+   * @param   var... args
    * @return  string
    */
   public function prepare() {
@@ -182,15 +182,14 @@ abstract class DBConnection extends Observable {
   /**
    * Execute an insert statement
    *
-   * @param   var* args
+   * @param   var... args
    * @return  int number of affected rows
    * @throws  rdbms.SQLStatementFailedException
    */
   public function insert() {
     $args= func_get_args();
     $args[0]= 'insert '.$args[0];
-    call_user_func_array([$this, 'query'], $args);
-    return $this->affectedRows();
+    return call_user_func_array([$this, 'query'], $args)->affected();
   }
   
   /**
@@ -203,35 +202,33 @@ abstract class DBConnection extends Observable {
   /**
    * Execute an update statement
    *
-   * @param   var* args
+   * @param   var... args
    * @return  int number of affected rows
    * @throws  rdbms.SQLStatementFailedException
    */
   public function update() {
     $args= func_get_args();
     $args[0]= 'update '.$args[0];
-    call_user_func_array([$this, 'query'], $args);
-    return $this->affectedRows();
+    return call_user_func_array([$this, 'query'], $args)->affected();
   }
   
   /**
    * Execute an update statement
    *
-   * @param   var* args
+   * @param   var... args
    * @return  int number of affected rows
    * @throws  rdbms.SQLStatementFailedException
    */
   public function delete() {
     $args= func_get_args();
     $args[0]= 'delete '.$args[0];
-    call_user_func_array([$this, 'query'], $args);
-    return $this->affectedRows();
+    return call_user_func_array([$this, 'query'], $args)->affected();
   }
   
   /**
    * Execute a select statement and return all rows as an array
    *
-   * @param   var* args
+   * @param   var... args
    * @return  array rowsets
    * @throws  rdbms.SQLStatementFailedException
    */
@@ -248,8 +245,8 @@ abstract class DBConnection extends Observable {
   /**
    * Execute any statement
    *
-   * @param   var* args
-   * @return  rdbms.ResultSet or TRUE if no resultset was created
+   * @param   var... args
+   * @return  rdbms.ResultSet
    * @throws  rdbms.SQLException
    */
   public function query() { 
@@ -265,8 +262,8 @@ abstract class DBConnection extends Observable {
   /**
    * Execute any statement
    *
-   * @param   var* args
-   * @return  rdbms.ResultSet or TRUE if no resultset was created
+   * @param   var... args
+   * @return  rdbms.ResultSet
    * @throws  rdbms.SQLException
    */
   public function open() { 
@@ -284,10 +281,10 @@ abstract class DBConnection extends Observable {
    *
    * @param   string sql
    * @param   bool buffered default TRUE
-   * @return  rdbms.ResultSet or TRUE if no resultset was created
+   * @return  rdbms.ResultSet
    * @throws  rdbms.SQLException
    */
-  protected function query0($sql, $buffered= true) {}
+  protected function query0($sql, $buffered= true) { }
   
   /**
    * Begin a transaction

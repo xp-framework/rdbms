@@ -197,7 +197,7 @@ abstract class RdbmsIntegrationTest extends TestCase {
   #[@test]
   public function insertViaQuery() {
     $this->createTable();
-    $this->assertTrue($this->db()->query('insert into %c values (1, "kiesel")', $this->tableName()));
+    $this->assertTrue($this->db()->query('insert into %c values (1, "kiesel")', $this->tableName())->isSuccess());
   }
 
   #[@test]
@@ -209,7 +209,7 @@ abstract class RdbmsIntegrationTest extends TestCase {
   #[@test]
   public function updateViaQuery() {
     $this->createTable();
-    $this->assertTrue($this->db()->query('update %c set pk= pk+ 1 where pk= 2', $this->tableName()));
+    $this->assertTrue($this->db()->query('update %c set pk= pk+ 1 where pk= 2', $this->tableName())->isSuccess());
   }
   
   #[@test]
@@ -221,7 +221,7 @@ abstract class RdbmsIntegrationTest extends TestCase {
   #[@test]
   public function deleteViaQuery() {
     $this->createTable();
-    $this->assertTrue($this->db()->query('delete from %c where pk= 2', $this->tableName()));
+    $this->assertTrue($this->db()->query('delete from %c where pk= 2', $this->tableName())->isSuccess());
   }
   
   #[@test]

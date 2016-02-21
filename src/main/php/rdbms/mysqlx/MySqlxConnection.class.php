@@ -6,6 +6,7 @@ use peer\Socket;
 use rdbms\DBConnection;
 use rdbms\DBEvent;
 use rdbms\DriverManager;
+use rdbms\QuerySucceeded;
 use rdbms\StatementFormatter;
 use rdbms\SQLConnectException;
 use rdbms\SQLStateException;
@@ -196,7 +197,7 @@ class MySqlxConnection extends DBConnection {
     
     if (!is_array($result)) {
       $this->affected= $result;
-      return true;
+      return new QuerySucceeded($result);
     }
 
     $this->affected= -1;

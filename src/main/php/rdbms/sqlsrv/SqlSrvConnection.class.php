@@ -3,6 +3,7 @@
 use rdbms\DBConnection;
 use rdbms\Transaction;
 use rdbms\StatementFormatter;
+use rdbms\QuerySucceeded;
 
 /**
  * Connection to SqlSrv databases using client libraries
@@ -133,7 +134,7 @@ class SqlSrvConnection extends DBConnection {
    *
    * @param   string sql
    * @param   bool buffered default TRUE
-   * @return  rdbms.mssql.SqlSrvResultSet or FALSE to indicate failure
+   * @return  rdbms.ResultSet
    * @throws  rdbms.SQLException
    */
   protected function query0($sql, $buffered= true) {
@@ -175,12 +176,10 @@ class SqlSrvConnection extends DBConnection {
         default:      // Other error
           throw new \rdbms\SQLStatementFailedException($message, $sql, $code);
       }
-    }
-
-    if (sqlsrv_num_fields($this->result)) {
+    } else if (sqlsrv_num_fields($this->result)) {
       return new SqlSrvResultSet($this->result, $this->tz);
     } else {
-      return true;
+      return new QuerySucceeded(sqlsrv_rows_affected($this->result));
     }
   }
   
