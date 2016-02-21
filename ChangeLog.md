@@ -3,6 +3,12 @@ RDBMS support for the XP Framework: MySQL, Sybase, MSSQL, PostgreSQL, SQLite3, I
 
 ## ?.?.? / ????-??-??
 
+## 7.0.0 / 2016-02-21
+
+* Implemented xp-framework/rfc#309: ResultSets. **Heads up**: The `query()`
+  method now always returns a `rdbms.ResultSet` instance.
+  (@thekid)
+
 ## 6.7.1 / 2016-02-21
 
 * Merged PR #15: Run MSSQL integration tests on AppVeyor
