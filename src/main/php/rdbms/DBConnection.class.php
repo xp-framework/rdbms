@@ -249,9 +249,9 @@ abstract class DBConnection extends Observable {
    * @return  rdbms.ResultSet
    * @throws  rdbms.SQLException
    */
-  public function query() { 
+  public function query() {
     $args= func_get_args();
-    $sql= call_user_func_array([$this, 'prepare'], $args);
+    $sql= $this->formatter->format(array_shift($args), $args);
 
     $this->_obs && $this->notifyObservers(new DBEvent(DBEvent::QUERY, $sql));
     $result= $this->query0($sql);
