@@ -14,7 +14,7 @@ abstract class AbstractDeadlockTest extends TestCase {
   private $dsn;
 
   /** @return string */
-  protected function driverName() { return 'sybase'; }
+  protected abstract function driverName();
 
   /**
    * Retrieve database connection object
