@@ -3,6 +3,10 @@ RDBMS support for the XP Framework: MySQL, Sybase, MSSQL, PostgreSQL, SQLite3, I
 
 ## ?.?.? / ????-??-??
 
+## 7.1.0 / 2016-02-21
+
+* Added version compatibility with XP 7 - @thekid
+
 ## 7.0.1 / 2016-02-21
 
 * Dropped dependency on xp-framework/collections, which was only used
