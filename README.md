@@ -33,7 +33,7 @@ The DriverManager will select an appropriate driver from the DSN string via its 
 | MySQL              | `mysql`    | ext/mysql or ext/mysqli | :white_check_mark: |
 | PostgreSQL         | `pgsql`    | ext/pgsql               |                    |
 | SQLite3            | `sqlite`   | ext/sqlite3             |                    |
-| Interbase/FireBird | `ibase`    | ext/sqlite3             |                    |
+| Interbase/FireBird | `ibase`    | ext/interbase           |                    |
 | Sybase             | `sybase`   | ext/sybase-ct           | :white_check_mark: |
 | MSSQL              | `mssql`    | ext/mssql or ext/sqlsrv | :white_check_mark: |
 
