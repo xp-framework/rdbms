@@ -189,8 +189,7 @@ abstract class DBConnection extends Observable {
   public function insert() {
     $args= func_get_args();
     $args[0]= 'insert '.$args[0];
-    call_user_func_array([$this, 'query'], $args);
-    return $this->affectedRows();
+    return call_user_func_array([$this, 'query'], $args)->affected();
   }
   
   /**
@@ -210,8 +209,7 @@ abstract class DBConnection extends Observable {
   public function update() {
     $args= func_get_args();
     $args[0]= 'update '.$args[0];
-    call_user_func_array([$this, 'query'], $args);
-    return $this->affectedRows();
+    return call_user_func_array([$this, 'query'], $args)->affected();
   }
   
   /**
@@ -224,8 +222,7 @@ abstract class DBConnection extends Observable {
   public function delete() {
     $args= func_get_args();
     $args[0]= 'delete '.$args[0];
-    call_user_func_array([$this, 'query'], $args);
-    return $this->affectedRows();
+    return call_user_func_array([$this, 'query'], $args)->affected();
   }
   
   /**
