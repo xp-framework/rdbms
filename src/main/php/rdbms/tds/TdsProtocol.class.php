@@ -116,7 +116,7 @@ abstract class TdsProtocol extends \lang\Object {
     self::$recordsFor[0][self::XT_VARCHAR]= newinstance('rdbms.tds.TdsRecord', [], '{
       public function unmarshal($stream, $field, $records) {
         $len= $stream->getShort();
-        if (0xFFFF === $len) {
+        if (0 === $len) {
           return null;
         } else if (\xp::ENCODING === $field["conv"]) {
           return $stream->read($len);
