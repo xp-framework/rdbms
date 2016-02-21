@@ -30,9 +30,7 @@ class SQLFunction extends \lang\Object implements SQLFragment {
    * @throws  rdbms.SQLStateException
    */
   public function asSql(DBConnection $conn) {
-    $args= $this->args;
-    array_unshift($args, $conn->getFormatter()->dialect->formatFunction($this));
-    return call_user_func_array([$conn, 'prepare'], $args);
+    return $conn->prepare($conn->getFormatter()->dialect->formatFunction($this), ...$this->args);
   }
 
   /**

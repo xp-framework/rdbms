@@ -33,6 +33,6 @@ abstract class FinderDelegate extends \lang\Object {
    * @return  var
    */
   public function __call($name, $args) {
-    return $this->select(call_user_func_array([$this->finder, $name], $args));
+    return $this->select($this->finder->{$name}(...$args));
   }
 }

@@ -132,7 +132,6 @@ abstract class DBConnection extends Observable {
     if ($db= $this->dsn->getDatabase()) {
       return $this->selectdb($db);
     }
-    
     return true;
   }
   
@@ -141,9 +140,7 @@ abstract class DBConnection extends Observable {
    *
    * @return  bool
    */
-  public function hasChanged() {
-    return true;
-  }
+  public function hasChanged() { return true; }
 
   /**
    * Disconnect
@@ -163,13 +160,12 @@ abstract class DBConnection extends Observable {
   /**
    * Prepare an SQL statement
    *
-   * @param   string fmt
-   * @param   var... args
-   * @return  string
+   * @param  string $statement
+   * @param  var... $args
+   * @return string
    */
-  public function prepare() {
-    $args= func_get_args();
-    return $this->formatter->format(array_shift($args), $args);
+  public function prepare($statement, ... $args) {
+    return $this->formatter->format($statement, $args);
   }
   
   /**
@@ -178,20 +174,7 @@ abstract class DBConnection extends Observable {
    * @return  int
    */
   protected function affectedRows() {}
-  
-  /**
-   * Execute an insert statement
-   *
-   * @param   var... args
-   * @return  int number of affected rows
-   * @throws  rdbms.SQLStatementFailedException
-   */
-  public function insert() {
-    $args= func_get_args();
-    $args[0]= 'insert '.$args[0];
-    return call_user_func_array([$this, 'query'], $args)->affected();
-  }
-  
+
   /**
    * Retrieve identity
    *
@@ -200,42 +183,51 @@ abstract class DBConnection extends Observable {
   abstract public function identity($field= null);
 
   /**
+   * Execute an insert statement
+   *
+   * @param  string $statement
+   * @param  var... $args
+   * @return int number of affected rows
+   * @throws rdbms.SQLStatementFailedException
+   */
+  public function insert($statement, ... $args) {
+    return $this->query('insert '.$statement, ...$args)->affected();
+  }
+
+  /**
    * Execute an update statement
    *
-   * @param   var... args
-   * @return  int number of affected rows
-   * @throws  rdbms.SQLStatementFailedException
+   * @param  string $statement
+   * @param  var... $args
+   * @return int number of affected rows
+   * @throws rdbms.SQLStatementFailedException
    */
-  public function update() {
-    $args= func_get_args();
-    $args[0]= 'update '.$args[0];
-    return call_user_func_array([$this, 'query'], $args)->affected();
+  public function update($statement, ... $args) {
+    return $this->query('update '.$statement, ...$args)->affected();
   }
   
   /**
    * Execute an update statement
    *
-   * @param   var... args
-   * @return  int number of affected rows
-   * @throws  rdbms.SQLStatementFailedException
+   * @param  string $statement
+   * @param  var... $args
+   * @return int number of affected rows
+   * @throws rdbms.SQLStatementFailedException
    */
-  public function delete() {
-    $args= func_get_args();
-    $args[0]= 'delete '.$args[0];
-    return call_user_func_array([$this, 'query'], $args)->affected();
+  public function delete($statement, ... $args) {
+    return $this->query('delete '.$statement, ...$args)->affected();
   }
   
   /**
    * Execute a select statement and return all rows as an array
    *
-   * @param   var... args
-   * @return  array rowsets
-   * @throws  rdbms.SQLStatementFailedException
+   * @param  string $statement
+   * @param  var... $args
+   * @return array rowsets
+   * @throws rdbms.SQLStatementFailedException
    */
-  public function select() {
-    $args= func_get_args();
-    $args[0]= 'select '.$args[0];
-    $r= call_user_func_array([$this, 'query'], $args);
+  public function select($statement, ... $args) {
+    $r= $this->query('select '.$statement, ...$args);
 
     $rows= [];
     while ($row= $r->next()) $rows[]= $row;
@@ -245,16 +237,16 @@ abstract class DBConnection extends Observable {
   /**
    * Execute any statement
    *
-   * @param   var... args
-   * @return  rdbms.ResultSet
-   * @throws  rdbms.SQLException
+   * @param  string $statement
+   * @param  var... $args
+   * @return rdbms.ResultSet
+   * @throws rdbms.SQLException
    */
-  public function query() {
-    $args= func_get_args();
-    $sql= $this->formatter->format(array_shift($args), $args);
+  public function query($statement, ... $args) {
+    $sql= $this->formatter->format($statement, $args);
 
     $this->_obs && $this->notifyObservers(new DBEvent(DBEvent::QUERY, $sql));
-    $result= $this->query0($sql);
+    $result= $this->query0($sql, true);
     $this->_obs && $this->notifyObservers(new DBEvent(DBEvent::QUERYEND, $result));
     return $result;
   }
@@ -262,13 +254,13 @@ abstract class DBConnection extends Observable {
   /**
    * Execute any statement
    *
-   * @param   var... args
-   * @return  rdbms.ResultSet
-   * @throws  rdbms.SQLException
+   * @param  string $statement
+   * @param  var... $args
+   * @return rdbms.ResultSet
+   * @throws rdbms.SQLException
    */
-  public function open() { 
-    $args= func_get_args();
-    $sql= call_user_func_array([$this, 'prepare'], $args);
+  public function open($statement, ... $args) { 
+    $sql= $this->formatter->format($statement, $args);
 
     $this->_obs && $this->notifyObservers(new DBEvent(DBEvent::QUERY, $sql));
     $result= $this->query0($sql, false);
