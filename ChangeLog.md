@@ -3,6 +3,8 @@ RDBMS support for the XP Framework: MySQL, Sybase, MSSQL, PostgreSQL, SQLite3, I
 
 ## ?.?.? / ????-??-??
 
+## 6.7.1 / 2016-02-21
+
 * Merged PR #15: Run MSSQL integration tests on AppVeyor
   (@thekid)
 
