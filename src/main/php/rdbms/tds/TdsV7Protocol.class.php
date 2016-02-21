@@ -120,21 +120,7 @@ class TdsV7Protocol extends TdsProtocol {
    *
    * @return  int
    */
-  protected function defaultPacketSize() {
-    return 4096;
-  }
-
-  /**
-   * Handle ENVCHANGE
-   *
-   * @param  int type
-   * @param  string old
-   * @param  string new
-   * @param  bool initial if this ENVCHANGE was part of the login response
-   */
-  protected function handleEnvChange($type, $old, $new, $initial= false) {
-    \util\cmd\Console::writeLine($initial ? 'I' : 'E', $type, ' ', $old, ' -> ', $new);
-  }
+  protected function defaultPacketSize() { return 4096; }
 
   /**
    * Connect
@@ -218,7 +204,7 @@ class TdsV7Protocol extends TdsProtocol {
         $nfields= $this->stream->getShort();
         for ($i= 0; $i < $nfields; $i++) {
           $field= $this->stream->get('Cx1/Cx2/Cflags/Cstatus/Ctype', 5);
-          $field['conv']= \xp::ENCODING;
+          $field['conv']= $this->servercs;
 
           // Handle column.
           if (self::T_TEXT === $field['type'] || self::T_NTEXT === $field['type']) {

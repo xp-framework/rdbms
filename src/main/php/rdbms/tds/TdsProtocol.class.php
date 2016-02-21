@@ -12,6 +12,7 @@ use peer\ProtocolException;
  * @see   https://github.com/mono/mono/tree/master/mcs/class/Mono.Data.Tds/Mono.Data.Tds.Protocol
  */
 abstract class TdsProtocol extends \lang\Object {
+  protected $servercs= 'cp850';
   protected $stream= null;
   protected $done= false;
   protected $records= [];
@@ -510,8 +511,24 @@ abstract class TdsProtocol extends \lang\Object {
   }
 
   /**
+   * Handle ENVCHANGE
+   *
+   * @param  int type
+   * @param  string old
+   * @param  string new
+   * @param  bool initial if this ENVCHANGE was part of the login response
+   */
+  protected function handleEnvChange($type, $old, $new, $initial= false) {
+    if ($initial && 3 === $type) {
+      $this->servercs= strtr($new, ['iso_' => 'iso-8859-', 'utf8' => 'utf-8']);
+    }
+    // DEBUG Console::writeLine($initial ? 'I' : 'E', $type, ' ', $old, ' -> ', $new);
+  }
+
+  /**
    * Process an ENVCHANGE token, e.g. "\015\003\005iso_1\005cp850"
    *
+   * @return void
    */
   protected function envchange() {
     $len= $this->stream->getShort();

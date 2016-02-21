@@ -7,7 +7,6 @@
  * @see   https://github.com/mono/mono/blob/master/mcs/class/Mono.Data.Tds/Mono.Data.Tds.Protocol/Tds50.cs
  */
 class TdsV5Protocol extends TdsProtocol {
-  protected $servercs= 'cp850';
 
   static function __static() { }
 
@@ -83,9 +82,7 @@ class TdsV5Protocol extends TdsProtocol {
    *
    * @return  int
    */
-  protected function defaultPacketSize() {
-    return 512;
-  }
+  protected function defaultPacketSize() { return 512; }
 
   /**
    * Connect
@@ -142,21 +139,6 @@ class TdsV5Protocol extends TdsProtocol {
 
     // Login
     $this->stream->write(self::MSG_LOGIN, $packet.$capabilities);
-  }
-
-  /**
-   * Handle ENVCHANGE
-   *
-   * @param  int type
-   * @param  string old
-   * @param  string new
-   * @param  bool initial if this ENVCHANGE was part of the login response
-   */
-  protected function handleEnvChange($type, $old, $new, $initial= false) {
-    if ($initial && 3 === $type) {
-      $this->servercs= strtr($new, ['iso_' => 'iso-8859-', 'utf8' => 'utf-8']);
-    }
-    // DEBUG Console::writeLine($initial ? 'I' : 'E', $type, ' ', $old, ' -> ', $new);
   }
 
   /**
