@@ -208,17 +208,15 @@ class SybaseDBAdapter extends DBAdapter {
     }
 
     // Get foreign key constraints
-    $sp_helpconstraint= $this->conn->query('sp_helpconstraint %s, detail', $this->qualifiedTablename($table, $database));
-    if (!$sp_helpconstraint instanceof \rdbms\ResultSet) return $t;
-
-    while ($db_constraint= $sp_helpconstraint->next()) {
+    $result= $this->conn->query('sp_helpconstraint %s, detail', $this->qualifiedTablename($table, $database));
+    while ($db_constraint= $result->next()) {
       if (!isset($db_constraint['type']) || !isset($db_constraint['definition'])) continue;
 
       if ('referential constraint' != $db_constraint['type']) continue;
       if (0 !== strpos($db_constraint['definition'], $table.' ')) continue;
       $t->addForeignKeyConstraint($this->parseForeignKey($db_constraint));
     }
-    $sp_helpconstraint->close();
+    $result->close();
 
     return $t;
   }
