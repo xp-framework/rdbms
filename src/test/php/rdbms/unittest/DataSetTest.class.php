@@ -10,7 +10,6 @@ use unittest\TestCase;
 use rdbms\DriverManager;
 use rdbms\DBObserver;
 use util\Date;
-use util\collections\Vector;
 use util\DateUtil;
 use rdbms\Statement;
 use rdbms\unittest\dataset\Job;
@@ -480,13 +479,10 @@ class DataSetTest extends TestCase {
 
   #[@test]
   public function percentSign() {
-    $observer= $this->getConnection()->addObserver(newinstance(DBObserver::class, [create('new util.collections.Vector<string>')], '{
-      public $statements;
-      public function __construct($statements) {
-        $this->statements= $statements;
-      }
+    $observer= $this->getConnection()->addObserver(newinstance(DBObserver::class, [], '{
+      public $statements= [];
       public static function instanceFor($arg) { }
-      public function update($observable, $event= NULL) {
+      public function update($observable, $event= null) {
         if ($event instanceof DBEvent && "query" == $event->getName()) {
           $this->statements[]= $event->getArgument();
         }

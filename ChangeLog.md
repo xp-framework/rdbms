@@ -3,6 +3,12 @@ RDBMS support for the XP Framework: MySQL, Sybase, MSSQL, PostgreSQL, SQLite3, I
 
 ## ?.?.? / ????-??-??
 
+## 7.0.1 / 2016-02-21
+
+* Dropped dependency on xp-framework/collections, which was only used
+  in one place inside the test suite!
+  (@thekid)
+
 ## 7.0.0 / 2016-02-21
 
 * **Adopted semantic versioning. See xp-framework/rfc#300** - @thekid 
