@@ -6,6 +6,7 @@
  * @see   https://github.com/mono/mono/blob/master/mcs/class/Mono.Data.Tds/Mono.Data.Tds.Protocol/Tds70.cs
  */
 class TdsV7Protocol extends TdsProtocol {
+  protected $servercs= 'cp1252';
 
   static function __static() { }
 
@@ -74,20 +75,37 @@ class TdsV7Protocol extends TdsProtocol {
         if ($has !== 16) return null;
 
         $stream->read(24);  // Skip 16 Byte TEXTPTR, 8 Byte TIMESTAMP
-        return $stream->read($stream->getLong());
+        $len= $stream->getLong();
+        if (0 === $len) {
+          return null;
+        } else if (\xp::ENCODING === $field["conv"]) {
+          return $stream->read($len);
+        } else {
+          return iconv($field["conv"], \xp::ENCODING, $stream->read($len));
+        }
       }
     }');
     $records[self::XT_BINARY]= newinstance('rdbms.tds.TdsRecord', [], '{
       public function unmarshal($stream, $field, $records) {
         if (0xFFFF === ($len= $stream->getShort())) return null;
         $string= $stream->read($len);
-        return substr($string, 0, strcspn($string, "\0"));
+        if (\xp::ENCODING === $field["conv"]) {
+          return substr($string, 0, strcspn($string, "\0"));
+        } else {
+          return iconv($field["conv"], \xp::ENCODING, substr($string, 0, strcspn($string, "\0")));
+        }
       }
     }');
     $records[self::XT_VARBINARY]= newinstance('rdbms.tds.TdsRecord', [], '{
       public function unmarshal($stream, $field, $records) {
         if (0xFFFF === ($len= $stream->getShort())) return null;
-        return $stream->read($len);
+        if (0 === $len) {
+          return null;
+        } else if (\xp::ENCODING === $field["conv"]) {
+          return $stream->read($len);
+        } else {
+          return iconv($field["conv"], \xp::ENCODING, $stream->read($len));
+        }
       }
     }');
     $records[self::XT_NVARCHAR]= newinstance('rdbms.tds.TdsRecord', [], '{
