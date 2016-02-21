@@ -462,7 +462,10 @@ abstract class TdsProtocol extends \lang\Object {
    * @param  bool initial if this ENVCHANGE was part of the login response
    */
   protected function handleEnvChange($type, $old, $new, $initial= false) {
-    // Intentionally empty
+    if ($initial && 3 === $type) {
+      $this->servercs= strtr($new, ['iso_' => 'iso-8859-', 'utf8' => 'utf-8']);
+    }
+    // DEBUG Console::writeLine($initial ? 'I' : 'E', $type, ' ', $old, ' -> ', $new);
   }
 
   /**
@@ -508,21 +511,6 @@ abstract class TdsProtocol extends \lang\Object {
     } while ($token= $this->stream->getToken());
 
     throw $this->exception('Unexpected login handshake error');
-  }
-
-  /**
-   * Handle ENVCHANGE
-   *
-   * @param  int type
-   * @param  string old
-   * @param  string new
-   * @param  bool initial if this ENVCHANGE was part of the login response
-   */
-  protected function handleEnvChange($type, $old, $new, $initial= false) {
-    if ($initial && 3 === $type) {
-      $this->servercs= strtr($new, ['iso_' => 'iso-8859-', 'utf8' => 'utf-8']);
-    }
-    // DEBUG Console::writeLine($initial ? 'I' : 'E', $type, ' ', $old, ' -> ', $new);
   }
 
   /**
