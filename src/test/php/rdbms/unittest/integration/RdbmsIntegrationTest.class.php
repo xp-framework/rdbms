@@ -13,7 +13,6 @@ use unittest\TestCase;
 use unittest\PrerequisitesNotMetError;
 use rdbms\DriverManager;
 use util\Bytes;
-use util\Properties;
 use lang\Throwable;
 use lang\MethodNotImplementedException;
 
@@ -25,15 +24,9 @@ abstract class RdbmsIntegrationTest extends TestCase {
 
   /** @return void */
   public function setUp() {
-    $driver= $this->driverName();
-    $this->dsn= getenv(strtoupper($driver).'_DSN') ?: Properties::fromString(typeof($this)
-      ->getPackage()
-      ->getResource('database.ini'))
-      ->readString($driver, 'dsn', null)
-    ;
-
-    if (null === $this->dsn) {
-      throw new PrerequisitesNotMetError('No credentials for '.nameof($this));
+    $env= strtoupper($this->driverName()).'_DSN';
+    if (!($this->dsn= getenv($env))) {
+      throw new PrerequisitesNotMetError('No credentials for '.nameof($this).', use '.$env.' to set');
     }
 
     try {
