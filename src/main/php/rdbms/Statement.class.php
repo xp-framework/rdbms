@@ -21,16 +21,18 @@
  * @test  xp://net.xp_framework.unittest.rdbms.StatementTest
  */
 class Statement extends \lang\Object implements SQLExpression {
+  public $statement;
   public $arguments= [];
 
   /**
    * Constructor
    *
-   * @param   string format
-   * @param   var* args
+   * @param  string $statement
+   * @param  var... $arguments
    */
-  public function __construct() {
-    $this->arguments= func_get_args();
+  public function __construct($statement, ... $arguments) {
+    $this->statement= $statement;
+    $this->arguments= $arguments;
   }
 
   /**
@@ -39,7 +41,7 @@ class Statement extends \lang\Object implements SQLExpression {
    * @return  string
    */
   public function toString() {
-    return nameof($this)."@{\n  ".$this->arguments[0]."\n}";
+    return nameof($this)."@{\n  ".$this->statement."\n}";
   }
       
   /**
@@ -70,11 +72,16 @@ class Statement extends \lang\Object implements SQLExpression {
    * @return  rdbms.ResultSet
    */
   public function executeSelect(DBConnection $conn, Peer $peer, $jp= null, $buffered= true) {
-    $this->arguments[0]= preg_replace(
+    $statement= preg_replace(
       '/object\(([^\)]+)\)/i', 
       '$1.'.implode(', $1.', array_keys($peer->types)),
-      $this->arguments[0]
+      $this->statement
     );
-    return call_user_func_array([$conn, $buffered ? 'query' : 'open'], $this->arguments);
+
+    if ($buffered) {
+      return $conn->query($statement, ...$this->arguments);
+    } else {
+      return $conn->open($statement, ...$this->arguments);
+    }
   }
 } 
