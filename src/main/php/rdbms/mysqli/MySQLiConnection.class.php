@@ -184,7 +184,7 @@ class MySQLiConnection extends DBConnection {
     
     // Clean up previous results to prevent "Commands out of sync" errors
     if (null !== $this->result) {
-      mysqli_free_result($this->result);
+      @mysqli_free_result($this->result);
       $this->result= null;
     }
 
