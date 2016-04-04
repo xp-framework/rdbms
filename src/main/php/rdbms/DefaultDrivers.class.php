@@ -14,7 +14,7 @@ class DefaultDrivers extends DriverImplementationsProvider {
 
     // MySQL support: Use mysqli extension by default, mysql otherwise. Never use mysqlnd!
     if (extension_loaded('mysqli')) {
-      self::$impl['mysql']= ['rdbms.mysql.MySQLiConnection', 'rdbms.mysql.MySQLConnection', 'rdbms.mysqlx.MySqlxConnection'];
+      self::$impl['mysql']= ['rdbms.mysqli.MySQLiConnection', 'rdbms.mysql.MySQLConnection', 'rdbms.mysqlx.MySqlxConnection'];
     } else if (extension_loaded('mysql')) {
       self::$impl['mysql']= ['rdbms.mysql.MySQLConnection', 'rdbms.mysqli.MySQLiConnection', 'rdbms.mysqlx.MySqlxConnection'];
     } else {
