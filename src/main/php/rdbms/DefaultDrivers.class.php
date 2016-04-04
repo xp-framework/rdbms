@@ -18,7 +18,7 @@ class DefaultDrivers extends DriverImplementationsProvider {
     } else if (extension_loaded('mysql')) {
       self::$impl['mysql']= ['rdbms.mysql.MySQLConnection', 'rdbms.mysqli.MySQLiConnection', 'rdbms.mysqlx.MySqlxConnection'];
     } else {
-      self::$impl['mysql']= ['rdbms.mysqlx.MySqlxConnection', 'rdbms.mysql.MySQLiConnection', 'rdbms.mysqli.MySQLConnection'];
+      self::$impl['mysql']= ['rdbms.mysqlx.MySqlxConnection', 'rdbms.mysqli.MySQLiConnection', 'rdbms.mysql.MySQLConnection'];
     }
 
     // Sybase support: Prefer sybase_ct over mssql
