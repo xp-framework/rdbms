@@ -12,11 +12,13 @@ class DefaultDrivers extends DriverImplementationsProvider {
 
   static function __static() {
 
-    // MySQL support: Use mysql extension by default, mysqli otherwise. Never use mysqlnd!
-    if (extension_loaded('mysql')) {
+    // MySQL support: Use mysqli extension by default, mysql otherwise. Never use mysqlnd!
+    if (extension_loaded('mysqli')) {
+      self::$impl['mysql']= ['rdbms.mysqli.MySQLiConnection', 'rdbms.mysql.MySQLConnection', 'rdbms.mysqlx.MySqlxConnection'];
+    } else if (extension_loaded('mysql')) {
       self::$impl['mysql']= ['rdbms.mysql.MySQLConnection', 'rdbms.mysqli.MySQLiConnection', 'rdbms.mysqlx.MySqlxConnection'];
     } else {
-      self::$impl['mysql']= ['rdbms.mysqlx.MySqlxConnection', 'rdbms.mysql.MySQLConnection', 'rdbms.mysqli.MySQLiConnection'];
+      self::$impl['mysql']= ['rdbms.mysqlx.MySqlxConnection', 'rdbms.mysqli.MySQLiConnection', 'rdbms.mysql.MySQLConnection'];
     }
 
     // Sybase support: Prefer sybase_ct over mssql
