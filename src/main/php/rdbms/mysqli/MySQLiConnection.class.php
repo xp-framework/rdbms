@@ -184,12 +184,13 @@ class MySQLiConnection extends DBConnection {
     
     // Clean up previous results to prevent "Commands out of sync" errors
     if (null !== $this->result) {
-      @mysqli_free_result($this->result);
+      mysqli_free_result($this->result);
       $this->result= null;
     }
 
     // Execute query
-    $r= mysqli_query($this->handle, $sql, !$buffered || $this->flags & DB_UNBUFFERED ? MYSQLI_USE_RESULT : 0);
+    $mode= !$buffered || $this->flags & DB_UNBUFFERED;
+    $r= mysqli_query($this->handle, $sql, $mode ? MYSQLI_USE_RESULT : MYSQLI_STORE_RESULT);
     if (false === $r) {
       $code= mysqli_errno($this->handle);
       $message= 'Statement failed: '.mysqli_error($this->handle).' @ '.$this->dsn->getHost();

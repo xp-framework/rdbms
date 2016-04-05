@@ -1,29 +1,32 @@
 <?php namespace rdbms\mysqli;
 
 use rdbms\ResultSet;
-
+use rdbms\SQLException;
+use util\TimeZone;
 
 /**
  * Result set
  *
  * @ext      mysqli
- * @purpose  Resultset wrapper
  */
 class MySQLiResultSet extends ResultSet {
 
   /**
    * Constructor
    *
-   * @param   resource handle
+   * @param  var $handle
+   * @param  util.TimeZone $tz
    */
-  public function __construct(&$result, \util\TimeZone $tz= null) {
+  public function __construct(&$result, TimeZone $tz= null) {
     $fields= [];
     if (is_object($result)) {
       while ($field= $result->fetch_field()) {
         $fields[$field->name]= $field->type;
       }
     }
-    parent::__construct($result, $fields, $tz);
+    $this->handle= &$result;
+    $this->fields= $fields;
+    $this->tz= $tz;
   }
 
   /**
@@ -35,7 +38,7 @@ class MySQLiResultSet extends ResultSet {
    */
   public function seek($offset) { 
     if (!mysqli_data_seek($this->handle, $offset)) {
-      throw new \rdbms\SQLException('Cannot seek to offset '.$offset);
+      throw new SQLException('Cannot seek to offset '.$offset);
     }
     return true;
   }
