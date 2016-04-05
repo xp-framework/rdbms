@@ -3,6 +3,9 @@ RDBMS support for the XP Framework: MySQL, Sybase, MSSQL, PostgreSQL, SQLite3, I
 
 ## ?.?.? / ????-??-??
 
+* Merge pull request #18 - change order of preference for MySQLi over MySQL, if
+  extensions available. (@friebe, @kiesel)
+
 ## 7.1.0 / 2016-02-21
 
 * Added version compatibility with XP 7 - @thekid
