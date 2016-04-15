@@ -20,6 +20,7 @@ class PostgreSQLDBAdapter extends DBAdapter {
     $this->map= [
       'varchar'    => DBTableAttribute::DB_ATTRTYPE_VARCHAR,
       'char'       => DBTableAttribute::DB_ATTRTYPE_CHAR,
+      'bpchar'     => DBTableAttribute::DB_ATTRTYPE_CHAR,
       'int'        => DBTableAttribute::DB_ATTRTYPE_INT,
       'int4'       => DBTableAttribute::DB_ATTRTYPE_INT,
       'bigint'     => DBTableAttribute::DB_ATTRTYPE_NUMERIC,
