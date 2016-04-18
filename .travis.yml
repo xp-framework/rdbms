@@ -13,6 +13,11 @@ php:
   - 5.6
   - 7.0
   - hhvm
+  - nightly
+
+matrix:
+  allow_failures:
+    - php: nightly
 
 before_install:
   - mysql -e 'create database IF NOT EXISTS test;' -uroot
