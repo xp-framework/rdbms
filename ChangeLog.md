@@ -3,7 +3,10 @@ RDBMS support for the XP Framework: MySQL, Sybase, MSSQL, PostgreSQL, SQLite3, I
 
 ## ?.?.? / ????-??-??
 
-* Merge pull request #18 - change order of preference for MySQLi over MySQL, if
+## 7.2.0 / 2016-04-18
+
+* Merged pull request #10 - Add type 'bpchar' (blank-padded char) - @treuter
+* Merged pull request #18 - change order of preference for MySQLi over MySQL, if
   extensions available. (@friebe, @kiesel)
 
 ## 7.1.0 / 2016-02-21
