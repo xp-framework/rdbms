@@ -145,28 +145,36 @@ class PostgreSQLDBAdapter extends DBAdapter {
       $index->keys[]= $record['column'];
     }
 
-    $q= $this->conn->query(
-      "Select
-        t.constraint_name as name,
-        k.column_name as column
+    $q= $this->conn->query("
+      select
+          i.relname as name,
+          a.attname as column,
+          ix.indisunique as isunique,
+          ix.indisprimary as isprimary
       from
-        information_schema.table_constraints as t JOIN
-        information_schema.key_column_usage as k on (k.constraint_name = t.constraint_name)
+          pg_class t,
+          pg_class i,
+          pg_index ix,
+          pg_attribute a
       where
-        'UNIQUE' = t.constraint_type
-        and t.table_catalog = %s
-        and t.table_name = %s",
-      $database,
+          t.oid = ix.indrelid
+          and i.oid = ix.indexrelid
+          and a.attrelid = t.oid
+          and a.attnum = ANY(ix.indkey)
+          and t.relkind = 'r'
+          and t.relname = %s",
       $table
     );
+
     $key= null;
     while ($record= $q->next()) {
       if ($record['name'] != $key) {
         $index= $t->addIndex(new \rdbms\DBIndex($record['name'], []));
         $key= $record['name'];
       }
-      $index->unique= (true);
-      $index->primary= (false);
+
+      $index->unique= $record['isunique'];
+      $index->primary= $record['isprimary'];
       $index->keys[]= $record['column'];
     }
 
