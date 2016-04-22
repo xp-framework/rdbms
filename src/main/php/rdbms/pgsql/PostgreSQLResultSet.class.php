@@ -56,16 +56,23 @@ class PostgreSQLResultSet extends ResultSet {
       return false;
     }
     
-    foreach (array_keys($row) as $key) {
+    foreach ($row as $key => $value) {
       switch ($this->fields[$key]) {
         case 'date':
         case 'time':
         case 'timestamp':
-          $row[$key]= new \util\Date($row[$key], $this->tz);
+          $row[$key]= new \util\Date($value, $this->tz);
           break;
 
         case 'bool':
-          settype($row[$key], 'bool'); 
+          if ($value === 't') {
+            $row[$key]= true;
+          } else if ($value === 'f') {
+            $row[$key]= false;
+          } else {
+            throw new \rdbms\SQLException('Boolean field carries illegal value: "'.$value.'"');
+          }
+
           break;
           
         case 'int2':
