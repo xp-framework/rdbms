@@ -51,7 +51,7 @@ class PostgreSQLDBAdapter extends DBAdapter {
    */
   public function getDatabases() {
     $dbs= [];
-    $q= $this->conn->query("Select db.datname as name from pg_database as db join pg_user as u on (db.datdba= u.usesysid) where u.usename=current_user;");
+    $q= $this->conn->query("select db.datname as name from pg_database as db join pg_user as u on (db.datdba= u.usesysid) where u.usename=current_user");
     while ($name= $q->next()) {
       $dbs[]= $name[key($name)];
     }
@@ -87,8 +87,8 @@ class PostgreSQLDBAdapter extends DBAdapter {
    */
   public function getTable($table, $database= null) {
     $t= new \rdbms\DBTable($table);
-    $q= $this->conn->query(
-      "Select
+    $q= $this->conn->query("
+      select
         column_name,
         udt_name,
         column_default,
@@ -119,8 +119,8 @@ class PostgreSQLDBAdapter extends DBAdapter {
       ));
     }
 
-    $q= $this->conn->query(
-      "Select
+    $q= $this->conn->query("
+      select
         t.constraint_name as name,
         k.column_name as column
       from
@@ -139,8 +139,9 @@ class PostgreSQLDBAdapter extends DBAdapter {
         $index= $t->addIndex(new \rdbms\DBIndex($record['name'], []));
         $key= $record['name'];
       }
-      $index->unique= (true);
-      $index->primary= (true);
+
+      $index->unique= true;
+      $index->primary= true;
       $index->keys[]= $record['column'];
     }
 
@@ -169,8 +170,8 @@ class PostgreSQLDBAdapter extends DBAdapter {
       $index->keys[]= $record['column'];
     }
 
-    $q= $this->conn->query(
-      "Select
+    $q= $this->conn->query("
+      select
         t.constraint_name as name,
         t.table_catalog as db,
         t.table_name as tbl,
