@@ -3,6 +3,9 @@ RDBMS support for the XP Framework: MySQL, Sybase, MSSQL, PostgreSQL, SQLite3, I
 
 ## ?.?.? / ????-??-??
 
+* Merged pull request #22 - Fix PostgreSQL DB adapter w/ indexes (@kiesel)
+* Merged pull request #23 - Fix handling of boolean values in PostgreSQL (@kiesel)
+
 ## 7.2.0 / 2016-04-18
 
 * Merged pull request #10 - Add type 'bpchar' (blank-padded char) - @treuter
