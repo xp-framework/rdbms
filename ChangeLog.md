@@ -3,6 +3,8 @@ RDBMS support for the XP Framework: MySQL, Sybase, MSSQL, PostgreSQL, SQLite3, I
 
 ## ?.?.? / ????-??-??
 
+## 7.2.1 / 2016-05-02
+
 * Merged pull request #22 - Fix PostgreSQL DB adapter w/ indexes (@kiesel)
 * Merged pull request #23 - Fix handling of boolean values in PostgreSQL (@kiesel)
 
