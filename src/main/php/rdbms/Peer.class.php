@@ -257,7 +257,7 @@ class Peer extends \lang\Object {
     $rs= $criteria->executeSelect($this->getConnection(), $this, $jp, $buffered);
 
     // if this is a projection, it does no matter if it's a join or not
-    if ($criteria->isProjection()) return new ResultIterator($rs, 'Record');
+    if ($criteria->isProjection()) return new ResultIterator($rs, '\rdbms\Record');
     if ($criteria->isJoin())       return $jp->getJoinIterator($rs);
     return new ResultIterator($rs, $this->identifier);
   }

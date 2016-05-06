@@ -1,5 +1,6 @@
 <?php namespace rdbms\unittest;
 
+use rdbms\DriverManager;
 use unittest\TestCase;
 use util\Date;
 use rdbms\sybase\SybaseConnection;
@@ -16,6 +17,7 @@ use rdbms\unittest\dataset\Job;
  *
  * @see  xp://rdbms.criterion.Projections
  */
+#[@action(new \rdbms\unittest\mock\RegisterMockConnection())]
 class ProjectionTest extends TestCase {
   public
     $syconn = null,
@@ -224,5 +226,17 @@ class ProjectionTest extends TestCase {
     );
     $this->assertFalse($crit->isProjection());
     $this->assertTrue($crit->withProjection(Projections::property(Job::column('job_id')))->isProjection());
+  }
+
+  #[@test]
+  function regressionIteratorDatasetType() {
+    $conn= DriverManager::getConnection('mock://mock/JOBS?autoconnect=1');
+    $crit= (new Criteria())
+      ->withProjection(Projections::count('*'));
+    $this->peer->setConnection($conn);
+    $this->assertEquals(
+      '\rdbms\Record',
+      $this->peer->iteratorFor($crit)->_identifier
+    );
   }
 }
