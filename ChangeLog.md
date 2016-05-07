@@ -5,6 +5,9 @@ RDBMS support for the XP Framework: MySQL, Sybase, MSSQL, PostgreSQL, SQLite3, I
 
 ## 7.2.2 / 2016-05-07
 
+* Fixed issue #23: No SQLiteDBAdapter available, by reintroducig the removed
+  class as `rdbms.sqlite3.SQLite3DBAdaper`
+  (@thekid)
 * Fixed issue #25: "Fatal error: Class 'Record' not found" error when using
   projections
   (@johannes85)
