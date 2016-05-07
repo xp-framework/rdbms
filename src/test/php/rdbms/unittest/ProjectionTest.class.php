@@ -1,7 +1,7 @@
 <?php namespace rdbms\unittest;
 
 use rdbms\DriverManager;
-use unittest\TestCase;
+use rdbms\Record;
 use util\Date;
 use rdbms\sybase\SybaseConnection;
 use rdbms\mysql\MySQLConnection;
@@ -11,14 +11,16 @@ use rdbms\criterion\Restrictions;
 use rdbms\criterion\Projections;
 use rdbms\Criteria;
 use rdbms\unittest\dataset\Job;
+use rdbms\unittest\mock\MockResultSet;
+use rdbms\unittest\mock\RegisterMockConnection;
 
 /**
  * TestCase
  *
  * @see  xp://rdbms.criterion.Projections
  */
-#[@action(new \rdbms\unittest\mock\RegisterMockConnection())]
-class ProjectionTest extends TestCase {
+#[@action(new RegisterMockConnection())]
+class ProjectionTest extends \unittest\TestCase {
   public
     $syconn = null,
     $myconn = null,
@@ -231,12 +233,9 @@ class ProjectionTest extends TestCase {
   #[@test]
   function regressionIteratorDatasetType() {
     $conn= DriverManager::getConnection('mock://mock/JOBS?autoconnect=1');
-    $crit= (new Criteria())
-      ->withProjection(Projections::count('*'));
+    $conn->setResultSet(new MockResultSet([['count' => 5]]));
+    $crit= (new Criteria())->withProjection(Projections::count('*'));
     $this->peer->setConnection($conn);
-    $this->assertEquals(
-      '\rdbms\Record',
-      $this->peer->iteratorFor($crit)->_identifier
-    );
+    $this->assertInstanceOf(Record::class, $this->peer->iteratorFor($crit)->next());
   }
 }

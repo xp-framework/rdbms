@@ -3,6 +3,10 @@ RDBMS support for the XP Framework: MySQL, Sybase, MSSQL, PostgreSQL, SQLite3, I
 
 ## ?.?.? / ????-??-??
 
+* Fixed issue #25: "Fatal error: Class 'Record' not found" error when using
+  projections
+  (@johannes85)
+
 ## 7.2.1 / 2016-05-02
 
 * Merged pull request #22 - Fix PostgreSQL DB adapter w/ indexes (@kiesel)

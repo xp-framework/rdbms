@@ -1,16 +1,12 @@
 <?php namespace rdbms;
 
-use util\XPIterator;
-
-
 /**
  * Iterator over a resultset
  *
- * @test     xp://net.xp_framework.unittest.rdbms.DataSetTest
- * @see      xp://rdbms.Peer
- * @purpose  Iterator
+ * @test  xp://net.xp_framework.unittest.rdbms.DataSetTest
+ * @see   xp://rdbms.Peer
  */
-class ResultIterator extends \lang\Object implements XPIterator {
+class ResultIterator extends \lang\Object implements \util\XPIterator {
   public
     $_rs         = null,
     $_identifier = '',
