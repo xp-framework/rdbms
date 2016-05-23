@@ -116,7 +116,7 @@ class MySqlxProtocol extends \lang\Object {
       $data= (
         pack('V', $flags).
         pack('V', 1024 * 1024 * 1024).
-        chr(33).                   // Charset 8 = latin1, 33 = utf8
+        chr(224).                  // Charset 8 = latin1, 33 = utf8, 224 = utf8mb4
         str_repeat("\0", 23).      // Filler
         $user."\0".
         ($password ? chr(20).MySqlPassword::$PROTOCOL_41->scramble($password, $init['scramble']) : chr(0))
