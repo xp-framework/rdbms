@@ -233,4 +233,13 @@ class MySQLIntegrationTest extends RdbmsIntegrationTest {
 
   #[@test, @ignore('Cast to smallint not supported by MySQL')]
   public function selectSmallintZero() { }
+
+  #[@test]
+  public function selectUtf8mb4() {
+
+    // Sending characters outside the BMP while the encoding isn't utf8mb4
+    // produces a warning.
+    $this->assertEquals('💩', $this->db()->query("select '💩' as poop")->next('poop'));
+    $this->assertEquals(false, $this->db()->query('show warnings')->next());
+  }
 }

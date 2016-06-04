@@ -3,6 +3,7 @@ RDBMS support for the XP Framework: MySQL, Sybase, MSSQL, PostgreSQL, SQLite3, I
 
 ## ?.?.? / ????-??-??
 
+* Merged PR #26: MySQL: Change charset to utf8mb4 - @lluchs, @thekid
 * Ensured deprecation warnings don't affect MySQL integration tests
   (@thekid)
 
