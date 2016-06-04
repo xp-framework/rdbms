@@ -91,11 +91,12 @@ abstract class AbstractDeadlockTest extends TestCase {
    */
   protected function newProcess() {
     with ($rt= Runtime::getInstance()); {
-      $proc= $rt->getExecutable()->newInstance(array_merge(
-        $rt->startupOptions()->asArguments(),
-        [$rt->bootstrapScript('class')],
-        ['rdbms.unittest.integration.SQLRunner', $this->dsn]
-      ));
+      $proc= $rt->newInstance(
+        $rt->startupOptions(),
+        'class',
+        'rdbms.unittest.integration.SQLRunner',
+        [$this->dsn]
+      );
       $this->assertEquals('! Started', $proc->out->readLine());
       return $proc;
     }
