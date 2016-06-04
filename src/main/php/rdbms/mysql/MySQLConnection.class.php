@@ -99,7 +99,7 @@ class MySQLConnection extends DBConnection {
       throw $e;
     }
 
-    mysql_query('set names UTF8', $this->handle);
+    mysql_query('set names utf8mb4', $this->handle);
 
     // Figure out sql_mode and update formatter's escaperules accordingly
     // - See: http://bugs.mysql.com/bug.php?id=10214

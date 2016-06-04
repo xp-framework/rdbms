@@ -92,7 +92,7 @@ class MySQLiConnection extends DBConnection {
       throw $e;
     }
 
-    mysqli_set_charset($this->handle, 'utf8');
+    mysqli_set_charset($this->handle, 'utf8mb4');
 
     // Figure out sql_mode and update formatter's escaperules accordingly
     // - See: http://bugs.mysql.com/bug.php?id=10214
