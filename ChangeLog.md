@@ -3,6 +3,9 @@ RDBMS support for the XP Framework: MySQL, Sybase, MSSQL, PostgreSQL, SQLite3, I
 
 ## ?.?.? / ????-??-??
 
+* Ensured deprecation warnings don't affect MySQL integration tests
+  (@thekid)
+
 ## 7.2.2 / 2016-05-07
 
 * Fixed issue #23: No SQLiteDBAdapter available, by reintroducig the removed

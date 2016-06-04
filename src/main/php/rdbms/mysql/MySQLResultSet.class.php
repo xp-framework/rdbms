@@ -108,7 +108,7 @@ class MySQLResultSet extends ResultSet {
    */
   public function close() { 
     if (!$this->handle) return;
-    $r= mysql_free_result($this->handle);
+    $r= @mysql_free_result($this->handle);
     $this->handle= null;
     return $r;
   }
