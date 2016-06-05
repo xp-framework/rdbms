@@ -89,6 +89,7 @@ class MySQLiConnection extends DBConnection {
     if (!is_object($this->handle)) {
       $e= new \rdbms\SQLConnectException('#'.mysqli_connect_errno().': '.mysqli_connect_error(), $this->dsn);
       \xp::gc(__FILE__);
+      defined('HHVM_VERSION') && \xp::gc('');
       throw $e;
     }
 
