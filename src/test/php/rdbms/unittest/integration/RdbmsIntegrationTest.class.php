@@ -715,9 +715,10 @@ abstract class RdbmsIntegrationTest extends TestCase {
     $this->createTable();
     $db= $this->db();
 
-    $q= $db->query('select * from %c', $this->tableName());
+    $q= $db->open('select * from %c', $this->tableName());
     $this->assertEquals(['pk' => 1, 'username' => 'kiesel'], $q->next());
 
+    $q->close();
     $this->assertEquals(1, $db->query('select 1 as num')->next('num'));
   }
 
