@@ -208,6 +208,8 @@ class MySQLiConnection extends DBConnection {
       }
     } else if (true === $r) {
       return new QuerySucceeded(mysqli_affected_rows($this->handle));
+    } else if ($buffered) {
+      return new MySQLiResultSet($r, $this->tz);
     } else {
       $this->result= $r;
       return new MySQLiResultSet($this->result, $this->tz);

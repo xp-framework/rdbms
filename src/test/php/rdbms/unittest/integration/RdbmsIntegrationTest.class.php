@@ -701,6 +701,17 @@ abstract class RdbmsIntegrationTest extends TestCase {
   }
 
   #[@test]
+  public function consecutiveQueryDoesNotAffectBufferedResults() {
+    $this->createTable();
+    $db= $this->db();
+
+    $result= $db->query('select * from %c where pk = 2', $this->tableName());
+    $db->query('update %c set username = "test" where pk = 1', $this->tableName());
+
+    $this->assertEquals([['pk' => 2, 'username' => 'kiesel']], iterator_to_array($result));
+  }
+
+  #[@test]
   public function unbufferedReadNoResults() {
     $this->createTable();
     $db= $this->db();
