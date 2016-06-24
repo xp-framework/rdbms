@@ -3,6 +3,10 @@ RDBMS support for the XP Framework: MySQL, Sybase, MSSQL, PostgreSQL, SQLite3, I
 
 ## ?.?.? / ????-??-??
 
+## 7.3.2 / 2016-06-24
+
+* Merged PR #31: MySQL: Buffered queries inconsistency - @thekid
+
 ## 7.3.1 / 2016-06-05
 
 * Fixed issue #27: Integration tests failing on HHVM - @thekid
