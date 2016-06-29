@@ -1,5 +1,7 @@
 <?php namespace rdbms;
 
+use util\NoSuchElementException;
+
 /**
  * Iterator over a resultset
  *
@@ -54,7 +56,7 @@ class ResultIterator extends \lang\Object implements \util\XPIterator {
       // Fall through
     }
     if (false === $this->_record) {
-      throw new \util\NoSuchElementException('No more elements');
+      throw new NoSuchElementException('No more elements');
     }
     
     // Create an instance and set the _record member to NULL so that
