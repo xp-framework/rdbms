@@ -25,13 +25,13 @@ class TdsResultSet extends AbstractTdsResultSet {
    * no more rows are available.
    *
    * @param   string field default NULL
-   * @return  var
+   * @return  [:var]
    */
   public function next($field= null) {
     try {
       if (null === $this->handle || null === ($record= $this->handle->fetch($this->fields))) {
         $this->handle= null;
-        return false;
+        return null;
       }
     } catch (ProtocolException $e) {
       throw new SQLException('Failed reading row', $e);

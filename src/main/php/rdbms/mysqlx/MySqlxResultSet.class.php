@@ -24,12 +24,12 @@ class MySQLxResultSet extends AbstractMysqlxResultSet {
    * no more rows are available.
    *
    * @param   string field default NULL
-   * @return  var
+   * @return  [:var]
    */
   public function next($field= null) {
     if (null === $this->handle || null === ($record= $this->handle->fetch($this->fields))) {
       $this->handle= null;
-      return false;
+      return null;
     }
     
     return $this->record($record, $field);

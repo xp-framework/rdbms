@@ -43,10 +43,10 @@ class MySqlxBufferedResultSet extends AbstractMysqlxResultSet {
    * no more rows are available.
    *
    * @param   string field default NULL
-   * @return  var
+   * @return  [:var]
    */
   public function next($field= null) {
-    if ($this->offset >= $this->length) return false;
+    if ($this->offset >= $this->length) return null;
     
     return $this->record($this->records[$this->offset++], $field);
   }

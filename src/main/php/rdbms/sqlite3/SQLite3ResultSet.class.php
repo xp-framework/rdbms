@@ -45,14 +45,14 @@ class SQLite3ResultSet extends ResultSet {
    * no more rows are available.
    *
    * @param   string field default NULL
-   * @return  var
+   * @return  [:var]
    */
   public function next($field= null) {
     if (
       !$this->handle instanceof \SQLite3Result ||
       false === ($row= $this->handle->fetchArray(SQLITE3_ASSOC))
     ) {
-      return false;
+      return null;
     }
 
     foreach ($row as $key => $value) {
