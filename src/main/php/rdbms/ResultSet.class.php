@@ -55,7 +55,7 @@ abstract class ResultSet extends \lang\Object implements Closeable, \IteratorAgg
    * no more rows are available.
    *
    * @param   string $field default NULL
-   * @return  var
+   * @return  [:var]
    */
   public abstract function next($field= null);
 

@@ -22,7 +22,7 @@ class CachedResults extends \lang\Object implements \util\XPIterator {
    * @return  bool
    */
   public function hasNext() {
-    return !is_null($this->_key);
+    return null !== $this->_key;
   }
   
   /**

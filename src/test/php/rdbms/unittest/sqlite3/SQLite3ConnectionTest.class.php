@@ -72,7 +72,7 @@ class SQLite3ConnectionTest extends \unittest\TestCase {
     $result= $this->conn->query('select 1 where 1 = 0');
 
     $this->assertInstanceOf(SQLite3ResultSet::class, $result);
-    $this->assertFalse($result->next());
+    $this->assertNull($result->next());
   }
 
   #[@test]

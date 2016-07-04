@@ -54,10 +54,10 @@ class TdsBufferedResultSet extends AbstractTdsResultSet {
    * no more rows are available.
    *
    * @param   string field default NULL
-   * @return  var
+   * @return  [:var]
    */
   public function next($field= null) {
-    if ($this->offset >= $this->length) return false;
+    if ($this->offset >= $this->length) return null;
     
     $record= $this->records[$this->offset++];
     if ($record instanceof SQLException) {

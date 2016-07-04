@@ -36,7 +36,7 @@ class JoinIterator extends \lang\Object implements \util\XPIterator, JoinExtract
    * @return  bool
    */
   public function hasNext() {
-    return (false !== $this->record);
+    return (null !== $this->record);
   }
   
   /**

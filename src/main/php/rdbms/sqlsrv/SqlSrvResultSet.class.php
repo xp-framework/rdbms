@@ -51,14 +51,14 @@ class SqlSrvResultSet extends ResultSet {
    * no more rows are available.
    *
    * @param   string field default NULL
-   * @return  var
+   * @return  [:var]
    */
   public function next($field= null) {
     if (
       !is_resource($this->handle) ||
       !is_array($row= sqlsrv_fetch_array($this->handle, SQLSRV_FETCH_ASSOC))
     ) {
-      return false;
+      return null;
     }
 
     foreach ($row as $key => $value) {

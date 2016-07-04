@@ -55,7 +55,7 @@ class ResultIterator extends \lang\Object implements \util\XPIterator {
       $this->_record= $this->_rs->next();
       // Fall through
     }
-    if (false === $this->_record) {
+    if (null === $this->_record) {
       throw new NoSuchElementException('No more elements');
     }
     

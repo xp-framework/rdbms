@@ -39,10 +39,10 @@ class MockResultSet extends \rdbms\ResultSet {
    * no more rows are available.
    *
    * @param   string $field default NULL
-   * @return  var
+   * @return  [:var]
    */
   public function next($field= null) {
-    if ($this->offset >= sizeof($this->data)) return false;
+    if ($this->offset >= sizeof($this->data)) return null;
     $this->offset++;
     
     if ($field) {

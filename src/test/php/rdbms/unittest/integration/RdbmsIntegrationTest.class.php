@@ -191,7 +191,7 @@ abstract class RdbmsIntegrationTest extends TestCase {
     $this->createTable();
     $q= $this->db()->query('select * from %c where 1 = 0', $this->tableName());
     $this->assertInstanceOf(ResultSet::class, $q);
-    $this->assertEquals(false, $q->next());
+    $this->assertNull($q->next());
   }
 
   #[@test]

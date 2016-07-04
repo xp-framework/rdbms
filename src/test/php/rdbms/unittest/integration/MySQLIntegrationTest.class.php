@@ -240,6 +240,6 @@ class MySQLIntegrationTest extends RdbmsIntegrationTest {
     // Sending characters outside the BMP while the encoding isn't utf8mb4
     // produces a warning.
     $this->assertEquals('💩', $this->db()->query("select '💩' as poop")->next('poop'));
-    $this->assertEquals(false, $this->db()->query('show warnings')->next());
+    $this->assertNull($this->db()->query('show warnings')->next());
   }
 }

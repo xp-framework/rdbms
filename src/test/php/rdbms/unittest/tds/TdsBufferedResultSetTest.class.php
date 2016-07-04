@@ -75,7 +75,7 @@ class TdsBufferedResultSetTest extends \unittest\TestCase {
     $records= [
     ];
     $fixture= $this->newResultSet($records);
-    $this->assertFalse($fixture->next());
+    $this->assertNull($fixture->next());
   }
 
   #[@test]
@@ -108,7 +108,7 @@ class TdsBufferedResultSetTest extends \unittest\TestCase {
   }
 
   #[@test]
-  public function next_returns_false_at_end() { 
+  public function next_returns_null_at_end() { 
     $records= [
       [
         'id'   => 6100,
@@ -117,7 +117,7 @@ class TdsBufferedResultSetTest extends \unittest\TestCase {
     ];
     $fixture= $this->newResultSet($records);
     $fixture->next();
-    $this->assertFalse($fixture->next());
+    $this->assertNull($fixture->next());
   }
 
   #[@test]

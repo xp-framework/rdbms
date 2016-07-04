@@ -2,12 +2,10 @@
 
 use rdbms\ResultSet;
 
-
 /**
  * Result set
  *
- * @ext      pgsql
- * @purpose  Resultset wrapper
+ * @ext   pgsql
  */
 class PostgreSQLResultSet extends ResultSet {
 
@@ -46,14 +44,14 @@ class PostgreSQLResultSet extends ResultSet {
    * no more rows are available.
    *
    * @param   string field default NULL
-   * @return  var
+   * @return  [:var]
    */
   public function next($field= null) {
     if (
       !is_resource($this->handle) ||
       false === ($row= pg_fetch_assoc($this->handle))
     ) {
-      return false;
+      return null;
     }
     
     foreach ($row as $key => $value) {
