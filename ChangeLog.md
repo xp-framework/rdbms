@@ -3,6 +3,13 @@ RDBMS support for the XP Framework: MySQL, Sybase, MSSQL, PostgreSQL, SQLite3, I
 
 ## ?.?.? / ????-??-??
 
+## 8.0.0 / 2016-07-04
+
+* Merged PR #32: Return `null` instead of `false` from ResultSet::next()
+  at EOF. Although this is theoretically a BC break typical code using a
+  `while` loop is not affected!
+  (@thekid)
+
 ## 7.3.2 / 2016-06-24
 
 * Merged PR #31: MySQL: Buffered queries inconsistency - @thekid
