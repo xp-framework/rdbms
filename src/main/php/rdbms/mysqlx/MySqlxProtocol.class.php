@@ -10,7 +10,7 @@ use util\Date;
  * @see   http://forge.mysql.com/wiki/MySQL_Internals_ClientServer_Protocol
  */
 class MySqlxProtocol extends \lang\Object {
-  protected $pkt= 0;
+  protected $pkt= 0, $thread= 0;
   protected $sock= null;
   public $connected= false;
   const MAX_PACKET_LENGTH = 16777215;   // 256 * 256 * 256 - 1
@@ -143,11 +143,12 @@ class MySqlxProtocol extends \lang\Object {
     // By sending this very specific reply server asks us to send scrambled password in old format. 
     if (1 === strlen($answer) && "\376" === $answer[0] && $capabilities & self::CLIENT_SECURE_CONNECTION) {
       $this->write(substr(MySqlPassword::$PROTOCOL_40->scramble($password, substr($init['scramble'], 0, -12)), 0, 8)."\0");
-      $answer= $this->read();
+      $this->read();
     }
-    
+
     $this->pkt= 0;
     $this->connected= true;
+    $this->thread= $init['thread'];
   }
 
   /**
@@ -477,7 +478,7 @@ class MySqlxProtocol extends \lang\Object {
    * @return  string
    */
   public function hashCode() {
-    return (string)(int)$this->sock->getHandle();
+    return $this->thread;
   }
   
   /**
