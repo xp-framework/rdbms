@@ -488,6 +488,6 @@ class MySqlxProtocol extends \lang\Object {
    * @return  string
    */
   public function toString() {
-    return nameof($this).'('.\xp::stringOf($this->sock->getHandle()).', P@'.$this->pkt.')';
+    return nameof($this).'(stream= '.\xp::stringOf($this->sock).', thread= '.$this->thread.', packet= '.$this->pkt.')';
   }
 }

@@ -245,6 +245,6 @@ class MySqlxConnection extends DBConnection {
    * @return  string
    */
   public function toString() {
-    return nameof($this).'(->'.$this->dsn->toString().', '.$this->handle->toString().')';
+    return nameof($this).'(->'.$this->dsn->toString().', #'.$this->handle->hashCode().')';
   }
 }
