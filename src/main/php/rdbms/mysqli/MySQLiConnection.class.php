@@ -247,4 +247,13 @@ class MySQLiConnection extends DBConnection {
   public function commit($name) { 
     return $this->query('commit');
   }
+
+  /**
+   * Returns a hashcode for this connection
+   *
+   * @return  string
+   */
+  public function hashCode() {
+    return 'mysqli link #'.$this->handle->thread_id;
+  }
 }
