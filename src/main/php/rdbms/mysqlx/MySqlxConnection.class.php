@@ -191,7 +191,8 @@ class MySqlxConnection extends DBConnection {
           throw new SQLStatementFailedException($message, $sql, $e->error);
       }
     } catch (IOException $e) {
-      throw new SQLStatementFailedException($e->getMessage());
+      $this->handle->close();
+      throw new SQLConnectionClosedException($e->getMessage(), $sql, -1);
     }
     
     if (!is_array($result)) {
