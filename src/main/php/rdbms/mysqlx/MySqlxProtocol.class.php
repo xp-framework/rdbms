@@ -436,12 +436,13 @@ class MySqlxProtocol extends \lang\Object {
       $a= $this->sock->readBinary(4);
       if (strlen($a) < 4) {
         if ($this->sock->eof()) {
-          $cause= 'Server disconnected';
           $this->sock->close();
+          $this->connected= false;
+          $this->pkt= 0;
+          throw new MySqlxProtocolException('Server disconnected', 2006, '00000');
         } else {
-          $cause= 'Server sent corrupt package `'.addcslashes($a, "\0..\377").'`';
+          throw new ProtocolException('Server sent corrupt package `'.addcslashes($a, "\0..\377").'`');
         }
-        throw new ProtocolException($cause);
       }
       $len= ord($a[0]) + ord($a[1]) * 0x100 + ord($a[2]) * 0x10000;
       $pkt= ord($a[3]);

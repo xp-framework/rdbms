@@ -3,6 +3,10 @@ RDBMS support for the XP Framework: MySQL, Sybase, MSSQL, PostgreSQL, SQLite3, I
 
 ## ?.?.? / ????-??-??
 
+## 8.0.1 / 2016-07-23
+
+* Fixed handling of disconnects in MySQL userland driver - @thekid
+
 ## 8.0.0 / 2016-07-04
 
 * Merged PR #32: Return `null` instead of `false` from ResultSet::next()
