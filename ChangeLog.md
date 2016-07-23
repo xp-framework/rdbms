@@ -5,6 +5,8 @@ RDBMS support for the XP Framework: MySQL, Sybase, MSSQL, PostgreSQL, SQLite3, I
 
 ## 8.0.1 / 2016-07-23
 
+* Fixed issue #34: Close connection when packet no. out of order
+  (@thekid)
 * Fixed handling of disconnects in MySQL userland driver - @thekid
 
 ## 8.0.0 / 2016-07-04
