@@ -30,7 +30,7 @@ class Statement extends \lang\Object implements SQLExpression {
    * @param  string $statement
    * @param  var... $args
    */
-  public function __construct() {
+  public function __construct($statement, ... $arguments) {
     $this->statement= $statement;
     $this->arguments= $arguments;
   }
