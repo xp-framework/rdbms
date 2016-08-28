@@ -3,34 +3,36 @@
 /**
  * Represents an SQL statement
  *
- * <code>
- *  with ($peer= News::getPeer()); {
- *    $statement= new Statement('select * from news where news_id < 10');
+ * ```php
+ * with ($peer= News::getPeer()); {
+ *   $statement= new Statement('select * from news where news_id < 10');
  * 
- *    // Use doSelect()
- *    $objects= $peer->doSelect($statement);
+ *   // Use doSelect()
+ *   $objects= $peer->doSelect($statement);
  * 
- *    // Use iteratorFor()
- *    for ($iterator= $peer->iteratorFor($statement); $iterator->hasNext(); ) {
- *      $object= $iterator->next();
- *      // ...
- *    }
- *  }
- * </code>
+ *   // Use iteratorFor()
+ *   for ($iterator= $peer->iteratorFor($statement); $iterator->hasNext(); ) {
+ *     $object= $iterator->next();
+ *     // ...
+ *   }
+ * }
+ * ```
  *
  * @test  xp://net.xp_framework.unittest.rdbms.StatementTest
  */
 class Statement extends \lang\Object implements SQLExpression {
+  public $statement;
   public $arguments= [];
 
   /**
    * Constructor
    *
-   * @param   string format
-   * @param   var* args
+   * @param  string $statement
+   * @param  var... $args
    */
   public function __construct() {
-    $this->arguments= func_get_args();
+    $this->statement= $statement;
+    $this->arguments= $arguments;
   }
 
   /**
@@ -39,7 +41,7 @@ class Statement extends \lang\Object implements SQLExpression {
    * @return  string
    */
   public function toString() {
-    return nameof($this)."@{\n  ".$this->arguments[0]."\n}";
+    return nameof($this)."@{\n  ".$this->statement."\n}";
   }
       
   /**
@@ -70,11 +72,16 @@ class Statement extends \lang\Object implements SQLExpression {
    * @return  rdbms.ResultSet
    */
   public function executeSelect(DBConnection $conn, Peer $peer, $jp= null, $buffered= true) {
-    $this->arguments[0]= preg_replace(
+    $statement= preg_replace(
       '/object\(([^\)]+)\)/i', 
       '$1.'.implode(', $1.', array_keys($peer->types)),
-      $this->arguments[0]
+      $this->statement
     );
-    return $buffered ? $conn->query(...$this->arguments) : $conn->open(...$this->arguments);
+
+    if ($buffered) {
+      return $conn->query($statement, ...$this->arguments);
+    } else {
+      return $conn->open($statement, ...$this->arguments);
+    }
   }
 } 
