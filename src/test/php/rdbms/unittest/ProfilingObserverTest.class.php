@@ -119,7 +119,7 @@ class ProfilingObserverTest extends TestCase {
 
     $elapsed= $o->elapsedTimeOfAll('queryend');
     $this->assertFalse(0 == $elapsed, $elapsed.'!= 0');
-    $this->assertTrue(0.099 <= $elapsed, $elapsed.' >= 0.099');
+    $this->assertTrue($elapsed >= 0.098, $elapsed.' >= 0.098');
   }
 
   #[@test]
