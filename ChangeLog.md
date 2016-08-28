@@ -3,6 +3,10 @@ RDBMS support for the XP Framework: MySQL, Sybase, MSSQL, PostgreSQL, SQLite3, I
 
 ## ?.?.? / ????-??-??
 
+## 9.0.1 / 2016-08-29
+
+* Added compatibility with xp-framework/networking v8.0.0 - @thekid
+
 ## 9.0.0 / 2016-08-28
 
 * Rewrote `call_user_func_array()` indirections to PHP 5.6 varargs and
