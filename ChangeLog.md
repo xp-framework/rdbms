@@ -5,6 +5,9 @@ RDBMS support for the XP Framework: MySQL, Sybase, MSSQL, PostgreSQL, SQLite3, I
 
 ## 9.0.0 / 2016-08-28
 
+* Rewrote `call_user_func_array()` indirections to PHP 5.6 varargs and
+  argument unpacking syntax - see pull request #17
+  (@thekid)
 * **Heads up: Dropped PHP 5.5 support!** - @thekid
 * Added forward compatibility with XP 8.0.0 - @thekid
 * Changed Finder API to raise rdbms.finder.FinderExceptions for nonexistant
