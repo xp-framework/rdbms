@@ -2,7 +2,7 @@
 
 use util\log\Logger;
 use rdbms\DBObserver;
-
+use rdbms\DBEvent;
 
 /**
  * Observer class to observe a SybaseConnections IO
@@ -78,14 +78,9 @@ class SybaseShowplanObserver extends \lang\Object implements \util\log\BoundLogO
    * @param   var dbevent
    */
   public function update($obs, $arg= null) {
-    if (!is('rdbms.DBEvent', $arg)) return;
-    
-    // Passthrough event to appropriate function, if existant
-    if (method_exists($this, 'on'.$arg->getName())) {
-      call_user_func_array(
-        [$this, 'on'.$arg->getName()],
-        [$obs, $arg]
-      );
+    if ($arg instanceof DBEvent) {
+      $event= 'on'.$arg->getName();
+      method_exists($this, $event) && $this->{$event}($obs, $arg);
     }
   }
   

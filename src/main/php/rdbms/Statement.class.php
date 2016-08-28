@@ -75,6 +75,6 @@ class Statement extends \lang\Object implements SQLExpression {
       '$1.'.implode(', $1.', array_keys($peer->types)),
       $this->arguments[0]
     );
-    return call_user_func_array([$conn, $buffered ? 'query' : 'open'], $this->arguments);
+    return $buffered ? $conn->query(...$this->arguments) : $conn->open(...$this->arguments);
   }
 } 
