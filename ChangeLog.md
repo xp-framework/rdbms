@@ -3,6 +3,13 @@ RDBMS support for the XP Framework: MySQL, Sybase, MSSQL, PostgreSQL, SQLite3, I
 
 ## ?.?.? / ????-??-??
 
+## 8.1.0 / 2016-08-28
+
+* Added forward compatibility with XP 8.0.0 - @thekid
+* Changed Finder API to raise rdbms.finder.FinderExceptions for nonexistant
+  methods instead of lang.Error
+  (@thekid)
+
 ## 8.0.1 / 2016-07-23
 
 * Fixed issue #34: Close connection when packet no. out of order

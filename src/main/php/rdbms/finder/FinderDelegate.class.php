@@ -33,6 +33,11 @@ abstract class FinderDelegate extends \lang\Object {
    * @return  var
    */
   public function __call($name, $args) {
-    return $this->select(call_user_func_array([$this->finder, $name], $args));
+    $delegate= [$this->finder, $name];
+    if (is_callable($delegate)) {
+      return $this->select(call_user_func_array([$this->finder, $name], $args));
+    } else {
+      throw new FinderException('No such method '.$name.' in '.nameof($this->finder));
+    }
   }
 }

@@ -6,7 +6,7 @@
   "description" : "RDBMS support for the XP Framework",
   "keywords": ["module", "xp"],
   "require" : {
-    "xp-framework/core": "^7.0 | ^6.11",
+    "xp-framework/core": "^8.0 | ^7.0 | ^6.11",
     "xp-framework/logging": "^7.0 | ^6.5",
     "xp-framework/networking": "^7.0 | ^6.6",
     "xp-framework/math": "^7.0 | ^6.6",

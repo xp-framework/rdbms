@@ -1,7 +1,5 @@
 <?php namespace rdbms\finder;
 
-
-
 /**
  * Generic finder that makes rdbms.Peer objects usable as finders.
  *

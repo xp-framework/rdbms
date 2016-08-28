@@ -321,7 +321,7 @@ class FinderTest extends TestCase {
     $this->fixture->findAll(new \rdbms\Criteria());
   }
 
-  #[@test, @expect(class= 'lang.Error', withMessage= '/Call to undefined method .+::nonExistantMethod/')]
+  #[@test, @expect(class= 'rdbms.finder.FinderException', withMessage= '/No such method nonExistantMethod/')]
   public function fluentNonExistantFinder() {
     $this->fixture->findAll()->nonExistantMethod(new \rdbms\Criteria());
   }

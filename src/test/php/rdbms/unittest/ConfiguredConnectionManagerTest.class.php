@@ -1,6 +1,8 @@
 <?php namespace rdbms\unittest;
 
 use util\Properties;
+use rdbms\ConnectionManager;
+use io\streams\MemoryInputStream;
 
 /**
  * Tests for configured connection managers
@@ -22,8 +24,12 @@ class ConfiguredConnectionManagerTest extends ConnectionManagerTest {
     foreach ($dsns as $name => $dsn) {
       $properties.= '['.$name."]\ndsn=\"".$dsn."\"\n";
     }
-    $cm= \rdbms\ConnectionManager::getInstance();
-    $cm->configure(Properties::fromString($properties));
+
+    $p= new Properties(null);
+    $p->load(new MemoryInputStream($properties));
+
+    $cm= ConnectionManager::getInstance();
+    $cm->configure($p);
     return $cm;
   }
 }
