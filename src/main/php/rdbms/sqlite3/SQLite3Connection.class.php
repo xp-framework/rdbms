@@ -88,7 +88,11 @@ class SQLite3Connection extends DBConnection {
     }
 
     $this->_obs && $this->notifyObservers(new \rdbms\DBEvent(\rdbms\DBEvent::CONNECT, $reconnect));
-    $database= urldecode($this->dsn->getDatabase());
+    $database= (string)urldecode($this->dsn->getDatabase());
+    if (0 === strlen($database) || false !== strpos($database, "\0")) {
+      throw new \rdbms\SQLConnectException('Illegal filename', $this->dsn);
+    }
+
     try {
       $this->handle= new \SQLite3($database, SQLITE3_OPEN_READWRITE | SQLITE3_OPEN_CREATE);
     } catch (\Exception $e) {

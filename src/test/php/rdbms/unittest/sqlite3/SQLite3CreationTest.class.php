@@ -44,6 +44,12 @@ class SQLite3CreationTest extends \unittest\TestCase {
   }
 
   #[@test, @expect(SQLConnectException::class)]
+  public function connect_fails_for_filenames_with_urlencoded_nul() {
+    $conn= new SQLite3Connection(new \rdbms\DSN('sqlite+3://./%00'));
+    $conn->connect();
+  }
+
+  #[@test, @expect(SQLConnectException::class)]
   public function connect_does_not_support_streams() {
     $conn= new SQLite3Connection(new \rdbms\DSN('sqlite+3://./res://database.db'));
     $conn->connect();
