@@ -3,8 +3,9 @@ RDBMS support for the XP Framework: MySQL, Sybase, MSSQL, PostgreSQL, SQLite3, I
 
 ## ?.?.? / ????-??-??
 
-## 8.1.0 / 2016-08-28
+## 9.0.0 / 2016-08-28
 
+* **Heads up: Dropped PHP 5.5 support!** - @thekid
 * Added forward compatibility with XP 8.0.0 - @thekid
 * Changed Finder API to raise rdbms.finder.FinderExceptions for nonexistant
   methods instead of lang.Error
