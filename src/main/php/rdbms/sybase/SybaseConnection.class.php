@@ -87,11 +87,9 @@ class SybaseConnection extends DBConnection {
    * @return  bool success
    */
   public function close() { 
-    if ($this->handle && $r= sybase_close($this->handle)) {
-      $this->handle= null;
-      return $r;
-    }
-    return false;
+    $this->handle && sybase_close($this->handle);
+    $this->handle= null;
+    return true;
   }
   
   /**

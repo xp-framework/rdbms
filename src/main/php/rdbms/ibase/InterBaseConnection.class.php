@@ -77,11 +77,9 @@ class InterBaseConnection extends DBConnection {
    * @return  bool success
    */
   public function close() { 
-    if ($this->handle && $r= ibase_close($this->handle)) {
-      $this->handle= null;
-      return $r;
-    }
-    return false;
+    $this->handle && ibase_close($this->handle);
+    $this->handle= null;
+    return true;
   }
   
   /**

@@ -126,12 +126,10 @@ class MySQLConnection extends DBConnection {
    *
    * @return  bool success
    */
-  public function close() { 
-    if ($this->handle && $r= mysql_close($this->handle)) {
-      $this->handle= null;
-      return $r;
-    }
-    return false;
+  public function close() {
+    $this->handle && mysql_close($this->handle);
+    $this->handle= null;
+    return true;
   }
   
   /**

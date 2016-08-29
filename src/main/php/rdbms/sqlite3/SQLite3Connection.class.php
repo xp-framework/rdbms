@@ -111,12 +111,9 @@ class SQLite3Connection extends DBConnection {
    * @return  bool success
    */
   public function close() {
-    if ($this->handle && $r= @$this->handle->close()) {
-      $this->handle= null;
-      return $r;
-    }
-
-    return false;
+    $this->handle && @$this->handle->close();
+    $this->handle= null;
+    return true;
   }
   
   /**

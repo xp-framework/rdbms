@@ -77,11 +77,9 @@ class PostgreSQLConnection extends DBConnection {
    * @return  bool success
    */
   public function close() {
-    if ($this->handle && $r= pg_close($this->handle)) {
-      $this->handle= null;
-      return $r;
-    }
-    return false;
+    $this->handle && pg_close($this->handle);
+    $this->handle= null;
+    return true;
   }
   
   /**
