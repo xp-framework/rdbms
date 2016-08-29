@@ -3,6 +3,12 @@ RDBMS support for the XP Framework: MySQL, Sybase, MSSQL, PostgreSQL, SQLite3, I
 
 ## ?.?.? / ????-??-??
 
+## 9.0.2 / 2016-08-29
+
+* Fixed drivers selecting mysqlnd-backed mysqli extension, which leads
+  to *mysqlnd cannot connect to MySQL 4.1+* errors
+  (@thekid)
+
 ## 9.0.1 / 2016-08-29
 
 * Added compatibility with xp-framework/networking v8.0.0 - @thekid
