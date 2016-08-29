@@ -116,9 +116,9 @@ class MySqlxConnection extends DBConnection {
    * @return  bool success
    */
   public function close() {
-    $this->handle->connected && $this->handle->close();
+    $r= $this->handle->connected && $this->handle->close();
     $this->handle->connected= false;
-    return true;
+    return (bool)$r;
   }
   
   /**

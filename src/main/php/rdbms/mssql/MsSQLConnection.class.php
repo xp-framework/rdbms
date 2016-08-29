@@ -86,9 +86,9 @@ class MsSQLConnection extends DBConnection {
    * @return  bool success
    */
   public function close() { 
-    $this->handle && mssql_close($this->handle);
+    $r= $this->handle && mssql_close($this->handle);
     $this->handle= null;
-    return true;
+    return (bool)$r;
   }
   
   /**

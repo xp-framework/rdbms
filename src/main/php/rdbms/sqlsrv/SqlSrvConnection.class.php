@@ -84,9 +84,9 @@ class SqlSrvConnection extends DBConnection {
    * @return  bool success
    */
   public function close() { 
-    $this->handle && sqlsrv_close($this->handle);
+    $r= $this->handle && sqlsrv_close($this->handle);
     $this->handle= null;
-    return true;
+    return (bool)$r;
   }
   
   /**

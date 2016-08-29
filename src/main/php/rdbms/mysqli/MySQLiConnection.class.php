@@ -121,9 +121,9 @@ class MySQLiConnection extends DBConnection {
    * @return  bool success
    */
   public function close() { 
-    $this->handle && mysqli_close($this->handle);
+    $r= $this->handle && mysqli_close($this->handle);
     $this->handle= null;
-    return true;
+    return (bool)$r;
   }
   
   /**
