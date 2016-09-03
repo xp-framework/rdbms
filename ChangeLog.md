@@ -3,6 +3,10 @@ RDBMS support for the XP Framework: MySQL, Sybase, MSSQL, PostgreSQL, SQLite3, I
 
 ## ?.?.? / ????-??-??
 
+## 9.0.4 / 2016-09-03
+
+* Fixed reference to SQLite driver - @thekid
+
 ## 9.0.3 / 2016-08-29
 
 * Ensure drivers correctly reconnect after an explicit call to `close()`

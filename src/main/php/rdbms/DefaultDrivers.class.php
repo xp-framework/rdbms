@@ -41,7 +41,7 @@ class DefaultDrivers extends DriverImplementationsProvider {
     self::$impl['pgsql']= ['rdbms.pgsql.PostgreSQLConnection'];
 
     // SQLite support
-    self::$impl['sqlite']= ['rdbms.sqlite3.SQLite3Connection', 'rdbms.sqlite.SQLiteConnection'];
+    self::$impl['sqlite']= ['rdbms.sqlite3.SQLite3Connection'];
 
     // Interbase support
     self::$impl['ibase']= ['rdbms.ibase.InterBaseConnection'];
