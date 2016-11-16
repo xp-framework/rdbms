@@ -1,4 +1,4 @@
-<?php namespace rdbms\sqlite;
+<?php namespace rdbms\sqlite3;
 
 use rdbms\DBAdapter;
 use rdbms\DBTableAttribute;
