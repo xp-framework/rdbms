@@ -79,15 +79,16 @@ class TdsV5Protocol extends TdsProtocol {
     $records[self::T_LONGCHAR]= newinstance('rdbms.tds.TdsRecord', [], '{
       public function unmarshal($stream, $field, $records) {
         $len= $stream->getLong();
-        $chars= null;
-        if ($len !== 0) {
+        if ($len === 0) {
+          return null;
+        } else {
           if (\xp::ENCODING === $field["conv"]) {
             $chars= $stream->read($len);
           } else {
             $chars= iconv($field["conv"], \xp::ENCODING, $stream->read($len));
           }
-        }
-        return $chars === " " ? "" : $chars;
+          return $chars === " " ? "" : $chars;
+        } 
       }
     }');
     return $records;
