@@ -8,6 +8,8 @@
  */
 class TdsV5Protocol extends TdsProtocol {
 
+  const T_LONGCHAR = 0xAF;
+
   static function __static() { }
 
   /**
@@ -72,6 +74,21 @@ class TdsV5Protocol extends TdsProtocol {
       public function unmarshal($stream, $field, $records) {
         $len= $stream->getLong();
         return $stream->getString($len / 2);
+      }
+    }');
+    $records[self::T_LONGCHAR]= newinstance('rdbms.tds.TdsRecord', [], '{
+      public function unmarshal($stream, $field, $records) {
+        $len= $stream->getLong();
+        if ($len === 0) {
+          return null;
+        } else {
+          if (\xp::ENCODING === $field["conv"]) {
+            $chars= $stream->read($len);
+          } else {
+            $chars= iconv($field["conv"], \xp::ENCODING, $stream->read($len));
+          }
+          return $chars === " " ? "" : $chars;
+        } 
       }
     }');
     return $records;

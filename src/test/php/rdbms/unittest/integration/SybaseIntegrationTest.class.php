@@ -208,4 +208,16 @@ class SybaseIntegrationTest extends RdbmsIntegrationTest {
     );
     $this->assertEquals(1, $q->next('result'));
   }
+
+  #[@test]
+  public function longcharImplementationRegression() {
+    $this->assertEquals([
+      'field1' => 'foo',
+      'field2' => 'bar'
+    ], $this->db()->query('
+      select
+        convert(varchar(5000), "foo") as "field1",
+        "bar" as "field2"
+    ')->next());
+  }
 }
