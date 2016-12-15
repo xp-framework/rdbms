@@ -3,6 +3,14 @@ RDBMS support for the XP Framework: MySQL, Sybase, MSSQL, PostgreSQL, SQLite3, I
 
 ## ?.?.? / ????-??-??
 
+## 7.3.3 / 2016-12-15
+
+* Backported changes from 9.0.5
+  * Merged PR #36: Implemented TDS_LONGCHAR
+    (@johannes85, @thekid)
+  * Merged PR #35: Fixed name and namespace mismatch for SQLite3DBAdapter
+    (@johannes85, @thekid)
+
 ## 7.3.2 / 2016-06-24
 
 * Merged PR #31: MySQL: Buffered queries inconsistency - @thekid
