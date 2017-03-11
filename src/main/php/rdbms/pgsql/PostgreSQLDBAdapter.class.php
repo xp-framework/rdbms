@@ -39,7 +39,9 @@ class PostgreSQLDBAdapter extends DBAdapter {
       'float'      => DBTableAttribute::DB_ATTRTYPE_FLOAT,
       'money'      => DBTableAttribute::DB_ATTRTYPE_MONEY,
       'numeric'    => DBTableAttribute::DB_ATTRTYPE_NUMERIC,
-      'bool'       => DBTableAttribute::DB_ATTRTYPE_BIT
+      'bool'       => DBTableAttribute::DB_ATTRTYPE_BIT,
+      'json'       => DBTableAttribute::DB_ATTRTYPE_TEXT,
+      'jsonb'      => DBTableAttribute::DB_ATTRTYPE_TEXT
     ];
     parent::__construct($conn);
   }
