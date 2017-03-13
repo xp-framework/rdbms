@@ -3,6 +3,11 @@ RDBMS support for the XP Framework: MySQL, Sybase, MSSQL, PostgreSQL, SQLite3, I
 
 ## ?.?.? / ????-??-??
 
+## 7.3.4 / 2017-03-13
+
+* Backported changes from 9.0.6
+  * Merged PR #37: Add column types json and jsonb, treat them as regular text columns
+
 ## 7.3.3 / 2016-12-15
 
 * Backported changes from 9.0.5
