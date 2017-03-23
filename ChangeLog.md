@@ -3,6 +3,10 @@ RDBMS support for the XP Framework: MySQL, Sybase, MSSQL, PostgreSQL, SQLite3, I
 
 ## ?.?.? / ????-??-??
 
+## 9.0.7 / 2017-03-23
+
+* Merged PR #38: Catch null value (PostgreSQL) - @treuter
+
 ## 9.0.6 / 2017-03-11
 
 * Merged PR #37: Add column types json and jsonb, treat them as regular
