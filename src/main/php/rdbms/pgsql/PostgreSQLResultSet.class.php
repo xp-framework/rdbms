@@ -55,6 +55,7 @@ class PostgreSQLResultSet extends ResultSet {
     }
     
     foreach ($row as $key => $value) {
+      if (null === $value || !isset($this->fields[$key])) continue;
       switch ($this->fields[$key]) {
         case 'date':
         case 'time':
