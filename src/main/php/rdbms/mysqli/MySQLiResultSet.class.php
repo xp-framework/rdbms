@@ -106,4 +106,11 @@ class MySQLiResultSet extends ResultSet {
     $this->handle= null;
     return $r;
   }
+
+  /**
+   * Automatically close resultset and free result memory when resultset object is destroyed
+   */
+  public function __destruct() {
+    $this->close();
+  }
 }
