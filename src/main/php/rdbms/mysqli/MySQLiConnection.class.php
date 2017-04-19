@@ -16,7 +16,6 @@ use rdbms\QuerySucceeded;
  * @purpose  Database connection
  */
 class MySQLiConnection extends DBConnection {
-  protected $result= null;
 
   static function __static() {
     if (extension_loaded('mysqli')) {
@@ -180,12 +179,6 @@ class MySQLiConnection extends DBConnection {
       // Check for subsequent connection errors
       if (false === $c) throw new \rdbms\SQLStateException('Previously failed to connect.');
     }
-    
-    // Clean up previous results to prevent "Commands out of sync" errors
-    if (null !== $this->result) {
-      mysqli_free_result($this->result);
-      $this->result= null;
-    }
 
     // Execute query
     $mode= !$buffered || $this->flags & DB_UNBUFFERED;
@@ -209,8 +202,7 @@ class MySQLiConnection extends DBConnection {
     } else if ($buffered) {
       return new MySQLiResultSet($r, $this->tz);
     } else {
-      $this->result= $r;
-      return new MySQLiResultSet($this->result, $this->tz);
+      return new MySQLiResultSet($r, $this->tz);
     }
   }
 
