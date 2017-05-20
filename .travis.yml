@@ -4,8 +4,6 @@ language: php
 
 sudo: false
 
-dist: trusty
-
 services:
   - mysql
   - postgresql
@@ -19,6 +17,7 @@ php:
 
 matrix:
   allow_failures:
+    - php: hhvm
     - php: nightly
 
 before_install:
