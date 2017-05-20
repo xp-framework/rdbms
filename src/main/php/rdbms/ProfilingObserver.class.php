@@ -4,7 +4,7 @@ use util\Observer;
 use util\log\Logger;
 use util\log\Traceable;
 use util\profiling\Timer;
-
+use lang\IllegalArgumentException;
 
 /**
  * Profiling database observer
@@ -69,7 +69,7 @@ class ProfilingObserver extends \lang\Object implements Observer, Traceable {
    */
   public function update($obs, $arg= null) {
     if (!$obs instanceof DBConnection) {
-      throw new \lang\IllegalArgumentException('Argument 1 must be instanceof "rdbms.DBConnection", "'.\xp::typeOf($obs).'" given.');
+      throw new IllegalArgumentException('Argument 1 must be instanceof "rdbms.DBConnection", "'.typeof($obs)->getName().'" given.');
     }
     if (!$arg instanceof DBEvent) return;
 
