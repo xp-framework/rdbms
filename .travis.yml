@@ -4,8 +4,6 @@ language: php
 
 sudo: false
 
-dist: trusty
-
 services:
   - mysql
   - postgresql
@@ -22,7 +20,6 @@ matrix:
     - php: nightly
 
 before_install:
-  - mysql -e 'set password for "root"@"localhost" = password("");' -uroot
   - mysql -e 'create database IF NOT EXISTS test;' -uroot
   - psql -c 'create database travis_ci_test;' -U postgres
 
