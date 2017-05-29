@@ -5,8 +5,10 @@ use rdbms\SQLException;
 use rdbms\DefaultDrivers;
 use util\profiling\Timer;
 use util\cmd\Console;
+use util\Date;
 use io\streams\Streams;
 use lang\XPClass;
+use lang\IllegalArgumentException;
 
 /**
  * Runs SQL statements
@@ -16,6 +18,10 @@ use lang\XPClass;
  *   ```sh
  *   $ xp sql 'sqlite://./test.db' 'select * from test'
  *   ```
+ * - Change output mode by appending *-m* and one of *csv*, *vert*
+ *   ```sh
+ *   $ xp sql 'sqlite://./test.db' 'select * from test;-m csv'
+ *   ```
  * - Read SQL statement from standard input using "-"
  *   ```sh
  *   $ cat statement.sql | xp sql 'sqlite://./test.db' -
@@ -24,6 +30,32 @@ use lang\XPClass;
  * Invoking without arguments shows a list of available drivers.
  */
 class SqlRunner {
+  private static $display;
+
+  static function __static() {
+    self::$display= [
+      'vert' => function($record) {
+        $r= '';
+        foreach ($record as $key => $value) {
+          $r.= $key.': '.\xp::stringOf($value)."\n";
+        }
+        return $r;
+      },
+      'csv'  => function($record) {
+        $r= [];
+        foreach ($record as $value) {
+          if ($value instanceof Date) {
+            $r[]= $value->toString('r');
+          } else if (is_string($value)) {
+            $r[]= '"'.strtr($value, ['"' => '""', "\r" => '', "\n" => '']).'"';
+          } else {
+            $r[]= $value;
+          }
+        }
+        return implode(';', $r);
+      }
+    ];
+  }
 
   /**
    * Shows drivers
@@ -85,6 +117,15 @@ class SqlRunner {
         $sql= $statement;
       }
 
+      if (false === ($p= strrpos($sql, ';'))) {
+        $mode= 'vert';
+      } else {
+        $mode= trim(strtr(strtolower(substr($sql, $p + 1)), ['-m' => ''])) ?: 'vert';
+        if (!isset(self::$display[$mode])) {
+          throw new IllegalArgumentException('No such display mode "'.$mode.'"');
+        }
+      }
+
       try {
         $timer->start();
         $q= $conn->query($sql);
@@ -93,7 +134,7 @@ class SqlRunner {
         } else {
           $rows= 0;
           while ($record= $q->next()) {
-            Console::writeLine($record);
+            Console::writeLine(self::$display[$mode]($record));
             $rows++;
           }
           Console::$err->writeLinef('%d rows in set (%.2f sec)', $rows, $timer->elapsedTime());
