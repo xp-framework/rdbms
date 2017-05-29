@@ -1,6 +1,7 @@
 <?php namespace xp\rdbms;
 
 use rdbms\DriverManager;
+use rdbms\SQLException;
 use rdbms\DefaultDrivers;
 use util\profiling\Timer;
 use util\cmd\Console;
@@ -30,7 +31,7 @@ class SqlRunner {
    * @param  rdbms.DriverImplementationsProvider $provider
    * @return int
    */
-  private function drivers($provider) {
+  private static function drivers($provider) {
     Console::writeLine("\e[33m@", nameof($provider), "\e[0m");
     Console::writeLine("\e[1mAvailable drivers\e[0m");
     Console::writeLine(str_repeat('═', 72));
@@ -61,7 +62,7 @@ class SqlRunner {
    * @param  string $dsn
    * @return int
    */
-  private function interactive($dsn) {
+  private static function interactive($dsn) {
     Console::$err->writeLine('Not yet implemented');
     return 255;
   }
@@ -73,7 +74,7 @@ class SqlRunner {
    * @param  string... $statements
    * @return int
    */
-  private function execute($dsn, ...$statements) {
+  private static function execute($dsn, ...$statements) {
     $conn= DriverManager::getConnection($dsn);
     $timer= new Timer();
 
