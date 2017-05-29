@@ -47,6 +47,9 @@ class DefaultDrivers extends DriverImplementationsProvider {
     self::$impl['ibase']= ['rdbms.ibase.InterBaseConnection'];
   }
 
+  /** @return string[] */
+  public function drivers() { return array_keys(self::$impl); }
+
   /**
    * Returns an array of class names implementing a given driver
    *

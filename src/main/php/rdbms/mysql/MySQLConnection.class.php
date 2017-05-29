@@ -6,7 +6,7 @@ use rdbms\StatementFormatter;
 use rdbms\QuerySucceeded;
 
 /**
- * Connection to MySQL Databases
+ * Connection to MySQL Databases via ext/mysql
  *
  * @see      http://mysql.org/
  * @ext      mysql
