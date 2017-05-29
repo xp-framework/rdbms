@@ -30,19 +30,18 @@ class SqlRunner {
     try {
       $q= $conn->query($sql);
       if ($q->isSuccess()) {
-        Console::writeLinef('Query OK, %d rows affected (%.2f sec)', $q->affected(), $timer->elapsedTime());
+        Console::$err->writeLinef('Query OK, %d rows affected (%.2f sec)', $q->affected(), $timer->elapsedTime());
       } else {
         $rows= 0;
         while ($record= $q->next()) {
           Console::writeLine($record);
           $rows++;
         }
-        Console::writeLinef('%d rows in set (%.2f sec)', $rows, $timer->elapsedTime());
+        Console::$err->writeLinef('%d rows in set (%.2f sec)', $rows, $timer->elapsedTime());
       }
       $q->close();
-      Console::writeLine();
     } catch (SQLException $e) {
-      Console::writeLine("\e[31m*** ", $e->compoundMessage(), "\e[0m");
+      Console::$err->writeLine("\e[31m*** ", $e->compoundMessage(), "\e[0m");
     }
     return 0;
   }
