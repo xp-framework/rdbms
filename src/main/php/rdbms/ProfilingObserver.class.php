@@ -12,7 +12,7 @@ use lang\IllegalArgumentException;
  * Attach to database by appending `&observer[rdbms.ProfilingObserver]=default` where
  * `default` denotes the log category to log to.
  */
-class ProfilingObserver extends \lang\Object implements Observer, Traceable {
+class ProfilingObserver implements Observer, Traceable {
   const COUNT= 0x01;
   const TIMES= 0x02;
 

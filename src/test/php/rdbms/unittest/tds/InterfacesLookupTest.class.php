@@ -15,7 +15,7 @@ class InterfacesLookupTest extends \unittest\TestCase {
    * Sets up test case
    */
   public function setUp() {
-    $this->fixture= new InterfacesLookup($this->getClass()->getPackage()->getResourceAsStream('interfaces'));
+    $this->fixture= new InterfacesLookup(typeof($this)->getPackage()->getResourceAsStream('interfaces'));
   }
   
   #[@test]

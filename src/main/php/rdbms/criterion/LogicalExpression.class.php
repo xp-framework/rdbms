@@ -6,7 +6,7 @@ define('LOGICAL_OR',  'or');
 /**
  * Logical expression
  */
-class LogicalExpression extends \lang\Object implements Criterion {
+class LogicalExpression implements Criterion {
   public
     $criterions = [],
     $op         = '';

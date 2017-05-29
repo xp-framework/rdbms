@@ -8,7 +8,7 @@ use util\NoSuchElementException;
  * @test  xp://net.xp_framework.unittest.rdbms.DataSetTest
  * @see   xp://rdbms.Peer
  */
-class ResultIterator extends \lang\Object implements \util\XPIterator {
+class ResultIterator implements \util\XPIterator {
   public
     $_rs         = null,
     $_identifier = '',

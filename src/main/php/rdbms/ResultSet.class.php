@@ -17,7 +17,7 @@ use lang\Closeable;
  *
  * @test  xp://rdbms.unittest.ResultSetTest
  */
-abstract class ResultSet extends \lang\Object implements Closeable, \IteratorAggregate {
+abstract class ResultSet implements Closeable, \IteratorAggregate {
   protected $handle, $fields, $tz;
   private $iterator= null;
 

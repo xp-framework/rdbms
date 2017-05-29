@@ -8,7 +8,7 @@ use io\File;
  * @test    xp://net.xp_framework.unittest.rdbms.tds.FreeTdsLookupTest
  * @test    xp://net.xp_framework.unittest.rdbms.tds.FreeTdsConfigLocationTest
  */
-class FreeTdsLookup extends \lang\Object implements ConnectionLookup {
+class FreeTdsLookup implements ConnectionLookup {
   protected $conf= null;
   
   /**

@@ -5,7 +5,7 @@
  *
  * @purpose  Enumeration
  */
-class FieldType extends \lang\Object {
+class FieldType {
   const BINARY =         0x0000;             
   const BIT =            0x0001;               
   const CHAR =           0x0002;              

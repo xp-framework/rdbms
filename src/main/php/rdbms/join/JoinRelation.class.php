@@ -10,7 +10,7 @@
  * @purpose rdbms.join
  *
  */
-class JoinRelation extends \lang\Object {
+class JoinRelation {
   private
     $source= null,
     $target= null,

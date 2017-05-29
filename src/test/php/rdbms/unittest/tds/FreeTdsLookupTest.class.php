@@ -15,7 +15,7 @@ class FreeTdsLookupTest extends \unittest\TestCase {
    * Sets up test case
    */
   public function setUp() {
-    $this->fixture= new FreeTdsLookup($this->getClass()->getPackage()->getResourceAsStream('freetds.conf'));
+    $this->fixture= new FreeTdsLookup(typeof($this)->getPackage()->getResourceAsStream('freetds.conf'));
   }
   
   #[@test]

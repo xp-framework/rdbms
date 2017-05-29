@@ -3,6 +3,10 @@ RDBMS support for the XP Framework: MySQL, Sybase, MSSQL, PostgreSQL, SQLite3, I
 
 ## ?.?.? / ????-??-??
 
+## 10.0.0 / 2017-05-29
+
+* Merged PR #39: XP9 Compatibility - @thekid
+
 ## 9.0.8 / 2017-05-20
 
 * Refactored code to use `typeof()` instead of `xp::typeOf()`, see

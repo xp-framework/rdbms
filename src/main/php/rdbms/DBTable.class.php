@@ -6,7 +6,7 @@
  * Represents a database table
  *
  */  
-class DBTable extends \lang\Object {
+class DBTable {
   public 
     $name=          '',
     $attributes=    [],

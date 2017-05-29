@@ -14,7 +14,7 @@ use rdbms\criterion\Restrictions;
  *   $criteria= create(new Criteria())->add($col->equal(5));
  * </code>
  */
-class Column extends \lang\Object implements SQLFragment {
+class Column implements SQLFragment {
   private
     $peer= null,
     $type= '',

@@ -5,7 +5,7 @@ use util\Date;
 /**
  * Abstract base class for TDS records
  */
-abstract class TdsRecord extends \lang\Object {
+abstract class TdsRecord {
   protected static $precision;
 
   static function __static() {

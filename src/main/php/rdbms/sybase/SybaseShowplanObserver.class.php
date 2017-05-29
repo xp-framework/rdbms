@@ -11,7 +11,7 @@ use rdbms\DBEvent;
  * @ext      sybase
  * @purpose  Observe SybaseConnection
  */
-class SybaseShowplanObserver extends \lang\Object implements \util\log\BoundLogObserver {
+class SybaseShowplanObserver implements \util\log\BoundLogObserver {
   protected
     $messages     = [],
     $queries      = [];

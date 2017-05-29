@@ -11,7 +11,7 @@ use peer\ProtocolException;
  * @see   http://www.freetds.org/tds.html
  * @see   https://github.com/mono/mono/tree/master/mcs/class/Mono.Data.Tds/Mono.Data.Tds.Protocol
  */
-abstract class TdsProtocol extends \lang\Object {
+abstract class TdsProtocol {
   protected $servercs= 'cp850';
   protected $stream= null;
   protected $done= false;

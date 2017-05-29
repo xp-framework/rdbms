@@ -5,7 +5,7 @@
  *
  * @deprecated use rdbms.Column instead
  */
-class Property extends \lang\Object {
+class Property {
   protected static $instances= [];
   public $name;
 

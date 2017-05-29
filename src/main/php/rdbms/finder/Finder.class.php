@@ -63,7 +63,7 @@ use lang\MethodNotImplementedException;
  * @test     xp://net.xp_framework.unittest.rdbms.FinderTest
  * @purpose  Base class for all finder
  */
-abstract class Finder extends \lang\Object {
+abstract class Finder {
 
   /**
    * Returns the associated peer objects
@@ -80,7 +80,7 @@ abstract class Finder extends \lang\Object {
    */
   protected function finderMethods($kind) {
     $r= [];
-    foreach ($this->getClass()->getMethods() as $m) {
+    foreach (typeof($this)->getMethods() as $m) {
       if (
         $m->hasAnnotation('finder') &&
         (null === $kind || $kind == $m->getAnnotation('finder', 'kind'))
@@ -130,7 +130,7 @@ abstract class Finder extends \lang\Object {
     null === $name && $name= 'all';
 
     try {
-      $m= $this->getClass()->getMethod($name);
+      $m= typeof($this)->getMethod($name);
     } catch (\lang\ElementNotFoundException $e) {
       throw new FinderException('No such finder', new MethodNotImplementedException('Cannot find finder method', $name));
     }

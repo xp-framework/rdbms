@@ -85,7 +85,7 @@ class DriverManagerTest extends \unittest\TestCase {
 
   #[@test, @expect(IllegalArgumentException::class)]
   public function registerNonDbConnection() {
-    $this->register('fail', $this->getClass());
+    $this->register('fail', typeof($this));
   }
 
   #[@test]

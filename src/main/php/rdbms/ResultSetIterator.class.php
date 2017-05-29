@@ -5,7 +5,7 @@
  *
  * @test xp://rdbms.unittest.ResultSetTest
  */
-class ResultSetIterator extends \lang\Object implements \Iterator {
+class ResultSetIterator implements \Iterator {
   const EOF = -1;
   protected $rs, $offset, $current;
 

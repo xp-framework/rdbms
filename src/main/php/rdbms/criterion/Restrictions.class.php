@@ -5,7 +5,7 @@
  *
  * @test  xp://net.xp_framework.unittest.rdbms.CriteriaTest
  */
-class Restrictions extends \lang\Object {
+class Restrictions {
 
   /**
    * Apply an "in" constraint to the named property

@@ -5,7 +5,7 @@
  *
  * @purpose  Wrap database events
  */
-class DBEvent extends \lang\Object {
+class DBEvent {
   const
     CONNECT   = 'connect',
     CONNECTED = 'connected',

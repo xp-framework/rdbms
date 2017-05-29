@@ -3,7 +3,7 @@
 /**
  * Between expression
  */
-class BetweenExpression extends \lang\Object implements Criterion {
+class BetweenExpression implements Criterion {
   public
     $lhs    = '',
     $lo     = null,

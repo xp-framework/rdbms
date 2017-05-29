@@ -3,7 +3,7 @@
 /**
  * A Record saves key value pairs
  */
-class Record extends \lang\Object {
+class Record {
   
   /**
    * Constructor. Supports the array syntax, where an associative

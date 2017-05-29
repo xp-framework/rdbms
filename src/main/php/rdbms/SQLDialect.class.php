@@ -8,7 +8,7 @@
  * @test     xp://net.xp_framework.unittest.rdbms.SQLDialectTest
  * @purpose  Base class for all dialects 
  */
-abstract class SQLDialect extends \lang\Object {
+abstract class SQLDialect {
   private static
     $dateparts= [
       'day'         => 'day',

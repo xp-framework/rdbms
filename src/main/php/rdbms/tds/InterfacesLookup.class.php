@@ -7,7 +7,7 @@ use io\File;
  *
  * @test    xp://net.xp_framework.unittest.rdbms.tds.InterfacesLookupTest
  */
-class InterfacesLookup extends \lang\Object implements ConnectionLookup {
+class InterfacesLookup implements ConnectionLookup {
   protected $file= null;
   
   /**

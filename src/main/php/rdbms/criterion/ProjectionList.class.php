@@ -33,7 +33,7 @@
  * @test  xp://net.xp_framework.unittest.rdbms.ProjectionListTest
  * @see   xp://rdbms.criterion.Projections
  */
-class ProjectionList extends \lang\Object implements Projection {
+class ProjectionList implements Projection {
   protected $projections= [];
 
   /**

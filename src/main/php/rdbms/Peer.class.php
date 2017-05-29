@@ -14,7 +14,7 @@
  * @test  xp://net.xp_framework.unittest.rdbms.DataSetTest
  * @see   xp://rdbms.DataSet
  */
-class Peer extends \lang\Object {
+class Peer {
   protected static 
     $instance   = [];
 

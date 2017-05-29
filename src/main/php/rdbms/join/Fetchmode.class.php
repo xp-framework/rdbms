@@ -9,7 +9,7 @@
  * @purpose rdbms.join
  * @see     xp://rdbms.Criteria#setFetchmode
  */
-class Fetchmode extends \lang\Object {
+class Fetchmode {
   private
     $path= '',
     $mode= '';

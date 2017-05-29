@@ -7,7 +7,7 @@ use rdbms\SQLFragment;
 /**
  * Simple expression
  */
-class SimpleExpression extends \lang\Object implements Criterion {
+class SimpleExpression implements Criterion {
   public
     $lhs    = null,
     $value  = null,

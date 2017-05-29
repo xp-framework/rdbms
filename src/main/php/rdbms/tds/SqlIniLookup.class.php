@@ -7,7 +7,7 @@ use io\File;
  *
  * @test    xp://net.xp_framework.unittest.rdbms.tds.SqlIniLookupTest
  */
-class SqlIniLookup extends \lang\Object implements ConnectionLookup {
+class SqlIniLookup implements ConnectionLookup {
   protected $ini= null;
   
   /**

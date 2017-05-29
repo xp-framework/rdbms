@@ -25,7 +25,7 @@ use rdbms\Criteria;
  * @see      xp://rdbms.query.UpdateQuery
  * @purpose  Base class for SelectQuery, DeleteQuery and UpdateQuery
  */
-abstract class Query extends \lang\Object implements QueryExecutable {
+abstract class Query implements QueryExecutable {
   protected
     $criteria=     null,
     $peer=         null;

@@ -50,7 +50,7 @@ use rdbms\Record;
  * @see      xp://rdbms.query.Query
  * @purpose  rdbms.query
  */
-class SetOperation extends \lang\Object implements SelectQueryExecutable {
+class SetOperation implements SelectQueryExecutable {
   const UNION=         'union';
   const UNION_ALL=     'union_all';
   const INTERCEPT=     'intercept';

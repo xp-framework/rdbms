@@ -14,7 +14,7 @@ use io\File;
  *
  * @see     http://dev.mysql.com/doc/refman/5.1/en/option-files.html
  */
-abstract class LocalSocket extends \lang\Object {
+abstract class LocalSocket {
 
   /**
    * Returns the implementation for the given operating system.

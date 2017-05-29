@@ -1,6 +1,8 @@
 <?php namespace rdbms;
 
 use rdbms\join\JoinExtractable;
+use lang\Value;
+use util\Objects;
 
 /**
  * A dataset represents a row of data selected from a database. Dataset 
@@ -72,7 +74,7 @@ use rdbms\join\JoinExtractable;
  * @see      xp://rdbms.ConnectionManager
  * @purpose  Base class
  */
-abstract class DataSet extends \lang\Object implements JoinExtractable {
+abstract class DataSet implements Value, JoinExtractable {
   public
     $_new         = true,
     $_changed     = [];
@@ -374,5 +376,24 @@ abstract class DataSet extends \lang\Object implements JoinExtractable {
     $affected= $peer->doDelete($criteria);
     $this->_changed= [];
     return $affected;
+  }
+
+  /**
+   * Returns a hashcode for this object
+   *
+   * @return  string
+   */
+  public function hashCode() {
+    return 'D'.Objects::hashOf((array)$this);
+  }
+
+  /**
+   * Compares this DSN to another given value
+   *
+   * @param  var $value
+   * @return int
+   */    
+  public function compareTo($value) {
+    return $value instanceof self ? Objects::compare((array)$this, (array)$value) : 1;
   }
 }

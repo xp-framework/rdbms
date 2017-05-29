@@ -65,7 +65,7 @@
  *
  * @test     xp://net.xp_framework.unittest.rdbms.DriverManagerTest
  */
-class DriverManager extends \lang\Object {
+class DriverManager {
   protected static $instance= null;
   public $drivers= [];
   protected $lookup= [];

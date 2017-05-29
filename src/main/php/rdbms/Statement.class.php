@@ -20,7 +20,7 @@
  *
  * @test  xp://net.xp_framework.unittest.rdbms.StatementTest
  */
-class Statement extends \lang\Object implements SQLExpression {
+class Statement implements SQLExpression {
   public $statement;
   public $arguments= [];
 

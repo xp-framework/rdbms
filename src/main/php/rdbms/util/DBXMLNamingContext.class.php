@@ -5,7 +5,7 @@
  * Generate Names for database generated classes
  *
  */
-class DBXMLNamingContext extends \lang\Object {
+class DBXMLNamingContext {
 
   private static $strategy= null;
   

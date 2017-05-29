@@ -11,7 +11,7 @@ use xml\Tree;
  *
  * @see   xp://rdbms.DBTable
  */
-class DBConstraintXmlGenerator extends \lang\Object implements Traceable {
+class DBConstraintXmlGenerator implements Traceable {
   protected
     $cat= null,
     $tables= null;
