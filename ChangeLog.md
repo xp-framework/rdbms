@@ -3,7 +3,7 @@ RDBMS support for the XP Framework: MySQL, Sybase, MSSQL, PostgreSQL, SQLite3, I
 
 ## ?.?.? / ????-??-??
 
-## 10.0.0 / 2017-05-29
+## 10.0.0 / ????-??-??
 
 * Merged PR #39: XP9 Compatibility - @thekid
 
