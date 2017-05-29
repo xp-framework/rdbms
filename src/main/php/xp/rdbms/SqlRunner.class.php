@@ -64,8 +64,8 @@ class SqlRunner {
    * @return int
    */
   private static function drivers($provider) {
-    Console::writeLine("\e[33m@", nameof($provider), "\e[0m");
-    Console::writeLine("\e[1mAvailable drivers\e[0m");
+    Console::writeLine("\e[33m@", typeof($provider)->getClassLoader(), "\e[0m");
+    Console::writeLine("\e[1mAvailable drivers via ", nameof($provider), "\e[0m");
     Console::writeLine(str_repeat('═', 72));
     Console::writeLine();
 
