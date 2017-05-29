@@ -130,14 +130,14 @@ class SqlRunner {
         $timer->start();
         $q= $conn->query($sql);
         if ($q->isSuccess()) {
-          Console::$err->writeLinef('Query OK, %d rows affected (%.2f sec)', $q->affected(), $timer->elapsedTime());
+          Console::$err->writeLinef('Query OK, %d row(s) affected (%.2f sec)', $q->affected(), $timer->elapsedTime());
         } else {
           $rows= 0;
           while ($record= $q->next()) {
             Console::writeLine(self::$display[$mode]($record));
             $rows++;
           }
-          Console::$err->writeLinef('%d rows in set (%.2f sec)', $rows, $timer->elapsedTime());
+          Console::$err->writeLinef('%d row(s) in set (%.2f sec)', $rows, $timer->elapsedTime());
         }
         $q->close();
       } catch (SQLException $e) {
