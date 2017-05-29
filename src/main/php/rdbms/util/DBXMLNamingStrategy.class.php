@@ -4,7 +4,7 @@
  * Generate Names for database generated classes
  *
  */
-abstract class DBXMLNamingStrategy extends \lang\Object {
+abstract class DBXMLNamingStrategy {
   
   /**
    * assemble th name of a foreign key constraint

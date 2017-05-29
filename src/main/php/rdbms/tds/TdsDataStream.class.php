@@ -8,7 +8,7 @@ use lang\IllegalArgumentException;
  * @see     xp://rdbms.tds.TdsV7Protocolo#read
  * @test    xp://net.xp_framework.unittest.rdbms.tds.TdsDataStreamTest
  */
-class TdsDataStream extends \lang\Object {
+class TdsDataStream {
   protected $pkt= 0;
   protected $packetSize= 0;
   protected $sock= null;

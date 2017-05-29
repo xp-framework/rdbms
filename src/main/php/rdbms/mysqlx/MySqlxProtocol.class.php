@@ -9,7 +9,7 @@ use util\Date;
  *
  * @see   http://forge.mysql.com/wiki/MySQL_Internals_ClientServer_Protocol
  */
-class MySqlxProtocol extends \lang\Object {
+class MySqlxProtocol {
   protected $pkt= 0, $thread= 0;
   protected $sock= null;
   public $connected= false;

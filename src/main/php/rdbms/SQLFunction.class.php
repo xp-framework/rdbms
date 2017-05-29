@@ -3,7 +3,7 @@
 /**
  * Represents an SQL standard procedure
  */
-class SQLFunction extends \lang\Object implements SQLFragment {
+class SQLFunction implements SQLFragment {
   public
     $func = '',
     $type = '%s',

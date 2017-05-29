@@ -8,7 +8,7 @@
  * @see      xp://rdbms.DBTable
  * @purpose  RDBMS reflection
  */  
-abstract class DBAdapter extends \lang\Object {
+abstract class DBAdapter {
   public
     $conn=  null;
     

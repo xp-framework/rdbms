@@ -11,7 +11,7 @@ use rdbms\DBConnection;
  * @see   xp://rdbms.criterion.CountProjection
  * @see   xp://rdbms.criterion.ProjectionList
  */
-class SimpleProjection extends \lang\Object implements Projection {
+class SimpleProjection implements Projection {
   protected $field, $command;
 
   /**

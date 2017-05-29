@@ -69,7 +69,7 @@ class TdsDataStreamTest extends \unittest\TestCase {
    * @throws  unittest.AssertionFailedError
    */
   protected function assertBytes($bytes, $str) {
-    $field= $str->getClass()->getField('sock')->setAccessible(true);
+    $field= typeof($str)->getField('sock')->setAccessible(true);
     $this->assertEquals(new Bytes($bytes), new Bytes($field->get($str)->bytes));
   }
 

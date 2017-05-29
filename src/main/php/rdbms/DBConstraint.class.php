@@ -3,7 +3,7 @@
 /**
  * Represents a database constaint
  */
-abstract class DBConstraint extends \lang\Object {
+abstract class DBConstraint {
 
   public 
     $name= '';

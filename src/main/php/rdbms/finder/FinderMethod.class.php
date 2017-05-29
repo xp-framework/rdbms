@@ -14,7 +14,7 @@
  * @see      xp://rdbms.finder.Finder
  * @purpose  Method wrapper
  */
-class FinderMethod extends \lang\Object {
+class FinderMethod {
   protected
     $finder= null, 
     $method= null;

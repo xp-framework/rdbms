@@ -5,7 +5,7 @@
  *
  * @see   xp://rdbms.DBTable
  */
-class DBTableAttribute extends \lang\Object {
+class DBTableAttribute {
   public 
     $name=        '',
     $type=        -1,

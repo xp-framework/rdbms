@@ -5,7 +5,7 @@
  *
  * @see   xp://net.xp_framework.unittest.rdbms.mock.MockConnection
  */
-class RegisterMockConnection extends \lang\Object implements \unittest\TestClassAction {
+class RegisterMockConnection implements \unittest\TestClassAction {
   const MOCK_CONNECTION_CLASS = 'rdbms.unittest.mock.MockConnection';
 
   /**

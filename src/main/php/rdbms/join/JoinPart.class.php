@@ -15,7 +15,7 @@ use util\collections\HashTable;
  * @see     xp://rdbms.join.JoinTableAttributes
  * @purpose rdbms.join
  */
-class JoinPart extends \lang\Object {
+class JoinPart {
   public
     $peer=      null;
 

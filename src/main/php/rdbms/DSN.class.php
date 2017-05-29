@@ -1,8 +1,8 @@
 <?php namespace rdbms;
 
 use peer\URL;
+use lang\Value;
 use util\Objects;
-
 
 define('DB_STORE_RESULT',     0x0001);
 define('DB_UNBUFFERED',       0x0002);
@@ -21,22 +21,19 @@ define('DB_NEWLINK',          0x0010);
  * @test     xp://net.xp_framework.unittest.rdbms.DSNTest
  * @purpose  Unified connect string
  */
-class DSN extends \lang\Object {
+class DSN implements Value {
   public 
     $url      = null,
-    $dsn      = [],
     $flags    = 0,
     $prop     = [];
     
   /**
    * Constructor
    *
-   * @param   string str
+   * @param  string $str
    */
   public function __construct($str) {
     $this->url= new URL($str);
-    $this->dsn= $str;
-
     if ($config= $this->url->getParams()) {
       foreach ($config as $key => $value) {
         if (defined('DB_'.strtoupper($key))) {
@@ -157,11 +154,12 @@ class DSN extends \lang\Object {
    * Returns a string representation of this object, by default anonymizing
    * the password.
    *
-   * @param   bool raw default FALSE
-   * @return  string
+   * @param  bool $password
+   * @param  bool $query
+   * @return string
    */
-  public function asString($raw= false) {
-    $pass= (true === $raw
+  public function asString($password= false, $query= true) {
+    $pass= ($password
       ? ':'.$this->url->getPassword()
       : ($this->url->getPassword() ? ':********' : '')
     );
@@ -177,7 +175,7 @@ class DSN extends \lang\Object {
         : ''
       ),
       $this->getDatabase() ? $this->getDatabase() : '',
-      $this->url->getQuery() ? '?'.$this->url->getQuery() : ''
+      $query && $this->url->getQuery() ? '?'.$this->url->getQuery() : ''
     );
   }
 
@@ -201,22 +199,27 @@ class DSN extends \lang\Object {
   }
 
   /**
-   * Checks whether an object is equal to this DSN
+   * Returns a hashcode for this object
    *
-   * @param   lang.Generic cmp
-   * @return  bool
+   * @return  string
+   */
+  public function hashCode() {
+    return 'D'.md5($this->asString());
+  }
+
+  /**
+   * Compares this DSN to another given value
+   *
+   * @param  var $value
+   * @return int
    */    
-  public function equals($cmp) {
-    return (
-      $cmp instanceof self && 
-      $cmp->getDriver() === $this->getDriver() &&
-      $cmp->getUser() === $this->getUser() &&
-      $cmp->getPassword() === $this->getPassword() &&
-      $cmp->getHost() === $this->getHost() &&
-      $cmp->getPort() === $this->getPort() &&
-      $cmp->getDatabase() === $this->getDatabase() &&
-      $cmp->flags === $this->flags &&
-      Objects::equal($cmp->prop, $this->prop)
-    );
+  public function compareTo($value) {
+    return $value instanceof self
+      ? Objects::compare(
+        [$this->asString(true, false), $this->flags, $this->prop],
+        [$value->asString(true, false), $value->flags, $value->prop]
+      )
+      : 1
+    ;
   }
 }

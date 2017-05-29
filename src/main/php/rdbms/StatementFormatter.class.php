@@ -15,7 +15,7 @@
  * @see   xp://rdbms.mysql.MysqlConnection
  * @see   xp://rdbms.pgsql.PostgresqlConnection
  */
-class StatementFormatter extends \lang\Object {
+class StatementFormatter {
   public $dialect= null;
   public $conn   = null;
 

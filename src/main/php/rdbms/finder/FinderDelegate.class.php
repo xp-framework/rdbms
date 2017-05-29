@@ -4,7 +4,7 @@
  * Abstract base class for finder delegates
  *
  */
-abstract class FinderDelegate extends \lang\Object {
+abstract class FinderDelegate {
   protected $finder= null;
 
   /**

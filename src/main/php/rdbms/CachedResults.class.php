@@ -1,6 +1,6 @@
 <?php namespace rdbms;
 
-class CachedResults extends \lang\Object implements \util\XPIterator {
+class CachedResults implements \util\XPIterator {
   private $_hash, $_key;
 
   /**

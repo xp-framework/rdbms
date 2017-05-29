@@ -10,7 +10,7 @@ use rdbms\DBEvent;
  * @ext      sybase
  * @purpose  Observe SybaseConnection
  */
-class SybaseIOObserver extends \lang\Object implements BoundLogObserver {
+class SybaseIOObserver implements BoundLogObserver {
   protected
     $messages = [],
     $queries  = [];

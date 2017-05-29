@@ -9,7 +9,7 @@
  * @test    xp://net.xp_framework.unittest.rdbms.JoinProcessorTest
  * @see     xp://rdbms.join.Fetchmode
  */
-class JoinProcessor extends \lang\Object {
+class JoinProcessor {
   const SEPARATOR= '->';
   const FIRST= 'start';
 

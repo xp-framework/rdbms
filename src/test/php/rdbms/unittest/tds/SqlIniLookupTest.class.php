@@ -15,7 +15,7 @@ class SqlIniLookupTest extends \unittest\TestCase {
    * Sets up test case
    */
   public function setUp() {
-    $this->fixture= new SqlIniLookup($this->getClass()->getPackage()->getResourceAsStream('sql.ini'));
+    $this->fixture= new SqlIniLookup(typeof($this)->getPackage()->getResourceAsStream('sql.ini'));
   }
   
   #[@test]

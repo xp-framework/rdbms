@@ -3,7 +3,7 @@
 /**
  * Negates another criterion
  */
-class NegationExpression extends \lang\Object implements Criterion {
+class NegationExpression implements Criterion {
   public $criterion;
 
   /**

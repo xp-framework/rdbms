@@ -33,7 +33,7 @@ class SybaseIntegrationTest extends RdbmsIntegrationTest {
    */
   public function setUp() {
     parent::setUp();
-    $m= $this->getClass()->getMethod($this->name);
+    $m= typeof($this)->getMethod($this->name);
     if ($m->hasAnnotation('version')) {
       $server= $this->db()->query('select @@version_number as v')->next('v');
       if ($server < ($required= $m->getAnnotation('version'))) {

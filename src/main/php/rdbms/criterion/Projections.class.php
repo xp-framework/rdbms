@@ -53,7 +53,7 @@
  * @see   xp://rdbms.criterion.ProjectionList
  * @see   xp://rdbms.criterion.CountProjection
  */
-class Projections extends \lang\Object {
+class Projections {
 
   /**
    * manufactor a new ProjectionList

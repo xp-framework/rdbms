@@ -8,7 +8,7 @@ use util\cmd\Console;
  *
  * @see   xp://net.xp_framework.unittest.rdbms.integration.AbstractDeadlockTest
  */
-class SQLRunner extends \lang\Object {
+class SQLRunner {
   
   /**
    * Entry point

@@ -7,7 +7,7 @@
  * @see     xp://rdbms.join.JoinPart
  * @purpose rdbms.join
  */
-class JoinTableAttribute extends \lang\Object {
+class JoinTableAttribute {
   private
     $alias= '',
     $name= '',

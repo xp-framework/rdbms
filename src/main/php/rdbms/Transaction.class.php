@@ -22,7 +22,7 @@
  * @see      xp://rdbms.DBConnection#begin
  * @purpose  Wrap a transaction
  */
-class Transaction extends \lang\Object {
+class Transaction {
   public
     $name     = '',
     $db       = null;

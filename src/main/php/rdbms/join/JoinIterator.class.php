@@ -7,7 +7,7 @@
  * @see   xp://rdbms.Criteria#getSelectQueryString
  * @see   xp://rdbms.Peer#iteratorFor
  */
-class JoinIterator extends \lang\Object implements \util\XPIterator, JoinExtractable {
+class JoinIterator implements \util\XPIterator, JoinExtractable {
   private
     $resultObj= null,
     $record= [],

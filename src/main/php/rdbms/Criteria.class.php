@@ -14,7 +14,7 @@ define('DESCENDING',      'desc');
  * @test  xp://net.xp_framework.unittest.rdbms.CriteriaTest
  * @see   xp://rdbms.DataSet
  */
-class Criteria extends \lang\Object implements SQLExpression {
+class Criteria implements SQLExpression {
   public 
     $conditions   = [],
     $orderings    = [],

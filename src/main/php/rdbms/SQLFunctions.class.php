@@ -8,7 +8,7 @@ use lang\IllegalArgumentException;
  * @test  xp://net.xp_framework.unittest.rdbms.SQLFunctionTest
  * @see   xp://rdbms.Criteria
  */
-class SQLFunctions extends \lang\Object {
+class SQLFunctions {
 
   /**
    * return a substring from col1, that start at

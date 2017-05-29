@@ -5,7 +5,7 @@
  *
  * @see   xp://rdbms.DefaultDrivers
  */
-abstract class DriverImplementationsProvider extends \lang\Object {
+abstract class DriverImplementationsProvider {
   protected $parent= null;
 
   /**

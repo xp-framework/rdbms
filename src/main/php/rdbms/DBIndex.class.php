@@ -4,7 +4,7 @@
  * Class representing an index
  *
  */
-class DBIndex extends \lang\Object {
+class DBIndex {
   public
     $name=     '',
     $keys=     [],

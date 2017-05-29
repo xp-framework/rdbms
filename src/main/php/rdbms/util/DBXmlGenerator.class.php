@@ -10,7 +10,7 @@ use util\log\Traceable;
  *
  * @see   xp://rdbms.DBTable
  */
-class DBXmlGenerator extends \lang\Object implements Traceable {
+class DBXmlGenerator implements Traceable {
   protected
     $cat= null;
 

@@ -8,7 +8,7 @@ use rdbms\DSN;
  *
  * @test    xp://net.xp_framework.rdbms.ConnectionManagerTest
  */
-class ConnectionManager extends \lang\Object implements Configurable {
+class ConnectionManager implements Configurable {
   protected static $instance= null;
   public $pool= [];
 
