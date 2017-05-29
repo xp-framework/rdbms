@@ -28,7 +28,9 @@ abstract class DriverImplementationsProvider {
   }
 
   /** @return string[] */
-  public function drivers() { return []; }
+  public function drivers() {
+    return null === $this->parent ? [] : $this->parent->drivers();
+  }
 
   /**
    * Creates a string representation of this implementation provider
