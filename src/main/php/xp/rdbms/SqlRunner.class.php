@@ -3,6 +3,7 @@
 use rdbms\DriverManager;
 use util\profiling\Timer;
 use util\cmd\Console;
+use io\streams\Streams;
 
 /**
  * Runs SQL statements
@@ -11,6 +12,10 @@ use util\cmd\Console;
  * - Execute a single SQL statement and print the results
  *   ```sh
  *   $ xp sql 'sqlite://./test.db' 'select * from test'
+ *   ```
+ * - Read SQL statement from standard input using "-"
+ *   ```sh
+ *   $ cat statement.sql | xp sql 'sqlite://./test.db' -
  *   ```
  */
 class SqlRunner {
@@ -23,7 +28,13 @@ class SqlRunner {
    */
   public static function main(array $args) {
     $dsn= $args[0];
-    $sql= $args[1];
+
+    // SQL query. Use `-` to read from standard input.
+    if ('-' === $args[1]) {
+      $sql= Streams::readAll(Console::$in->getStream());
+    } else {
+      $sql= $args[1];
+    }
 
     $conn= DriverManager::getConnection($dsn);
     $timer= (new Timer())->start();
