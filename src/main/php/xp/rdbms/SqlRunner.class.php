@@ -71,10 +71,10 @@ class SqlRunner {
    * Executes SQL statements; stops on first statement causing an error.
    *
    * @param  string $dsn
-   * @param  string... $statements
+   * @param  string[] $statements
    * @return int
    */
-  private static function execute($dsn, ...$statements) {
+  private static function execute($dsn, $statements) {
     $conn= DriverManager::getConnection($dsn);
     $timer= new Timer();
 
@@ -86,6 +86,7 @@ class SqlRunner {
       }
 
       try {
+        $timer->start();
         $q= $conn->query($sql);
         if ($q->isSuccess()) {
           Console::$err->writeLinef('Query OK, %d rows affected (%.2f sec)', $q->affected(), $timer->elapsedTime());
