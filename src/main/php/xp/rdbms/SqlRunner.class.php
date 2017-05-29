@@ -4,6 +4,15 @@ use rdbms\DriverManager;
 use util\profiling\Timer;
 use util\cmd\Console;
 
+/**
+ * Runs SQL statements
+ * ========================================================================
+ *
+ * - Execute a single SQL statement and print the results
+ *   ```sh
+ *   $ xp sql 'sqlite://./test.db' 'select * from test'
+ *   ```
+ */
 class SqlRunner {
 
   /**
