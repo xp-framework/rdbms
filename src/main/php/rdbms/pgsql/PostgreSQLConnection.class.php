@@ -6,7 +6,7 @@ use rdbms\StatementFormatter;
 use rdbms\QuerySucceeded;
 
 /**
- * Connection to PostgreSQL Databases
+ * Connection to PostgreSQL Databases via ext/pgsql
  *
  * @see      http://www.postgresql.org/
  * @see      http://www.freebsddiary.org/postgresql.php

@@ -6,8 +6,10 @@ use rdbms\StatementFormatter;
 use rdbms\QuerySucceeded;
 
 /**
- * Connection to SQLite Databases; specify the path to the database
- * file as the DSN's path - the hostname property should remain empty.
+ * Connection to SQLite 3.x Databases via ext/sqlite3
+ *
+ * Specify the path to the database file as the DSN's path - the
+ * hostname property should remain empty.
  *
  * To use in-memory databases, use :memory: as path - remember to
  * urlencode its value.
@@ -41,7 +43,7 @@ use rdbms\QuerySucceeded;
  *   changedby    string
  * </pre>
  *
- * @ext      sqlite
+ * @ext      sqlite3
  * @see      http://sqlite.org/
  * @see      http://php.net/sqlite3
  * @test     xp://net.xp_framework.unittest.rdbms.sqlite3.SQLite3ConnectionTest

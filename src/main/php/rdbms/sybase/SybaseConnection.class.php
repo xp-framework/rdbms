@@ -6,7 +6,7 @@ use rdbms\StatementFormatter;
 use rdbms\QuerySucceeded;
 
 /**
- * Connection to Sybase databases using client libraries
+ * Connection to Sybase databases using client libraries (sybase_ct)
  *
  * @see    http://sybase.com/
  * @ext    sybase_ct
