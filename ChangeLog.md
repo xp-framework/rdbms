@@ -3,8 +3,9 @@ RDBMS support for the XP Framework: MySQL, Sybase, MSSQL, PostgreSQL, SQLite3, I
 
 ## ?.?.? / ????-??-??
 
-## 10.0.0 / ????-??-??
+## 10.0.0 /2017-05-30
 
+* Added method to discover available drivers to DefaultDrivers - @thekid
 * Merged PR #39: XP9 Compatibility - @thekid
 
 ## 9.0.8 / 2017-05-20
