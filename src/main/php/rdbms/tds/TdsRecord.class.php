@@ -20,7 +20,7 @@ abstract class TdsRecord extends \lang\Object {
    * @return  string
    */
   protected function toDate($days, $seconds) {
-    return Date::create(1900, 1, 1 + $days, 0, 0, $seconds / 300);
+    return Date::create(1900, 1, 1 + $days, 0, 0, $seconds);
   }
 
   /**
