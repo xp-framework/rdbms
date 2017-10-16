@@ -209,31 +209,6 @@ abstract class TdsProtocol extends \lang\Object {
         return $this->toFloat($stream->read(4));
       }
     }');
-    self::$recordsFor[0][self::T_DATE]= newinstance('rdbms.tds.TdsRecord', [], '{
-      public function unmarshal($stream, $field, $records) {
-        return $this->toDate($stream->getLong(), 0);
-      }
-    }');
-    self::$recordsFor[0][self::T_DATETIME]= newinstance('rdbms.tds.TdsRecord', [], '{
-      public function unmarshal($stream, $field, $records) {
-        return $this->toDate($stream->getLong(), $stream->getLong());
-      }
-    }');
-    self::$recordsFor[0][self::T_DATETIME4]= newinstance('rdbms.tds.TdsRecord', [], '{
-      public function unmarshal($stream, $field, $records) {
-        return $this->toDate($stream->getShort(), $stream->getShort() * 60);
-      }
-    }');
-    self::$recordsFor[0][self::T_DATETIMN]= newinstance('rdbms.tds.TdsRecord', [], '{
-      public function unmarshal($stream, $field, $records) {
-        $len= isset($field["len"]) ? $field["len"] : $stream->getByte();
-        switch ($len) {
-          case 4: return $this->toDate($stream->getShort(), $stream->getShort() * 60); break;
-          case 8: return $this->toDate($stream->getLong(), $stream->getLong()); break;
-          default: return null;
-        }
-      }
-    }');
     self::$recordsFor[0][self::T_MONEYN]= newinstance('rdbms.tds.TdsRecord', [], '{
       public function unmarshal($stream, $field, $records) {
         $len= isset($field["len"]) ? $field["len"] : $stream->getByte();
