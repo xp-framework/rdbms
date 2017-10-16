@@ -2,6 +2,7 @@
 
 use rdbms\SQLStatementFailedException;
 use util\Bytes;
+use util\Date;
 use unittest\PrerequisitesNotMetError;
 
 /**
@@ -219,5 +220,23 @@ class SybaseIntegrationTest extends RdbmsIntegrationTest {
         convert(varchar(5000), "foo") as "field1",
         "bar" as "field2"
     ')->next());
+  }
+
+  #[@test]
+  public function datetime() {
+    $cmp= new Date('2009-08-14 12:45:00');
+    $result= $this->db()->query('select cast(%s as datetime) as value', $cmp)->next('value');
+
+    $this->assertInstanceOf(Date::class, $result);
+    $this->assertEquals($cmp->toString('Y-m-d H:i:s'), $result->toString('Y-m-d H:i:s'));
+  }
+
+  #[@test]
+  public function smalldatetime() {
+    $cmp= new Date('2009-08-14 12:45:00');
+    $result= $this->db()->query('select cast(%s as smalldatetime) as value', $cmp)->next('value');
+
+    $this->assertInstanceOf(Date::class, $result);
+    $this->assertEquals($cmp->toString('Y-m-d H:i:s'), $result->toString('Y-m-d H:i:s'));
   }
 }

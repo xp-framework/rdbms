@@ -171,4 +171,22 @@ class MsSQLIntegrationTest extends RdbmsIntegrationTest {
     ');
     $this->assertEquals(1, $q->next('result'));
   }
+
+  #[@test]
+  public function datetime() {
+    $cmp= new Date('2009-08-14 12:45:00');
+    $result= $this->db()->query('select cast(%s as datetime) as value', $cmp)->next('value');
+
+    $this->assertInstanceOf(Date::class, $result);
+    $this->assertEquals($cmp->toString('Y-m-d H:i:s'), $result->toString('Y-m-d H:i:s'));
+  }
+
+  #[@test]
+  public function smalldatetime() {
+    $cmp= new Date('2009-08-14 12:45:00');
+    $result= $this->db()->query('select cast(%s as smalldatetime) as value', $cmp)->next('value');
+
+    $this->assertInstanceOf(Date::class, $result);
+    $this->assertEquals($cmp->toString('Y-m-d H:i:s'), $result->toString('Y-m-d H:i:s'));
+  }
 }
