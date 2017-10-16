@@ -1,6 +1,7 @@
 <?php namespace rdbms\tds;
 
 use lang\IllegalArgumentException;
+use io\ByteOrder;
 
 /**
  * A TDS data stream
@@ -14,6 +15,11 @@ class TdsDataStream {
   protected $sock= null;
   protected $buffer= '';
   protected $header= ['status' => 0, 'length' => -1];
+  private static $reverse;
+
+  static function __static() {
+    self::$reverse= ByteOrder::BIG_ENDIAN === ByteOrder::nativeOrder();
+  }
 
   /**
    * Creates a new data stream on a given socket with a given packet size
@@ -156,12 +162,23 @@ class TdsDataStream {
   }
 
   /**
+   * Get an int (4 bytes)
+   *
+   * @return  int
+   */
+  public function getInt32() {
+    $packed= $this->read(4);
+    $u= unpack('l', self::$reverse ? strrev($packed) : $packed);
+    return $u[1];
+  }
+
+  /**
    * Get a long (4 bytes)
    *
    * @return  int
    */
   public function getLong() {
-    $u= unpack('I', $this->read(4));
+    $u= unpack('V', $this->read(4));
     return $u[1];
   }
 
