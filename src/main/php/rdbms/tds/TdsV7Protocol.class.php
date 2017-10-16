@@ -118,7 +118,7 @@ class TdsV7Protocol extends TdsProtocol {
       public function unmarshal($stream, $field, $records) {
         $len= isset($field["len"]) ? $field["len"] : $stream->getByte();
         switch ($len) {
-          case 4: return $this->toDate($stream->getShort(), $stream->getShort() * 60; break;
+          case 4: return $this->toDate($stream->getShort(), $stream->getShort() * 60); break;
           case 8: return $this->toDate($stream->getLong(), $stream->getLong() / 300); break;
           default: return null;
         }
