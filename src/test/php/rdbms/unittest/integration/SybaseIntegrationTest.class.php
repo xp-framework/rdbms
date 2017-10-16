@@ -196,7 +196,7 @@ class SybaseIntegrationTest extends RdbmsIntegrationTest {
 
   #[@test]
   public function sp_helpconstraint() {
-    $this->assertTrue($this->db()->query('sp_helpconstraint %c', $this->tableName()));
+    $this->assertTrue($this->db()->query('sp_helpconstraint %c', $this->tableName())->isSuccess());
   }
 
   #[@test]
