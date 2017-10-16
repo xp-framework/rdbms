@@ -114,16 +114,11 @@ class TdsV7Protocol extends TdsProtocol {
         return 0xFFFF === $len ? null : iconv("ucs-2le", \xp::ENCODING, $stream->read($len));
       }
     }');
-    self::$recordsFor[0][self::T_DATETIME4]= newinstance('rdbms.tds.TdsRecord', [], '{
-      public function unmarshal($stream, $field, $records) {
-        return $this->toDate($stream->getShort(), $stream->getShort() * 60 / 300);
-      }
-    }');
     self::$recordsFor[0][self::T_DATETIMN]= newinstance('rdbms.tds.TdsRecord', [], '{
       public function unmarshal($stream, $field, $records) {
         $len= isset($field["len"]) ? $field["len"] : $stream->getByte();
         switch ($len) {
-          case 4: return $this->toDate($stream->getShort(), $stream->getShort() * 60 / 300); break;
+          case 4: return $this->toDate($stream->getShort(), $stream->getShort() * 60; break;
           case 8: return $this->toDate($stream->getLong(), $stream->getLong() / 300); break;
           default: return null;
         }
