@@ -91,16 +91,6 @@ class TdsV5Protocol extends TdsProtocol {
         } 
       }
     }');
-    self::$recordsFor[0][self::T_DATE]= newinstance('rdbms.tds.TdsRecord', [], '{
-      public function unmarshal($stream, $field, $records) {
-        return $this->toDate($stream->getLong(), 0);
-      }
-    }');
-    self::$recordsFor[0][self::T_DATETIME]= newinstance('rdbms.tds.TdsRecord', [], '{
-      public function unmarshal($stream, $field, $records) {
-        return $this->toDate($stream->getLong(), $stream->getLong());
-      }
-    }');
     self::$recordsFor[0][self::T_DATETIME4]= newinstance('rdbms.tds.TdsRecord', [], '{
       public function unmarshal($stream, $field, $records) {
         return $this->toDate($stream->getShort(), $stream->getShort() * 60);
