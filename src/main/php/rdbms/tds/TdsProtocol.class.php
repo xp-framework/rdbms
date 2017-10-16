@@ -214,6 +214,11 @@ abstract class TdsProtocol {
         return $this->toDate($stream->getLong(), 0);
       }
     }');
+    self::$recordsFor[0][self::T_DATETIME4]= newinstance('rdbms.tds.TdsRecord', [], '{
+      public function unmarshal($stream, $field, $records) {
+        return $this->toDate($stream->getShort(), $stream->getShort() * 60);
+      }
+    }');
     self::$recordsFor[0][self::T_DATETIME]= newinstance('rdbms.tds.TdsRecord', [], '{
       public function unmarshal($stream, $field, $records) {
         return $this->toDate($stream->getLong(), $stream->getLong() / 300);
