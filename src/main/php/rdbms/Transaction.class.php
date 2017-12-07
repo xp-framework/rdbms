@@ -3,21 +3,22 @@
 /**
  * Transaction
  *
- * <code>
- *   uses('rdbms.DriverManager');
+ * ```php
+ * use rdbms\{DriverManager, SQLException};
  *   
- *   $conn= DriverManager::getConnection('sybase://user:password@server/database');
- *   try {
- *     $tran= $conn->begin(new Transaction('test'));
- *     
- *     // ... execute SQL statements
- *     
- *     $tran->commit();
- *   } catch (SQLException $e) {
- *     $tran && $tran->rollback();
- *     throw $e;
- *   }
- * </code>
+ * $conn= DriverManager::getConnection('sybase://user:password@server/database');
+ * $tran= $conn->begin(new Transaction('test'));
+ *
+ * try {
+ *
+ *   // ... execute SQL statements
+ *
+ *   $tran->commit();
+ * } catch (SQLException $e) {
+ *   $tran->rollback();
+ *   throw $e;
+ * }
+ * ```
  *
  * @see      xp://rdbms.DBConnection#begin
  * @purpose  Wrap a transaction
