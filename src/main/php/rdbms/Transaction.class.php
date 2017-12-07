@@ -20,8 +20,7 @@
  * }
  * ```
  *
- * @see      xp://rdbms.DBConnection#begin
- * @purpose  Wrap a transaction
+ * @see   xp://rdbms.DBConnection#begin
  */
 class Transaction {
   public
@@ -31,7 +30,7 @@ class Transaction {
   /**
    * Constructor
    *
-   * @param   string name
+   * @param  string $name
    */
   public function __construct($name) {
     $this->name= $name;
@@ -40,6 +39,7 @@ class Transaction {
   /**
    * Retrieve transaction state
    *
+   * @return var
    */
   public function getState() { 
     return $this->db->transtate($this->name);
@@ -48,6 +48,7 @@ class Transaction {
   /**
    * Rollback this transaction
    *
+   * @return bool success
    */
   public function rollback() { 
     return $this->db->rollback($this->name);
@@ -56,6 +57,7 @@ class Transaction {
   /**
    * Commit this transaction
    *
+   * @return bool success
    */
   public function commit() { 
     return $this->db->commit($this->name);
