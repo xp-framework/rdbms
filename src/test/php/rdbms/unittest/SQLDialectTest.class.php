@@ -56,7 +56,7 @@ class SQLDialectTest extends TestCase {
 
   #[@test, @values('dialects'), @expect(IllegalArgumentException::class)]
   public function unknown_function($dialect) {
-    $dialect->formatFunction(new SQLFunction('foo', 1, 2, 3, 4, 5));
+    $dialect->formatFunction(new SQLFunction('foo', '%s', [1, 2, 3, 4, 5]));
   }
 
   #[@test, @values('dialects')]
