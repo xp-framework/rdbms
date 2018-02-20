@@ -35,7 +35,9 @@ class MySQLiDBAdapter extends DBAdapter {
     'tinyblob'   => DBTableAttribute::DB_ATTRTYPE_TEXT,
     'blob'       => DBTableAttribute::DB_ATTRTYPE_TEXT,
     'mediumblob' => DBTableAttribute::DB_ATTRTYPE_TEXT,
-    'longblob'   => DBTableAttribute::DB_ATTRTYPE_TEXT
+    'longblob'   => DBTableAttribute::DB_ATTRTYPE_TEXT,
+    'time'       => DBTableAttribute::DB_ATTRTYPE_TEXT,
+    'year'       => DBTableAttribute::DB_ATTRTYPE_NUMERIC,
   ];
 
   /**
@@ -101,7 +103,7 @@ class MySQLiDBAdapter extends DBAdapter {
       self::$map[$regs[1]],                                     // type
       false !== strpos($record['Extra'], 'auto_increment'),     // identity
       !(empty($record['Null']) || ('NO' == $record['Null'])),   // nullable
-      (int)$regs[3],                                            // length
+      (int)(isset($regs[3]) ? $regs[3] : 0),                    // length
       0,                                                        // precision
       0                                                         // scale
     );
