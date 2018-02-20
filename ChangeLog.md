@@ -3,14 +3,19 @@ RDBMS support for the XP Framework: MySQL, Sybase, MSSQL, PostgreSQL, SQLite3, I
 
 ## ?.?.? / ????-??-??
 
-## 10.0.1 /2017-10-16
+## 10.0.2 / 2018-02-20
+
+* Fixed issue #41: Missing default value for lenth field in MySQLi implementation
+  (@thekid)
+
+## 10.0.1 / 2017-10-16
 
 * Fixed Sybase and MSSQL `money` and `int4` data types on 64-bit systems
   (@thekid)
 * Fixed datetime handling for Sybase and MSSQL
   (@treuter, @thekid)
 
-## 10.0.0 /2017-05-30
+## 10.0.0 / 2017-05-30
 
 * Added method to discover available drivers to DefaultDrivers - @thekid
 * Merged PR #39: XP9 Compatibility - @thekid
