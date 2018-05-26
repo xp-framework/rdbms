@@ -6,7 +6,7 @@ sudo: false
 
 services:
   - mysql
-  - postgresql
+  # - postgresql
 
 php:
   - 5.6
@@ -22,7 +22,7 @@ matrix:
 
 before_install:
   - mysql -e 'create database IF NOT EXISTS test;' -uroot
-  - psql -c 'create database travis_ci_test;' -U postgres
+  # - psql -c 'create database travis_ci_test;' -U postgres
 
 before_script:
   - curl -sSL https://dl.bintray.com/xp-runners/generic/xp-run-master.sh > xp-run
@@ -31,7 +31,7 @@ before_script:
 
 script:
   - export SQLITE_DSN=sqlite://./test
-  - export PGSQL_DSN=pgsql://127.0.0.1/travis_ci_test
+  # - export PGSQL_DSN=pgsql://127.0.0.1/travis_ci_test
   - sh xp-run xp.unittest.TestRunner src/test/php
   - export MYSQL_DSN=mysql+x://root@127.0.0.1/test
   - sh xp-run xp.unittest.TestRunner rdbms.unittest.integration.MySQLIntegrationTest rdbms.unittest.integration.MySQLDeadlockTest
