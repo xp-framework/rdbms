@@ -9,9 +9,9 @@ init:
   - set PATH=%PATH%;.\xp
   - set COMPOSER_NO_INTERACTION=1
   - set CACHED=0
-  - cinst -y php
 
 install:
+  - cinst -y php
   - if exist .\xp (set CACHED=1) else (mkdir .\xp)
   - if %CACHED%==0 cd .\xp
   - if %CACHED%==0 appveyor DownloadFile https://getcomposer.org/composer.phar
