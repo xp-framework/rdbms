@@ -1,5 +1,5 @@
 <?php namespace rdbms;
- 
+
 class PersistentConnection extends DBConnection {
   private $conn;
 
@@ -39,10 +39,10 @@ class PersistentConnection extends DBConnection {
 
   /** @return rdbms.DSN */
   public function getDSN() { return $this->conn->getDSN(); }
-  
+
   /** @return string */
   public function hashCode() { return 'P:'.$this->conn->hashCode(); }
-  
+
   /** @return  string */
   public function toString() { return 'Persisent('.$this->conn->toString().')'; }
 
@@ -51,10 +51,10 @@ class PersistentConnection extends DBConnection {
 
   /** @return int */
   public function getTimeout() { return $this->conn->getTimeout(); }
-  
+
   /** @param int flag */
   public function setFlag($flag) { $this->conn->setFlag($flag); }
-  
+
   /** @return bool */
   public function hasChanged() { return $this->conn->hasChanged(); }
 
@@ -77,7 +77,7 @@ class PersistentConnection extends DBConnection {
 
   /** @return bool success */
   public function close() { return $this->conn->close(); }
-  
+
   /**
    * Select database
    *
@@ -140,7 +140,7 @@ class PersistentConnection extends DBConnection {
       return $this->conn->begin($transaction);
     });
   }
-  
+
   /**
    * Retrieve transaction state
    *
@@ -150,7 +150,7 @@ class PersistentConnection extends DBConnection {
   public function transtate($name) {
     return $this->conn->transtate($name);
   }
-  
+
   /**
    * Rollback a transaction
    *
@@ -160,7 +160,7 @@ class PersistentConnection extends DBConnection {
   public function rollback($name) {
     return $this->conn->rollback($name);
   }
-  
+
   /**
    * Commit a transaction
    *
@@ -169,5 +169,5 @@ class PersistentConnection extends DBConnection {
    */
   public function commit($name) {
     return $this->conn->commit($name);
-  } 
+  }
 }
