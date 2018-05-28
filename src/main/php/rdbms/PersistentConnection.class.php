@@ -1,7 +1,13 @@
 <?php namespace rdbms;
 
+/**
+ * Keeps connection alive, reconnecting when server disconnects
+ *
+ * @test xp://rdbms.unittest.PersistentConnectionTest
+ */
 class PersistentConnection extends DBConnection {
   private $conn;
+  private $transaction= [];
 
   /**
    * Constructor
@@ -26,8 +32,14 @@ class PersistentConnection extends DBConnection {
     try {
       return $block();
     } catch (SQLConnectionClosedException $e) {
-      $this->conn->connect($reconnect= true);
-      return $block();
+      if ($this->transaction) {
+        $this->transaction= [];
+        $this->conn->close();
+        throw $e;
+      } else {
+        $this->conn->connect($reconnect= true);
+        return $block();
+      }
     } catch (SQLConnectException $e) {
       $this->conn->close();
       throw $e;
@@ -136,6 +148,7 @@ class PersistentConnection extends DBConnection {
    * @return  rdbms.Transaction
    */
   public function begin($transaction) {
+    $this->transaction[]= $transaction->name;
     return $this->execute(function() use($transaction) {
       return $this->conn->begin($transaction);
     });
@@ -158,6 +171,7 @@ class PersistentConnection extends DBConnection {
    * @return  bool success
    */
   public function rollback($name) {
+    array_pop($this->transaction);
     return $this->conn->rollback($name);
   }
 
@@ -168,6 +182,7 @@ class PersistentConnection extends DBConnection {
    * @return  bool success
    */
   public function commit($name) {
+    array_pop($this->transaction);
     return $this->conn->commit($name);
   }
 }
