@@ -149,10 +149,16 @@ class PostgreSQLConnection extends DBConnection {
       case PGSQL_BAD_RESPONSE: {
         $code= pg_result_error_field($this->result, PGSQL_DIAG_SQLSTATE);
         $message= 'Statement failed: '.pg_result_error_field($this->result, PGSQL_DIAG_MESSAGE_PRIMARY).' @ '.$this->dsn->getHost();
-        if ('40P01' === $code) {
-          throw new \rdbms\SQLDeadlockException($message, $sql, $code);
-        } else {
-          throw new \rdbms\SQLStatementFailedException($message, $sql, $code);
+
+        switch ($code) {
+          case '57P01':
+            throw new \rdbms\SQLConnectionClosedException('['.$code.'] '.$message, $sql);
+
+          case '40P01':
+            throw new \rdbms\SQLDeadlockException($message, $sql, $code);
+
+          default:
+            throw new \rdbms\SQLStatementFailedException($message, $sql, $code);
         }
       }
       
