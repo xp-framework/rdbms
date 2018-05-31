@@ -3,6 +3,11 @@ RDBMS support for the XP Framework: MySQL, Sybase, MSSQL, PostgreSQL, SQLite3, I
 
 ## ?.?.? / ????-??-??
 
+## 10.1.0 / 2018-05-30
+
+* Merged PR #43: Handle connection closed by admin as SQLConnectionClosedException
+  (@johannes85, @thekid)
+
 ## 10.0.2 / 2018-02-20
 
 * Fixed issue #41: Missing default value for lenth field in MySQLi implementation
