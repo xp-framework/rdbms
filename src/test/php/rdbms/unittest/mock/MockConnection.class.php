@@ -155,6 +155,15 @@ class MockConnection extends \rdbms\DBConnection {
    }
 
   /**
+   * Mock: Get whether connection has been established
+   *
+   * @return  bool
+   */
+  public function isConnected() {
+    return $this->_connected;
+  }
+
+  /**
    * Connect
    *
    * @param   bool reconnect default FALSE
