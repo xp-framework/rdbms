@@ -1,13 +1,14 @@
 <?php namespace rdbms\unittest;
 
-use unittest\TestCase;
-use rdbms\PersistentConnection;
 use rdbms\DriverManager;
-use rdbms\Transaction;
-use rdbms\SQLStatementFailedException;
+use rdbms\PersistentConnection;
+use rdbms\SQLConnectException;
 use rdbms\SQLConnectionClosedException;
-use rdbms\unittest\mock\RegisterMockConnection;
+use rdbms\SQLStatementFailedException;
+use rdbms\Transaction;
 use rdbms\unittest\mock\MockResultSet;
+use rdbms\unittest\mock\RegisterMockConnection;
+use unittest\TestCase;
 
 #[@action(new RegisterMockConnection())]
 class PersistentConnectionTest extends TestCase {
@@ -88,5 +89,19 @@ class PersistentConnectionTest extends TestCase {
 
     $conn->letServerDisconnect();
     $fixture->query('select id from test');
+  }
+
+  #[@test]
+  public function connection_is_closed_after_connect_errors() {
+    $conn= DriverManager::getConnection('mock://test');
+    $conn->makeConnectFail(401);
+
+    $fixture= new PersistentConnection($conn);
+    try {
+      $fixture->select('@@version');
+      $this->fail('No exception raised', null, SQLConnectException::class);
+    } catch (SQLConnectException $expected) {
+      $this->assertFalse($conn->isConnected());
+    }
   }
 }
