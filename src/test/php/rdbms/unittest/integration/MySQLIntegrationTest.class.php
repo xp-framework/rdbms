@@ -1,7 +1,7 @@
 <?php namespace rdbms\unittest\integration;
 
 use rdbms\PersistentConnection;
-use rdbms\SQLStatementFailedException;
+use rdbms\SQLException;
 
 /**
  * MySQL integration test
