@@ -6,7 +6,7 @@ sudo: false
 
 services:
   - mysql
-  # - postgresql
+  - postgresql
 
 php:
   - 5.6
