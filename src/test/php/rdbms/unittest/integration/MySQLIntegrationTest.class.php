@@ -1,5 +1,8 @@
 <?php namespace rdbms\unittest\integration;
 
+use rdbms\PersistentConnection;
+use rdbms\SQLStatementFailedException;
+
 /**
  * MySQL integration test
  *
@@ -241,5 +244,20 @@ class MySQLIntegrationTest extends RdbmsIntegrationTest {
     // produces a warning.
     $this->assertEquals('💩', $this->db()->query("select '💩' as poop")->next('poop'));
     $this->assertNull($this->db()->query('show warnings')->next());
+  }
+
+  #[@test]
+  public function reconnects_when_server_disconnects() {
+    $conn= new PersistentConnection($this->db());
+    $before= $conn->query('select connection_id() as id')->next('id');
+
+    try {
+      $conn->query('kill %d', $before);
+    } catch (SQLException $expected) {
+      // errorcode 1927: Connection was killed (sqlstate 70100)
+    }
+
+    $after= $conn->query('select connection_id() as id')->next('id');
+    $this->assertNotEquals($before, $after, 'Connection IDs must be different');
   }
 }
