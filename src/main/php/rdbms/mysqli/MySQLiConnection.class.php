@@ -1,9 +1,9 @@
 <?php namespace rdbms\mysqli;
 
 use rdbms\DBConnection;
-use rdbms\Transaction;
-use rdbms\StatementFormatter;
 use rdbms\QuerySucceeded;
+use rdbms\StatementFormatter;
+use rdbms\Transaction;
 
 /**
  * Connection to MySQL Databases
@@ -196,14 +196,19 @@ class MySQLiConnection extends DBConnection {
       switch ($code) {
         case 2006: // MySQL server has gone away
         case 2013: // Lost connection to MySQL server during query
-          throw new \rdbms\SQLConnectionClosedException('Statement failed: '.$message, $sql, $code);
+          $e= new \rdbms\SQLConnectionClosedException($message, $sql, $code);
+          break;
 
         case 1213: // Deadlock
-          throw new \rdbms\SQLDeadlockException($message, $sql, $code);
-        
+          $e= new \rdbms\SQLDeadlockException($message, $sql, $code);
+          break;
+
         default:   // Other error
-          throw new \rdbms\SQLStatementFailedException($message, $sql, $code);
+          $e= new \rdbms\SQLStatementFailedException($message, $sql, $code);
+          break;
       }
+      \xp::gc(__FILE__);
+      throw $e;
     } else if (true === $r) {
       return new QuerySucceeded(mysqli_affected_rows($this->handle));
     } else if ($buffered) {
