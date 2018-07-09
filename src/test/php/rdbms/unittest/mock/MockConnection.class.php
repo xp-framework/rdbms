@@ -1,7 +1,7 @@
 <?php namespace rdbms\unittest\mock;
 
-use rdbms\Transaction;
 use rdbms\StatementFormatter;
+use rdbms\Transaction;
 
 /**
  * Mock database connection.
@@ -292,7 +292,9 @@ class MockConnection extends \rdbms\DBConnection {
    * @param   string name
    * @return  mixed state
    */
-  public function transtate($name) { }
+  public function transtate($name) {
+    return $this->query('select @@transtate as state')->next('state');
+  }
   
   /**
    * Rollback a transaction
@@ -300,7 +302,9 @@ class MockConnection extends \rdbms\DBConnection {
    * @param   string name
    * @return  bool success
    */
-  public function rollback($name) { }
+  public function rollback($name) {
+    $this->query('rollback %s', $name);
+  }
   
   /**
    * Commit a transaction
@@ -308,5 +312,7 @@ class MockConnection extends \rdbms\DBConnection {
    * @param   string name
    * @return  bool success
    */
-  public function commit($name) { }
+  public function commit($name) {
+    $this->query('commit %s', $name);
+  }
 }

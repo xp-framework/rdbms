@@ -4,6 +4,7 @@ use rdbms\DriverManager;
 use rdbms\PersistentConnection;
 use rdbms\SQLConnectException;
 use rdbms\SQLConnectionClosedException;
+use rdbms\SQLException;
 use rdbms\SQLStatementFailedException;
 use rdbms\Transaction;
 use rdbms\unittest\mock\MockResultSet;
@@ -89,6 +90,24 @@ class PersistentConnectionTest extends TestCase {
 
     $conn->letServerDisconnect();
     $fixture->query('select id from test');
+  }
+
+  #[@test, @expect(SQLStatementFailedException::class)]
+  public function rolling_back_transaction() {
+    $conn= DriverManager::getConnection('mock://test');
+    $conn->connect();
+
+    $fixture= new PersistentConnection($conn);
+    $tran= $fixture->begin(new Transaction('test'));
+
+    $conn->letServerDisconnect();
+    try {
+      $fixture->query('update test set lastchange = now()');
+      $tran->commit();
+    } catch (SQLException $e) {
+      $conn->makeQueryFail(403, 'No transaction to rollback');
+      $tran->rollback();
+    }
   }
 
   #[@test]
