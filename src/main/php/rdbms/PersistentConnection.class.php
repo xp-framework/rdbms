@@ -37,7 +37,8 @@ class PersistentConnection extends DBConnection {
         $this->conn->close();
         throw $e;
       } else {
-        $this->conn->connect($reconnect= true);
+        $this->conn->close();
+        $this->conn->connect();
         return $block();
       }
     } catch (SQLConnectException $e) {
