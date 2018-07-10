@@ -1,19 +1,19 @@
 <?php namespace rdbms\unittest;
 
+use lang\IllegalArgumentException;
+use rdbms\Column;
+use rdbms\DBObserver;
+use rdbms\DriverManager;
 use rdbms\Peer;
 use rdbms\ResultIterator;
-use rdbms\Column;
 use rdbms\SQLException;
-use util\NoSuchElementException;
-use lang\IllegalArgumentException;
-use unittest\TestCase;
-use rdbms\DriverManager;
-use rdbms\DBObserver;
-use util\Date;
-use util\DateUtil;
 use rdbms\Statement;
 use rdbms\unittest\dataset\Job;
 use rdbms\unittest\mock\MockResultSet;
+use unittest\TestCase;
+use util\Date;
+use util\DateUtil;
+use util\NoSuchElementException;
 
 /**
  * O/R-mapping API unit test
@@ -28,7 +28,7 @@ class DataSetTest extends TestCase {
    * Setup method
    */
   public function setUp() {
-    Job::getPeer()->setConnection(DriverManager::getConnection('mock://mock/JOBS?autoconnect=1'));
+    Job::getPeer()->setConnection(DriverManager::getConnection('mock://mock/JOBS', false));
   }
   
   /**

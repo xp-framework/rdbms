@@ -1,5 +1,8 @@
 <?php namespace rdbms;
 
+use lang\IllegalArgumentException;
+use lang\XPClass;
+
 /**
  * Manages database drivers
  *
@@ -54,14 +57,14 @@
  *
  * Usage
  * =====
- * <code>
- *   uses('rdbms.DriverManager');
+ * ```php
+ * use rdbms\DriverManager;
  *   
- *   $conn= DriverManager::getConnection('sybase://user:pass@server');
- *   $conn->connect();
+ * $conn= DriverManager::getConnection('sybase://user:pass@server');
+ * $conn->connect();
  *   
- *   Console::writeLine($conn->query('select @@version as version')->next('version'));
- * </code>
+ * Console::writeLine($conn->query('select @@version as version')->next('version'));
+ * ```
  *
  * @test     xp://net.xp_framework.unittest.rdbms.DriverManagerTest
  */
@@ -76,10 +79,7 @@ class DriverManager {
     self::$instance->provider= new DefaultDrivers(null);
   }
   
-  /**
-   * Constructor.
-   *
-   */
+  /** Constructor */
   protected function __construct() {
   }
     
@@ -96,19 +96,19 @@ class DriverManager {
    * Register a driver
    *
    * Usage:
-   * <code>
-   *   DriverManager::register('mydb', XPClass::forName('my.db.Connection'));
-   *   // [...]
-   *   $conn= DriverManager::getConnection('mydb://...');
-   * </code>
+   * ```php
+   * DriverManager::register('mydb', XPClass::forName('my.db.Connection'));
+   * // [...]
+   * $conn= DriverManager::getConnection('mydb://...');
+   * ```
    *
    * @param   string name identifier
    * @param   lang.XPClass<rdbms.DBConnection> class
    * @throws  lang.IllegalArgumentException in case an incorrect class is given
    */
-  public static function register($name, \lang\XPClass $class) {
-    if (!$class->isSubclassOf('rdbms.DBConnection')) {
-      throw new \lang\IllegalArgumentException(sprintf(
+  public static function register($name, XPClass $class) {
+    if (!$class->isSubclassOf(DBConnection::class)) {
+      throw new IllegalArgumentException(sprintf(
         'Given argument must be lang.XPClass<rdbms.DBConnection>, %s given',
         $class->toString()
       ));
@@ -130,11 +130,12 @@ class DriverManager {
   /**
    * Get a connection by a DSN string
    *
-   * @param   string|rdbms.DSN $dsn
-   * @return  rdbms.DBConnection
-   * @throws  rdbms.DriverNotSupportedException
+   * @param  string|rdbms.DSN $dsn
+   * @param  bool $persistent
+   * @return rdbms.DBConnection
+   * @throws rdbms.DriverNotSupportedException
    */
-  public static function getConnection($dsn) {
+  public static function getConnection($dsn, $persistent= true) {
     $dsn= $dsn instanceof DSN ? $dsn : new DSN((string)$dsn);
     $driver= $dsn->getDriver();
 
@@ -156,7 +157,7 @@ class DriverManager {
           $search= $driver;
         }
         foreach ($provider->implementationsFor($family) as $impl) {
-          \lang\XPClass::forName($impl);
+          XPClass::forName($impl);
         }
 
         // Not every implementation may be registered (e.g., due to a missing 
@@ -178,6 +179,7 @@ class DriverManager {
       }
     }
     
-    return self::$instance->lookup[$driver]->newInstance($dsn);
+    $conn= self::$instance->lookup[$driver]->newInstance($dsn);
+    return $persistent ? new PersistentConnection($conn) : $conn;
   }
 }

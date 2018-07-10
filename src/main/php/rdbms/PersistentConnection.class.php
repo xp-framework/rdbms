@@ -12,13 +12,13 @@ class PersistentConnection extends DBConnection {
   /**
    * Constructor
    *
-   * @param  rdbms.DSN|rdbms.DBConnection $arg
+   * @param  string|rdbms.DSN|rdbms.DBConnection $arg
    */
   public function __construct($arg) {
     if ($arg instanceof DBConnection) {
       $this->conn= $arg;
     } else {
-      $this->conn= DriverManager::getConnection($arg);
+      $this->conn= DriverManager::getConnection($arg, false);
     }
   }
 

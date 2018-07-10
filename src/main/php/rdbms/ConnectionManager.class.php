@@ -1,7 +1,7 @@
 <?php namespace rdbms;
 
-use util\Configurable;
 use rdbms\DSN;
+use util\Configurable;
 
 /**
  * ConnectionManager holds connections to databases
@@ -159,12 +159,10 @@ class ConnectionManager implements Configurable {
    * @return  rdbms.DBConnection
    */
   protected function conn($name, $value) {
-    if ($value instanceof DBConnection) return $value;
-    if (is_string($value)) {
-
-      // Resolve lazy-loading DSNs
-      $this->pool[$name]= DriverManager::getConnection($value);
-      return $this->pool[$name];
+    if ($value instanceof DBConnection) {
+      return $value;
+    } else if (is_string($value)) {         // Resolve lazy-loading DSNs
+      return $this->pool[$name]= DriverManager::getConnection($value, false);
     }
     
     throw new DriverNotSupportedException('Neither a connection string nor a rdbms.DBConnection given.');

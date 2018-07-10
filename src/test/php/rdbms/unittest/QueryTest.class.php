@@ -1,14 +1,14 @@
 <?php namespace rdbms\unittest;
  
-use rdbms\unittest\mock\MockConnection;
-use unittest\TestCase;
-use rdbms\query\SelectQuery;
-use rdbms\query\UpdateQuery;
-use rdbms\query\DeleteQuery;
-use rdbms\query\SetOperation;
 use rdbms\Criteria;
+use rdbms\query\DeleteQuery;
+use rdbms\query\SelectQuery;
+use rdbms\query\SetOperation;
+use rdbms\query\UpdateQuery;
 use rdbms\unittest\dataset\Job;
 use rdbms\unittest\dataset\Person;
+use rdbms\unittest\mock\MockConnection;
+use unittest\TestCase;
 
 /**
  * Test query class
@@ -28,7 +28,7 @@ class QueryTest extends TestCase {
    * Setup method
    */
   public function setUp() {
-    with ($conn= \rdbms\DriverManager::getConnection('mock://mock/JOBS?autoconnect=1')); {
+    with ($conn= \rdbms\DriverManager::getConnection('mock://mock/JOBS', false)); {
       Job::getPeer()->setConnection($conn);
       Person::getPeer()->setConnection($conn);
     }

@@ -1,7 +1,7 @@
 <?php namespace rdbms;
 
-use peer\URL;
 use lang\Value;
+use peer\URL;
 use util\Objects;
 
 define('DB_STORE_RESULT',     0x0001);
@@ -14,12 +14,11 @@ define('DB_NEWLINK',          0x0010);
  * DSN
  *
  * DSN syntax:
- * <pre>
- *   driver://[username[:password]]@host[:port][/database][?flag=value[&flag2=value2]]
- * </pre>
+ * ```
+ * driver://[username[:password]]@host[:port][/database][?flag=value[&flag2=value2]]
+ * ```
  *
- * @test     xp://net.xp_framework.unittest.rdbms.DSNTest
- * @purpose  Unified connect string
+ * @test  xp://net.xp_framework.unittest.rdbms.DSNTest
  */
 class DSN implements Value {
   public 

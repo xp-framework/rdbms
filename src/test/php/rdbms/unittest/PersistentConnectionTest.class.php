@@ -21,12 +21,12 @@ class PersistentConnectionTest extends TestCase {
 
   #[@test]
   public function can_create_with_connection() {
-    new PersistentConnection(DriverManager::getConnection('mock://test'));
+    new PersistentConnection(DriverManager::getConnection('mock://test', false));
   }
 
   #[@test]
   public function connect() {
-    $conn= DriverManager::getConnection('mock://test');
+    $conn= DriverManager::getConnection('mock://test', false);
     $fixture= new PersistentConnection($conn);
     $fixture->connect();
     $this->assertTrue($conn->isConnected());
@@ -34,7 +34,7 @@ class PersistentConnectionTest extends TestCase {
 
   #[@test]
   public function close() {
-    $conn= DriverManager::getConnection('mock://test');
+    $conn= DriverManager::getConnection('mock://test', false);
     $fixture= new PersistentConnection($conn);
     $fixture->connect();
     $fixture->close();
@@ -43,35 +43,35 @@ class PersistentConnectionTest extends TestCase {
 
   #[@test]
   public function identity() {
-    $conn= DriverManager::getConnection('mock://test');
+    $conn= DriverManager::getConnection('mock://test', false);
     $conn->setIdentityValue(6100);
     $this->assertEquals(6100, (new PersistentConnection($conn))->identity());
   }
 
   #[@test]
   public function query_with_params() {
-    $conn= DriverManager::getConnection('mock://test');
+    $conn= DriverManager::getConnection('mock://test', false);
     (new PersistentConnection($conn))->query('select * from test where id = %d', 6100);
     $this->assertEquals('select * from test where id = 6100', $conn->getStatement());
   }
 
   #[@test]
   public function open_with_params() {
-    $conn= DriverManager::getConnection('mock://test');
+    $conn= DriverManager::getConnection('mock://test', false);
     (new PersistentConnection($conn))->open('select * from test where id = %d', 6100);
     $this->assertEquals('select * from test where id = 6100', $conn->getStatement());
   }
 
   #[@test, @expect(class= SQLStatementFailedException::class, withMessage= 'Syntax error')]
   public function query_failures_thrown() {
-    $conn= DriverManager::getConnection('mock://test');
+    $conn= DriverManager::getConnection('mock://test', false);
     $conn->makeQueryFail(1000, 'Syntax error');
     (new PersistentConnection($conn))->query('select');
   }
 
   #[@test]
   public function reconnects_and_reruns_query_when_server_disconnects() {
-    $conn= DriverManager::getConnection('mock://test');
+    $conn= DriverManager::getConnection('mock://test', false);
     $conn->connect();
     $conn->addResultSet(new MockResultSet([['id' => 'Test']]));
     $conn->letServerDisconnect();
@@ -82,7 +82,7 @@ class PersistentConnectionTest extends TestCase {
 
   #[@test, @expect(SQLConnectionClosedException::class)]
   public function does_not_rerun_query_inside_transaction() {
-    $conn= DriverManager::getConnection('mock://test');
+    $conn= DriverManager::getConnection('mock://test', false);
     $conn->connect();
 
     $fixture= new PersistentConnection($conn);
@@ -94,7 +94,7 @@ class PersistentConnectionTest extends TestCase {
 
   #[@test, @expect(SQLStatementFailedException::class)]
   public function rolling_back_transaction() {
-    $conn= DriverManager::getConnection('mock://test');
+    $conn= DriverManager::getConnection('mock://test', false);
     $conn->connect();
 
     $fixture= new PersistentConnection($conn);
@@ -112,7 +112,7 @@ class PersistentConnectionTest extends TestCase {
 
   #[@test]
   public function connection_is_closed_after_connect_errors() {
-    $conn= DriverManager::getConnection('mock://test');
+    $conn= DriverManager::getConnection('mock://test', false);
     $conn->makeConnectFail(401);
 
     $fixture= new PersistentConnection($conn);

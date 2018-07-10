@@ -1,9 +1,9 @@
 <?php namespace rdbms\unittest;
  
-use unittest\TestCase;
-use rdbms\Statement;
 use rdbms\DriverManager;
+use rdbms\Statement;
 use rdbms\unittest\dataset\Job;
+use unittest\TestCase;
 
 /**
  * Test Statement class
@@ -19,9 +19,9 @@ class StatementTest extends TestCase {
    * Setup method
    */
   public function setUp() {
-    $this->conn= DriverManager::getConnection('mock://mock/JOBS?autoconnect=1');
+    $this->conn= DriverManager::getConnection('mock://mock/JOBS', false);
     $this->peer= Job::getPeer();
-    $this->peer->setConnection(DriverManager::getConnection('mock://mock/JOBS?autoconnect=1'));
+    $this->peer->setConnection($this->conn);
   }
   
   /**

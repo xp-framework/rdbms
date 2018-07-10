@@ -1,7 +1,7 @@
 <?php namespace rdbms\unittest;
 
-use rdbms\DriverManager;
 use rdbms\ConnectionManager;
+use rdbms\DriverManager;
 
 /**
  * Tests for connection managers with connections programmatically
@@ -22,7 +22,7 @@ class RegisteredConnectionManagerTest extends ConnectionManagerTest {
   protected function instanceWith($dsns) {
     $cm= ConnectionManager::getInstance();
     foreach ($dsns as $name => $dsn) {
-      $conn= DriverManager::getConnection($dsn);
+      $conn= DriverManager::getConnection($dsn, false);
       if (false !== ($p= strpos($name, '.'))) {
         $cm->register($conn, substr($name, 0, $p), substr($name, $p+ 1));
       } else {
@@ -39,7 +39,7 @@ class RegisteredConnectionManagerTest extends ConnectionManagerTest {
 
   #[@test]
   public function registerReturnsConnection() {
-    $conn= DriverManager::getConnection('mock://user:pass@host/db');
+    $conn= DriverManager::getConnection('mock://user:pass@host/db', false);
     $cm= $this->instanceWith([]);
     
     $this->assertEquals($conn, $cm->register($conn));
@@ -47,7 +47,7 @@ class RegisteredConnectionManagerTest extends ConnectionManagerTest {
  
   #[@test]
   public function registerReturnsConnectionWhenPreviouslyRegistered() {
-    $conn= DriverManager::getConnection('mock://user:pass@host/db');
+    $conn= DriverManager::getConnection('mock://user:pass@host/db', false);
     $cm= $this->instanceWith([]);
     $cm->register($conn);
 
@@ -56,8 +56,8 @@ class RegisteredConnectionManagerTest extends ConnectionManagerTest {
 
   #[@test]
   public function registerOverwritesPreviouslyRegistered() {
-    $conn1= DriverManager::getConnection('mock://user:pass@host/db1');
-    $conn2= DriverManager::getConnection('mock://user:pass@host/db2');
+    $conn1= DriverManager::getConnection('mock://user:pass@host/db1', false);
+    $conn2= DriverManager::getConnection('mock://user:pass@host/db2', false);
     $cm= $this->instanceWith([]);
 
     $this->assertEquals($conn1, $cm->register($conn1));

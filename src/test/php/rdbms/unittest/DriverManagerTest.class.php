@@ -1,9 +1,9 @@
 <?php namespace rdbms\unittest;
 
-use rdbms\DriverNotSupportedException;
 use lang\FormatException;
 use lang\IllegalArgumentException;
 use rdbms\DriverManager;
+use rdbms\DriverNotSupportedException;
 
 /**
  * TestCase
@@ -57,7 +57,7 @@ class DriverManagerTest extends \unittest\TestCase {
   public function mysqlxProvidedByDefaultDrivers() {
     $this->assertInstanceOf(
       'rdbms.mysqlx.MySqlxConnection', 
-      DriverManager::getConnection('mysql+x://localhost')
+      DriverManager::getConnection('mysql+x://localhost', false)
     );
   }
 
@@ -79,7 +79,7 @@ class DriverManagerTest extends \unittest\TestCase {
     $this->register('mock', \lang\XPClass::forName('rdbms.unittest.mock.MockConnection'));
     $this->assertInstanceOf(
       'rdbms.unittest.mock.MockConnection',
-      DriverManager::getConnection('mock://localhost')
+      DriverManager::getConnection('mock://localhost', false)
     );
   }
 
@@ -110,7 +110,7 @@ class DriverManagerTest extends \unittest\TestCase {
 
     $this->assertInstanceOf(
       'rdbms.unittest.mock.AMockConnection', 
-      DriverManager::getConnection('test://localhost')
+      DriverManager::getConnection('test://localhost', false)
     );
   }
 }

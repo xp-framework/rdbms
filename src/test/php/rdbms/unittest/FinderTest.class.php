@@ -1,18 +1,18 @@
 <?php namespace rdbms\unittest;
 
-use rdbms\Peer;
-use rdbms\finder\FinderMethod;
-use rdbms\SQLExpression;
-use lang\MethodNotImplementedException;
 use lang\IllegalArgumentException;
-use rdbms\finder\FinderException;
-use rdbms\finder\NoSuchEntityException;
-use unittest\TestCase;
+use lang\MethodNotImplementedException;
 use rdbms\DriverManager;
+use rdbms\Peer;
+use rdbms\SQLExpression;
+use rdbms\finder\FinderException;
+use rdbms\finder\FinderMethod;
 use rdbms\finder\GenericFinder;
+use rdbms\finder\NoSuchEntityException;
 use rdbms\unittest\dataset\Job;
 use rdbms\unittest\dataset\JobFinder;
 use rdbms\unittest\mock\MockResultSet;
+use unittest\TestCase;
 
 /**
  * TestCase
@@ -28,7 +28,7 @@ class FinderTest extends TestCase {
    */
   public function setUp() {
     $this->fixture= new JobFinder();
-    $this->fixture->getPeer()->setConnection(DriverManager::getConnection('mock://mock/JOBS?autoconnect=1'));
+    $this->fixture->getPeer()->setConnection(DriverManager::getConnection('mock://mock/JOBS', false));
   }
 
   /**
