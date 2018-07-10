@@ -1,18 +1,18 @@
 <?php namespace rdbms\unittest;
 
+use rdbms\Criteria;
 use rdbms\DriverManager;
 use rdbms\Record;
-use util\Date;
-use rdbms\sybase\SybaseConnection;
+use rdbms\criterion\Projections;
+use rdbms\criterion\Restrictions;
 use rdbms\mysql\MySQLConnection;
 use rdbms\pgsql\PostgreSQLConnection;
 use rdbms\sqlite3\SQLite3Connection;
-use rdbms\criterion\Restrictions;
-use rdbms\criterion\Projections;
-use rdbms\Criteria;
+use rdbms\sybase\SybaseConnection;
 use rdbms\unittest\dataset\Job;
 use rdbms\unittest\mock\MockResultSet;
 use rdbms\unittest\mock\RegisterMockConnection;
+use util\Date;
 
 /**
  * TestCase
@@ -232,7 +232,7 @@ class ProjectionTest extends \unittest\TestCase {
 
   #[@test]
   function regressionIteratorDatasetType() {
-    $conn= DriverManager::getConnection('mock://mock/JOBS?autoconnect=1');
+    $conn= DriverManager::getConnection('mock://mock/JOBS', false);
     $conn->setResultSet(new MockResultSet([['count' => 5]]));
     $crit= (new Criteria())->withProjection(Projections::count('*'));
     $this->peer->setConnection($conn);

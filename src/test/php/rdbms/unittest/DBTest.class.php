@@ -1,13 +1,13 @@
 <?php namespace rdbms\unittest;
  
+use rdbms\DriverManager;
 use rdbms\ResultSet;
 use rdbms\SQLConnectException;
-use rdbms\SQLStateException;
 use rdbms\SQLConnectionClosedException;
+use rdbms\SQLStateException;
 use rdbms\SQLStatementFailedException;
-use rdbms\DriverManager;
-use unittest\TestCase;
 use rdbms\unittest\mock\MockResultSet;
+use unittest\TestCase;
 
 /**
  * Test rdbms API
@@ -20,7 +20,7 @@ class DBTest extends TestCase {
    * Setup function
    */
   public function setUp() {
-    $this->conn= DriverManager::getConnection('mock://mock/MOCKDB?autoconnect=0');
+    $this->conn= DriverManager::getConnection('mock://mock/MOCKDB?autoconnect=0', false);
     $this->assertEquals(0, $this->conn->flags & DB_AUTOCONNECT);
   }
   
