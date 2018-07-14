@@ -198,14 +198,19 @@ class MySQLiConnection extends DBConnection {
           }
           $this->close();
           $this->transaction= 0;
-          throw new \rdbms\SQLConnectionClosedException($message, $tries, $sql, $code);
+          $e= new \rdbms\SQLConnectionClosedException($message, $tries, $sql, $code);
+          break;
 
         case 1213: // Deadlock
-          throw new \rdbms\SQLDeadlockException($message, $sql, $code);
+          $e= new \rdbms\SQLDeadlockException($message, $sql, $code);
+          break;
         
         default:
-          throw new \rdbms\SQLStatementFailedException($message, $sql, $code);
+          $e= new \rdbms\SQLStatementFailedException($message, $sql, $code);
+          break;
       }
+      \xp::gc(__FILE__);
+      throw $e;
     } else if (true === $r) {
       return new QuerySucceeded(mysqli_affected_rows($this->handle));
     } else if ($buffered) {
