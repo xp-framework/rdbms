@@ -1,9 +1,9 @@
 <?php namespace rdbms\ibase;
 
 use rdbms\DBConnection;
-use rdbms\Transaction;
-use rdbms\StatementFormatter;
 use rdbms\QuerySucceeded;
+use rdbms\StatementFormatter;
+use rdbms\Transaction;
 
 /**
  * Connection to InterBase/FireBird databases using client libraries
@@ -124,21 +124,22 @@ class InterBaseConnection extends DBConnection {
    * @throws  rdbms.SQLException
    */
   protected function query0($sql, $buffered= true) {
-    if (!is_resource($this->handle)) {
-      if (!($this->flags & DB_AUTOCONNECT)) throw new \rdbms\SQLStateException('Not connected');
-      $c= $this->connect();
-      
-      // Check for subsequent connection errors
-      if (false === $c) throw new \rdbms\SQLStateException('Previously failed to connect');
-    }
-    
-    $result= ibase_query($sql, $this->handle);
+    is_resource($this->handle) || $this->connections->establish($this);
+
+    $tries= 1;
+    retry: $result= ibase_query($sql, $this->handle);
     if (false === $result) {
       $message= 'Statement failed: '.trim(ibase_errmsg()).' @ '.$this->dsn->getHost();
       $code= ibase_errcode();
       switch ($code) {
         case -924:    // Connection lost
-          throw new \rdbms\SQLConnectionClosedException($message, $sql);
+          if (0 === $this->transaction && $this->connections->retry($this, $tries)) {
+            $tries++;
+            goto retry;
+          }
+          $this->close();
+          $this->transaction= 0;
+          throw new \rdbms\SQLConnectionClosedException($message, $tries, $sql, $code);
 
         case -913:    // Deadlock
           throw new \rdbms\SQLDeadlockException($message, $sql, $code);
@@ -162,6 +163,7 @@ class InterBaseConnection extends DBConnection {
   public function begin($transaction) {
     $this->query('begin transaction xp_%c', $transaction->name);
     $transaction->db= $this;
+    $this->transaction++;
     return $transaction;
   }
   
@@ -181,7 +183,8 @@ class InterBaseConnection extends DBConnection {
    * @param   string name
    * @return  bool success
    */
-  public function rollback($name) { 
+  public function rollback($name) {
+    $this->transaction--;
     return $this->query('rollback transaction xp_%c', $name);
   }
   
@@ -191,7 +194,8 @@ class InterBaseConnection extends DBConnection {
    * @param   string name
    * @return  bool success
    */
-  public function commit($name) { 
+  public function commit($name) {
+    $this->transaction--;
     return $this->query('commit transaction xp_%c', $name);
   }
 }

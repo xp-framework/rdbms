@@ -1,9 +1,9 @@
 <?php namespace rdbms\mssql;
 
 use rdbms\DBConnection;
-use rdbms\Transaction;
-use rdbms\StatementFormatter;
 use rdbms\QuerySucceeded;
+use rdbms\StatementFormatter;
+use rdbms\Transaction;
 
 /**
  * Connection to MsSQL databases using client libraries
@@ -138,16 +138,10 @@ class MsSQLConnection extends DBConnection {
    * @throws  rdbms.SQLException
    */
   protected function query0($sql, $buffered= true) {
-    if (!is_resource($this->handle)) {
-      if (!($this->flags & DB_AUTOCONNECT)) throw new \rdbms\SQLStateException('Not connected');
-      $c= $this->connect();
-      
-      // Check for subsequent connection errors
-      if (false === $c) throw new \rdbms\SQLStateException('Previously failed to connect');
-    }
-    
-    $result= mssql_query($sql, $this->handle);
+    is_resource($this->handle) || $this->connections->establish($this);
 
+    $tries= 1;
+    retry: $result= mssql_query($sql, $this->handle);
     if (false === $result) {
       $message= 'Statement failed: '.trim(mssql_get_last_message()).' @ '.$this->dsn->getHost();
       if (!is_resource($error= mssql_query('select @@error', $this->handle))) {
@@ -159,7 +153,13 @@ class MsSQLConnection extends DBConnection {
         // MsSQL:  Client message:  Read from SQL server failed. (severity 78)
         //
         // but that seems a bit errorprone. 
-        throw new \rdbms\SQLConnectionClosedException($message, $sql);
+        if (0 === $this->transaction && $this->connections->retry($this, $tries)) {
+          $tries++;
+          goto retry;
+        }
+        $this->close();
+        $this->transaction= 0;
+        throw new \rdbms\SQLConnectionClosedException($message, $tries, $sql);
       }
 
       $code= current(mssql_fetch_row($error));
@@ -186,6 +186,7 @@ class MsSQLConnection extends DBConnection {
   public function begin($transaction) {
     $this->query('begin transaction xp_%c', $transaction->name);
     $transaction->db= $this;
+    $this->transaction++;
     return $transaction;
   }
   
@@ -195,7 +196,7 @@ class MsSQLConnection extends DBConnection {
    * @param   string name
    * @return  var state
    */
-  public function transtate($name) { 
+  public function transtate($name) {
     return $this->query('select @@transtate as transtate')->next('transtate');
   }
   
@@ -205,7 +206,8 @@ class MsSQLConnection extends DBConnection {
    * @param   string name
    * @return  bool success
    */
-  public function rollback($name) { 
+  public function rollback($name) {
+    $this->transaction--;
     return $this->query('rollback transaction xp_%c', $name);
   }
   
@@ -215,7 +217,8 @@ class MsSQLConnection extends DBConnection {
    * @param   string name
    * @return  bool success
    */
-  public function commit($name) { 
+  public function commit($name) {
+    $this->transaction--;
     return $this->query('commit transaction xp_%c', $name);
   }
 }

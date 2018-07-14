@@ -1,9 +1,9 @@
 <?php namespace rdbms\mysqli;
 
 use rdbms\DBConnection;
-use rdbms\Transaction;
-use rdbms\StatementFormatter;
 use rdbms\QuerySucceeded;
+use rdbms\StatementFormatter;
+use rdbms\Transaction;
 
 /**
  * Connection to MySQL Databases
@@ -173,13 +173,7 @@ class MySQLiConnection extends DBConnection {
    * @throws  rdbms.SQLException
    */
   protected function query0($sql, $buffered= true) {
-    if (!is_object($this->handle)) {
-      if (!($this->flags & DB_AUTOCONNECT)) throw new \rdbms\SQLStateException('Not connected');
-      $c= $this->connect();
-      
-      // Check for subsequent connection errors
-      if (false === $c) throw new \rdbms\SQLStateException('Previously failed to connect.');
-    }
+    is_object($this->handle) || $this->connections->establish($this);
     
     // Clean up previous results to prevent "Commands out of sync" errors
     if (null !== $this->result) {
@@ -187,21 +181,29 @@ class MySQLiConnection extends DBConnection {
       $this->result= null;
     }
 
-    // Execute query
+    $tries= 1;
     $mode= !$buffered || $this->flags & DB_UNBUFFERED;
-    $r= mysqli_query($this->handle, $sql, $mode ? MYSQLI_USE_RESULT : MYSQLI_STORE_RESULT);
+
+    // Execute query
+    retry: $r= mysqli_query($this->handle, $sql, $mode ? MYSQLI_USE_RESULT : MYSQLI_STORE_RESULT);
     if (false === $r) {
       $code= mysqli_errno($this->handle);
       $message= 'Statement failed: '.mysqli_error($this->handle).' @ '.$this->dsn->getHost();
       switch ($code) {
         case 2006: // MySQL server has gone away
         case 2013: // Lost connection to MySQL server during query
-          throw new \rdbms\SQLConnectionClosedException('Statement failed: '.$message, $sql, $code);
+          if (0 === $this->transaction && $this->connections->retry($this, $tries)) {
+            $tries++;
+            goto retry;
+          }
+          $this->close();
+          $this->transaction= 0;
+          throw new \rdbms\SQLConnectionClosedException($message, $tries, $sql, $code);
 
         case 1213: // Deadlock
           throw new \rdbms\SQLDeadlockException($message, $sql, $code);
         
-        default:   // Other error
+        default:
           throw new \rdbms\SQLStatementFailedException($message, $sql, $code);
       }
     } else if (true === $r) {
@@ -223,6 +225,7 @@ class MySQLiConnection extends DBConnection {
   public function begin($transaction) {
     if (!$this->query('begin')) return false;
     $transaction->db= $this;
+    $this->transaction++;
     return $transaction;
   }
   
@@ -232,7 +235,8 @@ class MySQLiConnection extends DBConnection {
    * @param   string name
    * @return  bool success
    */
-  public function rollback($name) { 
+  public function rollback($name) {
+    $this->transaction--;
     return $this->query('rollback');
   }
   
@@ -242,7 +246,8 @@ class MySQLiConnection extends DBConnection {
    * @param   string name
    * @return  bool success
    */
-  public function commit($name) { 
+  public function commit($name) {
+    $this->transaction--;
     return $this->query('commit');
   }
 

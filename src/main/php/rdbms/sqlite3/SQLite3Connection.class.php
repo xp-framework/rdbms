@@ -1,9 +1,9 @@
 <?php namespace rdbms\sqlite3;
 
 use rdbms\DBConnection;
-use rdbms\Transaction;
-use rdbms\StatementFormatter;
 use rdbms\QuerySucceeded;
+use rdbms\StatementFormatter;
+use rdbms\Transaction;
 
 /**
  * Connection to SQLite 3.x Databases via ext/sqlite3
@@ -161,13 +161,7 @@ class SQLite3Connection extends DBConnection {
    * @throws  rdbms.SQLException
    */
   protected function query0($sql, $buffered= true) {
-    if (!$this->handle instanceof \SQLite3) {
-      if (!($this->flags & DB_AUTOCONNECT)) throw new \rdbms\SQLStateException('Not connected');
-      $c= $this->connect();
-      
-      // Check for subsequent connection errors
-      if (false === $c) throw new \rdbms\SQLStateException('Previously failed to connect.');
-    }
+    $this->handle instanceof \SQLite || $this->connections->establish($this);
     
     $result= $this->handle->query($sql);
     if (false === $result) {
@@ -192,10 +186,9 @@ class SQLite3Connection extends DBConnection {
    * @return  rdbms.Transaction
    */
   public function begin($transaction) {
-    if (false === $this->query('begin transaction xp_%c', $transaction->name)) {
-      return false;
-    }
+    $this->query('begin transaction xp_%c', $transaction->name);
     $transaction->db= $this;
+    $this->transaction++;
     return $transaction;
   }
   
@@ -206,6 +199,7 @@ class SQLite3Connection extends DBConnection {
    * @return  bool success
    */
   public function rollback($name) { 
+    $this->transaction--;
     return $this->query('rollback transaction xp_%c', $name);
   }
   
@@ -216,6 +210,7 @@ class SQLite3Connection extends DBConnection {
    * @return  bool success
    */
   public function commit($name) { 
+    $this->transaction--;
     return $this->query('commit transaction xp_%c', $name);
   }
 }

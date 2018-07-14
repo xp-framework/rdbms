@@ -1,9 +1,9 @@
 <?php namespace rdbms\sybase;
 
 use rdbms\DBConnection;
-use rdbms\Transaction;
-use rdbms\StatementFormatter;
 use rdbms\QuerySucceeded;
+use rdbms\StatementFormatter;
+use rdbms\Transaction;
 
 /**
  * Connection to Sybase databases using client libraries (sybase_ct)
@@ -139,15 +139,10 @@ class SybaseConnection extends DBConnection {
    * @throws  rdbms.SQLException
    */
   protected function query0($sql, $buffered= true) {
-    if (!is_resource($this->handle)) {
-      if (!($this->flags & DB_AUTOCONNECT)) throw new \rdbms\SQLStateException('Not connected');
-      $c= $this->connect();
-      
-      // Check for subsequent connection errors
-      if (false === $c) throw new \rdbms\SQLStateException('Previously failed to connect');
-    }
-    
-    if (!$buffered) {
+    is_resource($this->handle) || $this->connections->establish($this);
+
+    $tries= 1;
+    retry: if (!$buffered) {
       $result= @sybase_unbuffered_query($sql, $this->handle, false);
     } else if ($this->flags & DB_UNBUFFERED) {
       $result= @sybase_unbuffered_query($sql, $this->handle, $this->flags & DB_STORE_RESULT);
@@ -166,7 +161,13 @@ class SybaseConnection extends DBConnection {
         // Sybase:  Client message:  Read from SQL server failed. (severity 78)
         //
         // but that seems a bit errorprone. 
-        throw new \rdbms\SQLConnectionClosedException($message, $sql);
+        if (0 === $this->transaction && $this->connections->retry($this, $tries)) {
+          $tries++;
+          goto retry;
+        }
+        $this->close();
+        $this->transaction= 0;
+        throw new \rdbms\SQLConnectionClosedException($message, $tries, $sql);
       }
 
       $code= current(sybase_fetch_row($error));
@@ -193,6 +194,7 @@ class SybaseConnection extends DBConnection {
   public function begin($transaction) {
     $this->query('begin transaction xp_%c', $transaction->name);
     $transaction->db= $this;
+    $this->transaction++;
     return $transaction;
   }
   
@@ -212,7 +214,8 @@ class SybaseConnection extends DBConnection {
    * @param   string name
    * @return  bool success
    */
-  public function rollback($name) { 
+  public function rollback($name) {
+    $this->transaction--;
     return $this->query('rollback transaction xp_%c', $name);
   }
   
@@ -222,7 +225,8 @@ class SybaseConnection extends DBConnection {
    * @param   string name
    * @return  bool success
    */
-  public function commit($name) { 
+  public function commit($name) {
+    $this->transaction--;
     return $this->query('commit transaction xp_%c', $name);
   }
 }
