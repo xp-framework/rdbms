@@ -193,6 +193,7 @@ class MySQLiConnection extends DBConnection {
         case 2006: // MySQL server has gone away
         case 2013: // Lost connection to MySQL server during query
           if (0 === $this->transaction && $this->connections->retry($this, $tries)) {
+            \xp::gc(__FILE__);
             $tries++;
             goto retry;
           }
