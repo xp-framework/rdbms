@@ -209,8 +209,9 @@ class PostgreSQLConnection extends DBConnection {
    * @return  bool success
    */
   public function rollback($name) {
+    $this->query('rollback transaction');
     $this->transaction--;
-    return $this->query('rollback transaction');
+    return true;
   }
   
   /**
@@ -220,7 +221,8 @@ class PostgreSQLConnection extends DBConnection {
    * @return  bool success
    */
   public function commit($name) {
+    $this->query('commit transaction');
     $this->transaction--;
-    return $this->query('commit transaction');
+    return true;
   }
 }

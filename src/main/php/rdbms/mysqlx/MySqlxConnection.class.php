@@ -230,8 +230,9 @@ class MySqlxConnection extends DBConnection {
    * @return  bool success
    */
   public function rollback($name) {
+    $this->query('rollback');
     $this->transaction--;
-    return $this->query('rollback');
+    return true;
   }
   
   /**
@@ -241,8 +242,9 @@ class MySqlxConnection extends DBConnection {
    * @return  bool success
    */
   public function commit($name) { 
+    $this->query('commit');
     $this->transaction--;
-    return $this->query('commit');
+    return true;
   }
 
   /**

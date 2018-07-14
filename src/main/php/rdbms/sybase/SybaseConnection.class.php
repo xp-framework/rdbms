@@ -215,8 +215,9 @@ class SybaseConnection extends DBConnection {
    * @return  bool success
    */
   public function rollback($name) {
+    $this->query('rollback transaction xp_%c', $name);
     $this->transaction--;
-    return $this->query('rollback transaction xp_%c', $name);
+    return true;
   }
   
   /**
@@ -226,7 +227,8 @@ class SybaseConnection extends DBConnection {
    * @return  bool success
    */
   public function commit($name) {
+    $this->query('commit transaction xp_%c', $name);
     $this->transaction--;
-    return $this->query('commit transaction xp_%c', $name);
+    return true;
   }
 }
