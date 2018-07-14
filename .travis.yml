@@ -18,6 +18,7 @@ php:
 
 matrix:
   allow_failures:
+    - php: hhvm
     - php: nightly
 
 before_install:
@@ -31,9 +32,10 @@ before_script:
 
 script:
   - export SQLITE_DSN=sqlite://./test
-  - export __DISABLED_PGSQL_DSN=pgsql://127.0.0.1/travis_ci_test
   - sh xp-run xp.unittest.TestRunner src/test/php
-  - export __DISABLED_MYSQL_DSN=mysql+x://root@127.0.0.1/test
+  - export MYSQL_DSN=mysql+x://root@127.0.0.1/test
   - sh xp-run xp.unittest.TestRunner rdbms.unittest.integration.MySQLIntegrationTest rdbms.unittest.integration.MySQLDeadlockTest
-  - export __DISABLED_MYSQL_DSN=mysql+i://root@127.0.0.1/test
+  - export MYSQL_DSN=mysql+i://root@127.0.0.1/test
   - sh xp-run xp.unittest.TestRunner rdbms.unittest.integration.MySQLIntegrationTest rdbms.unittest.integration.MySQLDeadlockTest
+  - export PGSQL_DSN=pgsql://127.0.0.1/travis_ci_test
+  - sh xp-run xp.unittest.TestRunner rdbms.unittest.integration.PostgreSQLIntegrationTest rdbms.unittest.integration.PostgreSQLDeadlockTest
