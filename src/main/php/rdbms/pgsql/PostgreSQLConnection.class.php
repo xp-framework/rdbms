@@ -1,25 +1,31 @@
 <?php namespace rdbms\pgsql;
 
+use lang\XPClass;
 use rdbms\DBConnection;
+use rdbms\DBEvent;
+use rdbms\DriverManager;
 use rdbms\QuerySucceeded;
+use rdbms\SQLConnectException;
+use rdbms\SQLConnectionClosedException;
+use rdbms\SQLDeadlockException;
+use rdbms\SQLStatementFailedException;
 use rdbms\StatementFormatter;
 use rdbms\Transaction;
 
 /**
  * Connection to PostgreSQL Databases via ext/pgsql
  *
- * @see      http://www.postgresql.org/
- * @see      http://www.freebsddiary.org/postgresql.php
- * @ext      pgsql
- * @purpose  Database connection
+ * @see   http://www.postgresql.org/
+ * @see   http://www.freebsddiary.org/postgresql.php
+ * @ext   pgsql
+ * @test  xp://rdbms.unittest.integration.PostgreSQLIntegrationTest
  */
 class PostgreSQLConnection extends DBConnection {
-  protected
-    $result     = null;
+  protected $result= null;
 
   static function __static() {
     if (extension_loaded('pgsql')) {
-      \rdbms\DriverManager::register('pgsql+std', new \lang\XPClass(__CLASS__));
+      DriverManager::register('pgsql+std', new XPClass(__CLASS__));
     }
   }
 
@@ -44,7 +50,7 @@ class PostgreSQLConnection extends DBConnection {
     if (is_resource($this->handle)) return true;  // Already connected
     if (!$reconnect && (false === $this->handle)) return false;    // Previously failed connecting
 
-    $this->_obs && $this->notifyObservers(new \rdbms\DBEvent(\rdbms\DBEvent::CONNECT, $reconnect));
+    $this->_obs && $this->notifyObservers(new DBEvent(DBEvent::CONNECT, $reconnect));
 
     // Build connection string. In PostgreSQL, a dbname must _always_
     // be specified.
@@ -65,9 +71,8 @@ class PostgreSQLConnection extends DBConnection {
       \xp::gc(__FILE__);
       throw $e;
     }
-    
-    $this->_obs && $this->notifyObservers(new \rdbms\DBEvent(\rdbms\DBEvent::CONNECTED, $reconnect));
-    
+
+    $this->_obs && $this->notifyObservers(new DBEvent(DBEvent::CONNECTED, $reconnect));
     return true;
   }
   
@@ -90,7 +95,7 @@ class PostgreSQLConnection extends DBConnection {
    * @throws  rdbms.SQLStatementFailedException
    */
   public function selectdb($db) {
-    throw new \rdbms\SQLStatementFailedException(
+    throw new SQLStatementFailedException(
       'Cannot select database, not implemented in PostgreSQL'
     );
   }
@@ -103,7 +108,7 @@ class PostgreSQLConnection extends DBConnection {
   public function identity($field= null) {
     $q= $this->query('select currval(%s) as id', $field);
     $id= $q ? $q->next('id') : null;
-    $this->_obs && $this->notifyObservers(new \rdbms\DBEvent(\rdbms\DBEvent::IDENTITY, $id));
+    $this->_obs && $this->notifyObservers(new DBEvent(DBEvent::IDENTITY, $id));
     return $id;
   }
 
@@ -138,9 +143,9 @@ class PostgreSQLConnection extends DBConnection {
         }
         $this->close();
         $this->transaction= 0;
-        throw new \rdbms\SQLConnectionClosedException($message, $tries, $sql);
+        throw new SQLConnectionClosedException($message, $tries, $sql);
       } else {
-        throw new \rdbms\SQLStatementFailedException($message, $sql);
+        throw new SQLStatementFailedException($message, $sql);
       }
     }
     
@@ -157,13 +162,13 @@ class PostgreSQLConnection extends DBConnection {
             }
             $this->close();
             $this->transaction= 0;
-            throw new \rdbms\SQLConnectionClosedException($message, $tries, $sql, $code);
+            throw new SQLConnectionClosedException($message, $tries, $sql, $code);
 
           case '40P01':
-            throw new \rdbms\SQLDeadlockException($message, $sql, $code);
+            throw new SQLDeadlockException($message, $sql, $code);
 
           default:
-            throw new \rdbms\SQLStatementFailedException($message, $sql, $code);
+            throw new SQLStatementFailedException($message, $sql, $code);
         }
       }
       
