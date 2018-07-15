@@ -11,14 +11,11 @@ use rdbms\tds\TdsProtocol;
 class TdsBufferedResultSetTest extends \unittest\TestCase {
   protected static $proto;
 
-  /**
-   * Defines the mock socket class necessary for these tests
-   *
-   */
   #[@beforeClass]
-  public static function mockSocket() {
-    self::$proto= \lang\ClassLoader::defineClass('rdbms.unittest.tds.MockTdsProtocol', 'lang.Object', [], '{
-      protected $records= array();
+  public static function mockProtocol() {
+    $parent= class_exists('\\lang\\Object', false) ? 'lang.Object' : null;
+    self::$proto= \lang\ClassLoader::defineClass('rdbms.unittest.tds.MockTdsProtocol', $parent, [], '{
+      private $records= [];
 
       public function __construct($records) {
         $this->records= $records;

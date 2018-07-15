@@ -11,13 +11,11 @@ use rdbms\mysqlx\MySqlxProtocol;
 class MySqlxBufferedResultSetTest extends \unittest\TestCase {
   protected static $proto;
 
-  /**
-   * Defines the mock socket class necessary for these tests
-   */
   #[@beforeClass]
-  public static function mockSocket() {
-    self::$proto= \lang\ClassLoader::defineClass('rdbms.unittest.mysql.MockMysqlProtocol', 'lang.Object', [], '{
-      protected $records= array();
+  public static function mockProtocol() {
+    $parent= class_exists('\\lang\\Object', false) ? 'lang.Object' : null;
+    self::$proto= \lang\ClassLoader::defineClass('rdbms.unittest.mysql.MockMysqlProtocol', $parent, [], '{
+      private $records= [];
 
       public function __construct($records) {
         $this->records= $records;
