@@ -115,15 +115,6 @@ class SybaseConnection extends DBConnection {
   }
 
   /**
-   * Retrieve number of affected rows for last query
-   *
-   * @return  int
-   */
-  protected function affectedRows() {
-    return sybase_affected_rows($this->handle);
-  }
-  
-  /**
    * Execute any statement
    *
    * @param   string sql

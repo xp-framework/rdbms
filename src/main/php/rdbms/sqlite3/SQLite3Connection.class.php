@@ -140,15 +140,6 @@ class SQLite3Connection extends DBConnection {
   }
 
   /**
-   * Retrieve number of affected rows
-   *
-   * @return  int
-   */
-  protected function affectedRows() {
-    return $this->handle->changes();
-  }
-  
-  /**
    * Execute any statement
    *
    * @param   string sql

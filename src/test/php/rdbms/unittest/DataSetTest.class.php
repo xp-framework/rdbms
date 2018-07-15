@@ -1,19 +1,19 @@
 <?php namespace rdbms\unittest;
 
+use lang\IllegalArgumentException;
+use rdbms\Column;
+use rdbms\DriverManager;
 use rdbms\Peer;
 use rdbms\ResultIterator;
-use rdbms\Column;
 use rdbms\SQLException;
-use util\NoSuchElementException;
-use lang\IllegalArgumentException;
-use unittest\TestCase;
-use rdbms\DriverManager;
-use rdbms\DBObserver;
-use util\Date;
-use util\DateUtil;
 use rdbms\Statement;
 use rdbms\unittest\dataset\Job;
 use rdbms\unittest\mock\MockResultSet;
+use unittest\TestCase;
+use util\Date;
+use util\DateUtil;
+use util\NoSuchElementException;
+use util\log\BoundLogObserver;
 
 /**
  * O/R-mapping API unit test
@@ -479,11 +479,11 @@ class DataSetTest extends TestCase {
 
   #[@test]
   public function percentSign() {
-    $observer= $this->getConnection()->addObserver(newinstance(DBObserver::class, [], '{
+    $observer= $this->getConnection()->addObserver(newinstance(BoundLogObserver::class, [], '{
       public $statements= [];
-      public static function instanceFor($arg) { }
+      public static function instanceFor($arg) { /* NOOP */ }
       public function update($observable, $event= null) {
-        if ($event instanceof DBEvent && "query" == $event->getName()) {
+        if ($event instanceof \\rdbms\\DBEvent && "query" == $event->getName()) {
           $this->statements[]= $event->getArgument();
         }
       }

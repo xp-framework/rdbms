@@ -38,15 +38,7 @@ abstract class DBConnection extends Observable {
     
     // Add observers
     foreach ($observers as $observer => $param) {
-      $class= XPClass::forName($observer);
-
-      // Check if class implements BoundLogObserver: in that case use factory method to acquire
-      // instance. Otherwise, just use the constructor
-      if (XPClass::forName('util.log.BoundLogObserver')->isAssignableFrom($class)) {
-        $this->addObserver($class->getMethod('instanceFor')->invoke(null, [$param]));
-      } else {
-        $this->addObserver($class->newInstance($param));
-      }
+      $this->addObserver(XPClass::forName($observer)->getMethod('instanceFor')->invoke(null, [$param]));
     }
 
     // Time zone handling
@@ -163,13 +155,6 @@ abstract class DBConnection extends Observable {
   public function prepare($statement, ...$args) {
     return $this->formatter->format($statement, $args);
   }
-  
-  /**
-   * Retrieve number of affected rows
-   *
-   * @return  int
-   */
-  protected function affectedRows() {}
   
   /**
    * Execute an insert statement

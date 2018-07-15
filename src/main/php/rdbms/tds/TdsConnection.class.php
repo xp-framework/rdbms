@@ -21,7 +21,6 @@ use rdbms\mssql\MsSQLDialect;
  * @test  xp://net.xp_framework.unittest.rdbms.DBTest
  */
 abstract class TdsConnection extends DBConnection {
-  protected $affected= -1;
 
   /**
    * Constructor
@@ -118,15 +117,6 @@ abstract class TdsConnection extends DBConnection {
   }
 
   /**
-   * Retrieve number of affected rows for last query
-   *
-   * @return  int
-   */
-  protected function affectedRows() {
-    return $this->affected;
-  }    
-  
-  /**
    * Execute any statement
    *
    * @param   string sql
@@ -161,15 +151,13 @@ abstract class TdsConnection extends DBConnection {
     }
     
     if (!is_array($result)) {
-      $this->affected= $result;
       return new QuerySucceeded($result);
     }
 
-    $this->affected= -1;
     if ($buffered) {
-      return new TdsBufferedResultSet($this->handle, $result, $this->tz);
-    } else {
       return new TdsResultSet($this->handle, $result, $this->tz);
+    } else {
+      return new TdsBufferedResultSet($this->handle, $result, $this->tz);
     }
   }
 

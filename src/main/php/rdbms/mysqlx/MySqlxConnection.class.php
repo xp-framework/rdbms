@@ -24,7 +24,6 @@ use rdbms\mysql\MysqlDialect;
  * @test  xp://net.xp_framework.unittest.rdbms.DBTest
  */
 class MySqlxConnection extends DBConnection {
-  protected $affected= -1;
 
   static function __static() {
     DriverManager::register('mysql+x', new XPClass(__CLASS__));
@@ -149,15 +148,6 @@ class MySqlxConnection extends DBConnection {
   }
 
   /**
-   * Retrieve number of affected rows for last query
-   *
-   * @return  int
-   */
-  protected function affectedRows() {
-    return $this->affected;
-  }    
-  
-  /**
    * Execute any statement
    *
    * @param   string sql
@@ -198,15 +188,13 @@ class MySqlxConnection extends DBConnection {
     }
     
     if (!is_array($result)) {
-      $this->affected= $result;
       return new QuerySucceeded($result);
     }
 
-    $this->affected= -1;
     if ($buffered) {
-      return new MySqlxBufferedResultSet($this->handle, $result, $this->tz);
-    } else {
       return new MySqlxResultSet($this->handle, $result, $this->tz);
+    } else {
+      return new MySqlxBufferedResultSet($this->handle, $result, $this->tz);
     }
   }
 
