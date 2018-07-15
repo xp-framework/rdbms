@@ -233,7 +233,9 @@ class MockConnection extends DBConnection {
   protected function query0($sql, $buffered= true) { 
     $this->_connected || $this->connections->establish($this);
 
-    $this->sql= $sql;
+    $tries= 1;
+    retry: $this->sql= $sql;
+
     switch (sizeof($this->queryError)) {
       case 0: {
         if ($this->currentResultSet >= sizeof($this->resultSets)) {
@@ -245,11 +247,13 @@ class MockConnection extends DBConnection {
 
       case 1: {   // letServerDisconnect() sets this
         $this->queryError= [];
-        $this->_connected= false;
-        throw new SQLConnectionClosedException(
-          'Statement failed: Read from server failed',
-          $sql
-        );
+        if (0 === $this->transaction && $this->connections->retry($this, $tries)) {
+          $tries++;
+          goto retry;
+        }
+        $this->close();
+        $this->transaction= 0;
+        throw new SQLConnectionClosedException('Statement failed: Read from server failed', $tries, $sql);
       }
       
       case 2: {   // makeQueryFail() sets this

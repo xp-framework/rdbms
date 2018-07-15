@@ -79,10 +79,22 @@ class DBTest extends TestCase {
 
   #[@test, @expect(SQLConnectionClosedException::class)]
   public function connectionLost() {
+    $this->conn->connections->automatic(true)->reconnect(0);
+
     $this->conn->connect();
     $this->assertQuery();
     $this->conn->letServerDisconnect();
     $this->conn->query('select 1');   // Not connected
+  }
+
+  #[@test]
+  public function connection_reestablished() {
+    $this->conn->connections->automatic(true)->reconnect(1);
+
+    $this->conn->connect();
+    $this->assertQuery();
+    $this->conn->letServerDisconnect();
+    $this->assertQuery();
   }
 
   #[@test, @expect(SQLStateException::class)]
