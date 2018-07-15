@@ -3,6 +3,7 @@ RDBMS support for the XP Framework: MySQL, Sybase, MSSQL, PostgreSQL, SQLite3, I
 
 ## ?.?.? / ????-??-??
 
+* Merged PR #47: Remove unused affectedRows() method - @thekid
 * Merged PR #48: Remove deprecated classes - @thekid
 
 ## 10.2.0 / 2018-07-15
