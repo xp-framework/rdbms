@@ -87,7 +87,7 @@ class DBTest extends TestCase {
 
   #[@test, @expect(SQLStateException::class)]
   public function queryOnFailedConnection() {
-    $this->conn->connections->automatic(true);
+    $this->conn->connections->automatic(true)->reconnect(0);
 
     $this->conn->makeConnectFail('Access denied');
     try {

@@ -44,7 +44,7 @@ class Connections {
    */
   public function establish($conn) {
     if ($this->automatic) {
-      if (false === $conn->connect()) {
+      if (false === $conn->connect($reconnect= $this->attempts > 0)) {
         throw new SQLStateException('Previously failed to connect.');
       }
     } else {
