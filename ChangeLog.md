@@ -3,6 +3,16 @@ RDBMS support for the XP Framework: MySQL, Sybase, MSSQL, PostgreSQL, SQLite3, I
 
 ## ?.?.? / ????-??-??
 
+* Merged PR #46: Remove flags "unbuffered", "storeresult", "persistent"
+  and "newlink":
+  - Unbuffered queries are run by using open() instead of query() and are
+    definitely not a per-connection flag
+  - Persistent connections were dropped completely - they have caveats
+    regarding locks and transactions described in the PHP Manual here:
+    http://php.net/manual/en/features.persistent-connections.php
+  - Creating new links is the default now, instantiating two DBConnection
+    instances and not creating a new connection seems counter-intuitive
+  (@thekid)
 * Merged PR #45: Default reconnect to 1 - @thekid
 * Merged PR #47: Remove unused affectedRows() method - @thekid
 * Merged PR #48: Remove deprecated classes - @thekid
@@ -276,7 +286,7 @@ RDBMS support for the XP Framework: MySQL, Sybase, MSSQL, PostgreSQL, SQLite3, I
 
 ## 6.1.1 / 2015-02-12
 
-* Changed dependency to use XP ~6.0 (instead of dev-master) - @thekid
+* Changed dependency to use XP 6.0 (instead of dev-master) - @thekid
 
 ## 6.1.0 / 2015-02-06
 
