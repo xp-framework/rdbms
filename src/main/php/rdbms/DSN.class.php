@@ -38,21 +38,6 @@ class DSN implements Value {
   }
 
   /**
-   * Retrieve value of a given parameter
-   *
-   * @param   string key
-   * @param   string defaullt default NULL
-   * @return  string value
-   */
-  #[@deprecated('Duplicates getProperty()')]
-  public function getValue($key, $default= null) {
-    if (!isset($this->parts['query'])) return $default;
-    
-    parse_str($this->parts['query'], $config);
-    return isset($config[$key]) ? $config[$key] : $default;
-  }
-
-  /**
    * Retrieve driver
    *
    * @param   var default default NULL  
