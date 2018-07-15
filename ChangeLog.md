@@ -3,6 +3,8 @@ RDBMS support for the XP Framework: MySQL, Sybase, MSSQL, PostgreSQL, SQLite3, I
 
 ## ?.?.? / ????-??-??
 
+* Merged PR #48: Remove deprecated classes - @thekid
+
 ## 10.2.0 / 2018-07-15
 
 * Merged PR #44: Connection handling. All drivers now automatically reconnect
