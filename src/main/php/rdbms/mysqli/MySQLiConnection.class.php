@@ -6,14 +6,13 @@ use rdbms\StatementFormatter;
 use rdbms\Transaction;
 
 /**
- * Connection to MySQL Databases
+ * Connection to MySQL and MariaDB Databases
  *
- * @see      http://mysql.org/
- * @ext      mysqli
- * @test     xp://net.xp_framework.unittest.rdbms.TokenizerTest
- * @test     xp://net.xp_framework.unittest.rdbms.DBTest
- * @test     net.xp_framework.unittest.rdbms.integration.MySQLIntegrationTest
- * @purpose  Database connection
+ * @see   http://mysql.org/
+ * @ext   mysqli
+ * @test  xp://net.xp_framework.unittest.rdbms.TokenizerTest
+ * @test  xp://net.xp_framework.unittest.rdbms.DBTest
+ * @test  xp://net.xp_framework.unittest.rdbms.integration.MySQLIntegrationTest
  */
 class MySQLiConnection extends DBConnection {
   protected $result= null;
@@ -76,7 +75,7 @@ class MySQLiConnection extends DBConnection {
     }
 
     $this->handle= mysqli_connect(
-      ($this->flags & DB_PERSISTENT ? 'p:' : '').$host,
+      $host,
       $this->dsn->getUser(), 
       $this->dsn->getPassword(),
       $this->dsn->getDatabase(),
@@ -182,10 +181,7 @@ class MySQLiConnection extends DBConnection {
     }
 
     $tries= 1;
-    $mode= !$buffered || $this->flags & DB_UNBUFFERED;
-
-    // Execute query
-    retry: $r= mysqli_query($this->handle, $sql, $mode ? MYSQLI_USE_RESULT : MYSQLI_STORE_RESULT);
+    retry: $r= mysqli_query($this->handle, $sql, $buffered ? MYSQLI_STORE_RESULT : MYSQLI_USE_RESULT);
     if (false === $r) {
       $code= mysqli_errno($this->handle);
       $message= 'Statement failed: '.mysqli_error($this->handle).' @ '.$this->dsn->getHost();

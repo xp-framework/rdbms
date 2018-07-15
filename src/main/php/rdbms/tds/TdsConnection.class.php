@@ -166,10 +166,10 @@ abstract class TdsConnection extends DBConnection {
     }
 
     $this->affected= -1;
-    if (!$buffered || $this->flags & DB_UNBUFFERED) {
-      return new TdsResultSet($this->handle, $result, $this->tz);
-    } else {
+    if ($buffered) {
       return new TdsBufferedResultSet($this->handle, $result, $this->tz);
+    } else {
+      return new TdsResultSet($this->handle, $result, $this->tz);
     }
   }
 

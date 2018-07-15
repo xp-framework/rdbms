@@ -1,8 +1,8 @@
 <?php namespace rdbms\tds;
 
-use rdbms\sybase\SybaseDialect;
-use rdbms\DriverManager;
 use lang\XPClass;
+use rdbms\DriverManager;
+use rdbms\sybase\SybaseDialect;
 
 /**
  * Connection to Sybase Databases via TDS 5.0
@@ -26,7 +26,7 @@ class SybasexConnection extends TdsConnection {
   /**
    * Constructor
    *
-   * @param   rdbms.DSN dsn
+   * @param  rdbms.DSN $dsn
    */
   public function __construct($dsn) {
     if (null === $dsn->getPort(null)) {       // Check lookup

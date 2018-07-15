@@ -15,7 +15,6 @@ abstract class DBConnection extends Observable {
     $dsn         = null,
     $tz          = null,
     $timeout     = 0,
-    $flags       = 0,
     $connections = null;
   
   protected
@@ -29,10 +28,6 @@ abstract class DBConnection extends Observable {
    */
   public function __construct($dsn) {
     $this->dsn= $dsn;
-    $this->flags= $dsn->getFlags();
-    if (!$this->dsn->url->hasParam('autoconnect')) {
-      $this->flags |= DB_AUTOCONNECT;
-    }
     $this->setTimeout($dsn->getProperty('timeout', 0));   // 0 means no timeout
     
     // Keep this for BC reasons
@@ -60,8 +55,8 @@ abstract class DBConnection extends Observable {
     }
 
     $this->connections= new Connections(
-      $this->flags & DB_AUTOCONNECT,
-      $this->dsn->getProperty('reconnect', 0)
+      (bool)$this->dsn->getProperty('autoconnect', 1),
+      (int)$this->dsn->getProperty('reconnect', 0)
     );
   }
 

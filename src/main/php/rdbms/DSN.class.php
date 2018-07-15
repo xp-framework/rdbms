@@ -4,12 +4,6 @@ use lang\Value;
 use peer\URL;
 use util\Objects;
 
-define('DB_STORE_RESULT',     0x0001);
-define('DB_UNBUFFERED',       0x0002);
-define('DB_AUTOCONNECT',      0x0004);
-define('DB_PERSISTENT',       0x0008);
-define('DB_NEWLINK',          0x0010);
-
 /**
  * DSN
  *
@@ -21,10 +15,7 @@ define('DB_NEWLINK',          0x0010);
  * @test  xp://net.xp_framework.unittest.rdbms.DSNTest
  */
 class DSN implements Value {
-  public 
-    $url      = null,
-    $flags    = 0,
-    $prop     = [];
+  public $url;
     
   /**
    * Constructor
@@ -33,26 +24,8 @@ class DSN implements Value {
    */
   public function __construct($str) {
     $this->url= new URL($str);
-    if ($config= $this->url->getParams()) {
-      foreach ($config as $key => $value) {
-        if (defined('DB_'.strtoupper($key))) {
-          if ($value) $this->flags= $this->flags | constant('DB_'.strtoupper($key));
-        } else {
-          $this->prop[$key]= $value;
-        }
-      }
-    }
   }
-  
-  /**
-   * Retrieve flags
-   *
-   * @return  int flags
-   */
-  public function getFlags() {
-    return $this->flags;
-  }
-  
+
   /**
    * Get a property by its name
    *
@@ -61,7 +34,7 @@ class DSN implements Value {
    * @return  string property or the default value if the property does not exist
    */
   public function getProperty($name, $default= null) {
-    return isset($this->prop[$name]) ? $this->prop[$name] : $default;
+    return $this->url->getParam($name, $default);
   }
 
   /**
@@ -215,8 +188,8 @@ class DSN implements Value {
   public function compareTo($value) {
     return $value instanceof self
       ? Objects::compare(
-        [$this->asString(true, false), $this->flags, $this->prop],
-        [$value->asString(true, false), $value->flags, $value->prop]
+        [$this->asString(true, false), $this->url->getParams()],
+        [$value->asString(true, false), $value->url->getParams()]
       )
       : 1
     ;

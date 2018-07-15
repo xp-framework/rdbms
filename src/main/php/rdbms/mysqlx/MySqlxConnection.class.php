@@ -203,10 +203,10 @@ class MySqlxConnection extends DBConnection {
     }
 
     $this->affected= -1;
-    if (!$buffered || $this->flags & DB_UNBUFFERED) {
-      return new MySqlxResultSet($this->handle, $result, $this->tz);
-    } else {
+    if ($buffered) {
       return new MySqlxBufferedResultSet($this->handle, $result, $this->tz);
+    } else {
+      return new MySqlxResultSet($this->handle, $result, $this->tz);
     }
   }
 

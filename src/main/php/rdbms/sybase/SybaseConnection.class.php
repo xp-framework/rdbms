@@ -54,22 +54,15 @@ class SybaseConnection extends DBConnection {
     if (!$reconnect && (false === $this->handle)) return false;    // Previously failed connecting
 
     $this->_obs && $this->notifyObservers(new \rdbms\DBEvent(\rdbms\DBEvent::CONNECT, $reconnect));
-    if ($this->flags & DB_PERSISTENT) {
-      $this->handle= sybase_pconnect(
-        $this->dsn->getHost(), 
-        $this->dsn->getUser(), 
-        $this->dsn->getPassword(),
-        'utf8'
-      );
-    } else {
-      $this->handle= sybase_connect(
-        $this->dsn->getHost(), 
-        $this->dsn->getUser(), 
-        $this->dsn->getPassword(),
-        'utf8'
-      );
-    }
 
+    $this->handle= sybase_connect(
+      $this->dsn->getHost(),
+      $this->dsn->getUser(),
+      $this->dsn->getPassword(),
+      'utf8',
+      'XP',
+      true
+    );
     if (!is_resource($this->handle)) {
       $e= new \rdbms\SQLConnectException(trim(sybase_get_last_message()), $this->dsn);
       \xp::gc(__FILE__);
@@ -144,8 +137,6 @@ class SybaseConnection extends DBConnection {
     $tries= 1;
     retry: if (!$buffered) {
       $result= @sybase_unbuffered_query($sql, $this->handle, false);
-    } else if ($this->flags & DB_UNBUFFERED) {
-      $result= @sybase_unbuffered_query($sql, $this->handle, $this->flags & DB_STORE_RESULT);
     } else {
       $result= @sybase_query($sql, $this->handle);
     }

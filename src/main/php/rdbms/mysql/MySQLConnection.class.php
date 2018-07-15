@@ -76,20 +76,7 @@ class MySQLConnection extends DBConnection {
     }
 
     $this->_obs && $this->notifyObservers(new \rdbms\DBEvent(\rdbms\DBEvent::CONNECT, $reconnect));
-    if ($this->flags & DB_PERSISTENT) {
-      $this->handle= mysql_pconnect(
-        $connect,
-        $this->dsn->getUser(), 
-        $this->dsn->getPassword()
-      );
-    } else {
-      $this->handle= mysql_connect(
-        $connect,
-        $this->dsn->getUser(), 
-        $this->dsn->getPassword(),
-        ($this->flags & DB_NEWLINK)
-      );
-    }
+    $this->handle= mysql_connect($connect, $this->dsn->getUser(), $this->dsn->getPassword(), true);
     
     $this->_obs && $this->notifyObservers(new \rdbms\DBEvent(\rdbms\DBEvent::CONNECTED, $reconnect));
     $ini && ini_set('mysql.default_socket', $ini);
@@ -182,10 +169,10 @@ class MySQLConnection extends DBConnection {
     is_resource($this->handle) || $this->connections->establish($this);
 
     $tries= 1;
-    retry: if (!$buffered || $this->flags & DB_UNBUFFERED) {
-      $result= @mysql_unbuffered_query($sql, $this->handle);
-    } else {
+    retry: if ($buffered) {
       $result= @mysql_query($sql, $this->handle);
+    } else {
+      $result= @mysql_unbuffered_query($sql, $this->handle);
     }
     
     if (false === $result) {

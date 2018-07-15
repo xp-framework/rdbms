@@ -78,10 +78,6 @@ class SQLite3Connection extends DBConnection {
     if ($this->handle instanceof \SQLite3) return true;  // Already connected
     if (!$reconnect && (false === $this->handle)) return false;    // Previously failed connecting
 
-    if (($this->flags & DB_PERSISTENT)) {
-      throw new \rdbms\SQLConnectException('sqlite+3:// does not support persistent connections.', $this->dsn);
-    }
-
     // Sanity check: SQLite(3) works local: either loads a database from a file
     // or from memory, so connecting to remote hosts is not supported, thus
     // checked here. You may pass "localhost", though

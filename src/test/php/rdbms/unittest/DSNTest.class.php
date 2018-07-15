@@ -209,19 +209,6 @@ class DSNTest extends \unittest\TestCase {
   }
   
   #[@test]
-  public function noFlags() {
-    $this->assertEquals(0, (new DSN('sybase://sa@TEST'))->getFlags());
-  }
-
-  #[@test]
-  public function definedFlags() {
-    $this->assertEquals(
-      DB_AUTOCONNECT, 
-      (new DSN('sybase://sa@TEST?autoconnect=1'))->getFlags()
-    );
-  }
-  
-  #[@test]
   public function stringPropertyValue() {
     $this->assertEquals(
       'default', 

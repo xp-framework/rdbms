@@ -21,7 +21,6 @@ class DBTest extends TestCase {
    */
   public function setUp() {
     $this->conn= DriverManager::getConnection('mock://mock/MOCKDB?autoconnect=0');
-    $this->assertEquals(0, $this->conn->flags & DB_AUTOCONNECT);
   }
   
   /**
