@@ -1,7 +1,7 @@
 <?php namespace rdbms\unittest\mock;
 
-use rdbms\Transaction;
 use rdbms\StatementFormatter;
+use rdbms\Transaction;
 
 /**
  * Mock database connection.
@@ -226,13 +226,7 @@ class MockConnection extends \rdbms\DBConnection {
    * @throws  rdbms.SQLException
    */
   protected function query0($sql, $buffered= true) { 
-    if (!$this->_connected) {
-      if (!($this->flags & DB_AUTOCONNECT)) throw new \rdbms\SQLStateException('Not connected');
-      $c= $this->connect();
-      
-      // Check for subsequent connection errors
-      if (false === $c) throw new \rdbms\SQLStateException('Previously failed to connect.');
-    }
+    $this->_connected || $this->connections->establish($this);
     
     $this->sql= $sql;
 
