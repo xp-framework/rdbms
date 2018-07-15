@@ -72,6 +72,7 @@ class PostgreSQLConnection extends DBConnection {
       throw $e;
     }
 
+    $this->pid= pg_get_pid($this->handle);
     $this->_obs && $this->notifyObservers(new DBEvent(DBEvent::CONNECTED, $reconnect));
     return true;
   }
@@ -227,5 +228,19 @@ class PostgreSQLConnection extends DBConnection {
     $this->query('commit transaction');
     $this->transaction--;
     return true;
+  }
+
+  /**
+   * Returns a hashcode for this connection
+   *
+   * Example:
+   * <pre>
+   *   pgsql link #4718
+   * </pre>
+   *
+   * @return  string
+   */
+  public function hashCode() {
+    return get_resource_type($this->handle).' #'.$this->pid;
   }
 }
