@@ -179,13 +179,6 @@ abstract class DBConnection extends Observable {
   }
   
   /**
-   * Retrieve number of affected rows
-   *
-   * @return  int
-   */
-  protected function affectedRows() {}
-  
-  /**
    * Execute an insert statement
    *
    * @param  string $statement

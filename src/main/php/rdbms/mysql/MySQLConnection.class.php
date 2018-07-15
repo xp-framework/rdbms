@@ -160,15 +160,6 @@ class MySQLConnection extends DBConnection {
     $this->_obs && $this->notifyObservers(new \rdbms\DBEvent(\rdbms\DBEvent::IDENTITY, $i));
     return $i;
   }
-
-  /**
-   * Retrieve number of affected rows for last query
-   *
-   * @return  int
-   */
-  protected function affectedRows() {
-    return mysql_affected_rows($this->handle);
-  }    
   
   /**
    * Execute any statement

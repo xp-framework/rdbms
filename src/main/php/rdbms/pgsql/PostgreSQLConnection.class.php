@@ -114,15 +114,6 @@ class PostgreSQLConnection extends DBConnection {
   }
 
   /**
-   * Retrieve number of affected rows for last query
-   *
-   * @return  int
-   */
-  protected function affectedRows() { 
-    return pg_affected_rows($this->result);
-  }
-  
-  /**
    * Execute any statement
    *
    * @param   string sql
