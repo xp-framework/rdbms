@@ -155,9 +155,9 @@ abstract class TdsConnection extends DBConnection {
     }
 
     if ($buffered) {
-      return new TdsResultSet($this->handle, $result, $this->tz);
-    } else {
       return new TdsBufferedResultSet($this->handle, $result, $this->tz);
+    } else {
+      return new TdsResultSet($this->handle, $result, $this->tz);
     }
   }
 
