@@ -3,6 +3,7 @@ RDBMS support for the XP Framework: MySQL, Sybase, MSSQL, PostgreSQL, SQLite3, I
 
 ## ?.?.? / ????-??-??
 
+* Merged PR #45: Default reconnect to 1 - @thekid
 * Merged PR #47: Remove unused affectedRows() method - @thekid
 * Merged PR #48: Remove deprecated classes - @thekid
 
