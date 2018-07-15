@@ -3,6 +3,8 @@ RDBMS support for the XP Framework: MySQL, Sybase, MSSQL, PostgreSQL, SQLite3, I
 
 ## ?.?.? / ????-??-??
 
+## 11.0.0 / 2018-07-15
+
 * Merged PR #46: Remove flags "unbuffered", "storeresult", "persistent"
   and "newlink":
   - Unbuffered queries are run by using open() instead of query() and are
