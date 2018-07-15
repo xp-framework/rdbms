@@ -20,7 +20,7 @@ class MockConnection extends \rdbms\DBConnection {
     $sql              = null;
 
   public
-    $_connected       = false;
+    $_connected       = null;
 
   /**
    * Constructor
@@ -164,8 +164,8 @@ class MockConnection extends \rdbms\DBConnection {
   public function connect($reconnect= false) {
     $this->sql= null;
   
-    if ($this->_connected && !$reconnect) return true;
-    
+    if (!$reconnect && null !== $this->_connected) return $this->_connected;
+
     $this->_obs && $this->notifyObservers(new \rdbms\DBEvent(\rdbms\DBEvent::CONNECT, $reconnect));
     if ($this->connectError) {
       $this->_connected= false;
@@ -183,7 +183,7 @@ class MockConnection extends \rdbms\DBConnection {
    * @return  bool success
    */
   public function close() {
-    $this->_connected= false;
+    $this->_connected= null;
     return true;
   }
 
