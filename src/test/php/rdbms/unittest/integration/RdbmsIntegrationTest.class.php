@@ -1,20 +1,20 @@
 <?php namespace rdbms\unittest\integration;
 
-use util\Date;
-use rdbms\ResultSet;
-use rdbms\DSN;
-use rdbms\DBEvent;
-use rdbms\SQLStateException;
-use rdbms\SQLConnectException;
-use rdbms\SQLStatementFailedException;
-use rdbms\SQLException;
-use util\Observer;
-use unittest\TestCase;
-use unittest\PrerequisitesNotMetError;
-use rdbms\DriverManager;
-use util\Bytes;
-use lang\Throwable;
 use lang\MethodNotImplementedException;
+use lang\Throwable;
+use rdbms\DBEvent;
+use rdbms\DSN;
+use rdbms\DriverManager;
+use rdbms\ResultSet;
+use rdbms\SQLConnectException;
+use rdbms\SQLException;
+use rdbms\SQLStateException;
+use rdbms\SQLStatementFailedException;
+use unittest\PrerequisitesNotMetError;
+use unittest\TestCase;
+use util\Bytes;
+use util\Date;
+use util\Observer;
 
 /**
  * Base class for all RDBMS integration tests
@@ -124,7 +124,7 @@ abstract class RdbmsIntegrationTest extends TestCase {
 
   #[@test, @expect(SQLStateException::class)]
   public function noQueryWhenNotConnected() {
-    $this->conn->flags ^= DB_AUTOCONNECT;
+    $this->conn->connections->automatic(false);
     $this->conn->query('select 1');
   }
   
@@ -144,7 +144,7 @@ abstract class RdbmsIntegrationTest extends TestCase {
 
   #[@test, @expect(SQLStateException::class)]
   public function noQueryWhenDisConnected() {
-    $this->conn->flags ^= DB_AUTOCONNECT;
+    $this->conn->connections->automatic(false);
     $this->conn->connect();
     $this->conn->close();
     $this->conn->query('select 1');

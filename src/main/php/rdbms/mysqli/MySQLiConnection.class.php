@@ -1,9 +1,9 @@
 <?php namespace rdbms\mysqli;
 
 use rdbms\DBConnection;
-use rdbms\Transaction;
-use rdbms\StatementFormatter;
 use rdbms\QuerySucceeded;
+use rdbms\StatementFormatter;
+use rdbms\Transaction;
 
 /**
  * Connection to MySQL Databases
@@ -173,13 +173,7 @@ class MySQLiConnection extends DBConnection {
    * @throws  rdbms.SQLException
    */
   protected function query0($sql, $buffered= true) {
-    if (!is_object($this->handle)) {
-      if (!($this->flags & DB_AUTOCONNECT)) throw new \rdbms\SQLStateException('Not connected');
-      $c= $this->connect();
-      
-      // Check for subsequent connection errors
-      if (false === $c) throw new \rdbms\SQLStateException('Previously failed to connect.');
-    }
+    is_object($this->handle) || $this->connections->establish($this);
     
     // Clean up previous results to prevent "Commands out of sync" errors
     if (null !== $this->result) {
@@ -187,23 +181,37 @@ class MySQLiConnection extends DBConnection {
       $this->result= null;
     }
 
-    // Execute query
+    $tries= 1;
     $mode= !$buffered || $this->flags & DB_UNBUFFERED;
-    $r= mysqli_query($this->handle, $sql, $mode ? MYSQLI_USE_RESULT : MYSQLI_STORE_RESULT);
+
+    // Execute query
+    retry: $r= mysqli_query($this->handle, $sql, $mode ? MYSQLI_USE_RESULT : MYSQLI_STORE_RESULT);
     if (false === $r) {
       $code= mysqli_errno($this->handle);
       $message= 'Statement failed: '.mysqli_error($this->handle).' @ '.$this->dsn->getHost();
       switch ($code) {
         case 2006: // MySQL server has gone away
         case 2013: // Lost connection to MySQL server during query
-          throw new \rdbms\SQLConnectionClosedException('Statement failed: '.$message, $sql, $code);
+          if (0 === $this->transaction && $this->connections->retry($this, $tries)) {
+            \xp::gc(__FILE__);
+            $tries++;
+            goto retry;
+          }
+          $this->close();
+          $this->transaction= 0;
+          $e= new \rdbms\SQLConnectionClosedException($message, $tries, $sql, $code);
+          break;
 
         case 1213: // Deadlock
-          throw new \rdbms\SQLDeadlockException($message, $sql, $code);
+          $e= new \rdbms\SQLDeadlockException($message, $sql, $code);
+          break;
         
-        default:   // Other error
-          throw new \rdbms\SQLStatementFailedException($message, $sql, $code);
+        default:
+          $e= new \rdbms\SQLStatementFailedException($message, $sql, $code);
+          break;
       }
+      \xp::gc(__FILE__);
+      throw $e;
     } else if (true === $r) {
       return new QuerySucceeded(mysqli_affected_rows($this->handle));
     } else if ($buffered) {
@@ -221,8 +229,9 @@ class MySQLiConnection extends DBConnection {
    * @return  rdbms.Transaction
    */
   public function begin($transaction) {
-    if (!$this->query('begin')) return false;
+    $this->query('begin');
     $transaction->db= $this;
+    $this->transaction++;
     return $transaction;
   }
   
@@ -232,8 +241,10 @@ class MySQLiConnection extends DBConnection {
    * @param   string name
    * @return  bool success
    */
-  public function rollback($name) { 
-    return $this->query('rollback');
+  public function rollback($name) {
+    $this->query('rollback');
+    $this->transaction--;
+    return true;
   }
   
   /**
@@ -242,8 +253,10 @@ class MySQLiConnection extends DBConnection {
    * @param   string name
    * @return  bool success
    */
-  public function commit($name) { 
-    return $this->query('commit');
+  public function commit($name) {
+    $this->query('commit');
+    $this->transaction--;
+    return true;
   }
 
   /**

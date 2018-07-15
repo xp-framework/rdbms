@@ -1,9 +1,9 @@
 <?php namespace rdbms\mysql;
 
 use rdbms\DBConnection;
-use rdbms\Transaction;
-use rdbms\StatementFormatter;
 use rdbms\QuerySucceeded;
+use rdbms\StatementFormatter;
+use rdbms\Transaction;
 
 /**
  * Connection to MySQL Databases via ext/mysql
@@ -179,15 +179,10 @@ class MySQLConnection extends DBConnection {
    * @throws  rdbms.SQLException
    */
   protected function query0($sql, $buffered= true) {
-    if (!is_resource($this->handle)) {
-      if (!($this->flags & DB_AUTOCONNECT)) throw new \rdbms\SQLStateException('Not connected');
-      $c= $this->connect();
-      
-      // Check for subsequent connection errors
-      if (false === $c) throw new \rdbms\SQLStateException('Previously failed to connect.');
-    }
-    
-    if (!$buffered || $this->flags & DB_UNBUFFERED) {
+    is_resource($this->handle) || $this->connections->establish($this);
+
+    $tries= 1;
+    retry: if (!$buffered || $this->flags & DB_UNBUFFERED) {
       $result= @mysql_unbuffered_query($sql, $this->handle);
     } else {
       $result= @mysql_query($sql, $this->handle);
@@ -199,7 +194,13 @@ class MySQLConnection extends DBConnection {
       switch ($code) {
         case 2006: // MySQL server has gone away
         case 2013: // Lost connection to MySQL server during query
-          throw new \rdbms\SQLConnectionClosedException('Statement failed: '.$message, $sql, $code);
+          if (0 === $this->transaction && $this->connections->retry($this, $tries)) {
+            $tries++;
+            goto retry;
+          }
+          $this->close();
+          $this->transaction= 0;
+          throw new \rdbms\SQLConnectionClosedException($message, $tries, $sql, $code);
 
         case 1213: // Deadlock
           throw new \rdbms\SQLDeadlockException($message, $sql, $code);
@@ -221,8 +222,9 @@ class MySQLConnection extends DBConnection {
    * @return  rdbms.Transaction
    */
   public function begin($transaction) {
-    if (!$this->query('begin')) return false;
+    $this->query('begin');
     $transaction->db= $this;
+    $this->transaction++;
     return $transaction;
   }
   
@@ -232,8 +234,10 @@ class MySQLConnection extends DBConnection {
    * @param   string name
    * @return  bool success
    */
-  public function rollback($name) { 
-    return $this->query('rollback');
+  public function rollback($name) {
+    $this->query('rollback');
+    $this->transaction--;
+    return true;
   }
   
   /**
@@ -242,7 +246,9 @@ class MySQLConnection extends DBConnection {
    * @param   string name
    * @return  bool success
    */
-  public function commit($name) { 
-    return $this->query('commit');
+  public function commit($name) {
+    $this->query('commit');
+    $this->transaction--;
+    return true;
   }
 }

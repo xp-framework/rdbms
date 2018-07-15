@@ -1,9 +1,9 @@
 <?php namespace rdbms\sqlsrv;
 
 use rdbms\DBConnection;
-use rdbms\Transaction;
-use rdbms\StatementFormatter;
 use rdbms\QuerySucceeded;
+use rdbms\StatementFormatter;
+use rdbms\Transaction;
 
 /**
  * Connection to SqlSrv databases using client libraries
@@ -136,13 +136,7 @@ class SqlSrvConnection extends DBConnection {
    * @throws  rdbms.SQLException
    */
   protected function query0($sql, $buffered= true) {
-    if (!is_resource($this->handle)) {
-      if (!($this->flags & DB_AUTOCONNECT)) throw new \rdbms\SQLStateException('Not connected');
-      $c= $this->connect();
-      
-      // Check for subsequent connection errors
-      if (false === $c) throw new \rdbms\SQLStateException('Previously failed to connect');
-    }
+    is_resource($this->handle) || $this->connections->establish($this);
 
     // Cancel pending result sets. TODO: Look into using MARS (Multiple
     // Active Result Sets) feature, but this was causing problems in other
@@ -151,7 +145,8 @@ class SqlSrvConnection extends DBConnection {
       sqlsrv_free_stmt($this->result);
     }
 
-    $this->result= sqlsrv_query($this->handle, $sql);
+    $tries= 1;
+    retry: $this->result= sqlsrv_query($this->handle, $sql);
     if (false === $this->result) {
       $message= 'Statement failed: '.$this->errors().' @ '.$this->dsn->getHost();
       if (!is_resource($error= sqlsrv_query($this->handle, 'select @@error'))) {
@@ -163,7 +158,13 @@ class SqlSrvConnection extends DBConnection {
         // SqlSrv:  Client message:  Read from SQL server failed. (severity 78)
         //
         // but that seems a bit errorprone. 
-        throw new \rdbms\SQLConnectionClosedException($message, $sql);
+        if (0 === $this->transaction && $this->connections->retry($this, $tries)) {
+          $tries++;
+          goto retry;
+        }
+        $this->close();
+        $this->transaction= 0;
+        throw new \rdbms\SQLConnectionClosedException($message, $tries, $sql);
       }
 
       $code= current(sqlsrv_fetch_array($error, SQLSRV_FETCH_NUMERIC));
@@ -190,6 +191,7 @@ class SqlSrvConnection extends DBConnection {
   public function begin($transaction) {
     $this->query('begin transaction xp_%c', $transaction->name);
     $transaction->db= $this;
+    $this->transaction++;
     return $transaction;
   }
   
@@ -209,8 +211,10 @@ class SqlSrvConnection extends DBConnection {
    * @param   string name
    * @return  bool success
    */
-  public function rollback($name) { 
-    return $this->query('rollback transaction xp_%c', $name);
+  public function rollback($name) {
+    $this->query('rollback transaction xp_%c', $name);
+    $this->transaction--;
+    return true;
   }
   
   /**
@@ -219,7 +223,9 @@ class SqlSrvConnection extends DBConnection {
    * @param   string name
    * @return  bool success
    */
-  public function commit($name) { 
-    return $this->query('commit transaction xp_%c', $name);
+  public function commit($name) {
+    $this->query('commit transaction xp_%c', $name);
+    $this->transaction--;
+    return true;
   }
 }

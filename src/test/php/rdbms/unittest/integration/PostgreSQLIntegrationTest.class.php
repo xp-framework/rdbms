@@ -1,5 +1,7 @@
 <?php namespace rdbms\unittest\integration;
 
+use rdbms\SQLException;
+
 /**
  * PostgreSQL integration test
  *
@@ -209,4 +211,19 @@ class PostgreSQLIntegrationTest extends RdbmsIntegrationTest {
 
   #[@test, @ignore('Cast to smallint not supported by PostgreSQL')]
   public function selectSmallintZero() { }
+
+  #[@test] 
+  public function reconnects_when_server_disconnects() { 
+    $conn= $this->db();
+    $before= $conn->query('select pg_backend_pid() as id')->next('id'); 
+
+    try { 
+     $conn->query('select pg_terminate_backend(%d)', $before); 
+    } catch (SQLException $expected) { 
+     // errorcode 1927: Connection was killed (sqlstate 70100) 
+    } 
+
+    $after= $conn->query('select pg_backend_pid() as id')->next('id'); 
+    $this->assertNotEquals($before, $after, 'Connection IDs must be different'); 
+  } 
 }

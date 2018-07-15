@@ -1,7 +1,12 @@
 <?php namespace rdbms\unittest\mock;
 
-use rdbms\Transaction;
+use rdbms\DBConnection;
+use rdbms\DBEvent;
+use rdbms\SQLConnectException;
+use rdbms\SQLConnectionClosedException;
+use rdbms\SQLStatementFailedException;
 use rdbms\StatementFormatter;
+use rdbms\Transaction;
 
 /**
  * Mock database connection.
@@ -9,7 +14,7 @@ use rdbms\StatementFormatter;
  * @see      xp://rdbms.DBConnection
  * @purpose  Mock object
  */
-class MockConnection extends \rdbms\DBConnection {
+class MockConnection extends DBConnection {
   public
     $affectedRows     = 1,
     $identityValue    = 1,
@@ -20,7 +25,7 @@ class MockConnection extends \rdbms\DBConnection {
     $sql              = null;
 
   public
-    $_connected       = false;
+    $_connected       = null;
 
   /**
    * Constructor
@@ -164,16 +169,16 @@ class MockConnection extends \rdbms\DBConnection {
   public function connect($reconnect= false) {
     $this->sql= null;
   
-    if ($this->_connected && !$reconnect) return true;
-    
-    $this->_obs && $this->notifyObservers(new \rdbms\DBEvent(\rdbms\DBEvent::CONNECT, $reconnect));
+    if (!$reconnect && null !== $this->_connected) return $this->_connected;
+
+    $this->_obs && $this->notifyObservers(new DBEvent(DBEvent::CONNECT, $reconnect));
     if ($this->connectError) {
       $this->_connected= false;
-      throw new \rdbms\SQLConnectException($this->connectError, $this->dsn);
+      throw new SQLConnectException($this->connectError, $this->dsn);
     }
 
     $this->_connected= true;
-    $this->_obs && $this->notifyObservers(new \rdbms\DBEvent(\rdbms\DBEvent::CONNECTED, $reconnect));
+    $this->_obs && $this->notifyObservers(new DBEvent(DBEvent::CONNECTED, $reconnect));
     return true;
   }
 
@@ -183,7 +188,7 @@ class MockConnection extends \rdbms\DBConnection {
    * @return  bool success
    */
   public function close() {
-    $this->_connected= false;
+    $this->_connected= null;
     return true;
   }
 
@@ -204,7 +209,7 @@ class MockConnection extends \rdbms\DBConnection {
    * @return  mixed identity value
    */
   public function identity($field= null) {
-    $this->_obs && $this->notifyObservers(new \rdbms\DBEvent(\rdbms\DBEvent::IDENTITY, $this->identityValue));
+    $this->_obs && $this->notifyObservers(new DBEvent(DBEvent::IDENTITY, $this->identityValue));
     return $this->identityValue;
   }
 
@@ -226,15 +231,10 @@ class MockConnection extends \rdbms\DBConnection {
    * @throws  rdbms.SQLException
    */
   protected function query0($sql, $buffered= true) { 
-    if (!$this->_connected) {
-      if (!($this->flags & DB_AUTOCONNECT)) throw new \rdbms\SQLStateException('Not connected');
-      $c= $this->connect();
-      
-      // Check for subsequent connection errors
-      if (false === $c) throw new \rdbms\SQLStateException('Previously failed to connect.');
-    }
-    
-    $this->sql= $sql;
+    $this->_connected || $this->connections->establish($this);
+
+    $tries= 1;
+    retry: $this->sql= $sql;
 
     switch (sizeof($this->queryError)) {
       case 0: {
@@ -247,17 +247,19 @@ class MockConnection extends \rdbms\DBConnection {
 
       case 1: {   // letServerDisconnect() sets this
         $this->queryError= [];
-        $this->_connected= false;
-        throw new \rdbms\SQLConnectionClosedException(
-          'Statement failed: Read from server failed',
-          $sql
-        );
+        if (0 === $this->transaction && $this->connections->retry($this, $tries)) {
+          $tries++;
+          goto retry;
+        }
+        $this->close();
+        $this->transaction= 0;
+        throw new SQLConnectionClosedException('Statement failed: Read from server failed', $tries, $sql);
       }
       
       case 2: {   // makeQueryFail() sets this
         $error= $this->queryError;
         $this->queryError= [];       // Reset so next query succeeds again
-        throw new \rdbms\SQLStatementFailedException(
+        throw new SQLStatementFailedException(
           'Statement failed: '.$error[1],
           $sql, 
           $error[0]

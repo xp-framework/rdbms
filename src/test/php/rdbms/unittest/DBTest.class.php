@@ -1,13 +1,13 @@
 <?php namespace rdbms\unittest;
  
+use rdbms\DriverManager;
 use rdbms\ResultSet;
 use rdbms\SQLConnectException;
-use rdbms\SQLStateException;
 use rdbms\SQLConnectionClosedException;
+use rdbms\SQLStateException;
 use rdbms\SQLStatementFailedException;
-use rdbms\DriverManager;
-use unittest\TestCase;
 use rdbms\unittest\mock\MockResultSet;
+use unittest\TestCase;
 
 /**
  * Test rdbms API
@@ -79,14 +79,28 @@ class DBTest extends TestCase {
 
   #[@test, @expect(SQLConnectionClosedException::class)]
   public function connectionLost() {
+    $this->conn->connections->automatic(true)->reconnect(0);
+
     $this->conn->connect();
     $this->assertQuery();
     $this->conn->letServerDisconnect();
     $this->conn->query('select 1');   // Not connected
   }
 
+  #[@test]
+  public function connection_reestablished() {
+    $this->conn->connections->automatic(true)->reconnect(1);
+
+    $this->conn->connect();
+    $this->assertQuery();
+    $this->conn->letServerDisconnect();
+    $this->assertQuery();
+  }
+
   #[@test, @expect(SQLStateException::class)]
   public function queryOnFailedConnection() {
+    $this->conn->connections->automatic(true)->reconnect(0);
+
     $this->conn->makeConnectFail('Access denied');
     try {
       $this->conn->connect();

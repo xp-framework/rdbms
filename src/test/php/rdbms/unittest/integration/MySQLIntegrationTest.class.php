@@ -1,10 +1,9 @@
 <?php namespace rdbms\unittest\integration;
 
-/**
- * MySQL integration test
- *
- * @ext       mysql
- */
+use rdbms\SQLConnectionClosedException;
+use rdbms\SQLException;
+use rdbms\Transaction;
+
 class MySQLIntegrationTest extends RdbmsIntegrationTest {
 
   /** @return string */
@@ -25,7 +24,8 @@ class MySQLIntegrationTest extends RdbmsIntegrationTest {
   /**
    * Create autoincrement table
    *
-   * @param   string name
+   * @param  string $name
+   * @return void
    */
   protected function createAutoIncrementTable($name) {
     $this->removeTable($name);
@@ -35,7 +35,8 @@ class MySQLIntegrationTest extends RdbmsIntegrationTest {
   /**
    * Create transactions table
    *
-   * @param   string name
+   * @param  string $name
+   * @return void
    */
   protected function createTransactionsTable($name) {
     $this->removeTable($name);
@@ -241,5 +242,40 @@ class MySQLIntegrationTest extends RdbmsIntegrationTest {
     // produces a warning.
     $this->assertEquals('💩', $this->db()->query("select '💩' as poop")->next('poop'));
     $this->assertNull($this->db()->query('show warnings')->next());
+  }
+
+  #[@test]
+  public function reconnects_when_server_disconnects() {
+    $conn= $this->db();
+    $before= $conn->query('select connection_id() as id')->next('id');
+
+    try {
+      $conn->query('kill %d', $before);
+    } catch (SQLException $expected) {
+      // errorcode 1927: Connection was killed (sqlstate 70100)
+    }
+
+    $after= $conn->query('select connection_id() as id')->next('id');
+    $this->assertNotEquals($before, $after, 'Connection IDs must be different');
+  }
+
+  #[@test]
+  public function does_not_reconnect_if_disconnected_inside_transaction() {
+    $conn= $this->db();
+    $before= $conn->query('select connection_id() as id')->next('id');
+
+    $tran= $conn->begin(new Transaction('test'));
+    try {
+      $conn->query('kill %d', $before);
+    } catch (SQLException $expected) {
+      // errorcode 1927: Connection was killed (sqlstate 70100)
+    }
+
+    try {
+      $conn->query('select connection_id() as id');
+      $this->fail('No exception raised', null, SQLConnectionClosedException::class);
+    } catch (SQLConnectionClosedException $expected) {
+      // errorcode 2006: Server disconnected (sqlstate 00000)
+    }
   }
 }

@@ -1,9 +1,9 @@
 <?php namespace rdbms;
  
-use util\log\Logger;
+use lang\XPClass;
 use util\Observable;
 use util\TimeZone;
-use lang\XPClass;
+use util\log\Logger;
 
 /**
  * Provide an interface from which all other database connection
@@ -11,14 +11,16 @@ use lang\XPClass;
  */
 abstract class DBConnection extends Observable {
   public 
-    $handle  = null,
-    $dsn     = null,
-    $tz      = null,
-    $timeout = 0,
-    $flags   = 0;
+    $handle      = null,
+    $dsn         = null,
+    $tz          = null,
+    $timeout     = 0,
+    $flags       = 0,
+    $connections = null;
   
   protected
-    $formatter= null;
+    $formatter   = null,
+    $transaction = 0;
 
   /**
    * Constructor
@@ -56,6 +58,11 @@ abstract class DBConnection extends Observable {
     if ($tz= $dsn->getProperty('timezone', false)) {
       $this->tz= new TimeZone($tz);
     }
+
+    $this->connections= new Connections(
+      $this->flags & DB_AUTOCONNECT,
+      $this->dsn->getProperty('reconnect', 1)
+    );
   }
 
   /**
