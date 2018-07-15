@@ -214,15 +214,6 @@ class MockConnection extends DBConnection {
   }
 
   /**
-   * Retrieve number of affected rows for last query
-   *
-   * @return  int
-   */
-  protected function affectedRows() {
-    return $this->affectedRows;
-  }    
-  
-  /**
    * Execute any statement
    *
    * @param   string sql

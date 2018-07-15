@@ -121,15 +121,6 @@ class MsSQLConnection extends DBConnection {
   }
 
   /**
-   * Retrieve number of affected rows for last query
-   *
-   * @return  int
-   */
-  protected function affectedRows() {
-    return mssql_rows_affected($this->handle);
-  }
-  
-  /**
    * Execute any statement
    *
    * @param   string sql

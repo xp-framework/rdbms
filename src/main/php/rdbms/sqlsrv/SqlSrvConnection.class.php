@@ -119,15 +119,6 @@ class SqlSrvConnection extends DBConnection {
   }
 
   /**
-   * Retrieve number of affected rows for last query
-   *
-   * @return  int
-   */
-  protected function affectedRows() {
-    return sqlsrv_rows_affected($this->result);
-  }
-  
-  /**
    * Execute any statement
    *
    * @param   string sql
