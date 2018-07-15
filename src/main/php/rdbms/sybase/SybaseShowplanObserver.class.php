@@ -1,8 +1,8 @@
 <?php namespace rdbms\sybase;
 
-use util\log\Logger;
-use rdbms\DBObserver;
 use rdbms\DBEvent;
+use util\log\BoundLogObserver;
+use util\log\Logger;
 
 /**
  * Observer class to observe a SybaseConnections IO
@@ -11,7 +11,7 @@ use rdbms\DBEvent;
  * @ext      sybase
  * @purpose  Observe SybaseConnection
  */
-class SybaseShowplanObserver implements \util\log\BoundLogObserver {
+class SybaseShowplanObserver implements BoundLogObserver {
   protected
     $messages     = [],
     $queries      = [];
