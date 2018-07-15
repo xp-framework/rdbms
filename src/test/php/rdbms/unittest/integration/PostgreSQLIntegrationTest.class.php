@@ -215,12 +215,13 @@ class PostgreSQLIntegrationTest extends RdbmsIntegrationTest {
   #[@test] 
   public function reconnects_when_server_disconnects() { 
     $conn= $this->db();
+    $conn->connections->reconnect(1);
     $before= $conn->query('select pg_backend_pid() as id')->next('id'); 
 
     try { 
-     $conn->query('select pg_terminate_backend(%d)', $before); 
-    } catch (SQLException $expected) { 
-     // errorcode 1927: Connection was killed (sqlstate 70100) 
+      $conn->query('select pg_terminate_backend(%d)', $before);
+    } catch (SQLException $expected) {
+      // errorcode 57P01: Statement failed: terminating connection due to administrator command
     } 
 
     $after= $conn->query('select pg_backend_pid() as id')->next('id'); 

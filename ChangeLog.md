@@ -6,7 +6,7 @@ RDBMS support for the XP Framework: MySQL, Sybase, MSSQL, PostgreSQL, SQLite3, I
 * Merged PR #44: Connection handling. All drivers now automatically reconnect
   to database servers and re-run queries when they receive a disconnect. This
   behavior can be controlled by a new DSN parameter, `reconnect`, which specifies
-  how many attempts are made, and defaults to 1.
+  how many attempts are made, and defaults to 0.
   (@thekid)
 
 ## 10.1.0 / 2018-05-30
