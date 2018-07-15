@@ -247,7 +247,6 @@ class MySQLIntegrationTest extends RdbmsIntegrationTest {
   #[@test]
   public function reconnects_when_server_disconnects() {
     $conn= $this->db();
-    $conn->connections->reconnect(1);
     $before= $conn->query('select connection_id() as id')->next('id');
 
     try {
@@ -263,7 +262,6 @@ class MySQLIntegrationTest extends RdbmsIntegrationTest {
   #[@test]
   public function does_not_reconnect_if_disconnected_inside_transaction() {
     $conn= $this->db();
-    $conn->connections->reconnect(1);
     $before= $conn->query('select connection_id() as id')->next('id');
 
     $tran= $conn->begin(new Transaction('test'));
