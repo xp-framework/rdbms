@@ -1,16 +1,17 @@
 <?php namespace rdbms\tds;
 
-use peer\Socket;
 use io\IOException;
+use peer\Socket;
 use rdbms\DBConnection;
-use rdbms\QuerySucceeded;
-use rdbms\Transaction;
 use rdbms\DBEvent;
+use rdbms\QuerySucceeded;
 use rdbms\SQLConnectException;
+use rdbms\SQLConnectionClosedException;
+use rdbms\SQLDeadlockException;
 use rdbms\SQLStateException;
 use rdbms\SQLStatementFailedException;
-use rdbms\SQLDeadlockException;
 use rdbms\StatementFormatter;
+use rdbms\Transaction;
 use rdbms\mssql\MsSQLDialect;
 
 /**
@@ -65,7 +66,7 @@ abstract class TdsConnection extends DBConnection {
     try {
       $this->handle->connect($this->dsn->getUser(), $this->dsn->getPassword(), $this->dsn->getProperty('charset', null));
       $this->_obs && $this->notifyObservers(new DBEvent(DBEvent::CONNECTED, $reconnect));
-    } catch (\io\IOException $e) {
+    } catch (IOException $e) {
       $this->handle->connected= null;
       $this->_obs && $this->notifyObservers(new DBEvent(DBEvent::CONNECTED, $reconnect));
       $message= '';
@@ -134,15 +135,10 @@ abstract class TdsConnection extends DBConnection {
    * @throws  rdbms.SQLException
    */
   protected function query0($sql, $buffered= true) {
-    if (!$this->handle->connected) {
-      if (!($this->flags & DB_AUTOCONNECT)) throw new SQLStateException('Not connected');
-      $c= $this->connect();
-      
-      // Check for subsequent connection errors
-      if (false === $c) throw new SQLStateException('Previously failed to connect.');
-    }
-    
-    try {
+    $this->handle->connected || $this->connections->establish($this);
+
+    $tries= 1;
+    retry: try {
       $this->handle->ready() || $this->handle->cancel();
       $result= $this->handle->query($sql);
     } catch (TdsProtocolException $e) {
@@ -155,7 +151,13 @@ abstract class TdsConnection extends DBConnection {
           throw new SQLStatementFailedException($message, $sql, $e->number);
       }
     } catch (IOException $e) {
-      throw new SQLStatementFailedException($e->getMessage());
+      if (0 === $this->transaction && $this->connections->retry($this, $tries)) {
+        $tries++;
+        goto retry;
+      }
+      $this->close();
+      $this->transaction= 0;
+      throw new SQLConnectionClosedException($e->getMessage(), $tries, $sql);
     }
     
     if (!is_array($result)) {
@@ -180,6 +182,7 @@ abstract class TdsConnection extends DBConnection {
   public function begin($transaction) {
     $this->query('begin transaction xp_%c', $transaction->name);
     $transaction->db= $this;
+    $this->transaction++;
     return $transaction;
   }
 
@@ -189,7 +192,7 @@ abstract class TdsConnection extends DBConnection {
    * @param   string name
    * @return  var state
    */
-  public function transtate($name) { 
+  public function transtate($name) {
     return $this->query('select @@transtate as transtate')->next('transtate');
   }
   
@@ -199,8 +202,10 @@ abstract class TdsConnection extends DBConnection {
    * @param   string name
    * @return  bool success
    */
-  public function rollback($name) { 
-    return $this->query('rollback transaction xp_%c', $name);
+  public function rollback($name) {
+    $this->query('rollback transaction xp_%c', $name);
+    $this->transaction--;
+    return true;
   }
   
   /**
@@ -209,8 +214,10 @@ abstract class TdsConnection extends DBConnection {
    * @param   string name
    * @return  bool success
    */
-  public function commit($name) { 
-    return $this->query('commit transaction xp_%c', $name);
+  public function commit($name) {
+    $this->query('commit transaction xp_%c', $name);
+    $this->transaction--;
+    return true;
   }
 
   /**

@@ -1,18 +1,18 @@
 <?php namespace rdbms\mysqlx;
 
-use lang\XPClass;
 use io\IOException;
+use lang\XPClass;
 use peer\Socket;
 use rdbms\DBConnection;
 use rdbms\DBEvent;
 use rdbms\DriverManager;
 use rdbms\QuerySucceeded;
-use rdbms\StatementFormatter;
 use rdbms\SQLConnectException;
-use rdbms\SQLStateException;
-use rdbms\SQLDeadlockException;
-use rdbms\SQLStatementFailedException;
 use rdbms\SQLConnectionClosedException;
+use rdbms\SQLDeadlockException;
+use rdbms\SQLStateException;
+use rdbms\SQLStatementFailedException;
+use rdbms\StatementFormatter;
 use rdbms\Transaction;
 use rdbms\mysql\MysqlDialect;
 
@@ -166,15 +166,10 @@ class MySqlxConnection extends DBConnection {
    * @throws  rdbms.SQLException
    */
   protected function query0($sql, $buffered= true) {
-    if (!$this->handle->connected) {
-      if (!($this->flags & DB_AUTOCONNECT)) throw new SQLStateException('Not connected');
-      $c= $this->connect();
-      
-      // Check for subsequent connection errors
-      if (false === $c) throw new SQLStateException('Previously failed to connect.');
-    }
-    
-    try {
+    $this->handle->connected || $this->connections->establish($this);
+
+    $tries= 1;
+    retry: try {
       $this->handle->ready() || $this->handle->cancel();
       $result= $this->handle->query($sql);
     } catch (MySqlxProtocolException $e) {
@@ -182,17 +177,24 @@ class MySqlxConnection extends DBConnection {
       switch ($e->error) {
         case 2006: // MySQL server has gone away
         case 2013: // Lost connection to MySQL server during query
-          throw new SQLConnectionClosedException('Statement failed: '.$message, $sql, $e->error);
+          if (0 === $this->transaction && $this->connections->retry($this, $tries)) {
+            $tries++;
+            goto retry;
+          }
+          $this->close();
+          $this->transaction= 0;
+          throw new SQLConnectionClosedException($message, $tries, $sql, $e->error);
 
         case 1213: // Deadlock
           throw new SQLDeadlockException($message, $sql, $e->error);
         
-        default:   // Other error
+        default:
           throw new SQLStatementFailedException($message, $sql, $e->error);
       }
     } catch (IOException $e) {
-      $this->handle->close();
-      throw new SQLConnectionClosedException($e->getMessage(), $sql, -1);
+      $this->close();
+      $this->transaction= 0;
+      throw new SQLConnectionClosedException($e->getMessage(), $tries, $sql, -1);
     }
     
     if (!is_array($result)) {
@@ -215,7 +217,8 @@ class MySqlxConnection extends DBConnection {
    * @return  rdbms.Transaction
    */
   public function begin($transaction) {
-    if (!$this->query('begin')) return false;
+    $this->query('begin');
+    $this->transaction++;
     $transaction->db= $this;
     return $transaction;
   }
@@ -226,8 +229,10 @@ class MySqlxConnection extends DBConnection {
    * @param   string name
    * @return  bool success
    */
-  public function rollback($name) { 
-    return $this->query('rollback');
+  public function rollback($name) {
+    $this->query('rollback');
+    $this->transaction--;
+    return true;
   }
   
   /**
@@ -237,7 +242,9 @@ class MySqlxConnection extends DBConnection {
    * @return  bool success
    */
   public function commit($name) { 
-    return $this->query('commit');
+    $this->query('commit');
+    $this->transaction--;
+    return true;
   }
 
   /**
