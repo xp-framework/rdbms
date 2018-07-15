@@ -3,6 +3,8 @@ RDBMS support for the XP Framework: MySQL, Sybase, MSSQL, PostgreSQL, SQLite3, I
 
 ## ?.?.? / ????-??-??
 
+## 10.2.0 / 2018-07-15
+
 * Merged PR #44: Connection handling. All drivers now automatically reconnect
   to database servers and re-run queries when they receive a disconnect. This
   behavior can be controlled by a new DSN parameter, `reconnect`, which specifies
