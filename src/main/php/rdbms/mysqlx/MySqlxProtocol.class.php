@@ -1,7 +1,7 @@
 <?php namespace rdbms\mysqlx;
 
-use peer\Socket;
 use peer\ProtocolException;
+use peer\Socket;
 use util\Date;
 
 /**

@@ -60,14 +60,9 @@ class PostgreSQLConnection extends DBConnection {
     if ($this->dsn->getUser()) $cs.= ' user='.$this->dsn->getUser();
     if ($this->dsn->getPassword()) $cs.= ' password='.$this->dsn->getPassword();
 
-    if ($this->flags & DB_PERSISTENT) {
-      $this->handle= pg_pconnect($cs);
-    } else {
-      $this->handle= pg_connect($cs);
-    }
-
+    $this->handle= pg_connect($cs, PGSQL_CONNECT_FORCE_NEW);
     if (!is_resource($this->handle)) {
-      $e= new \rdbms\SQLConnectException(rtrim(pg_last_error()), $this->dsn);
+      $e= new SQLConnectException(rtrim(pg_last_error()), $this->dsn);
       \xp::gc(__FILE__);
       throw $e;
     }

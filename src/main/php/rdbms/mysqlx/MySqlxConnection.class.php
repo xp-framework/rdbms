@@ -191,10 +191,10 @@ class MySqlxConnection extends DBConnection {
       return new QuerySucceeded($result);
     }
 
-    if (!$buffered || $this->flags & DB_UNBUFFERED) {
-      return new MySqlxResultSet($this->handle, $result, $this->tz);
-    } else {
+    if ($buffered) {
       return new MySqlxBufferedResultSet($this->handle, $result, $this->tz);
+    } else {
+      return new MySqlxResultSet($this->handle, $result, $this->tz);
     }
   }
 

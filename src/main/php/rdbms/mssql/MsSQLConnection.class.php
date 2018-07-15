@@ -55,19 +55,7 @@ class MsSQLConnection extends DBConnection {
     if (!$reconnect && (false === $this->handle)) return false;    // Previously failed connecting
 
     $this->_obs && $this->notifyObservers(new \rdbms\DBEvent(\rdbms\DBEvent::CONNECT, $reconnect));
-    if ($this->flags & DB_PERSISTENT) {
-      $this->handle= mssql_pconnect(
-        $this->dsn->getHost(), 
-        $this->dsn->getUser(), 
-        $this->dsn->getPassword()
-      );
-    } else {
-      $this->handle= mssql_connect(
-        $this->dsn->getHost(), 
-        $this->dsn->getUser(), 
-        $this->dsn->getPassword()
-      );
-    }
+    $this->handle= mssql_connect($this->dsn->getHost(), $this->dsn->getUser(), $this->dsn->getPassword(), true);
 
     if (!is_resource($this->handle)) {
       $e= new \rdbms\SQLConnectException(trim(mssql_get_last_message()), $this->dsn);

@@ -47,21 +47,7 @@ class InterBaseConnection extends DBConnection {
 
     $this->_obs && $this->notifyObservers(new \rdbms\DBEvent(\rdbms\DBEvent::CONNECT, $reconnect));
     $db= $this->dsn->getHost().':'.$this->dsn->getDatabase();
-    if ($this->flags & DB_PERSISTENT) {
-      $this->handle= ibase_pconnect(
-        $db, 
-        $this->dsn->getUser(), 
-        $this->dsn->getPassword(),
-        'UTF_8'
-      );
-    } else {
-      $this->handle= ibase_connect(
-        $db, 
-        $this->dsn->getUser(), 
-        $this->dsn->getPassword(),
-        'UTF_8'
-      );
-    }
+    $this->handle= ibase_connect($db, $this->dsn->getUser(), $this->dsn->getPassword(), 'UTF_8');
 
     if (!is_resource($this->handle)) {
       throw new \rdbms\SQLConnectException(trim(ibase_errmsg()), $this->dsn);

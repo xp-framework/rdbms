@@ -1,10 +1,10 @@
 <?php namespace rdbms\unittest\sqlite3;
 
-use rdbms\sqlite3\SQLite3ResultSet;
-use rdbms\SQLStatementFailedException;
 use lang\IllegalStateException;
 use rdbms\SQLStateException;
+use rdbms\SQLStatementFailedException;
 use rdbms\sqlite3\SQLite3Connection;
+use rdbms\sqlite3\SQLite3ResultSet;
 
 /**
  * Testcase for rdbms.sqlite3.SQLite3Connection
@@ -106,9 +106,8 @@ class SQLite3ConnectionTest extends \unittest\TestCase {
 
   #[@test]
   public function unbuffered_queries_simulated() {
-    $this->conn->setFlag(DB_UNBUFFERED);
     $this->conn->connect();
-    $this->assertEquals([1 => 1], $this->conn->query('select 1')->next());
+    $this->assertEquals([1 => 1], $this->conn->query('select 1', false)->next());
   }
 
   #[@test, @expect(SQLStateException::class)]
