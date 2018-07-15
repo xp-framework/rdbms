@@ -48,7 +48,7 @@ abstract class DBConnection extends Observable {
 
     $this->connections= new Connections(
       (bool)$this->dsn->getProperty('autoconnect', 1),
-      (int)$this->dsn->getProperty('reconnect', 0)
+      (int)$this->dsn->getProperty('reconnect', 1)
     );
   }
 
