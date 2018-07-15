@@ -107,15 +107,6 @@ class InterBaseConnection extends DBConnection {
   }
 
   /**
-   * Retrieve number of affected rows for last query
-   *
-   * @return  int
-   */
-  protected function affectedRows() {
-    return ibase_affected_rows($this->handle);
-  }
-  
-  /**
    * Execute any statement
    *
    * @param   string sql
