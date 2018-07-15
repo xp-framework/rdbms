@@ -149,7 +149,6 @@ class PostgreSQLConnection extends DBConnection {
       case PGSQL_FATAL_ERROR: case PGSQL_BAD_RESPONSE: {
         $code= pg_result_error_field($this->result, PGSQL_DIAG_SQLSTATE);
         $message= 'Statement failed: '.pg_result_error_field($this->result, PGSQL_DIAG_MESSAGE_PRIMARY).' @ '.$this->dsn->getHost();
-
         switch ($code) {
           case '57P01':
             if (0 === $this->transaction && $this->connections->retry($this, $tries)) {

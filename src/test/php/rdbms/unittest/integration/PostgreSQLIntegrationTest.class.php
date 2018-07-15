@@ -2,11 +2,6 @@
 
 use rdbms\SQLException;
 
-/**
- * PostgreSQL integration test
- *
- * @ext       pgsql
- */
 class PostgreSQLIntegrationTest extends RdbmsIntegrationTest {
   
   /** @return string */
@@ -15,7 +10,8 @@ class PostgreSQLIntegrationTest extends RdbmsIntegrationTest {
   /**
    * Create autoincrement table
    *
-   * @param   string name
+   * @param  string $name
+   * @return void
    */
   protected function createAutoIncrementTable($name) {
     $this->removeTable($name);
@@ -25,7 +21,8 @@ class PostgreSQLIntegrationTest extends RdbmsIntegrationTest {
   /**
    * Create transactions table
    *
-   * @param   string name
+   * @param  string $name
+   * @return void
    */
   protected function createTransactionsTable($name) {
     $this->removeTable($name);
@@ -215,15 +212,16 @@ class PostgreSQLIntegrationTest extends RdbmsIntegrationTest {
   #[@test] 
   public function reconnects_when_server_disconnects() { 
     $conn= $this->db();
-    $conn->connections->reconnect(1);
     $before= $conn->query('select pg_backend_pid() as id')->next('id'); 
 
-    try { 
+    $conn->connections->reconnect(0);
+    try {
       $conn->query('select pg_terminate_backend(%d)', $before);
     } catch (SQLException $expected) {
       // errorcode 57P01: Statement failed: terminating connection due to administrator command
     } 
 
+    $conn->connections->reconnect(1);
     $after= $conn->query('select pg_backend_pid() as id')->next('id'); 
     $this->assertNotEquals($before, $after, 'Connection IDs must be different'); 
   } 
