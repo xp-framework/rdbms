@@ -117,15 +117,6 @@ abstract class DBConnection extends Observable {
   }
   
   /**
-   * Set a flag
-   *
-   * @param   int flag
-   */
-  public function setFlag($flag) { 
-    $this->flags |= $flag;
-  }
-  
-  /**
    * Connect
    *
    * @return  bool success
