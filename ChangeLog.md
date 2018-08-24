@@ -11,6 +11,7 @@ RDBMS support for the XP Framework: MySQL, Sybase, MSSQL, PostgreSQL, SQLite3, I
   to use *LogCategory* instances instead of strings as constructor
   arguments.
   (@thekid)
+* Made compatible with `xp-framework/logging` version 9.0.0 - @thekid
 
 ## 11.0.0 / 2018-07-15
 
