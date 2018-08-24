@@ -3,7 +3,6 @@
 use lang\XPClass;
 use util\Observable;
 use util\TimeZone;
-use util\log\Logger;
 
 /**
  * Provide an interface from which all other database connection
