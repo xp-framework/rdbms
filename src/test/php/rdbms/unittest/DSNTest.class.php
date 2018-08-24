@@ -21,32 +21,32 @@ class DSNTest extends \unittest\TestCase {
   #[@test]
   public function stringRepresentationWithoutPassword() {
     $this->assertEquals(
-      'rdbms.DSN@(mysql://root@localhost/?log=default)',
-      (new DSN('mysql://root@localhost/?log=default'))->toString()
+      'rdbms.DSN@(mysql://root@localhost/)',
+      (new DSN('mysql://root@localhost/'))->toString()
     );
   }
 
   #[@test]
   public function asStringRemovesPassword() {
     $this->assertEquals(
-      'mysql://user:********@localhost/?log=default',
-      (new DSN('mysql://user:foobar@localhost/?log=default'))->asString()
+      'mysql://user:********@localhost/',
+      (new DSN('mysql://user:foobar@localhost/'))->asString()
     );
   }
 
   #[@test]
   public function asStringKeepsPasswordIfRequested() {
     $this->assertEquals(
-      'mysql://user:foobar@localhost/?log=default',
-      (new DSN('mysql://user:foobar@localhost/?log=default'))->asString(true)
+      'mysql://user:foobar@localhost/',
+      (new DSN('mysql://user:foobar@localhost/'))->asString(true)
     );
   }
 
   #[@test]
   public function asStringSkipsUserEvenWithRaw() {
     $this->assertEquals(
-      'mysql://localhost/?log=default',
-      (new DSN('mysql://localhost/?log=default'))->asString(true)
+      'mysql://localhost/',
+      (new DSN('mysql://localhost/'))->asString(true)
     );
   }
 
@@ -211,30 +211,22 @@ class DSNTest extends \unittest\TestCase {
   #[@test]
   public function stringPropertyValue() {
     $this->assertEquals(
-      'default', 
-      (new DSN('sybase://sa@TEST?log=default'))->getProperty('log')
-    );
-  }
-
-  #[@test]
-  public function arrayPropertyValue() {
-    $this->assertEquals(
-      ['util.log.LogObserver' => 'default'], 
-      (new DSN('pgsql://postgres:1433/db?observer[util.log.LogObserver]=default'))->getProperty('observer')
+      'Europe/Berlin', 
+      (new DSN('sybase://sa@TEST?tz=Europe/Berlin'))->getProperty('tz')
     );
   }
 
   #[@test]
   public function twoDsnsCreatedFromSameStringAreEqual() {
-    $string= 'scheme://user:password@host/DATABASE?log=default&autoconnect=1';
+    $string= 'scheme://user:password@host/DATABASE?&autoconnect=1';
     $this->assertEquals(new DSN($string), new DSN($string));
   }
 
   #[@test]
   public function twoDsnsWithDifferingAutoconnectNotEqual() {
     $this->assertNotEquals(
-      new DSN('scheme://user:password@host/DATABASE?log=default&autoconnect=0'), 
-      new DSN('scheme://user:password@host/DATABASE?log=default&autoconnect=1')
+      new DSN('scheme://user:password@host/DATABASE?autoconnect=0'), 
+      new DSN('scheme://user:password@host/DATABASE?autoconnect=1')
     );
   }
 
@@ -242,7 +234,7 @@ class DSNTest extends \unittest\TestCase {
   public function twoDsnsWithDifferingParamsNotEqual() {
     $this->assertNotEquals(
       new DSN('scheme://user:password@host/DATABASE'), 
-      new DSN('scheme://user:password@host/DATABASE?log=default')
+      new DSN('scheme://user:password@host/DATABASE?tz=Europe/Berlin')
     );
   }
 
@@ -255,34 +247,10 @@ class DSNTest extends \unittest\TestCase {
   }
 
   #[@test]
-  public function twoDsnsWithDifferingObserverParamsNotEqual() {
-    $this->assertNotEquals(
-      new DSN('scheme://user:password@host/DATABASE?observer[rdbms.sybase.SybaseShowplanObserver]=sql'), 
-      new DSN('scheme://user:password@host/DATABASE?observer[util.log.LogObserver]=default')
-    );
-  }
-
-  #[@test]
-  public function twoDsnsWithDifferingObserverParamValuesNotEqual() {
-    $this->assertNotEquals(
-      new DSN('scheme://user:password@host/DATABASE?observer[util.log.LogObserver]=sql'), 
-      new DSN('scheme://user:password@host/DATABASE?observer[util.log.LogObserver]=default')
-    );
-  }
-
-  #[@test]
-  public function twoDsnsWithSameObserverParamsEqual() {
-    $this->assertEquals(
-      new DSN('scheme://user:password@host/DATABASE?observer[util.log.LogObserver]=default'), 
-      new DSN('scheme://user:password@host/DATABASE?observer[util.log.LogObserver]=default')
-    );
-  }
-
-  #[@test]
   public function twoDsnsWithDifferentlyOrderedParamsAreEqual() {
     $this->assertEquals(
-      new DSN('scheme://host/DATABASE?autoconnect=1&observer[rdbms.sybase.SybaseShowplanObserver]=sql&log=default'), 
-      new DSN('scheme://host/DATABASE?log=default&observer[rdbms.sybase.SybaseShowplanObserver]=sql&autoconnect=1')
+      new DSN('scheme://host/DATABASE?autoconnect=1&tz=Europe/Berlin'), 
+      new DSN('scheme://host/DATABASE?tz=Europe/Berlin&autoconnect=1')
     );
   }
 
