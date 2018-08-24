@@ -9,16 +9,13 @@ use util\profiling\Timer;
 /**
  * Profiling database observer
  *
- * Attach to database by appending `&observer[rdbms.ProfilingObserver]=default` where
- * `default` denotes the log category to log to.
+ * @test  xp://rdbms.unittest.ProfilingObserverTest
  */
-class ProfilingObserver implements Observer, Traceable {
+class ProfilingObserver implements Observer {
   const COUNT= 0x01;
   const TIMES= 0x02;
 
-  protected $cat  = null;
-  protected $name = null;
-
+  private $cat    = null;
   private $timer  = null;
   private $lastq  = null;
   private $dsn    = null;
@@ -27,19 +24,9 @@ class ProfilingObserver implements Observer, Traceable {
   /**
    * Creates a new log observer with a given log category.
    *
-   * @param   string cat
+   * @param  util.log.LogCategory $cat
    */
-  public function __construct($name= null) {
-    if (null === $name) $name= 'default';
-    $this->name= $name;
-  }
-
-  /**
-   * Set log category
-   * 
-   * @param util.log.LogCategory $cat
-   */
-  public function setTrace($cat) {
+  public function __construct($cat) {
     $this->cat= $cat;
   }
 
@@ -51,14 +38,10 @@ class ProfilingObserver implements Observer, Traceable {
    * @return string
    */
   public function typeOf($sql) {
-    $sql= strtolower(ltrim($sql));
-    $verb= substr($sql, 0, strpos($sql, ' '));
+    $sql= ltrim($sql);
+    $verb= strtolower(substr($sql, 0, strpos($sql, ' ')));
 
-    if (in_array($verb, ['update', 'insert', 'select', 'delete', 'set', 'show'])) {
-      return $verb;
-    }
-
-    return 'unknown';
+    return in_array($verb, ['update', 'insert', 'select', 'delete', 'set', 'show']) ? $verb : 'unknown';
   }
 
   /**

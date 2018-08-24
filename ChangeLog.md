@@ -3,9 +3,11 @@ RDBMS support for the XP Framework: MySQL, Sybase, MSSQL, PostgreSQL, SQLite3, I
 
 ## ?.?.? / ????-??-??
 
-## 11.0.1 / 2018-08-24
+## 12.0.0 / 2018-08-24
 
-* Made compatible with `xp-framework/logging` version 9.0.0 - @thekid
+* **Heads up**: Remove `?log=` and `?observer=` functionality from
+  connection strings; it required a singleton logger set up
+  (@thekid)
 
 ## 11.0.0 / 2018-07-15
 

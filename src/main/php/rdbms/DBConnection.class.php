@@ -29,44 +29,23 @@ abstract class DBConnection extends Observable {
     $this->dsn= $dsn;
     $this->setTimeout($dsn->getProperty('timeout', 0));   // 0 means no timeout
     
-    // Keep this for BC reasons
-    $observers= $dsn->getProperty('observer', []);
-    if (null !== ($cat= $dsn->getProperty('log'))) { 
-      $observers['util.log.LogObserver']= $cat; 
-    }
-    
-    // Add observers
-    foreach ($observers as $observer => $param) {
-      $this->addObserver(XPClass::forName($observer)->getMethod('instanceFor')->invoke(null, [$param]));
-    }
-
-    // Time zone handling
-    if ($tz= $dsn->getProperty('timezone', false)) {
+    if ($tz= $dsn->getProperty('timezone', null)) {
       $this->tz= new TimeZone($tz);
     }
 
     $this->connections= new Connections(
-      (bool)$this->dsn->getProperty('autoconnect', 1),
-      (int)$this->dsn->getProperty('reconnect', 1)
+      (bool)$dsn->getProperty('autoconnect', 1),
+      (int)$dsn->getProperty('reconnect', 1)
     );
   }
 
-  /**
-   * Retrieve DSN
-   *
-   * @return rdbms.DSN
-   */
-  public function getDSN() {
-    return $this->dsn;
-  }
+  /** @return rdbms.DSN */
+  public function getDSN() { return $this->dsn; }
   
   /**
    * Returns a hashcode for this connection
    *
-   * Example:
-   * <pre>
-   *   sybase-ct link #50
-   * </pre>
+   * Example: `sybase-ct link #50`
    *
    * @return  string
    */

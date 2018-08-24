@@ -1,13 +1,13 @@
 <?php namespace rdbms\unittest;
 
 use lang\IllegalArgumentException;
-use unittest\TestCase;
 use rdbms\DBEvent;
+use rdbms\DSN;
 use rdbms\ProfilingObserver;
 use rdbms\sqlite3\SQLite3Connection;
+use unittest\TestCase;
+use util\log\BufferedAppender;
 use util\log\LogCategory;
-use util\log\StreamAppender;
-
 
 /**
  * Testcase for the profiling observer class
@@ -16,13 +16,14 @@ use util\log\StreamAppender;
  */
 class ProfilingObserverTest extends TestCase {
 
-  /**
-   * Returns a database connection to test with
-   *
-   * @return rdbms.DBConnection
-   */
-  protected function conn() {
-    return new SQLite3Connection(new \rdbms\DSN('sqlite+3:///foo.sqlite'));
+  /** @return void */
+  public function setUp() {
+    $this->cat= new LogCategory('test');
+  }
+
+  /** @return rdbms.DBConnection */
+  private function conn() {
+    return new SQLite3Connection(new DSN('sqlite+3:///foo.sqlite'));
   }
 
   /**
@@ -31,7 +32,7 @@ class ProfilingObserverTest extends TestCase {
    * @return rdbms.ProfilingObserver
    */
   private function observerWithSelect() {
-    $o= new ProfilingObserver();
+    $o= new ProfilingObserver($this->cat);
     $conn= $this->conn();
     $o->update($conn, new DBEvent('query', 'select * from world'));
     usleep(100000);
@@ -42,12 +43,7 @@ class ProfilingObserverTest extends TestCase {
 
   #[@test]
   public function create() {
-    new ProfilingObserver('default');
-  }
-
-  #[@test]
-  public function create_without_arg() {
-    new ProfilingObserver();
+    new ProfilingObserver($this->cat);
   }
 
   #[@test, @values([
@@ -62,47 +58,47 @@ class ProfilingObserverTest extends TestCase {
   #  'Select * from world'
   #])]
   public function select_type($sql) {
-    $this->assertEquals('select', (new ProfilingObserver())->typeOf($sql));
+    $this->assertEquals('select', (new ProfilingObserver($this->cat))->typeOf($sql));
   }
 
   public function update_type() {
-    $this->assertEquals('update', (new ProfilingObserver())->typeOf('update world set ...'));
+    $this->assertEquals('update', (new ProfilingObserver($this->cat))->typeOf('update world set ...'));
   }
 
   public function insert_type() {
-    $this->assertEquals('insert', (new ProfilingObserver())->typeOf('insert into world ...'));
+    $this->assertEquals('insert', (new ProfilingObserver($this->cat))->typeOf('insert into world ...'));
   }
 
   public function delete_type() {
-    $this->assertEquals('delete', (new ProfilingObserver())->typeOf('delete from world ...'));
+    $this->assertEquals('delete', (new ProfilingObserver($this->cat))->typeOf('delete from world ...'));
   }
 
   public function set_type() {
-    $this->assertEquals('set', (new ProfilingObserver())->typeOf('set showplan on'));
+    $this->assertEquals('set', (new ProfilingObserver($this->cat))->typeOf('set showplan on'));
   }
 
   public function show_type() {
-    $this->assertEquals('show', (new ProfilingObserver())->typeOf('show keys from ...'));
+    $this->assertEquals('show', (new ProfilingObserver($this->cat))->typeOf('show keys from ...'));
   }
 
   public function unknown_type() {
-    $this->assertEquals('unknown', (new ProfilingObserver())->typeOf('explain ...'));
+    $this->assertEquals('unknown', (new ProfilingObserver($this->cat))->typeOf('explain ...'));
   }
 
   #[@test]
   public function emitTiming_without_actually_having_any_timing_does_not_fatal() {
-    (new ProfilingObserver())->emitTimings();
+    (new ProfilingObserver($this->cat))->emitTimings();
   }
 
   #[@test, @expect(IllegalArgumentException::class)]
   public function update_with_anyarg() {
-    $o= new ProfilingObserver();
+    $o= new ProfilingObserver($this->cat);
     $o->update(1);
   }
 
   #[@test]
   public function update_with_event() {
-    $o= new ProfilingObserver();
+    $o= new ProfilingObserver($this->cat);
     $o->update($this->conn(), new DBEvent('hello', 'select * from world'));
   }
 
@@ -131,17 +127,15 @@ class ProfilingObserverTest extends TestCase {
   #[@test]
   public function destructor_emits_timing() {
     $o= $this->observerWithSelect();
-    $stream= new \io\streams\MemoryOutputStream();
-    $lc= (new LogCategory('profiling'))->withAppender(new StreamAppender($stream));
-    $o->setTrace($lc);
+    $appender= $this->cat->addAppender(new BufferedAppender());
     $o= null;
 
-    $this->assertTrue(0 < strlen($stream->getBytes()));
+    $this->assertTrue(0 < strlen($appender->buffer));
   }
 
   #[@test]
   public function dbevent_in_illegal_order_is_ignored() {
-    $o= new ProfilingObserver();
+    $o= new ProfilingObserver($this->cat);
     $conn= $this->conn();
 
     $o->update($conn, new DBEvent('queryend', 5));
@@ -150,7 +144,7 @@ class ProfilingObserverTest extends TestCase {
 
   #[@test]
   public function connect_is_counted_as_verb() {
-    $o= new ProfilingObserver();
+    $o= new ProfilingObserver($this->cat);
 
     $c1= $this->conn();
     $o->update($c1, new DBEvent('connect'));
@@ -161,7 +155,7 @@ class ProfilingObserverTest extends TestCase {
 
   #[@test, @ignore('Expected behavior not finally decided')]
   public function observer_only_listens_to_one_dbconnection() {
-    $o= new ProfilingObserver();
+    $o= new ProfilingObserver($this->cat);
 
     $c1= $this->conn();
     $o->update($c1, new DBEvent('connect'));
@@ -176,7 +170,7 @@ class ProfilingObserverTest extends TestCase {
 
   #[@test]
   public function unknown_sql_token_is_classified_as_unknown() {
-    $o= new ProfilingObserver();
+    $o= new ProfilingObserver($this->cat);
 
     $c1= $this->conn();
     $o->update($c1, new DBEvent('query', 'encrypt foo from bar'));;
@@ -187,7 +181,7 @@ class ProfilingObserverTest extends TestCase {
 
   #[@test]
   public function update_sql_token_is_classified_as_unknown() {
-    $o= new ProfilingObserver();
+    $o= new ProfilingObserver($this->cat);
 
     $c1= $this->conn();
     $o->update($c1, new DBEvent('query', 'update foo from bar'));;
