@@ -6,7 +6,10 @@ RDBMS support for the XP Framework: MySQL, Sybase, MSSQL, PostgreSQL, SQLite3, I
 ## 12.0.0 / 2018-08-24
 
 * **Heads up**: Remove `?log=` and `?observer=` functionality from
-  connection strings; it required a singleton logger set up
+  connection strings; it required a singleton logger set up. Changed
+  `rdbms.ProfilingObserver` and the implementations in `rdbms.sybase`
+  to use *LogCategory* instances instead of strings as constructor
+  arguments.
   (@thekid)
 
 ## 11.0.0 / 2018-07-15
