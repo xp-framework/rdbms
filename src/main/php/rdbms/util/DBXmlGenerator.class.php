@@ -1,13 +1,14 @@
 <?php namespace rdbms\util;
 
-use rdbms\DBTable;
-use xml\Tree;
 use lang\System;
+use rdbms\DBTable;
 use util\log\Traceable;
+use xml\Tree;
 
 /**
  * Generate an XML representation of a database table
  *
+ * @deprecated
  * @see   xp://rdbms.DBTable
  */
 class DBXmlGenerator implements Traceable {

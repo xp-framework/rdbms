@@ -1,9 +1,9 @@
 <?php namespace rdbms\util;
 
-
 /**
  * Generate Names for database generated classes
  *
+ * @deprecated
  */
 class DBXMLNamingContext {
 

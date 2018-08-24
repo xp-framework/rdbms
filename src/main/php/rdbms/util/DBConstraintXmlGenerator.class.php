@@ -5,10 +5,10 @@ use rdbms\DBTable;
 use util\log\Traceable;
 use xml\Tree;
 
-
 /**
  * Generate the relation map of a database
  *
+ * @deprecated
  * @see   xp://rdbms.DBTable
  */
 class DBConstraintXmlGenerator implements Traceable {

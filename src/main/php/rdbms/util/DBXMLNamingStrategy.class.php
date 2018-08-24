@@ -3,6 +3,7 @@
 /**
  * Generate Names for database generated classes
  *
+ * @deprecated
  */
 abstract class DBXMLNamingStrategy {
   
