@@ -2,16 +2,16 @@
 
 use rdbms\DBEvent;
 use util\log\BoundLogObserver;
-use util\log\Logger;
 
 /**
  * Observer class to observe a SybaseConnections IO
  * optimizer plan
  *
- * @ext      sybase
- * @purpose  Observe SybaseConnection
+ * @ext  sybase
  */
 class SybaseShowplanObserver implements BoundLogObserver {
+  private $cat;
+
   protected
     $messages     = [],
     $queries      = [];
@@ -29,12 +29,12 @@ class SybaseShowplanObserver implements BoundLogObserver {
   }
 
   /**
-   * Constructor.
+   * Creates a new log observer with a given log category.
    *
-   * @param   string argument
+   * @param  util.log.LogCategory $cat
    */
-  public function __construct($arg) {
-    $this->cat= Logger::getInstance()->getCategory($arg);
+  public function __construct($cat) {
+    $this->cat= $cat;
   }
 
   /**
