@@ -1,10 +1,10 @@
 <?php namespace rdbms;
 
+use lang\IllegalArgumentException;
 use util\Observer;
 use util\log\Logger;
 use util\log\Traceable;
 use util\profiling\Timer;
-use lang\IllegalArgumentException;
 
 /**
  * Profiling database observer
@@ -74,7 +74,6 @@ class ProfilingObserver implements Observer, Traceable {
     if (!$arg instanceof DBEvent) return;
 
     // Store reference for later reuse
-    if (null === $this->cat) $this->setTrace(Logger::getInstance()->getCategory($this->name));
     if (null === $this->dsn) $this->dsn= $obs->getDSN()->withoutPassword();
 
     $method= $arg->getName();
