@@ -2,7 +2,6 @@
 
 use lang\IllegalArgumentException;
 use util\Observer;
-use util\log\Logger;
 use util\log\Traceable;
 use util\profiling\Timer;
 
