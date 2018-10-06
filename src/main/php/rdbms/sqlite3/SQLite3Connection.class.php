@@ -148,7 +148,7 @@ class SQLite3Connection extends DBConnection {
    * @throws  rdbms.SQLException
    */
   protected function query0($sql, $buffered= true) {
-    $this->handle instanceof \SQLite || $this->connections->establish($this);
+    $this->handle instanceof \SQLite3 || $this->connections->establish($this);
     
     $result= $this->handle->query($sql);
     if (false === $result) {
