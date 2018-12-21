@@ -3,6 +3,15 @@ RDBMS support for the XP Framework: MySQL, Sybase, MSSQL, PostgreSQL, SQLite3, I
 
 ## ?.?.? / ????-??-??
 
+## 7.3.5 / 2018-12-21
+
+* Backported changes from 10.0.1
+  * Fix parse error
+  * MSSQL datetime4 handling is the same as Sybase, only datetime8 differs
+  * Add tests for datetime and datetime4 types
+  * Separate implementations for date time parsing for MSSQL & Sybase
+  * Try removing division by 300 for dates
+
 ## 7.3.4 / 2017-03-13
 
 * Backported changes from 9.0.6
