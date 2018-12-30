@@ -82,7 +82,7 @@ class SQLite3ResultSet extends ResultSet {
    */
   public function close() { 
     if ($this->handle instanceof \SQLite3Result) {
-      $r= $this->handle->finalize();
+      $r= @$this->handle->finalize();
       $this->handle= null;
       return $r;
     }
