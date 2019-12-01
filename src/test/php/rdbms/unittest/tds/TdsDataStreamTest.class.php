@@ -1,10 +1,10 @@
 <?php namespace rdbms\unittest\tds;
 
-use rdbms\tds\TdsProtocolException;
-use rdbms\tds\TdsDataStream;
-use peer\Socket;
-use util\Bytes;
 use lang\ClassLoader;
+use peer\Socket;
+use rdbms\tds\TdsDataStream;
+use rdbms\tds\TdsProtocolException;
+use util\Bytes;
 
 /**
  * TestCase
@@ -31,9 +31,9 @@ class TdsDataStreamTest extends \unittest\TestCase {
         $this->bytes.= $bytes;
       }
       
-      public function readBinary($l) {
-        $chunk= substr($this->bytes, $this->offset, $l);
-        $this->offset+= $l;
+      public function readBinary($maxLen= 4096) {
+        $chunk= substr($this->bytes, $this->offset, $maxLen);
+        $this->offset+= $maxLen;
         return $chunk;
       }
     }');
