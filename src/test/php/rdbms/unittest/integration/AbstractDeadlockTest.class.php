@@ -1,10 +1,10 @@
 <?php namespace rdbms\unittest\integration;
 
-use unittest\TestCase;
-use unittest\PrerequisitesNotMetError;
 use lang\Runtime;
-use rdbms\DriverManager;
 use lang\Throwable;
+use rdbms\DriverManager;
+use unittest\PrerequisitesNotMetError;
+use unittest\TestCase;
 
 /**
  * Abstract deadlock test
@@ -46,7 +46,7 @@ abstract class AbstractDeadlockTest extends TestCase {
 
   /** @return void */
   public function tearDown() {
-    $this->dropTables();
+    $this->dsn && $this->dropTables();
   }
   
   /**
