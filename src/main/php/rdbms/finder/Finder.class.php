@@ -5,7 +5,6 @@ define('COLLECTION', '<? extends DataSet>[]');
 
 use lang\MethodNotImplementedException;
 
-
 /**
  * A finder is a collection of criteria for a given rdbms.Peer object.
  *
@@ -147,7 +146,7 @@ abstract class Finder {
    *
    * @return  rdbms.Criteria
    */
-  #[@finder(kind= COLLECTION)]
+  #[@finder(['kind' => COLLECTION])]
   public function all() {
     return new \rdbms\Criteria();
   }

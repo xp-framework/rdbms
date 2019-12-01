@@ -26,7 +26,7 @@ class JobFinder extends Finder {
    * @param   int pk the job_id
    * @return  rdbms.Criteria
    */
-  #[@finder(kind= ENTITY)]
+  #[@finder(['kind' => ENTITY])]
   public function byPrimary($pk) {
     return new \rdbms\Criteria(['job_id', $pk, EQUAL]);
   }
@@ -36,7 +36,7 @@ class JobFinder extends Finder {
    *
    * @return  rdbms.Criteria
    */
-  #[@finder(kind= COLLECTION)]
+  #[@finder(['kind' => COLLECTION])]
   public function newestJobs() {
     return (new \rdbms\Criteria())->addOrderBy('valid_from', DESCENDING);
   }
@@ -46,7 +46,7 @@ class JobFinder extends Finder {
    *
    * @return  rdbms.Criteria
    */
-  #[@finder(kind= COLLECTION)]
+  #[@finder(['kind' => COLLECTION])]
   public function expiredJobs() {
     return new \rdbms\Criteria(['expire_at', \util\Date::now(), GREATER_THAN]);
   }
@@ -57,7 +57,7 @@ class JobFinder extends Finder {
    * @param   string title
    * @return  rdbms.Criteria
    */
-  #[@finder(kind= COLLECTION)]
+  #[@finder(['kind' => COLLECTION])]
   public function similarTo($title) {
     return new Statement('select object(j) from job j where title like %s', $title.'%');
   }
