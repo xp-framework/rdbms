@@ -2,6 +2,7 @@
 
 use lang\System;
 use rdbms\DBTable;
+use util\Objects;
 use util\log\Traceable;
 use xml\Tree;
 
@@ -97,7 +98,7 @@ class DBXmlGenerator implements Traceable {
       $constKeyList= [];
       if ($constraint= $this->table->getFirstForeignKeyConstraint()) do {
         if (isset($constKeyList[$this->constraintKey($constraint)])) {
-          $this->cat && $this->cat->warn($this->table->name, 'has a double constraint'."\n".\xp::stringOf($constraint));
+          $this->cat && $this->cat->warn($this->table->name, 'has a double constraint'."\n".Objects::stringOf($constraint));
           continue;
         }
         $constKeyList[$this->constraintKey($constraint)]= true;

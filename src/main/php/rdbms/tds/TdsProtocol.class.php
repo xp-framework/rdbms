@@ -2,6 +2,7 @@
 
 use peer\ProtocolException;
 use peer\Socket;
+use util\Objects;
 
 /**
  * TDS protocol implementation
@@ -673,6 +674,6 @@ abstract class TdsProtocol {
    * @return  string
    */
   public function toString() {
-    return nameof($this).'('.\xp::stringOf($this->stream).')';
+    return nameof($this).'('.Objects::stringOf($this->stream).')';
   }
 }

@@ -2,8 +2,10 @@
 
 use lang\System;
 use rdbms\DBTable;
+use util\Objects;
 use util\log\Traceable;
 use xml\Tree;
+
 
 /**
  * Generate the relation map of a database
@@ -61,7 +63,7 @@ class DBConstraintXmlGenerator implements Traceable {
 
       if ($constraint= $t->getFirstForeignKeyConstraint()) do {
         if (isset($constKeyList[$this->constraintKey($constraint)])) {
-          $this->cat && $this->cat->warn($t->name, 'has a double constraint'."\n".\xp::stringOf($constraint));
+          $this->cat && $this->cat->warn($t->name, 'has a double constraint'."\n".Objects::stringOf($constraint));
           continue;
         }
         $constKeyList[$this->constraintKey($constraint)]= true;

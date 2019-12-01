@@ -3,6 +3,7 @@
 use rdbms\DBConnection;
 use rdbms\Peer;
 use rdbms\SQLFragment;
+use util\Objects;
 
 /**
  * Simple expression
@@ -77,9 +78,9 @@ class SimpleExpression implements Criterion {
     return sprintf(
       '%s({%s %s} %% %s)',
       nameof($this),
-      \xp::stringOf($this->lhs),
+      Objects::stringOf($this->lhs),
       $this->op,
-      \xp::stringOf($this->value)
+      Objects::stringOf($this->value)
     );
   }
 

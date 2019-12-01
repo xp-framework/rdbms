@@ -1,5 +1,7 @@
 <?php namespace rdbms;
 
+use util\Objects;
+
 /**
  * Represents an SQL standard procedure
  */
@@ -84,6 +86,6 @@ class SQLFunction implements SQLFragment {
    * @return  string
    */
   public function toString() {
-    return nameof($this).'<'.$this->type.' '.$this->func.' ('.\xp::stringOf($this->args).')>';
+    return nameof($this).'<'.$this->type.' '.$this->func.' ('.Objects::stringOf($this->args).')>';
   }
 }

@@ -1,7 +1,8 @@
 <?php namespace rdbms;
 
-use util\TimeZone;
 use lang\Closeable;
+use util\Objects;
+use util\TimeZone;
 
 /**
  * Result set as returned from the DBConnection::query method
@@ -84,7 +85,7 @@ abstract class ResultSet implements Closeable, \IteratorAggregate {
    * @return  string
    */
   public function toString() {
-    return nameof($this).'('.\xp::stringOf($this->handle).')@'.\xp::stringOf($this->fields);
+    return nameof($this).'('.Objects::stringOf($this->handle).')@'.Objects::stringOf($this->fields);
   }
 
   /**

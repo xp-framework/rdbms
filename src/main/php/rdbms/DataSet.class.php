@@ -1,7 +1,7 @@
 <?php namespace rdbms;
 
-use rdbms\join\JoinExtractable;
 use lang\Value;
+use rdbms\join\JoinExtractable;
 use util\Objects;
 
 /**
@@ -255,7 +255,7 @@ abstract class DataSet implements Value, JoinExtractable {
         $key,
         (in_array($key, $peer->primary) ? 'PK' : ''), 
         ($key == $peer->identity ? ',I' : ''),
-        \xp::stringOf($this->$key)
+        Objects::stringOf($this->$key)
       )."\n";
     }
     return $s.'}';

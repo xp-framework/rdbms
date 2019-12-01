@@ -1,9 +1,10 @@
 <?php namespace rdbms;
 
-use rdbms\criterion\SimpleExpression;
-use rdbms\criterion\Projections;
-use rdbms\criterion\ProjectionList;
 use rdbms\criterion\Criterion;
+use rdbms\criterion\ProjectionList;
+use rdbms\criterion\Projections;
+use rdbms\criterion\SimpleExpression;
+use util\Objects;
 
 define('ASCENDING',       'asc');
 define('DESCENDING',      'desc');
@@ -169,7 +170,7 @@ class Criteria implements SQLExpression {
   public function toString() {
     $s= nameof($this)."@{\n";
     foreach ($this->conditions as $condition) {
-      $s.= '  '.\xp::stringOf($condition)."\n";
+      $s.= '  '.Objects::stringOf($condition)."\n";
     }
     return $s.'}';
   }

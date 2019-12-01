@@ -1,5 +1,7 @@
 <?php namespace rdbms;
 
+use util\Objects;
+
 /**
  * Manages database drivers
  *
@@ -155,7 +157,7 @@ class DriverManager {
           throw new DriverNotSupportedException(sprintf(
             'No driver registered for "%s" or provided by any of %s',
             $driver,
-            \xp::stringOf($provider)
+            Objects::stringOf($provider)
           ));
         } while (0);
       }

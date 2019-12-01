@@ -1,5 +1,7 @@
 <?php namespace rdbms;
 
+use util\Objects;
+
 /**
  * Generic DB event.
  *
@@ -68,6 +70,6 @@ class DBEvent {
    * @return  string
    */
   public function toString() {
-    return nameof($this).'('.$this->name.') {'.\xp::stringOf($this->arg).'}';
+    return nameof($this).'('.$this->name.') {'.Objects::stringOf($this->arg).'}';
   }
 }

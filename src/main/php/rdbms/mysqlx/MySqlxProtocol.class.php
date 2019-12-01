@@ -3,6 +3,7 @@
 use peer\ProtocolException;
 use peer\Socket;
 use util\Date;
+use util\Objects;
 
 /**
  * MySQL protocol implementation
@@ -488,6 +489,6 @@ class MySqlxProtocol {
    * @return  string
    */
   public function toString() {
-    return nameof($this).'(stream= '.\xp::stringOf($this->sock).', thread= '.$this->thread.', packet= '.$this->pkt.')';
+    return nameof($this).'(stream= '.Objects::stringOf($this->sock).', thread= '.$this->thread.', packet= '.$this->pkt.')';
   }
 }
