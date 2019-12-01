@@ -195,7 +195,7 @@ class MySqlxProtocol {
     if (!isset($data[$consumed])) {
       return 0;
     }
-    switch ($data{$consumed}) {
+    switch ($data[$consumed]) {
       case "\373": $consumed+= 1; return null;
       case "\374": $consumed+= 3; return ord($data[$o+ 1]) + ord($data[$o+ 2]) * 256;
       case "\375": $consumed+= 4; return ord($data[$o+ 1]) + ord($data[$o+ 2]) * 256 + ord($data[$o+ 3]) * 65536;
@@ -234,7 +234,7 @@ class MySqlxProtocol {
    * @return  string
    */
   protected function lstr($data, &$consumed) {
-    if ("\373" === $data{$consumed}) {
+    if ("\373" === $data[$consumed]) {
       $consumed++;
       return null;
     }
@@ -280,7 +280,7 @@ class MySqlxProtocol {
     $field['length']= $this->lbin($f, 4, $consumed);
     $field['type']= $this->lbin($f, 2, $consumed);
     $field['flags']= $this->lbin($f, 2, $consumed);
-    $field['decimals']= ord($f{$consumed+ 1});
+    $field['decimals']= ord($f[$consumed + 1]);
     return $field;
   }
   
@@ -346,7 +346,7 @@ class MySqlxProtocol {
    */
   public function fetch($fields) {
     $r= $this->read();
-    if ("\376" === $r{0} && strlen($r) < 9) {
+    if ("\376" === $r[0] && strlen($r) < 9) {
       $this->pkt= 0;
       return null;
     }
@@ -370,7 +370,7 @@ class MySqlxProtocol {
     do {
       $r= $this->read();
       $i++;
-    } while (!("\376" === $r{0} && strlen($r) < 9));
+    } while (!("\376" === $r[0] && strlen($r) < 9));
     $this->pkt= 0;
     return $i;
   }
@@ -457,7 +457,7 @@ class MySqlxProtocol {
     // DEBUG Console::$err->writeLine('R-> ', new Bytes($buf));
     
     // 0xFF indicates an error
-    if ("\377" !== $buf{0}) return $buf;
+    if ("\377" !== $buf[0]) return $buf;
 
     $this->pkt= 0;
     $sqlstate= '00000';

@@ -55,14 +55,14 @@ class StatementFormatter {
       // If offset == length, it was the last token, so return
       if ($offset >= $length) return $statement;
 
-      if ('"' === $fmt{$offset} || "'" === $fmt{$offset}) {
+      if ('"' === $fmt[$offset] || "'" === $fmt[$offset]) {
 
         // Escape string literals (which use double quote characters inside for escaping)
-        $quote= $fmt{$offset};
+        $quote= $fmt[$offset];
         $strlen= $offset+ 1;
         do {
           $strlen+= strcspn($fmt, $quote, $strlen);
-          if ($strlen >= $length || $quote !== $fmt{$strlen+ 1}) break;
+          if ($strlen >= $length || $quote !== $fmt[$strlen + 1]) break;
           $strlen+= 2;
         } while (true);
 
@@ -71,39 +71,39 @@ class StatementFormatter {
         }
 
         $statement.= $this->dialect->escapeString(
-          strtr(substr($fmt, $offset+ 1, $strlen- $offset- 1), 
+          strtr(substr($fmt, $offset + 1, $strlen- $offset- 1), 
           ['%%' => '%', $quote.$quote => $quote]
         ));
         $offset= $strlen+ 1;
         continue;
-      } else if (is_numeric($fmt{$offset+ 1})) {
+      } else if (is_numeric($fmt[$offset + 1])) {
       
         // Numeric argument type specifier, e.g. %1$s
         sscanf(substr($fmt, $offset), '%%%d$', $overrideOffset);
-        $type= $fmt{$offset+ strlen($overrideOffset)+ 2};
-        $offset+= strlen($overrideOffset)+ 3;
+        $type= $fmt[$offset+ strlen($overrideOffset) + 2];
+        $offset+= strlen($overrideOffset) + 3;
         if (!array_key_exists($overrideOffset- 1, $args)) {
-          throw new SQLStateException('Missing argument #'.($overrideOffset- 1).' @offset '.$offset);
+          throw new SQLStateException('Missing argument #'.($overrideOffset - 1).' @offset '.$offset);
         }
-        $argument= $args[$overrideOffset- 1];
-      } else if (false !== strpos($tokens, $fmt{$offset+ 1})) {
+        $argument= $args[$overrideOffset - 1];
+      } else if (false !== strpos($tokens, $fmt[$offset + 1])) {
       
         // Known tokens
-        $type= $fmt{$offset+ 1};
+        $type= $fmt[$offset+ 1];
         $offset+= 2;
         if (!array_key_exists($argumentOffset, $args)) {
           throw new SQLStateException('Missing argument #'.$argumentOffset.' @offset '.$offset);
         }
         $argument= $args[$argumentOffset];
         $argumentOffset++;
-      } else if ('%' == $fmt{$offset+ 1}) {
+      } else if ('%' == $fmt[$offset + 1]) {
       
         // Escape sign
         $statement.= '%';
         $offset+= 2;
         continue;
       } else {
-        throw new SQLStateException('Unknown token "'.$fmt{$offset+ 1}.'"');
+        throw new SQLStateException('Unknown token "'.$fmt[$offset + 1].'"');
       }
       
       $statement.= $this->prepare($type, $argument);
