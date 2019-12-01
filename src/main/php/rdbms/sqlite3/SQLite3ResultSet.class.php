@@ -57,7 +57,7 @@ class SQLite3ResultSet extends ResultSet {
 
     foreach ($row as $key => $value) {
       if (null === $value || '' === $value || !isset($this->fields[$key])) continue;
-      switch ($value{0}) {
+      if (is_string($value)) switch ($value[0]) {
         case "\2":
           $row[$key]= new \util\Date(substr($value, 1));
           break;

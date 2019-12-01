@@ -154,7 +154,7 @@ class MySQLDBAdapter extends DBAdapter {
     $createTableString= $this->conn->query('show create table %c', $this->qualifiedTablename($table, $database))->next('Create Table');
     
     for ($i= 0; $i < strlen($createTableString); $i++) {
-      switch ($createTableString{$i}) {
+      switch ($createTableString[$i]) {
         case '`':
         $this->parseQuoteString($createTableString, $i, '`');
         break;
@@ -212,7 +212,7 @@ class MySQLDBAdapter extends DBAdapter {
     $attributes=   [];
     $pos= 10;
     while (++$pos < strlen($string)) {
-      switch ($string{$pos}) {
+      switch ($string[$pos]) {
         case '`':
         $quotstrings[]= $this->parseQuoteString($string, $pos, '`');
         break;
@@ -248,12 +248,12 @@ class MySQLDBAdapter extends DBAdapter {
   private function parseQuoteString($string, &$pos, $quot) {
     $quotedString= '';
     while ($pos++ < strlen($string)) {
-      switch ($string{$pos}) {
+      switch ($string[$pos]) {
         case $quot:
         return $quotedString;
 
         default:
-        $quotedString.= $string{$pos};
+        $quotedString.= $string[$pos];
       }
     }
     return $quotedString;
@@ -269,28 +269,28 @@ class MySQLDBAdapter extends DBAdapter {
   private function parseBracerString($string, &$pos) {
     $braceredString= '';
     while ($pos++ < strlen($string)) {
-      switch ($string{$pos}) {
+      switch ($string[$pos]) {
         case ')':
         return $braceredString;
         break;
 
         case '(':
-        $braceredString.= $string{$pos};
+        $braceredString.= $string[$pos];
         $braceredString.= $this->parseBracerString($string, $pos).')';
         break;
 
         case '`':
-        $braceredString.= $string{$pos};
+        $braceredString.= $string[$pos];
         $braceredString.= $this->parseQuoteString($string, $pos, '`').'`';
         break;
 
         case '"':
-        $braceredString.= $string{$pos};
+        $braceredString.= $string[$pos];
         $braceredString.= $this->parseQuoteString($string, $pos, '"').'"';
         break;
 
         default:
-        $braceredString.= $string{$pos};
+        $braceredString.= $string[$pos];
       }
     }
     return $braceredString;
@@ -307,29 +307,29 @@ class MySQLDBAdapter extends DBAdapter {
     $paramString= '';
     $pos= 0;
     while ($pos < strlen($string)) {
-      switch ($string{$pos}) {
+      switch ($string[$pos]) {
         case ',':
         $paramArray[]= trim($paramString);
         $paramString= '';
         break;
 
         case '(':
-        $paramString.= $string{$pos};
+        $paramString.= $string[$pos];
         $paramString.= $this->parseBracerString($string, $pos).')';
         break;
 
         case '`':
-        $paramString.= $string{$pos};
+        $paramString.= $string[$pos];
         $paramString.= $this->parseQuoteString($string, $pos, '`').'`';
         break;
 
         case '"':
-        $paramString.= $string{$pos};
+        $paramString.= $string[$pos];
         $paramString.= $this->parseQuoteString($string, $pos, '"').'"';
         break;
 
         default:
-        $paramString.= $string{$pos};
+        $paramString.= $string[$pos];
       }
       $pos++;
     }

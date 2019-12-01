@@ -41,9 +41,9 @@ class FreeTdsLookup implements ConnectionLookup {
     $sections= [];
     while (false !== ($line= $this->conf->readLine())) {
       $line= trim($line);
-      if ('' === $line || ';' === $line{0} || '#' === $line{0}) {
+      if ('' === $line || ';' === $line[0] || '#' === $line[0]) {
         continue;
-      } else if ('[' === $line{0}) {
+      } else if ('[' === $line[0]) {
         $section= strtolower(trim($line, '[]'));
       } else if (false !== ($p= strpos($line, '='))) {
         $key= trim(substr($line, 0, $p));

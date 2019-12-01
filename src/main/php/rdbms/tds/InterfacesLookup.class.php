@@ -33,9 +33,9 @@ class InterfacesLookup implements ConnectionLookup {
     $section= null;
     $sections= [];
     while (false !== ($line= $this->file->readLine())) {
-      if ('' === $line || '#' === $line{0}) {
+      if ('' === $line || '#' === $line[0]) {
         continue;
-      } else if (' ' === $line{0} || "\t" === $line{0}) {
+      } else if (' ' === $line[0] || "\t" === $line[0]) {
         sscanf($line, "%*[ \t]%s %[^\r]", $key, $value);
         $sections[$section][$key]= $value;
       } else {

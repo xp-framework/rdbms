@@ -33,9 +33,9 @@ class SqlIniLookup implements ConnectionLookup {
     $section= null;
     $sections= [];
     while (false !== ($line= $this->ini->readLine())) {
-      if ('' === $line || ';' === $line{0}) {
+      if ('' === $line || ';' === $line[0]) {
         continue;
-      } else if ('[' === $line{0}) {
+      } else if ('[' === $line[0]) {
         $section= strtolower(trim($line, '[]'));
       } else if (false !== ($p= strpos($line, '='))) {
         $key= trim(substr($line, 0, $p));

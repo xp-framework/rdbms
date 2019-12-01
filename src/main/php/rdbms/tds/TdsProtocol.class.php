@@ -1,7 +1,7 @@
 <?php namespace rdbms\tds;
 
-use peer\Socket;
 use peer\ProtocolException;
+use peer\Socket;
 
 /**
  * TDS protocol implementation
@@ -519,10 +519,10 @@ abstract class TdsProtocol {
     $env= $this->stream->read($len);
     $i= 0;
     while ($i < $len) {
-      $type= $env{$i++};
-      $new= substr($env, $i+ 1, $l= ord($env{$i++}));
+      $type= $env[$i++];
+      $new= substr($env, $i+ 1, $l= ord($env[$i++]));
       $i+= $l;
-      $old= substr($env, $i+ 1, $l= ord($env{$i++}));
+      $old= substr($env, $i+ 1, $l= ord($env[$i++]));
       $i+= $l;
       $this->handleEnvChange(ord($type), $old, $new, true);
     }

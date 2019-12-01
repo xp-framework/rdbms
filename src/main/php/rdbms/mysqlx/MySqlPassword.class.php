@@ -22,7 +22,7 @@ abstract class MySqlPassword extends \lang\Enum {
         $add= new \math\BigInt(7);
 
         for ($i= 0, $s= strlen($in); $i < $s; $i++) {
-          $ord= ord($in{$i});
+          $ord= ord($in[$i]);
           if (0x20 === $ord || 0x09 === $ord) continue;
           $value= $nr->bitwiseAnd(63)->add0($add)->multiply0($ord)->add0($nr->multiply0(0x100));
           $nr= $nr->bitwiseXor($value);
