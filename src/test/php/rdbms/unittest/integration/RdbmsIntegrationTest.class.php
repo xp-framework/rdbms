@@ -38,7 +38,7 @@ abstract class RdbmsIntegrationTest extends TestCase {
 
   /** @return void */
   public function tearDown() {
-    $this->conn->close();
+    $this->conn && $this->conn->close();
   }
 
   /**
