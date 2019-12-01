@@ -1,7 +1,7 @@
 <?php namespace rdbms;
 
-use util\Configurable;
 use rdbms\DSN;
+use util\Configurable;
 
 /**
  * ConnectionManager holds connections to databases
@@ -49,15 +49,13 @@ class ConnectionManager implements Configurable {
    * @throws  rdbms.DriverNotSupportedException
    */
   public function configure($properties) {
-    $section= $properties->getFirstSection();
-    if ($section) do {
+    foreach ($properties->sections() as $section) {
       if (false !== ($p= strpos($section, '.'))) {
         $this->queue($properties->readString($section, 'dsn'), substr($section, 0, $p), substr($section, $p+ 1));
       } else {
         $this->queue($properties->readString($section, 'dsn'), $section);
       }
-      
-    } while ($section= $properties->getNextSection());
+    }
 
     return true;
   }
