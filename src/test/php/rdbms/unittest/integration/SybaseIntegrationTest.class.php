@@ -1,9 +1,9 @@
 <?php namespace rdbms\unittest\integration;
 
 use rdbms\SQLStatementFailedException;
+use unittest\PrerequisitesNotMetError;
 use util\Bytes;
 use util\Date;
-use unittest\PrerequisitesNotMetError;
 
 /**
  * Sybase integration test
@@ -155,7 +155,7 @@ class SybaseIntegrationTest extends RdbmsIntegrationTest {
     parent::selectMaxUnsignedBigInt();
   }
 
-  #[@test, @expect(class = 'rdbms.SQLStatementFailedException', withMessage= '/More power/')]
+  #[@test, @expect(['class' => SQLStatementFailedException::class, 'withMessage' => '/More power/'])]
   public function raiseError() {
     $this->db()->query('raiserror 61000 "More power"');
   }

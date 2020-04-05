@@ -19,17 +19,17 @@
  *      return News::getPeer();
  *    }
  *    
- *    #[@finder(kind= ENTITY)]
+ *    #[@finder(['kind' => ENTITY])]
  *    public function byPrimary($pk) {
  *      return new Criteria(array('news_id', $pk, EQUAL));
  *    }
  *    
- *    #[@finder(kind= COLLECTION)]
+ *    #[@finder(['kind' => COLLECTION])]
  *    public function allNews() {
  *      return new Criteria();
  *    }
  *    
- *    #[@finder(kind= COLLECTION)]
+ *    #[@finder(['kind' => COLLECTION])]
  *    public function todaysHelloNews() {
  *      return new Criteria(Restrictions::allOf(
  *        Restrictions::like('title', 'Hello%'),

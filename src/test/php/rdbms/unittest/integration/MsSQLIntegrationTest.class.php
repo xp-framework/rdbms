@@ -1,5 +1,6 @@
 <?php namespace rdbms\unittest\integration;
 
+use rdbms\SQLStatementFailedException;
 use util\Date;
 
 /**
@@ -158,7 +159,7 @@ class MsSQLIntegrationTest extends RdbmsIntegrationTest {
     $this->assertNull($this->db()->query('select cast("" as varbinary) as value')->next('value'));
   }
 
-  #[@test, @expect(class = 'rdbms.SQLStatementFailedException', withMessage= '/More power/')]
+  #[@test, @expect(['class' => SQLStatementFailedException::class, 'withMessage' => '/More power/'])]
   public function raiseError() {
     $this->db()->query('raiserror ("More power", 16, 1)');
   }

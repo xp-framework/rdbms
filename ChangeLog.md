@@ -3,6 +3,11 @@ RDBMS support for the XP Framework: MySQL, Sybase, MSSQL, PostgreSQL, SQLite3, I
 
 ## ?.?.? / ????-??-??
 
+## 12.0.3 / 2020-04-05
+
+* Implemented RFC #335: Remove deprecated key/value pair annotation syntax
+  (@thekid)
+
 ## 12.0.2 / 2019-12-01
 
 * Made compatible with XP 10 - @thekid

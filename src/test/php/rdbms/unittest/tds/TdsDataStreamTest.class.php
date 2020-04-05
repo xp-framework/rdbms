@@ -1,9 +1,11 @@
 <?php namespace rdbms\unittest\tds;
 
 use lang\ClassLoader;
+use lang\IllegalArgumentException;
 use peer\Socket;
 use rdbms\tds\TdsDataStream;
 use rdbms\tds\TdsProtocolException;
+use unittest\TestCase;
 use util\Bytes;
 
 /**
@@ -11,7 +13,7 @@ use util\Bytes;
  *
  * @see   xp://rdbms.tds.TdsDataStream
  */
-class TdsDataStreamTest extends \unittest\TestCase {
+class TdsDataStreamTest extends TestCase {
   protected static $sock;
 
   /**
@@ -19,7 +21,7 @@ class TdsDataStreamTest extends \unittest\TestCase {
    */
   #[@beforeClass]
   public static function mockSocket() {
-    self::$sock= ClassLoader::defineClass('rdbms.unittest.tds.MockTdsSocket', 'peer.Socket', [], '{
+    self::$sock= ClassLoader::defineClass('rdbms.unittest.tds.MockTdsSocket', Socket::class, [], '{
       public $bytes;
       protected $offset= 0;
       
@@ -190,7 +192,7 @@ class TdsDataStreamTest extends \unittest\TestCase {
     $this->assertEquals("\xA2", $str->getToken());
   }
 
-  #[@test, @expect(class = 'lang.IllegalArgumentException', withMessage= '/must be at least 9/')]
+  #[@test, @expect(['class' => IllegalArgumentException::class, 'withMessage' => '/must be at least 9/'])]
   public function illegalPacketSize() {
     $this->newDataStream('', 1);
   }

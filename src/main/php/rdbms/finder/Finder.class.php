@@ -15,12 +15,12 @@ use lang\MethodNotImplementedException;
  *       return Job::getPeer();
  *     }
  *
- *     #[@finder(kind= ENTITY)]
+ *     #[@finder(['kind' => ENTITY])]
  *     public function byPrimary($pk) {
  *       return new Criteria(array('job_id', $pk, EQUAL));
  *     }
  *
- *     #[@finder(kind= COLLECTION)]
+ *     #[@finder(['kind' => COLLECTION])]
  *     public function expiredJobs() {
  *       return new Criteria(array('expire_at', Date::now(), GREATER_EQUAL));
  *     }
