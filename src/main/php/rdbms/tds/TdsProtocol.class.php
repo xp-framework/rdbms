@@ -128,7 +128,7 @@ abstract class TdsProtocol {
     self::$recordsFor[0][self::XT_NVARCHAR]= self::$recordsFor[0][self::XT_VARCHAR];
     self::$recordsFor[0][self::T_INTN]= newinstance('rdbms.tds.TdsRecord', [], '{
       public function unmarshal($stream, $field, $records) {
-        $len= isset($field["len"]) ? $field["len"] : $stream->getByte();
+        $len= $field["len"] ?? $stream->getByte();
         switch ($len) {
           case 1: return $stream->getByte();
           case 2: return $stream->getShort();
@@ -180,7 +180,7 @@ abstract class TdsProtocol {
     }');
     self::$recordsFor[0][self::T_UINTN]= newinstance('rdbms.tds.TdsRecord', [], '{
       public function unmarshal($stream, $field, $records) {
-        $len= isset($field["len"]) ? $field["len"] : $stream->getByte();
+        $len= $field["len"] ?? $stream->getByte();
         switch ($len) {
           case 2: return $stream->getShort();
           case 4: return $stream->getLong();
@@ -191,7 +191,7 @@ abstract class TdsProtocol {
     }');
     self::$recordsFor[0][self::T_FLTN]= newinstance('rdbms.tds.TdsRecord', [], '{
       public function unmarshal($stream, $field, $records) {
-        $len= isset($field["len"]) ? $field["len"] : $stream->getByte();
+        $len= $field["len"] ?? $stream->getByte();
         switch ($len) {
           case 4: return $this->toFloat($stream->read(4)); break;
           case 8: return $this->toDouble($stream->read(8)); break;
@@ -226,7 +226,7 @@ abstract class TdsProtocol {
     }');
     self::$recordsFor[0][self::T_MONEYN]= newinstance('rdbms.tds.TdsRecord', [], '{
       public function unmarshal($stream, $field, $records) {
-        $len= isset($field["len"]) ? $field["len"] : $stream->getByte();
+        $len= $field["len"] ?? $stream->getByte();
         switch ($len) {
           case 4: return $this->toMoney($stream->getInt32()); break;
           case 8: return $this->toMoney($stream->getInt32(), $stream->getInt32()); break;

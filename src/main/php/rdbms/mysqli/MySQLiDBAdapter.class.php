@@ -102,7 +102,7 @@ class MySQLiDBAdapter extends DBAdapter {
       self::$map[$regs[1]],                                     // type
       false !== strpos($record['Extra'], 'auto_increment'),     // identity
       !(empty($record['Null']) || ('NO' == $record['Null'])),   // nullable
-      (int)(isset($regs[3]) ? $regs[3] : 0),                    // length
+      (int)($regs[3] ?? 0),                                     // length
       0,                                                        // precision
       0                                                         // scale
     );

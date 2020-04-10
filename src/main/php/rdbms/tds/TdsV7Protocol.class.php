@@ -18,7 +18,7 @@ class TdsV7Protocol extends TdsProtocol {
   protected function setupRecords() {
     $records[self::T_NUMERIC]= newinstance('rdbms.tds.TdsRecord', [], '{
       public function unmarshal($stream, $field, $records) {
-        $len= isset($field["len"]) ? $field["len"]- 1 : $stream->getByte()- 1;
+        $len= ($field["len"] ?? $stream->getByte()) - 1;
         if (-1 === $len) return null;
         $pos= $stream->getByte();
         for ($j= 0, $n= 0, $m= $pos ? 1 : -1; $j < $len; $j+= 4, $m= bcmul($m, "4294967296", 0)) {
@@ -55,7 +55,7 @@ class TdsV7Protocol extends TdsProtocol {
     }');
     $records[self::T_UNIQUE]= newinstance('rdbms.tds.TdsRecord', [], '{
       public function unmarshal($stream, $field, $records) {
-        $len= isset($field["len"]) ? $field["len"] : $stream->getByte();
+        $len= $field["len"] ?? $stream->getByte();
         if (0 === $len) return null;
 
         $bytes= $stream->read($len);
@@ -116,7 +116,7 @@ class TdsV7Protocol extends TdsProtocol {
     }');
     self::$recordsFor[0][self::T_DATETIMN]= newinstance('rdbms.tds.TdsRecord', [], '{
       public function unmarshal($stream, $field, $records) {
-        $len= isset($field["len"]) ? $field["len"] : $stream->getByte();
+        $len= $field["len"] ?? $stream->getByte();
         switch ($len) {
           case 4: return $this->toDate($stream->getShort(), $stream->getShort() * 60); break;
           case 8: return $this->toDate($stream->getLong(), $stream->getLong() / 300); break;

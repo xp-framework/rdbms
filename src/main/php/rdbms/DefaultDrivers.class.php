@@ -57,6 +57,6 @@ class DefaultDrivers extends DriverImplementationsProvider {
    * @return  string[] implementations
    */
   public function implementationsFor($driver) {
-    return isset(self::$impl[$driver]) ? self::$impl[$driver] : parent::implementationsFor($driver);
+    return self::$impl[$driver] ?? parent::implementationsFor($driver);
   }
 }

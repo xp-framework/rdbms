@@ -40,8 +40,7 @@ class NamedPipe extends LocalSocket {
       return null;
     } while (0);
 
-    $options= $this->parse($ini);
-    return isset($options['client']['socket']) ? $pipes.$options['client']['socket'] : null;
+    return $this->parse($ini)['client']['socket'] ?? null;
   }
   
   /**
