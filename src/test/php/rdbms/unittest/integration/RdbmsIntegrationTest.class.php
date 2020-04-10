@@ -626,18 +626,17 @@ abstract class RdbmsIntegrationTest extends TestCase {
 
   #[@test]
   public function observe() {
-    $observer= newinstance(Observer::class, [], [
-      'observations' => [],
-      'numberOfObservations' => function() {
-        return sizeof($this->observations);
-      },
-      'observationAt' => function($i) {
-        return $this->observations[$i]['arg'];
-      },
-      'update' => function($obs, $arg= null) {
+    $observer= new class() implements Observer {
+      public $observations= [];
+
+      public function numberOfObservations() { return sizeof($this->observations); }
+
+      public function observationAt($i) { return $this->observations[$i]['arg']; }
+
+      public function update($obs, $arg= null) {
         $this->observations[]= ['observable' => $obs, 'arg' => $arg];
       }
-    ]);
+    };
     
     $db= $this->db();
     $db->addObserver($observer);

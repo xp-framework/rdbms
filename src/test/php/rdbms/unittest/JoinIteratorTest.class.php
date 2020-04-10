@@ -1,12 +1,12 @@
 <?php namespace rdbms\unittest;
  
-use rdbms\{CachedResults, Criteria, DSN};
 use rdbms\join\{JoinIterator, JoinProcessor};
 use rdbms\mysql\MySQLConnection;
 use rdbms\unittest\dataset\{Job, Person};
 use rdbms\unittest\mock\MockResultSet;
+use rdbms\{CachedResults, ConnectionManager, Criteria, DSN};
 use unittest\TestCase;
-use util\NoSuchElementException;
+use util\{Date, NoSuchElementException};
 
 /**
  * Test JoinProcessor class
@@ -19,12 +19,9 @@ use util\NoSuchElementException;
  */
 class JoinIteratorTest extends TestCase {
   
-  /**
-   * Setup test
-   */
   #[@beforeClass]
   public static function registerConnection() {
-    \rdbms\ConnectionManager::getInstance()->register(new MySQLConnection(new DSN('mysql://localhost:3306/')), 'jobs');
+    ConnectionManager::getInstance()->register(new MySQLConnection(new DSN('mysql://localhost:3306/')), 'jobs');
   }
   
   #[@test, @expect(NoSuchElementException::class)]
@@ -44,7 +41,7 @@ class JoinIteratorTest extends TestCase {
         [
           JoinProcessor::FIRST.'_job_id'        => '11',
           JoinProcessor::FIRST.'_title'         => 'clean toilette',
-          JoinProcessor::FIRST.'_valid_from'    => new \util\Date(),
+          JoinProcessor::FIRST.'_valid_from'    => new Date(),
           JoinProcessor::FIRST.'_expire_at'     => '',
           't1_person_id'     => '11',
           't1_name'          => 'Schultz',
@@ -54,7 +51,7 @@ class JoinIteratorTest extends TestCase {
         [
           JoinProcessor::FIRST.'_job_id'        => '11',
           JoinProcessor::FIRST.'_title'         => 'clean toilette',
-          JoinProcessor::FIRST.'_valid_from'    => new \util\Date(),
+          JoinProcessor::FIRST.'_valid_from'    => new Date(),
           JoinProcessor::FIRST.'_expire_at'     => '',
           't1_person_id'     => '12',
           't1_name'          => 'Friebe',
@@ -76,25 +73,25 @@ class JoinIteratorTest extends TestCase {
         [
           JoinProcessor::FIRST.'_job_id'        => '11',
           JoinProcessor::FIRST.'_title'         => 'clean toilette',
-          JoinProcessor::FIRST.'_valid_from'    => new \util\Date(),
+          JoinProcessor::FIRST.'_valid_from'    => new Date(),
           JoinProcessor::FIRST.'_expire_at'     => '',
         ],
         [
           JoinProcessor::FIRST.'_job_id'        => '11',
           JoinProcessor::FIRST.'_title'         => 'clean toilette',
-          JoinProcessor::FIRST.'_valid_from'    => new \util\Date(),
+          JoinProcessor::FIRST.'_valid_from'    => new Date(),
           JoinProcessor::FIRST.'_expire_at'     => '',
         ],
         [
           JoinProcessor::FIRST.'_job_id'        => '12',
           JoinProcessor::FIRST.'_title'         => 'second job',
-          JoinProcessor::FIRST.'_valid_from'    => new \util\Date(),
+          JoinProcessor::FIRST.'_valid_from'    => new Date(),
           JoinProcessor::FIRST.'_expire_at'     => '',
         ],
         [
           JoinProcessor::FIRST.'_job_id'        => '13',
           JoinProcessor::FIRST.'_title'         => 'third job',
-          JoinProcessor::FIRST.'_valid_from'    => new \util\Date(),
+          JoinProcessor::FIRST.'_valid_from'    => new Date(),
           JoinProcessor::FIRST.'_expire_at'     => '',
         ],
       ]
@@ -117,7 +114,7 @@ class JoinIteratorTest extends TestCase {
         [
           JoinProcessor::FIRST.'_job_id'        => '11',
           JoinProcessor::FIRST.'_title'         => 'clean toilette',
-          JoinProcessor::FIRST.'_valid_from'    => new \util\Date(),
+          JoinProcessor::FIRST.'_valid_from'    => new Date(),
           JoinProcessor::FIRST.'_expire_at'     => '',
           JoinProcessor::pathToKey(['PersonJob']).'_person_id'     => '11',
           JoinProcessor::pathToKey(['PersonJob']).'_name'          => 'Schultz',
@@ -127,7 +124,7 @@ class JoinIteratorTest extends TestCase {
         [
           JoinProcessor::FIRST.'_job_id'        => '11',
           JoinProcessor::FIRST.'_title'         => 'clean toilette',
-          JoinProcessor::FIRST.'_valid_from'    => new \util\Date(),
+          JoinProcessor::FIRST.'_valid_from'    => new Date(),
           JoinProcessor::FIRST.'_expire_at'     => '',
           JoinProcessor::pathToKey(['PersonJob']).'_person_id'     => '12',
           JoinProcessor::pathToKey(['PersonJob']).'_name'          => 'Müller',
@@ -137,7 +134,7 @@ class JoinIteratorTest extends TestCase {
         [
           JoinProcessor::FIRST.'_job_id'        => '12',
           JoinProcessor::FIRST.'_title'         => 'second job',
-          JoinProcessor::FIRST.'_valid_from'    => new \util\Date(),
+          JoinProcessor::FIRST.'_valid_from'    => new Date(),
           JoinProcessor::FIRST.'_expire_at'     => '',
           JoinProcessor::pathToKey(['PersonJob']).'_person_id'     => '11',
           JoinProcessor::pathToKey(['PersonJob']).'_name'          => 'Schultz',
@@ -147,7 +144,7 @@ class JoinIteratorTest extends TestCase {
         [
           JoinProcessor::FIRST.'_job_id'        => '13',
           JoinProcessor::FIRST.'_title'         => 'third job',
-          JoinProcessor::FIRST.'_valid_from'    => new \util\Date(),
+          JoinProcessor::FIRST.'_valid_from'    => new Date(),
           JoinProcessor::FIRST.'_expire_at'     => '',
           JoinProcessor::pathToKey(['PersonJob']).'_person_id'     => null,
           JoinProcessor::pathToKey(['PersonJob']).'_name'          => null,

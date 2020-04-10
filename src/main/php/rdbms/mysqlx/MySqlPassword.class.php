@@ -1,5 +1,8 @@
 <?php namespace rdbms\mysqlx;
 
+use lang\Enum;
+use math\{BigInt, BigFloat};
+
 /**
  * MySQL password functions
  *
@@ -7,19 +10,17 @@
  * @see   http://forge.mysql.com/wiki/MySQL_Internals_ClientServer_Protocol
  * @test  xp://net.xp_framework.unittest.rdbms.mysql.MySqlPasswordTest
  */
-abstract class MySqlPassword extends \lang\Enum {
-  public static 
-    $PROTOCOL_40= null,
-    $PROTOCOL_41= null;
+abstract class MySqlPassword extends Enum {
+  public static $PROTOCOL_40, $PROTOCOL_41;
   
   static function __static() {
-    self::$PROTOCOL_40= newinstance(__CLASS__, [0, 'PROTOCOL_40'], '{
+    self::$PROTOCOL_40= new class(0, 'PROTOCOL_40') extends MySqlPassword {
       static function __static() { }
       
       public static function hash($in) {
-        $nr= new \math\BigInt(1345345333);
-        $nr2= new \math\BigInt(0x12345671);
-        $add= new \math\BigInt(7);
+        $nr= new BigInt(1345345333);
+        $nr2= new BigInt(0x12345671);
+        $add= new BigInt(7);
 
         for ($i= 0, $s= strlen($in); $i < $s; $i++) {
           $ord= ord($in[$i]);
@@ -29,11 +30,11 @@ abstract class MySqlPassword extends \lang\Enum {
           $nr2= $nr2->multiply0(0x100)->bitwiseXor($nr)->add0($nr2);
           $add= $add->add0($ord);
         }
-        return array($nr->bitwiseAnd(0x7FFFFFFF), $nr2->bitwiseAnd(0x7FFFFFFF));
+        return [$nr->bitwiseAnd(0x7FFFFFFF), $nr2->bitwiseAnd(0x7FFFFFFF)];
       }
       
       public function scramble($password, $message) {
-        if ("" === $password || null === $password) return "";
+        if ('' === $password || null === $password) return '';
 
         $hp= self::hash($password);
         $hm= self::hash($message);
@@ -41,30 +42,31 @@ abstract class MySqlPassword extends \lang\Enum {
 
         $seed1= $hp[0]->bitwiseXor($hm[0])->modulo($SEED_MAX);
         $seed2= $hp[1]->bitwiseXor($hm[1])->modulo($SEED_MAX);
-        $to= "";
+        $to= '';
         for ($i= 0, $s= strlen($message); $i < $s; $i++) {
           $seed1= $seed1->multiply0(3)->add0($seed2)->modulo($SEED_MAX);
           $seed2= $seed1->add0($seed2)->add0(33)->modulo($SEED_MAX);
-          $div= new \math\BigFloat(bcdiv((string)$seed1, $SEED_MAX, 14));  // Explicitely pass precision, HHVM bug
+          $div= new BigFloat(bcdiv((string)$seed1, $SEED_MAX));
           $to.= chr($div->multiply(31)->intValue() + 64);
         }
         $seed1= $seed1->multiply0(3)->add0($seed2)->modulo($SEED_MAX);
         $seed2= $seed1->add0($seed2)->add0(33)->modulo($SEED_MAX);
 
-        $div= new \math\BigFloat(bcdiv((string)$seed1, $SEED_MAX, 14));    // Explicitely pass precision, HHVM bug
+        $div= new BigFloat(bcdiv((string)$seed1, $SEED_MAX));
         $result= $to ^ str_repeat(chr($div->multiply(31)->intValue()), strlen($message));
         return $result;
       }
-    }');
-    self::$PROTOCOL_41= newinstance(__CLASS__, [1, 'PROTOCOL_41'], '{
+    };
+    self::$PROTOCOL_41= new class(1, 'PROTOCOL_41') extends MySqlPassword {
       static function __static() { }
+
       public function scramble($password, $message) {
-        if ("" === $password || null === $password) return "";
+        if ('' === $password || null === $password) return '';
 
         $stage1= sha1($password, true);
         return sha1($message.sha1($stage1, true), true) ^ $stage1;
       }
-    }');
+    };
   }
   
   /**
