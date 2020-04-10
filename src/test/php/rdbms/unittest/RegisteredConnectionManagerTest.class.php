@@ -1,7 +1,6 @@
 <?php namespace rdbms\unittest;
 
-use rdbms\DriverManager;
-use rdbms\ConnectionManager;
+use rdbms\{ConnectionManager, DriverManager};
 
 /**
  * Tests for connection managers with connections programmatically

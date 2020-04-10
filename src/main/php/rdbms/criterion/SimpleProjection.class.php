@@ -1,7 +1,6 @@
 <?php namespace rdbms\criterion;
 
-use rdbms\SQLRenderable;
-use rdbms\DBConnection;
+use rdbms\{DBConnection, SQLRenderable};
 
 /**
  * Belongs to the Criterion projection API simple base class.

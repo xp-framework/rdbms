@@ -1,9 +1,7 @@
 <?php namespace rdbms\mysqlx;
 
-use peer\ProtocolException;
-use peer\Socket;
-use util\Date;
-use util\Objects;
+use peer\{ProtocolException, Socket};
+use util\{Date, Objects};
 
 /**
  * MySQL protocol implementation

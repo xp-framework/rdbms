@@ -3,17 +3,7 @@
 use io\IOException;
 use lang\XPClass;
 use peer\Socket;
-use rdbms\DBConnection;
-use rdbms\DBEvent;
-use rdbms\DriverManager;
-use rdbms\QuerySucceeded;
-use rdbms\SQLConnectException;
-use rdbms\SQLConnectionClosedException;
-use rdbms\SQLDeadlockException;
-use rdbms\SQLStateException;
-use rdbms\SQLStatementFailedException;
-use rdbms\StatementFormatter;
-use rdbms\Transaction;
+use rdbms\{DBConnection, DBEvent, DriverManager, QuerySucceeded, SQLConnectException, SQLConnectionClosedException, SQLDeadlockException, SQLStateException, SQLStatementFailedException, StatementFormatter, Transaction};
 use rdbms\mysql\MysqlDialect;
 
 /**

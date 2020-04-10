@@ -1,7 +1,6 @@
 <?php namespace rdbms\mssql;
 
-use rdbms\DBAdapter;
-use rdbms\DBTableAttribute;
+use rdbms\{DBAdapter, DBTableAttribute};
 
 
 /**

@@ -2,8 +2,7 @@
 
 use lang\ClassLoader;
 use rdbms\SQLException;
-use rdbms\tds\TdsBufferedResultSet;
-use rdbms\tds\TdsProtocol;
+use rdbms\tds\{TdsBufferedResultSet, TdsProtocol};
 use unittest\TestCase;
 
 /**

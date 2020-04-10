@@ -1,8 +1,7 @@
 <?php namespace rdbms;
  
 use lang\XPClass;
-use util\Observable;
-use util\TimeZone;
+use util\{Observable, TimeZone};
 
 /**
  * Provide an interface from which all other database connection

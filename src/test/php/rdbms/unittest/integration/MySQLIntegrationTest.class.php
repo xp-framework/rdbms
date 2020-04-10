@@ -1,8 +1,6 @@
 <?php namespace rdbms\unittest\integration;
 
-use rdbms\SQLConnectionClosedException;
-use rdbms\SQLException;
-use rdbms\Transaction;
+use rdbms\{SQLConnectionClosedException, SQLException, Transaction};
 
 class MySQLIntegrationTest extends RdbmsIntegrationTest {
 

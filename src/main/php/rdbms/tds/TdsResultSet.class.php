@@ -1,7 +1,7 @@
 <?php namespace rdbms\tds;
 
-use rdbms\SQLException;
 use peer\ProtocolException;
+use rdbms\SQLException;
 
 /**
  * TDS result set

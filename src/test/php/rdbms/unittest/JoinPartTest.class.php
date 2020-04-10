@@ -1,15 +1,10 @@
 <?php namespace rdbms\unittest;
  
-use rdbms\join\JoinTable;
-use rdbms\join\JoinRelation;
-use rdbms\DSN;
-use rdbms\Criteria;
+use rdbms\{Criteria, DSN};
+use rdbms\join\{JoinPart, JoinRelation, JoinTable};
 use rdbms\mysql\MySQLConnection;
+use rdbms\unittest\dataset\{Department, Job, Person};
 use unittest\TestCase;
-use rdbms\join\JoinPart;
-use rdbms\unittest\dataset\Job;
-use rdbms\unittest\dataset\Person;
-use rdbms\unittest\dataset\Department;
 
 /**
  * Test JoinPart class

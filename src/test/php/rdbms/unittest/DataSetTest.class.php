@@ -1,18 +1,11 @@
 <?php namespace rdbms\unittest;
 
 use lang\IllegalArgumentException;
-use rdbms\Column;
-use rdbms\DriverManager;
-use rdbms\Peer;
-use rdbms\ResultIterator;
-use rdbms\SQLException;
-use rdbms\Statement;
+use rdbms\{Column, DriverManager, Peer, ResultIterator, SQLException, Statement};
 use rdbms\unittest\dataset\Job;
 use rdbms\unittest\mock\MockResultSet;
 use unittest\TestCase;
-use util\Date;
-use util\DateUtil;
-use util\NoSuchElementException;
+use util\{Date, DateUtil, NoSuchElementException};
 use util\log\BoundLogObserver;
 
 /**

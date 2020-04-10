@@ -1,7 +1,6 @@
 <?php namespace rdbms\tds;
 
-use peer\ProtocolException;
-use peer\Socket;
+use peer\{ProtocolException, Socket};
 use util\Objects;
 
 /**

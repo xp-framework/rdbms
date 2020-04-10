@@ -1,7 +1,7 @@
 <?php namespace rdbms\tds;
 
-use lang\IllegalArgumentException;
 use io\ByteOrder;
+use lang\IllegalArgumentException;
 
 /**
  * A TDS data stream

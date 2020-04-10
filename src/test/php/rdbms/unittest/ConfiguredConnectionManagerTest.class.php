@@ -1,8 +1,8 @@
 <?php namespace rdbms\unittest;
 
-use util\Properties;
-use rdbms\ConnectionManager;
 use io\streams\MemoryInputStream;
+use rdbms\ConnectionManager;
+use util\Properties;
 
 /**
  * Tests for configured connection managers

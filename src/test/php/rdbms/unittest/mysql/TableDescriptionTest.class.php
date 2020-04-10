@@ -1,8 +1,7 @@
 <?php namespace rdbms\unittest\mysql;
 
+use rdbms\{DBTableAttribute, FieldType};
 use rdbms\mysql\MySQLDBAdapter;
-use rdbms\DBTableAttribute;
-use rdbms\FieldType;
 
 /**
  * TestCase

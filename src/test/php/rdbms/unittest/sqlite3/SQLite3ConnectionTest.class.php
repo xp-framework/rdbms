@@ -1,10 +1,8 @@
 <?php namespace rdbms\unittest\sqlite3;
 
 use lang\IllegalStateException;
-use rdbms\SQLStateException;
-use rdbms\SQLStatementFailedException;
-use rdbms\sqlite3\SQLite3Connection;
-use rdbms\sqlite3\SQLite3ResultSet;
+use rdbms\{SQLStateException, SQLStatementFailedException};
+use rdbms\sqlite3\{SQLite3Connection, SQLite3ResultSet};
 
 /**
  * Testcase for rdbms.sqlite3.SQLite3Connection

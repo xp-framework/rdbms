@@ -1,9 +1,8 @@
 <?php namespace rdbms\unittest;
  
-use rdbms\SQLStateException;
-use rdbms\DBConnection;
-use util\Date;
+use rdbms\{DBConnection, SQLStateException};
 use unittest\actions\RuntimeVersion;
+use util\Date;
 
 /**
  * Test rdbms tokenizer

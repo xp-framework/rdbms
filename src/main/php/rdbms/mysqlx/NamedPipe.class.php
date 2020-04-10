@@ -1,7 +1,6 @@
 <?php namespace rdbms\mysqlx;
 
-use io\File;
-use io\IOException;
+use io\{File, IOException};
 use peer\Socket;
 
 /**

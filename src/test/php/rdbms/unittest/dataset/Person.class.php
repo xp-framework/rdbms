@@ -1,8 +1,7 @@
 <?php namespace rdbms\unittest\dataset;
  
-use rdbms\DataSet;
+use rdbms\{CachedResults, DataSet};
 use rdbms\join\JoinExtractable;
-use rdbms\CachedResults;
 
 /**
  * Class wrapper for table person, database JOBS

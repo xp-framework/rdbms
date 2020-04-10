@@ -2,8 +2,7 @@
 
 use rdbms\SQLConnectException;
 use rdbms\sqlite3\SQLite3Connection;
-use unittest\actions\ExtensionAvailable;
-use unittest\actions\VerifyThat;
+use unittest\actions\{ExtensionAvailable, VerifyThat};
 
 /**
  * Testcase for rdbms.sqlite3.SQLite3Connection

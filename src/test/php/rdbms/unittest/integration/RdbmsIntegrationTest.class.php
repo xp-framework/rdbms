@@ -1,20 +1,9 @@
 <?php namespace rdbms\unittest\integration;
 
-use lang\MethodNotImplementedException;
-use lang\Throwable;
-use rdbms\DBEvent;
-use rdbms\DSN;
-use rdbms\DriverManager;
-use rdbms\ResultSet;
-use rdbms\SQLConnectException;
-use rdbms\SQLException;
-use rdbms\SQLStateException;
-use rdbms\SQLStatementFailedException;
-use unittest\PrerequisitesNotMetError;
-use unittest\TestCase;
-use util\Bytes;
-use util\Date;
-use util\Observer;
+use lang\{MethodNotImplementedException, Throwable};
+use rdbms\{DBEvent, DSN, DriverManager, ResultSet, SQLConnectException, SQLException, SQLStateException, SQLStatementFailedException};
+use unittest\{PrerequisitesNotMetError, TestCase};
+use util\{Bytes, Date, Observer};
 
 /**
  * Base class for all RDBMS integration tests

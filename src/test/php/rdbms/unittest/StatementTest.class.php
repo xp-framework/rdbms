@@ -1,9 +1,8 @@
 <?php namespace rdbms\unittest;
  
-use unittest\TestCase;
-use rdbms\Statement;
-use rdbms\DriverManager;
+use rdbms\{DriverManager, Statement};
 use rdbms\unittest\dataset\Job;
+use unittest\TestCase;
 
 /**
  * Test Statement class

@@ -1,16 +1,7 @@
 <?php namespace rdbms\pgsql;
 
 use lang\XPClass;
-use rdbms\DBConnection;
-use rdbms\DBEvent;
-use rdbms\DriverManager;
-use rdbms\QuerySucceeded;
-use rdbms\SQLConnectException;
-use rdbms\SQLConnectionClosedException;
-use rdbms\SQLDeadlockException;
-use rdbms\SQLStatementFailedException;
-use rdbms\StatementFormatter;
-use rdbms\Transaction;
+use rdbms\{DBConnection, DBEvent, DriverManager, QuerySucceeded, SQLConnectException, SQLConnectionClosedException, SQLDeadlockException, SQLStatementFailedException, StatementFormatter, Transaction};
 
 /**
  * Connection to PostgreSQL Databases via ext/pgsql

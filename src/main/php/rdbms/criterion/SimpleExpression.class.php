@@ -1,8 +1,6 @@
 <?php namespace rdbms\criterion;
 
-use rdbms\DBConnection;
-use rdbms\Peer;
-use rdbms\SQLFragment;
+use rdbms\{DBConnection, Peer, SQLFragment};
 use util\Objects;
 
 /**

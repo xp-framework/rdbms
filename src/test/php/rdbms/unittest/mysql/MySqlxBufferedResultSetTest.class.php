@@ -2,8 +2,7 @@
 
 use lang\ClassLoader;
 use rdbms\SQLException;
-use rdbms\mysqlx\MySqlxBufferedResultSet;
-use rdbms\mysqlx\MySqlxProtocol;
+use rdbms\mysqlx\{MySqlxBufferedResultSet, MySqlxProtocol};
 use unittest\TestCase;
 
 /**

@@ -1,10 +1,7 @@
 <?php namespace rdbms\unittest;
 
-use rdbms\DBConnection;
-use rdbms\ConnectionNotRegisteredException;
-use rdbms\DriverNotSupportedException;
+use rdbms\{ConnectionManager, ConnectionNotRegisteredException, DBConnection, DriverNotSupportedException};
 use unittest\TestCase;
-use rdbms\ConnectionManager;
 
 /**
  * ConnectionManager testcase

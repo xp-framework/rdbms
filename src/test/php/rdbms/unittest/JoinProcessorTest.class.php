@@ -1,12 +1,11 @@
 <?php namespace rdbms\unittest;
  
 use lang\IllegalArgumentException;
-use rdbms\Criteria;
-use rdbms\DriverManager;
-use unittest\TestCase;
+use rdbms\{Criteria, DriverManager};
 use rdbms\join\JoinProcessor;
 use rdbms\mysql\MySQLConnection;
 use rdbms\unittest\dataset\Job;
+use unittest\TestCase;
 
 /**
  * Test JoinProcessor class

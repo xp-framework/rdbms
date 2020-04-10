@@ -1,15 +1,14 @@
 <?php namespace rdbms\unittest;
 
-use unittest\TestCase;
-use util\Date;
-use rdbms\sybase\SybaseConnection;
+use rdbms\{Criteria, SQLFunctions};
+use rdbms\criterion\Restrictions;
 use rdbms\mysql\MySQLConnection;
 use rdbms\pgsql\PostgreSQLConnection;
 use rdbms\sqlite3\SQLite3Connection;
-use rdbms\criterion\Restrictions;
-use rdbms\Criteria;
-use rdbms\SQLFunctions;
+use rdbms\sybase\SybaseConnection;
 use rdbms\unittest\dataset\Job;
+use unittest\TestCase;
+use util\Date;
 
 /**
  * TestCase

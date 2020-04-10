@@ -1,7 +1,6 @@
 <?php namespace rdbms\unittest;
 
-use rdbms\QuerySucceeded;
-use rdbms\SQLException;
+use rdbms\{QuerySucceeded, SQLException};
 
 class QuerySucceededTest extends \unittest\TestCase {
 

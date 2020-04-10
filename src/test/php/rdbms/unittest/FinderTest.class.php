@@ -1,18 +1,10 @@
 <?php namespace rdbms\unittest;
 
-use lang\IllegalArgumentException;
-use lang\MethodNotImplementedException;
-use rdbms\DriverManager;
-use rdbms\Peer;
-use rdbms\SQLExpression;
-use rdbms\finder\FinderException;
-use rdbms\finder\FinderMethod;
-use rdbms\finder\GenericFinder;
-use rdbms\finder\NoSuchEntityException;
-use rdbms\unittest\dataset\Job;
-use rdbms\unittest\dataset\JobFinder;
-use rdbms\unittest\mock\MockResultSet;
-use rdbms\unittest\mock\RegisterMockConnection;
+use lang\{IllegalArgumentException, MethodNotImplementedException};
+use rdbms\{DriverManager, Peer, SQLExpression};
+use rdbms\finder\{FinderException, FinderMethod, GenericFinder, NoSuchEntityException};
+use rdbms\unittest\dataset\{Job, JobFinder};
+use rdbms\unittest\mock\{MockResultSet, RegisterMockConnection};
 use unittest\TestCase;
 
 /**

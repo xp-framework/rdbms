@@ -1,12 +1,10 @@
 <?php namespace rdbms\unittest;
  
 use lang\IllegalArgumentException;
-use rdbms\SQLStateException;
-use rdbms\Criteria;
+use rdbms\{Criteria, DriverManager, SQLStateException};
 use rdbms\criterion\Restrictions;
-use rdbms\DriverManager;
-use unittest\TestCase;
 use rdbms\unittest\dataset\Job;
+use unittest\TestCase;
 
 /**
  * Test criteria class

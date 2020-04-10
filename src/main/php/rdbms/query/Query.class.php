@@ -1,8 +1,6 @@
 <?php namespace rdbms\query;
-use lang\IllegalArgumentException;
-use lang\IllegalStateException;
-use rdbms\Peer;
-use rdbms\Criteria;
+use lang\{IllegalArgumentException, IllegalStateException};
+use rdbms\{Criteria, Peer};
 
 
 /**

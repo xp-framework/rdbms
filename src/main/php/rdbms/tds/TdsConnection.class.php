@@ -2,16 +2,7 @@
 
 use io\IOException;
 use peer\Socket;
-use rdbms\DBConnection;
-use rdbms\DBEvent;
-use rdbms\QuerySucceeded;
-use rdbms\SQLConnectException;
-use rdbms\SQLConnectionClosedException;
-use rdbms\SQLDeadlockException;
-use rdbms\SQLStateException;
-use rdbms\SQLStatementFailedException;
-use rdbms\StatementFormatter;
-use rdbms\Transaction;
+use rdbms\{DBConnection, DBEvent, QuerySucceeded, SQLConnectException, SQLConnectionClosedException, SQLDeadlockException, SQLStateException, SQLStatementFailedException, StatementFormatter, Transaction};
 use rdbms\mssql\MsSQLDialect;
 
 /**

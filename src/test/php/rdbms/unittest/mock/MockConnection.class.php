@@ -1,12 +1,6 @@
 <?php namespace rdbms\unittest\mock;
 
-use rdbms\DBConnection;
-use rdbms\DBEvent;
-use rdbms\SQLConnectException;
-use rdbms\SQLConnectionClosedException;
-use rdbms\SQLStatementFailedException;
-use rdbms\StatementFormatter;
-use rdbms\Transaction;
+use rdbms\{DBConnection, DBEvent, SQLConnectException, SQLConnectionClosedException, SQLStatementFailedException, StatementFormatter, Transaction};
 
 /**
  * Mock database connection.

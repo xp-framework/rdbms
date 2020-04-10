@@ -1,14 +1,10 @@
 <?php namespace rdbms\unittest;
  
+use rdbms\Criteria;
+use rdbms\query\{DeleteQuery, SelectQuery, SetOperation, UpdateQuery};
+use rdbms\unittest\dataset\{Job, Person};
 use rdbms\unittest\mock\MockConnection;
 use unittest\TestCase;
-use rdbms\query\SelectQuery;
-use rdbms\query\UpdateQuery;
-use rdbms\query\DeleteQuery;
-use rdbms\query\SetOperation;
-use rdbms\Criteria;
-use rdbms\unittest\dataset\Job;
-use rdbms\unittest\dataset\Person;
 
 /**
  * Test query class

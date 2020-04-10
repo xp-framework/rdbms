@@ -1,16 +1,12 @@
 <?php namespace rdbms\unittest;
  
-use rdbms\CachedResults;
-use rdbms\unittest\dataset\Person;
-use util\NoSuchElementException;
-use rdbms\DSN;
-use rdbms\Criteria;
+use rdbms\{CachedResults, Criteria, DSN};
+use rdbms\join\{JoinIterator, JoinProcessor};
 use rdbms\mysql\MySQLConnection;
-use unittest\TestCase;
-use rdbms\join\JoinProcessor;
-use rdbms\join\JoinIterator;
-use rdbms\unittest\dataset\Job;
+use rdbms\unittest\dataset\{Job, Person};
 use rdbms\unittest\mock\MockResultSet;
+use unittest\TestCase;
+use util\NoSuchElementException;
 
 /**
  * Test JoinProcessor class
@@ -134,7 +130,7 @@ class JoinIteratorTest extends TestCase {
           JoinProcessor::FIRST.'_valid_from'    => new \util\Date(),
           JoinProcessor::FIRST.'_expire_at'     => '',
           JoinProcessor::pathToKey(['PersonJob']).'_person_id'     => '12',
-          JoinProcessor::pathToKey(['PersonJob']).'_name'          => 'Müller',
+          JoinProcessor::pathToKey(['PersonJob']).'_name'          => 'MÃ¼ller',
           JoinProcessor::pathToKey(['PersonJob']).'_job_id'        => '11',
           JoinProcessor::pathToKey(['PersonJob']).'_department_id' => '31',
         ],

@@ -1,11 +1,9 @@
 <?php namespace rdbms\unittest;
 
-use unittest\TestCase;
-use rdbms\DBTable;
-use rdbms\DriverManager;
-use xml\XPath;
+use rdbms\{DBIndex, DBTable, DriverManager};
 use rdbms\util\DBXmlGenerator;
-use rdbms\DBIndex;
+use unittest\TestCase;
+use xml\XPath;
 
 /**
  * TestCase

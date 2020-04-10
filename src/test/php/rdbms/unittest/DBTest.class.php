@@ -1,11 +1,6 @@
 <?php namespace rdbms\unittest;
  
-use rdbms\DriverManager;
-use rdbms\ResultSet;
-use rdbms\SQLConnectException;
-use rdbms\SQLConnectionClosedException;
-use rdbms\SQLStateException;
-use rdbms\SQLStatementFailedException;
+use rdbms\{DriverManager, ResultSet, SQLConnectException, SQLConnectionClosedException, SQLStateException, SQLStatementFailedException};
 use rdbms\unittest\mock\MockResultSet;
 use unittest\TestCase;
 

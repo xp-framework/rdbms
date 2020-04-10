@@ -1,7 +1,6 @@
 <?php namespace rdbms\unittest;
 
-use rdbms\DSN;
-use rdbms\ConnectionManager;
+use rdbms\{ConnectionManager, DSN};
 
 /**
  * Tests for connection managers with connections programmatically

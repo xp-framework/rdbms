@@ -1,7 +1,7 @@
 <?php namespace rdbms;
 
-use rdbms\join\JoinProcessor;
 use rdbms\criterion\Restrictions;
+use rdbms\join\JoinProcessor;
 
 /**
  * Represents a table column

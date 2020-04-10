@@ -1,7 +1,6 @@
 <?php namespace rdbms\sqlite3;
 
-use rdbms\ResultSet;
-use rdbms\SQLException;
+use rdbms\{ResultSet, SQLException};
 
 /**
  * Result set

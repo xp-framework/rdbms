@@ -1,7 +1,6 @@
 <?php namespace rdbms\mysqli;
 
-use rdbms\ResultSet;
-use rdbms\SQLException;
+use rdbms\{ResultSet, SQLException};
 use util\TimeZone;
 
 /**

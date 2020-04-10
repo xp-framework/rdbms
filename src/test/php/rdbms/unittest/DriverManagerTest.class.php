@@ -1,9 +1,7 @@
 <?php namespace rdbms\unittest;
 
-use rdbms\DriverNotSupportedException;
-use lang\FormatException;
-use lang\IllegalArgumentException;
-use rdbms\DriverManager;
+use lang\{FormatException, IllegalArgumentException};
+use rdbms\{DriverManager, DriverNotSupportedException};
 
 /**
  * TestCase

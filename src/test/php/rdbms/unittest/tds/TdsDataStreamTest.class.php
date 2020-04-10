@@ -1,10 +1,8 @@
 <?php namespace rdbms\unittest\tds;
 
-use lang\ClassLoader;
-use lang\IllegalArgumentException;
+use lang\{ClassLoader, IllegalArgumentException};
 use peer\Socket;
-use rdbms\tds\TdsDataStream;
-use rdbms\tds\TdsProtocolException;
+use rdbms\tds\{TdsDataStream, TdsProtocolException};
 use unittest\TestCase;
 use util\Bytes;
 

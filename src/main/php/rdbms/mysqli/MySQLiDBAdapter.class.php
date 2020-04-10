@@ -1,7 +1,6 @@
 <?php namespace rdbms\mysqli;
 
-use rdbms\DBAdapter;
-use rdbms\DBTableAttribute;
+use rdbms\{DBAdapter, DBTableAttribute};
 
 /**
  * Adapter for MySQL

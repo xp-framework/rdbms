@@ -1,9 +1,6 @@
 <?php namespace rdbms;
 
-use rdbms\criterion\Criterion;
-use rdbms\criterion\ProjectionList;
-use rdbms\criterion\Projections;
-use rdbms\criterion\SimpleExpression;
+use rdbms\criterion\{Criterion, ProjectionList, Projections, SimpleExpression};
 use util\Objects;
 
 define('ASCENDING',       'asc');

@@ -2,8 +2,7 @@
 
 use rdbms\SQLStatementFailedException;
 use unittest\PrerequisitesNotMetError;
-use util\Bytes;
-use util\Date;
+use util\{Bytes, Date};
 
 /**
  * Sybase integration test

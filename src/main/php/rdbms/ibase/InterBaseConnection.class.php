@@ -1,9 +1,6 @@
 <?php namespace rdbms\ibase;
 
-use rdbms\DBConnection;
-use rdbms\QuerySucceeded;
-use rdbms\StatementFormatter;
-use rdbms\Transaction;
+use rdbms\{DBConnection, QuerySucceeded, StatementFormatter, Transaction};
 
 /**
  * Connection to InterBase/FireBird databases using client libraries

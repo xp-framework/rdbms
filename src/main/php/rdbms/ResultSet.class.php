@@ -1,8 +1,7 @@
 <?php namespace rdbms;
 
 use lang\Closeable;
-use util\Objects;
-use util\TimeZone;
+use util\{Objects, TimeZone};
 
 /**
  * Result set as returned from the DBConnection::query method

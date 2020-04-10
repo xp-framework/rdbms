@@ -1,13 +1,10 @@
 <?php namespace rdbms\unittest;
 
 use lang\IllegalArgumentException;
-use rdbms\DBEvent;
-use rdbms\DSN;
-use rdbms\ProfilingObserver;
+use rdbms\{DBEvent, DSN, ProfilingObserver};
 use rdbms\sqlite3\SQLite3Connection;
 use unittest\TestCase;
-use util\log\BufferedAppender;
-use util\log\LogCategory;
+use util\log\{BufferedAppender, LogCategory};
 
 /**
  * Testcase for the profiling observer class

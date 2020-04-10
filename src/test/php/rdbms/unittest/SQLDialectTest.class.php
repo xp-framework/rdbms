@@ -1,15 +1,13 @@
 <?php namespace rdbms\unittest;
 
 use lang\IllegalArgumentException;
-use unittest\TestCase;
-use util\Date;
-use rdbms\SQLFunction;
+use rdbms\{SQLDialect, SQLFunction};
 use rdbms\criterion\Restrictions;
-use rdbms\SQLDialect;
+use rdbms\join\{JoinRelation, JoinTable};
 use rdbms\mysql\MySQLConnection;
 use rdbms\sybase\SybaseConnection;
-use rdbms\join\JoinTable;
-use rdbms\join\JoinRelation;
+use unittest\TestCase;
+use util\Date;
 
 /**
  * TestCase

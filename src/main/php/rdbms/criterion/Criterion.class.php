@@ -1,7 +1,6 @@
 <?php namespace rdbms\criterion;
 
-use rdbms\DBConnection;
-use rdbms\Peer;
+use rdbms\{DBConnection, Peer};
 
 /**
  * Represents a query criterion to be used in a Criteria query

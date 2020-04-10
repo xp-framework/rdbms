@@ -1,18 +1,14 @@
 <?php namespace rdbms\unittest;
 
-use rdbms\DriverManager;
-use rdbms\Record;
-use util\Date;
-use rdbms\sybase\SybaseConnection;
+use rdbms\{Criteria, DriverManager, Record};
+use rdbms\criterion\{Projections, Restrictions};
 use rdbms\mysql\MySQLConnection;
 use rdbms\pgsql\PostgreSQLConnection;
 use rdbms\sqlite3\SQLite3Connection;
-use rdbms\criterion\Restrictions;
-use rdbms\criterion\Projections;
-use rdbms\Criteria;
+use rdbms\sybase\SybaseConnection;
 use rdbms\unittest\dataset\Job;
-use rdbms\unittest\mock\MockResultSet;
-use rdbms\unittest\mock\RegisterMockConnection;
+use rdbms\unittest\mock\{MockResultSet, RegisterMockConnection};
+use util\Date;
 
 /**
  * TestCase

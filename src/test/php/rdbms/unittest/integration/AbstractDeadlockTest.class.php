@@ -1,10 +1,8 @@
 <?php namespace rdbms\unittest\integration;
 
-use lang\Runtime;
-use lang\Throwable;
+use lang\{Runtime, Throwable};
 use rdbms\DriverManager;
-use unittest\PrerequisitesNotMetError;
-use unittest\TestCase;
+use unittest\{PrerequisitesNotMetError, TestCase};
 
 /**
  * Abstract deadlock test

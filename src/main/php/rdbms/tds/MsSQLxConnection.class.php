@@ -1,8 +1,8 @@
 <?php namespace rdbms\tds;
 
-use rdbms\mssql\MsSQLDialect;
-use rdbms\DriverManager;
 use lang\XPClass;
+use rdbms\DriverManager;
+use rdbms\mssql\MsSQLDialect;
 
 /**
  * Connection to MSSQL Databases via TDS 7.0

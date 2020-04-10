@@ -1,7 +1,7 @@
 <?php namespace rdbms\mysqlx;
 
-use peer\BSDSocket;
 use io\File;
+use peer\BSDSocket;
 
 /**
  * Use an AF_UNIX socket. The socket's location is determined in the 

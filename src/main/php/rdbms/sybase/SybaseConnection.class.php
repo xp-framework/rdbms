@@ -1,9 +1,6 @@
 <?php namespace rdbms\sybase;
 
-use rdbms\DBConnection;
-use rdbms\QuerySucceeded;
-use rdbms\StatementFormatter;
-use rdbms\Transaction;
+use rdbms\{DBConnection, QuerySucceeded, StatementFormatter, Transaction};
 
 /**
  * Connection to Sybase databases using client libraries (sybase_ct)

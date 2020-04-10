@@ -1,7 +1,6 @@
 <?php namespace rdbms\sybase;
 
-use rdbms\DBAdapter;
-use rdbms\DBTableAttribute;
+use rdbms\{DBAdapter, DBTableAttribute};
 
 
 /**
