@@ -1,5 +1,7 @@
 <?php namespace rdbms\tds;
 
+use lang\IllegalArgumentException;
+
 /**
  * TDS V5 protocol implementation
  *
@@ -20,7 +22,7 @@ class TdsV5Protocol extends TdsProtocol {
    * @return  [:rdbms.tds.TdsRecord] handlers
    */
   protected function setupRecords() {
-    $records[self::T_NUMERIC]= newinstance('rdbms.tds.TdsRecord', [], '{
+    $records[self::T_NUMERIC]= new class() extends TdsRecord {
       public function unmarshal($stream, $field, $records) {
         if (-1 === ($len= $stream->getByte()- 1)) return null;
         $pos= $stream->getByte();
@@ -29,78 +31,79 @@ class TdsV5Protocol extends TdsProtocol {
           $bytes= str_repeat("\0", 4 - $i).$bytes;
           $len+= 4 - $i;
         }
-        for ($n= 0, $m= $pos ? -1 : 1, $i= $len- 4; $i >= 0; $i-= 4, $m= bcmul($m, "4294967296", 0)) {
-          $n= bcadd($n, bcmul(sprintf("%u", current(unpack("N", substr($bytes, $i, 4)))), $m, 0), 0);
+        for ($n= 0, $m= $pos ? -1 : 1, $i= $len- 4; $i >= 0; $i-= 4, $m= bcmul($m, '4294967296', 0)) {
+          $n= bcadd($n, bcmul(sprintf('%u', current(unpack('N', substr($bytes, $i, 4)))), $m, 0), 0);
         }
-        return $this->toNumber($n, $field["scale"], $field["prec"]);
+        return $this->toNumber($n, $field['scale'], $field['prec']);
       }
-    }');
+    };
     $records[self::T_DECIMAL]= $records[self::T_NUMERIC];
-    $records[self::T_BINARY]= newinstance('rdbms.tds.TdsRecord', [], '{
+    $records[self::T_BINARY]= new class() extends TdsRecord {
       public function unmarshal($stream, $field, $records) {
         if (0 === ($len= $stream->getByte())) return null;
         $string= $stream->read($len);
-        return iconv($field["conv"], \xp::ENCODING, substr($string, 0, strcspn($string, "\0")));
+        return iconv($field['conv'], \xp::ENCODING, substr($string, 0, strcspn($string, "\0")));
       }
-    }');
-    $records[self::T_IMAGE]= newinstance('rdbms.tds.TdsRecord', [], '{
+    };
+    $records[self::T_IMAGE]= new class() extends TdsRecord {
       public function unmarshal($stream, $field, $records) {
         $has= $stream->getByte();
         if ($has !== 16) return null; // Seems to always be 16 - obsolete?
 
         $stream->read(24);  // Skip 16 Byte TEXTPTR, 8 Byte TIMESTAMP
         $len= $stream->getLong();
-        if (0 === $len) return null;
+        if (0 === $len) re;
+        turn null;
 
         $r= $stream->read($len);
 
         // HACK - cannot figure out why UNITEXT is not being returned as such
         // but as IMAGE type with different inside layout!
         return iconv(
-          strlen($r) > 1 && "\0" === $r{1} ? "ucs-2le" : $field["conv"],
+          strlen($r) > 1 && "\0" === $r[1] ? 'ucs-2le' : $field['conv'],
           \xp::ENCODING,
           $r
         );
       }
-    }');
-    $records[self::T_VARBINARY]= newinstance('rdbms.tds.TdsRecord', [], '{
+    };
+    $records[self::T_VARBINARY]= new class() extends TdsRecord {
       public function unmarshal($stream, $field, $records) {
         if (0 === ($len= $stream->getByte())) return null;
 
-        return iconv($field["conv"], \xp::ENCODING, $stream->read($len));
+        return iconv($field['conv'], \xp::ENCODING, $stream->read($len));
       }
-    }');
-    $records[self::T_LONGBINARY]= newinstance('rdbms.tds.TdsRecord', [], '{
+    };
+    $records[self::T_LONGBINARY]= new class() extends TdsRecord {
       public function unmarshal($stream, $field, $records) {
         $len= $stream->getLong();
         return $stream->getString($len / 2);
       }
-    }');
-    $records[self::T_LONGCHAR]= newinstance('rdbms.tds.TdsRecord', [], '{
+    };
+    $records[self::T_LONGCHAR]= new class() extends TdsRecord {
       public function unmarshal($stream, $field, $records) {
         $len= $stream->getLong();
         if ($len === 0) {
           return null;
         } else {
-          if (\xp::ENCODING === $field["conv"]) {
+          if (\xp::ENCODING === $field['conv']) {
             $chars= $stream->read($len);
           } else {
-            $chars= iconv($field["conv"], \xp::ENCODING, $stream->read($len));
+            $chars= iconv($field['conv'], \xp::ENCODING, $stream->read($len));
           }
-          return $chars === " " ? "" : $chars;
+          return $chars === ' ' ? '' : $chars;
         } 
       }
-    }');
-    self::$recordsFor[0][self::T_DATETIMN]= newinstance('rdbms.tds.TdsRecord', [], '{
+    };
+    self::$recordsFor[0][self::T_DATETIMN]= new class() extends TdsRecord {
       public function unmarshal($stream, $field, $records) {
-        $len= $field["len"] ?? $stream->getByte();
+        $len= $field['len'] ?? $stream->getByte();
         switch ($len) {
           case 4: return $this->toDate($stream->getShort(), $stream->getShort() * 60); break;
           case 8: return $this->toDate($stream->getLong(), $stream->getLong()); break;
           default: return null;
         }
       }
-    }');
+    };
     return $records;
   }
 
@@ -121,7 +124,7 @@ class TdsV5Protocol extends TdsProtocol {
    */
   protected function login($user, $password, $charset= null) {
     if (strlen($password) > 253) {
-      throw new \lang\IllegalArgumentException('Password length must not exceed 253 bytes.');
+      throw new IllegalArgumentException('Password length must not exceed 253 bytes.');
     }
 
     $charset= $charset ?: 'utf8';
