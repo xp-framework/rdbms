@@ -146,7 +146,7 @@ abstract class Finder {
    *
    * @return  rdbms.Criteria
    */
-  #[@finder(['kind' => COLLECTION])]
+  #[Finder(kind: COLLECTION)]
   public function all() {
     return new \rdbms\Criteria();
   }

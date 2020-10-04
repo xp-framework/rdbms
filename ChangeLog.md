@@ -3,6 +3,12 @@ RDBMS support for the XP Framework: MySQL, Sybase, MSSQL, PostgreSQL, SQLite3, I
 
 ## ?.?.? / ????-??-??
 
+## 13.0.1 / 2020-10-04
+
+* Fixed "Array and string offset access syntax with curly braces is no
+  longer supported"
+  (@thekid)
+
 ## 13.0.0 / 2020-04-10
 
 * Implemented xp-framework/rfc#334: Drop PHP 5.6:

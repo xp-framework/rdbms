@@ -45,7 +45,7 @@ class TdsDataStream {
   protected static function chars($bytes, $offset) {
     $s= '';
     for ($j= $offset- 16, $l= min($offset, strlen($bytes)); $j < $l; $j++) {
-      $c= $bytes{$j};
+      $c= $bytes[$j];
       $s.= $c < "\x20" || $c > "\x7F" ? ' ' : $c;
     }
     return $s;
@@ -70,7 +70,7 @@ class TdsDataStream {
       } else if (0 === ($i % 16)) {
         $s.= sprintf("|%s|\n%3d: ", self::chars($bytes, $i), $i);
       }
-      $s.= sprintf('%02X ', ord($bytes{$i}));
+      $s.= sprintf('%02X ', ord($bytes[$i]));
     }
     return $s;
   }
