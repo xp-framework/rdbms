@@ -1,5 +1,7 @@
 <?php namespace rdbms\unittest\integration;
 
+use unittest\BeforeClass;
+
 /**
  * Deadlock test on Sybase
  *
@@ -14,7 +16,7 @@ class SybaseDeadlockTest extends AbstractDeadlockTest {
    *
    * @return void
    */
-  #[@beforeClass]
+  #[BeforeClass]
   public static function setMinimumServerSeverity() {
     if (function_exists('sybase_min_message_severity')) {
       sybase_min_message_severity(12);

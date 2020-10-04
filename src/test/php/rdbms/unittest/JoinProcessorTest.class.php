@@ -1,11 +1,11 @@
 <?php namespace rdbms\unittest;
  
 use lang\IllegalArgumentException;
-use rdbms\{Criteria, DriverManager};
 use rdbms\join\JoinProcessor;
 use rdbms\mysql\MySQLConnection;
 use rdbms\unittest\dataset\Job;
-use unittest\TestCase;
+use rdbms\{Criteria, DriverManager};
+use unittest\{Expect, Test, TestCase};
 
 /**
  * Test JoinProcessor class
@@ -25,7 +25,7 @@ class JoinProcessorTest extends TestCase {
     Job::getPeer()->setConnection(new MySQLConnection(new \rdbms\DSN('mysql://localhost:3306/')));
   }
   
-  #[@test]
+  #[Test]
   public function getAttributeStringTest() {
     $jp= new JoinProcessor(Job::getPeer());
     $jp->setFetchModes(['PersonJob->Department' => 'join']);
@@ -45,7 +45,7 @@ class JoinProcessorTest extends TestCase {
     );
   }
 
-  #[@test]
+  #[Test]
   public function getJoinStringTest() {
     $jp= new JoinProcessor(Job::getPeer());
     $jp->setFetchModes(['PersonJob' => 'join']);
@@ -56,19 +56,19 @@ class JoinProcessorTest extends TestCase {
     );
   }
 
-  #[@test, @expect(IllegalArgumentException::class)]
+  #[Test, Expect(IllegalArgumentException::class)]
   public function emptyModeTest() {
     $jp= new JoinProcessor(Job::getPeer());
     $jp->setFetchModes([]);
   }
 
-  #[@test, @expect(IllegalArgumentException::class)]
+  #[Test, Expect(IllegalArgumentException::class)]
   public function noJoinModeTest() {
     $jp= new JoinProcessor(Job::getPeer());
     $jp->setFetchModes(['JobPerson.Department' => 'select']);
   }
 
-  #[@test, @expect(IllegalArgumentException::class)]
+  #[Test, Expect(IllegalArgumentException::class)]
   public function noSuchRoleTest() {
     $jp= new JoinProcessor(Job::getPeer());
     $jp->setFetchModes(['UnknownRole' => 'join']);

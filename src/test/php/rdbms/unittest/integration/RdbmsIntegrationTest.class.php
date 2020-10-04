@@ -2,7 +2,7 @@
 
 use lang\{MethodNotImplementedException, Throwable};
 use rdbms\{DBEvent, DSN, DriverManager, ResultSet, SQLConnectException, SQLException, SQLStateException, SQLStatementFailedException};
-use unittest\{PrerequisitesNotMetError, TestCase};
+use unittest\{Expect, PrerequisitesNotMetError, Test, TestCase};
 use util\{Bytes, Date, Observer};
 
 /**
@@ -111,13 +111,13 @@ abstract class RdbmsIntegrationTest extends TestCase {
     return $this->db()->prepare('select cast(i as int) as i from %c', $this->tableName());
   }
 
-  #[@test, @expect(SQLStateException::class)]
+  #[Test, Expect(SQLStateException::class)]
   public function noQueryWhenNotConnected() {
     $this->conn->connections->automatic(false);
     $this->conn->query('select 1');
   }
   
-  #[@test, @expect(SQLConnectException::class)]
+  #[Test, Expect(SQLConnectException::class)]
   public function connectFailedThrowsException() {
     $dsn= new DSN($this->dsn);
     $dsn->url->setUser('wrong-user');
@@ -126,12 +126,12 @@ abstract class RdbmsIntegrationTest extends TestCase {
     DriverManager::getConnection($dsn)->connect();
   }
   
-  #[@test]
+  #[Test]
   public function connect() {
     $this->assertEquals(true, $this->conn->connect());
   }
 
-  #[@test, @expect(SQLStateException::class)]
+  #[Test, Expect(SQLStateException::class)]
   public function noQueryWhenDisConnected() {
     $this->conn->connections->automatic(false);
     $this->conn->connect();
@@ -139,7 +139,7 @@ abstract class RdbmsIntegrationTest extends TestCase {
     $this->conn->query('select 1');
   }
   
-  #[@test]
+  #[Test]
   public function simpleSelect() {
     $this->assertEquals(
       [['foo' => 1]], 
@@ -147,35 +147,35 @@ abstract class RdbmsIntegrationTest extends TestCase {
     );
   }
 
-  #[@test]
+  #[Test]
   public function queryAndNext() {
     $q= $this->db()->query('select 1 as foo');
     $this->assertInstanceOf(ResultSet::class, $q);
     $this->assertEquals(['foo' => 1], $q->next());
   }
  
-  #[@test]
+  #[Test]
   public function queryAndNextWithField() {
     $q= $this->db()->query('select 1 as foo');
     $this->assertInstanceOf(ResultSet::class, $q);
     $this->assertEquals(1, $q->next('foo'));
   }
 
-  #[@test]
+  #[Test]
   public function openAndNext() {
     $q= $this->db()->open('select 1 as foo');
     $this->assertInstanceOf(ResultSet::class, $q);
     $this->assertEquals(['foo' => 1], $q->next());
   }
 
-  #[@test]
+  #[Test]
   public function openAndNextWithField() {
     $q= $this->db()->open('select 1 as foo');
     $this->assertInstanceOf(ResultSet::class, $q);
     $this->assertEquals(1, $q->next('foo'));
   }
  
-  #[@test]
+  #[Test]
   public function emptyQuery() {
     $this->createTable();
     $q= $this->db()->query('select * from %c where 1 = 0', $this->tableName());
@@ -183,43 +183,43 @@ abstract class RdbmsIntegrationTest extends TestCase {
     $this->assertNull($q->next());
   }
 
-  #[@test]
+  #[Test]
   public function insertViaQuery() {
     $this->createTable();
     $this->assertTrue($this->db()->query('insert into %c values (1, "kiesel")', $this->tableName())->isSuccess());
   }
 
-  #[@test]
+  #[Test]
   public function insertIntoTable() {
     $this->createTable();
     $this->assertEquals(1, $this->db()->insert('into %c values (2, "xp")', $this->tableName()));
   }
 
-  #[@test]
+  #[Test]
   public function updateViaQuery() {
     $this->createTable();
     $this->assertTrue($this->db()->query('update %c set pk= pk+ 1 where pk= 2', $this->tableName())->isSuccess());
   }
   
-  #[@test]
+  #[Test]
   public function updateTable() {
     $this->createTable();
     $this->assertEquals(1, $this->db()->update('%c set pk= pk+ 1 where pk= 1', $this->tableName()));
   }
 
-  #[@test]
+  #[Test]
   public function deleteViaQuery() {
     $this->createTable();
     $this->assertTrue($this->db()->query('delete from %c where pk= 2', $this->tableName())->isSuccess());
   }
   
-  #[@test]
+  #[Test]
   public function deleteFromTable() {
     $this->createTable();
     $this->assertEquals(1, $this->db()->delete('from %c where pk= 1', $this->tableName()));
   }
   
-  #[@test]
+  #[Test]
   public function identity() {
     $this->createAutoIncrementTable($this->tableName());      
     $this->assertEquals(1, $this->db()->insert('into %c (username) values ("kiesel")', $this->tableName()));
@@ -229,47 +229,47 @@ abstract class RdbmsIntegrationTest extends TestCase {
     $this->assertEquals($first+ 1, $this->db()->identity('unittest_pk_seq'));
   }
   
-  #[@test, @expect(SQLStatementFailedException::class)]
+  #[Test, Expect(SQLStatementFailedException::class)]
   public function malformedStatement() {
     $this->db()->query('select insert into delete.');
   }
 
-  #[@test]
+  #[Test]
   public function selectNull() {
     $this->assertEquals(null, $this->db()->query('select NULL as value')->next('value'));
   }
   
-  #[@test]
+  #[Test]
   public function selectInteger() {
     $this->assertEquals(1, $this->db()->query('select 1 as value')->next('value'));
   }
 
-  #[@test]
+  #[Test]
   public function selectIntegerZero() {
     $this->assertEquals(0, $this->db()->query('select 0 as value')->next('value'));
   }
 
-  #[@test]
+  #[Test]
   public function selectNegativeInteger() {
     $this->assertEquals(-6100, $this->db()->query('select -6100 as value')->next('value'));
   }
 
-  #[@test]
+  #[Test]
   public function selectString() {
     $this->assertEquals('Hello, World!', $this->db()->query('select "Hello, World!" as value')->next('value'));
   }
 
-  #[@test]
+  #[Test]
   public function selectEmptyString() {
     $this->assertEquals('', $this->db()->query('select "" as value')->next('value'));
   }
 
-  #[@test]
+  #[Test]
   public function selectSpace() {
     $this->assertEquals(' ', $this->db()->query('select " " as value')->next('value'));
   }
 
-  #[@test]
+  #[Test]
   public function selectUmlautString() {
     $this->assertEquals(
       new Bytes("\303\234bercoder"),
@@ -277,67 +277,67 @@ abstract class RdbmsIntegrationTest extends TestCase {
     );
   }
   
-  #[@test]
+  #[Test]
   public function selectDecimalLiteral() {
     $this->assertEquals(0.5, $this->db()->query('select 0.5 as value')->next('value'));
   }
 
-  #[@test]
+  #[Test]
   public function selectDecimalLiteralOne() {
     $this->assertEquals(1.0, $this->db()->query('select 1.0 as value')->next('value'));
   }
 
-  #[@test]
+  #[Test]
   public function selectDecimalLiteralZero() {
     $this->assertEquals(0.0, $this->db()->query('select 0.0 as value')->next('value'));
   }
 
-  #[@test]
+  #[Test]
   public function selectNegativeDecimalLiteral() {
     $this->assertEquals(-6.1, $this->db()->query('select -6.1 as value')->next('value'));
   }
   
-  #[@test]
+  #[Test]
   public function selectFloat() {
     $this->assertEquals(0.5, $this->db()->query('select cast(0.5 as float) as value')->next('value'));
   }
 
-  #[@test]
+  #[Test]
   public function selectFloatOne() {
     $this->assertEquals(1.0, $this->db()->query('select cast(1.0 as float) as value')->next('value'));
   }
 
-  #[@test]
+  #[Test]
   public function selectFloatZero() {
     $this->assertEquals(0.0, $this->db()->query('select cast(0.0 as float) as value')->next('value'));
   }
 
-  #[@test]
+  #[Test]
   public function selectNegativeFloat() {
     $this->assertEquals(-6.1, round($this->db()->query('select cast(-6.1 as float) as value')->next('value'), 1));
   }
 
-  #[@test]
+  #[Test]
   public function selectReal() {
     $this->assertEquals(0.5, $this->db()->query('select cast(0.5 as real) as value')->next('value'));
   }
 
-  #[@test]
+  #[Test]
   public function selectRealOne() {
     $this->assertEquals(1.0, $this->db()->query('select cast(1.0 as real) as value')->next('value'));
   }
 
-  #[@test]
+  #[Test]
   public function selectRealZero() {
     $this->assertEquals(0.0, $this->db()->query('select cast(0.0 as real) as value')->next('value'));
   }
 
-  #[@test]
+  #[Test]
   public function selectNegativeReal() {
     $this->assertEquals(-6.1, round($this->db()->query('select cast(-6.1 as real) as value')->next('value'), 1));
   }
   
-  #[@test]
+  #[Test]
   public function selectDate() {
     $cmp= new \util\Date('2009-08-14 12:45:00');
     $result= $this->db()->query('select cast(%s as date) as value', $cmp)->next('value');
@@ -346,137 +346,137 @@ abstract class RdbmsIntegrationTest extends TestCase {
     $this->assertEquals($cmp->toString('Y-m-d'), $result->toString('Y-m-d'));
   }
 
-  #[@test]
+  #[Test]
   public function selectNumericNull() {
     $this->assertEquals(null, $this->db()->query('select convert(numeric(8), NULL) as value')->next('value'));
   }
 
-  #[@test]
+  #[Test]
   public function selectNumeric() {
     $this->assertEquals(1, $this->db()->query('select convert(numeric(8), 1) as value')->next('value'));
   }
 
-  #[@test]
+  #[Test]
   public function selectNumericZero() {
     $this->assertEquals(0, $this->db()->query('select convert(numeric(8), 0) as value')->next('value'));
   }
 
-  #[@test]
+  #[Test]
   public function selectNegativeNumeric() {
     $this->assertEquals(-6100, $this->db()->query('select convert(numeric(8), -6100) as value')->next('value'));
   }
 
-  #[@test]
+  #[Test]
   public function selectNumericWithScaleNull() {
     $this->assertEquals(null, $this->db()->query('select convert(numeric(8, 2), NULL) as value')->next('value'));
   }
 
-  #[@test]
+  #[Test]
   public function selectNumericWithScale() {
     $this->assertEquals(1.00, $this->db()->query('select convert(numeric(8, 2), 1) as value')->next('value'));
   }
 
-  #[@test]
+  #[Test]
   public function selectNumericWithScaleZero() {
     $this->assertEquals(0.00, $this->db()->query('select convert(numeric(8, 2), 0) as value')->next('value'));
   }
 
-  #[@test]
+  #[Test]
   public function selectNegativeNumericWithScale() {
     $this->assertEquals(-6100.00, $this->db()->query('select convert(numeric(8, 2), -6100) as value')->next('value'));
   }
 
-  #[@test]
+  #[Test]
   public function select64BitLongMaxPlus1Numeric() {
     $this->assertEquals('9223372036854775808', $this->db()->query('select convert(numeric(20), 9223372036854775808) as value')->next('value'));
   }
 
-  #[@test]
+  #[Test]
   public function select64BitLongMinMinus1Numeric() {
     $this->assertEquals('-9223372036854775809', $this->db()->query('select convert(numeric(20), -9223372036854775809) as value')->next('value'));
   }
 
-  #[@test]
+  #[Test]
   public function selectDecimalNull() {
     $this->assertEquals(null, $this->db()->query('select convert(decimal(8), NULL) as value')->next('value'));
   }
 
-  #[@test]
+  #[Test]
   public function selectDecimal() {
     $this->assertEquals(1, $this->db()->query('select convert(decimal(8), 1) as value')->next('value'));
   }
 
-  #[@test]
+  #[Test]
   public function selectDecimalZero() {
     $this->assertEquals(0, $this->db()->query('select convert(decimal(8), 0) as value')->next('value'));
   }
 
-  #[@test]
+  #[Test]
   public function selectNegativeDecimal() {
     $this->assertEquals(-6100, $this->db()->query('select convert(decimal(8), -6100) as value')->next('value'));
   }
 
-  #[@test]
+  #[Test]
   public function selectDecimalWithScaleNull() {
     $this->assertEquals(null, $this->db()->query('select convert(decimal(8, 2), NULL) as value')->next('value'));
   }
 
-  #[@test]
+  #[Test]
   public function selectDecimalWithScale() {
     $this->assertEquals(1.00, $this->db()->query('select convert(decimal(8, 2), 1) as value')->next('value'));
   }
 
-  #[@test]
+  #[Test]
   public function selectDecimalWithScaleZero() {
     $this->assertEquals(0.00, $this->db()->query('select convert(decimal(8, 2), 0) as value')->next('value'));
   }
 
-  #[@test]
+  #[Test]
   public function selectNegativeDecimalWithScale() {
     $this->assertEquals(-6100.00, $this->db()->query('select convert(decimal(8, 2), -6100) as value')->next('value'));
   }
 
-  #[@test]
+  #[Test]
   public function selectEmptyChar() {
     $this->assertEquals('    ', $this->db()->query('select cast("" as char(4)) as value')->next('value'));
   }
 
-  #[@test]
+  #[Test]
   public function selectCharWithoutPadding() {
     $this->assertEquals('test', $this->db()->query('select cast("test" as char(4)) as value')->next('value'));
   }
 
-  #[@test]
+  #[Test]
   public function selectCharWithPadding() {
     $this->assertEquals('t   ', $this->db()->query('select cast("t" as char(4)) as value')->next('value'));
   }
 
-  #[@test]
+  #[Test]
   public function selectEmptyVarChar() {
     $this->assertEquals('', $this->db()->query('select cast("" as varchar(255)) as value')->next('value'));
   }
 
-  #[@test]
+  #[Test]
   public function selectVarChar() {
     $this->assertEquals('test', $this->db()->query('select cast("test" as varchar(255)) as value')->next('value'));
   }
 
-  #[@test]
+  #[Test]
   public function selectNullVarChar() {
     $this->assertEquals(null, $this->db()->query('select cast(NULL as varchar(255)) as value')->next('value'));
   }
 
-  #[@test]
+  #[Test]
   public function selectEmptyText() {
     $this->assertEquals('', $this->db()->query('select cast("" as text) as value')->next('value'));
   }
 
-  #[@test]
+  #[Test]
   public function selectText() {
     $this->assertEquals('test', $this->db()->query('select cast("test" as text) as value')->next('value'));
   }
 
-  #[@test]
+  #[Test]
   public function selectUmlautText() {
     $this->assertEquals(
       new Bytes("\303\234bercoder"),
@@ -484,22 +484,22 @@ abstract class RdbmsIntegrationTest extends TestCase {
     );
   }
 
-  #[@test]
+  #[Test]
   public function selectNulltext() {
     $this->assertEquals(null, $this->db()->query('select cast(NULL as text) as value')->next('value'));
   }
 
-  #[@test]
+  #[Test]
   public function selectEmptyImage() {
     $this->assertEquals('', $this->db()->query('select cast("" as image) as value')->next('value'));
   }
 
-  #[@test]
+  #[Test]
   public function selectImage() {
     $this->assertEquals('test', $this->db()->query('select cast("test" as image) as value')->next('value'));
   }
 
-  #[@test]
+  #[Test]
   public function selectUmlautImage() {
     $this->assertEquals(
       new Bytes("\303\234bercoder"),
@@ -507,23 +507,23 @@ abstract class RdbmsIntegrationTest extends TestCase {
     );
   }
 
-  #[@test]
+  #[Test]
   public function selectNullImage() {
     $this->assertEquals(null, $this->db()->query('select cast(NULL as image) as value')->next('value'));
   }
 
 
-  #[@test]
+  #[Test]
   public function selectEmptyBinary() {
     $this->assertEquals('', $this->db()->query('select cast("" as binary) as value')->next('value'));
   }
 
-  #[@test]
+  #[Test]
   public function selectBinary() {
     $this->assertEquals('test', $this->db()->query('select cast("test" as binary) as value')->next('value'));
   }
 
-  #[@test]
+  #[Test]
   public function selectUmlautBinary() {
     $this->assertEquals(
       new Bytes("\303\234bercoder"),
@@ -531,22 +531,22 @@ abstract class RdbmsIntegrationTest extends TestCase {
     );
   }
 
-  #[@test]
+  #[Test]
   public function selectNullBinary() {
     $this->assertEquals(null, $this->db()->query('select cast(NULL as binary) as value')->next('value'));
   }
 
-  #[@test]
+  #[Test]
   public function selectEmptyVarBinary() {
     $this->assertEquals('', $this->db()->query('select cast("" as varbinary) as value')->next('value'));
   }
 
-  #[@test]
+  #[Test]
   public function selectVarBinary() {
     $this->assertEquals('test', $this->db()->query('select cast("test" as varbinary) as value')->next('value'));
   }
 
-  #[@test]
+  #[Test]
   public function selectUmlautVarBinary() {
     $this->assertEquals(
       new Bytes("\303\234bercoder"),
@@ -554,77 +554,77 @@ abstract class RdbmsIntegrationTest extends TestCase {
     );
   }
 
-  #[@test]
+  #[Test]
   public function selectNullVarBinary() {
     $this->assertEquals(null, $this->db()->query('select cast(NULL as varbinary) as value')->next('value'));
   }
 
-  #[@test]
+  #[Test]
   public function selectMoney() {
     $this->assertEquals(0.5, $this->db()->query('select $0.5 as value')->next('value'));
   }
 
-  #[@test]
+  #[Test]
   public function selectHugeMoney() {
     $this->assertEquals(2147483648.0, $this->db()->query('select $2147483648 as value')->next('value'));
   }
 
-  #[@test]
+  #[Test]
   public function selectMoneyOne() {
     $this->assertEquals(1.0, $this->db()->query('select $1.0 as value')->next('value'));
   }
 
-  #[@test]
+  #[Test]
   public function selectMoneyZero() {
     $this->assertEquals(0.0, $this->db()->query('select $0.0 as value')->next('value'));
   }
 
-  #[@test]
+  #[Test]
   public function selectNegativeMoney() {
     $this->assertEquals(-6.1, $this->db()->query('select -$6.1 as value')->next('value'));
   }
 
-  #[@test]
+  #[Test]
   public function selectUnsignedInt() {
     $this->assertEquals(1, $this->db()->query('select cast(1 as unsigned integer) as value')->next('value'));
   }
 
-  #[@test]
+  #[Test]
   public function selectMaxUnsignedBigInt() {
     $this->assertEquals('18446744073709551615', $this->db()->query('select cast(18446744073709551615 as unsigned bigint) as value')->next('value'));
   }
 
-  #[@test]
+  #[Test]
   public function selectTinyint() {
     $this->assertEquals(5, $this->db()->query('select cast(5 as tinyint) as value')->next('value'));
   }
 
-  #[@test]
+  #[Test]
   public function selectTinyintOne() {
     $this->assertEquals(1, $this->db()->query('select cast(1 as tinyint) as value')->next('value'));
   }
 
-  #[@test]
+  #[Test]
   public function selectTinyintZero() {
     $this->assertEquals(0, $this->db()->query('select cast(0 as tinyint) as value')->next('value'));
   }
 
-  #[@test]
+  #[Test]
   public function selectSmallint() {
     $this->assertEquals(5, $this->db()->query('select cast(5 as smallint) as value')->next('value'));
   }
 
-  #[@test]
+  #[Test]
   public function selectSmallintOne() {
     $this->assertEquals(1, $this->db()->query('select cast(1 as smallint) as value')->next('value'));
   }
 
-  #[@test]
+  #[Test]
   public function selectSmallintZero() {
     $this->assertEquals(0, $this->db()->query('select cast(0 as smallint) as value')->next('value'));
   }
 
-  #[@test]
+  #[Test]
   public function observe() {
     $observer= new class() implements Observer {
       public $observations= [];
@@ -657,7 +657,7 @@ abstract class RdbmsIntegrationTest extends TestCase {
     }
   }
 
-  #[@test]
+  #[Test]
   public function rolledBackTransaction() {
     $this->createTransactionsTable($this->tableName());
     $db= $this->db();
@@ -673,7 +673,7 @@ abstract class RdbmsIntegrationTest extends TestCase {
   }
 
 
-  #[@test]
+  #[Test]
   public function committedTransaction() {
     $this->createTransactionsTable($this->tableName());
     $db= $this->db();
@@ -688,7 +688,7 @@ abstract class RdbmsIntegrationTest extends TestCase {
     );
   }
 
-  #[@test]
+  #[Test]
   public function consecutiveQueryDoesNotAffectBufferedResults() {
     $this->createTable();
     $db= $this->db();
@@ -699,7 +699,7 @@ abstract class RdbmsIntegrationTest extends TestCase {
     $this->assertEquals([['pk' => 2, 'username' => 'kiesel']], iterator_to_array($result));
   }
 
-  #[@test]
+  #[Test]
   public function unbufferedReadNoResults() {
     $this->createTable();
     $db= $this->db();
@@ -709,7 +709,7 @@ abstract class RdbmsIntegrationTest extends TestCase {
     $this->assertEquals(1, $db->query('select 1 as num')->next('num'));
   }
   
-  #[@test]
+  #[Test]
   public function unbufferedReadOneResult() {
     $this->createTable();
     $db= $this->db();
@@ -720,17 +720,17 @@ abstract class RdbmsIntegrationTest extends TestCase {
     $this->assertEquals(1, $db->query('select 1 as num')->next('num'));
   }
 
-  #[@test, @expect(SQLException::class)]
+  #[Test, Expect(SQLException::class)]
   public function arithmeticOverflowWithQuery() {
     $this->db()->query('select cast(10000000000000000 as int)')->next();
   }
 
-  #[@test, @expect(SQLException::class)]
+  #[Test, Expect(SQLException::class)]
   public function arithmeticOverflowWithOpen() {
     $this->db()->open('select cast(10000000000000000 as int)')->next();
   }
 
-  #[@test]
+  #[Test]
   public function readingRowFailsWithQuery() {
     $q= $this->db()->query($this->rowFailureFixture());
     $records= [];
@@ -745,7 +745,7 @@ abstract class RdbmsIntegrationTest extends TestCase {
     $this->assertEquals([1, false], $records);
   }
 
-  #[@test]
+  #[Test]
   public function readingRowFailsWithOpen() {
     $q= $this->db()->open($this->rowFailureFixture());
     $records= [];

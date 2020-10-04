@@ -2,7 +2,7 @@
 
 use lang\{Runtime, Throwable};
 use rdbms\DriverManager;
-use unittest\{PrerequisitesNotMetError, TestCase};
+use unittest\{PrerequisitesNotMetError, Test, TestCase};
 
 /**
  * Abstract deadlock test
@@ -100,7 +100,7 @@ abstract class AbstractDeadlockTest extends TestCase {
     }
   }
 
-  #[@test]
+  #[Test]
   public function provokeDeadlock() {
     $a= $this->newProcess();
     $b= $this->newProcess();

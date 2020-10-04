@@ -1,6 +1,5 @@
 <?php namespace rdbms\unittest;
 
-use rdbms\{Criteria, DriverManager, Record};
 use rdbms\criterion\{Projections, Restrictions};
 use rdbms\mysql\MySQLConnection;
 use rdbms\pgsql\PostgreSQLConnection;
@@ -8,6 +7,8 @@ use rdbms\sqlite3\SQLite3Connection;
 use rdbms\sybase\SybaseConnection;
 use rdbms\unittest\dataset\Job;
 use rdbms\unittest\mock\{MockResultSet, RegisterMockConnection};
+use rdbms\{Criteria, DriverManager, Record};
+use unittest\Test;
 use util\Date;
 
 /**
@@ -15,7 +16,7 @@ use util\Date;
  *
  * @see  xp://rdbms.criterion.Projections
  */
-#[@action(new RegisterMockConnection())]
+#[Action(eval: 'new RegisterMockConnection()')]
 class ProjectionTest extends \unittest\TestCase {
   public
     $syconn = null,
@@ -72,7 +73,7 @@ class ProjectionTest extends \unittest\TestCase {
     $this->assertEquals('sqlite: '.$sqlite, 'sqlite: '.trim($criteria->projections($this->sqconn, $this->peer), ' '));
   }
   
-  #[@test]
+  #[Test]
   function countTest() {
     $this->assertProjection(
       'count(*) as `count`',
@@ -83,7 +84,7 @@ class ProjectionTest extends \unittest\TestCase {
     );
   }
 
-  #[@test]
+  #[Test]
   function countColumnTest() {
     $this->assertProjection(
       'count(job_id) as `count_job_id`',
@@ -94,7 +95,7 @@ class ProjectionTest extends \unittest\TestCase {
     );
   }
 
-  #[@test]
+  #[Test]
   function countColumnAliasTest() {
     $this->assertProjection(
       'count(job_id) as `counting all`',
@@ -105,7 +106,7 @@ class ProjectionTest extends \unittest\TestCase {
     );
   }
 
-  #[@test]
+  #[Test]
   function countAliasTest() {
     $this->assertProjection(
       'count(*) as `counting all`',
@@ -116,7 +117,7 @@ class ProjectionTest extends \unittest\TestCase {
     );
   }
 
-  #[@test]
+  #[Test]
   function avgTest() {
     $this->assertProjection(
       'avg(job_id)',
@@ -127,7 +128,7 @@ class ProjectionTest extends \unittest\TestCase {
     );
   }
 
-  #[@test]
+  #[Test]
   function sumTest() {
     $this->assertProjection(
       'sum(job_id)',
@@ -138,7 +139,7 @@ class ProjectionTest extends \unittest\TestCase {
     );
   }
 
-  #[@test]
+  #[Test]
   function minTest() {
     $this->assertProjection(
       'min(job_id)',
@@ -149,7 +150,7 @@ class ProjectionTest extends \unittest\TestCase {
     );
   }
 
-  #[@test]
+  #[Test]
   function maxTest() {
     $this->assertProjection(
       'max(job_id)',
@@ -160,7 +161,7 @@ class ProjectionTest extends \unittest\TestCase {
     );
   }
 
-  #[@test]
+  #[Test]
   function propertyTest() {
     $this->assertProjection(
       'job_id',
@@ -171,7 +172,7 @@ class ProjectionTest extends \unittest\TestCase {
     );
   }
 
-  #[@test]
+  #[Test]
   function propertyListTest() {
     $this->assertProjection(
       'job_id, title',
@@ -188,7 +189,7 @@ class ProjectionTest extends \unittest\TestCase {
     );
   }
 
-  #[@test]
+  #[Test]
   function propertyListAliasTest() {
     $this->assertProjection(
       'job_id as `id`, title',
@@ -201,7 +202,7 @@ class ProjectionTest extends \unittest\TestCase {
     ));
   }
 
-  #[@test]
+  #[Test]
   function setProjectionTest() {
     $crit= new Criteria();
     $this->assertFalse($crit->isProjection());
@@ -215,7 +216,7 @@ class ProjectionTest extends \unittest\TestCase {
     $this->assertFalse($crit->isProjection());
   }
 
-  #[@test]
+  #[Test]
   function withProjectionTest() {
     $crit= new Criteria();
     $this->assertInstanceOf(
@@ -226,7 +227,7 @@ class ProjectionTest extends \unittest\TestCase {
     $this->assertTrue($crit->withProjection(Projections::property(Job::column('job_id')))->isProjection());
   }
 
-  #[@test]
+  #[Test]
   function regressionIteratorDatasetType() {
     $conn= DriverManager::getConnection('mock://mock/JOBS?autoconnect=1');
     $conn->setResultSet(new MockResultSet([['count' => 5]]));

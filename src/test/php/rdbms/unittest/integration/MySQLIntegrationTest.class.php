@@ -1,6 +1,7 @@
 <?php namespace rdbms\unittest\integration;
 
 use rdbms\{SQLConnectionClosedException, SQLException, Transaction};
+use unittest\{Ignore, Test};
 
 class MySQLIntegrationTest extends RdbmsIntegrationTest {
 
@@ -41,199 +42,199 @@ class MySQLIntegrationTest extends RdbmsIntegrationTest {
     $this->db()->query('create table %c (pk int, username varchar(30)) Engine=InnoDB', $name);
   }
 
-  #[@test, @ignore('Numeric not supported by MySQL')]
+  #[Test, Ignore('Numeric not supported by MySQL')]
   public function selectNumericNull() { }
 
-  #[@test, @ignore('Numeric not supported by MySQL')]
+  #[Test, Ignore('Numeric not supported by MySQL')]
   public function selectNumeric() { }
 
-  #[@test, @ignore('Numeric not supported by MySQL')]
+  #[Test, Ignore('Numeric not supported by MySQL')]
   public function selectNumericZero() { }
 
-  #[@test, @ignore('Numeric not supported by MySQL')]
+  #[Test, Ignore('Numeric not supported by MySQL')]
   public function selectNegativeNumeric() { }
 
-  #[@test, @ignore('NumericWithScale not supported by MySQL')]
+  #[Test, Ignore('NumericWithScale not supported by MySQL')]
   public function selectNumericWithScaleNull() { }
 
-  #[@test, @ignore('NumericWithScale not supported by MySQL')]
+  #[Test, Ignore('NumericWithScale not supported by MySQL')]
   public function selectNumericWithScale() { }
 
-  #[@test, @ignore('NumericWithScale not supported by MySQL')]
+  #[Test, Ignore('NumericWithScale not supported by MySQL')]
   public function selectNumericWithScaleZero() { }
 
-  #[@test, @ignore('NumericWithScale not supported by MySQL')]
+  #[Test, Ignore('NumericWithScale not supported by MySQL')]
   public function selectNegativeNumericWithScale() { }
 
-  #[@test, @ignore('Numeric not supported by MySQL')]
+  #[Test, Ignore('Numeric not supported by MySQL')]
   public function select64BitLongMaxPlus1Numeric() { }
 
-  #[@test, @ignore('Numeric not supported by MySQL')]
+  #[Test, Ignore('Numeric not supported by MySQL')]
   public function select64BitLongMinMinus1Numeric() { }
 
-  #[@test, @ignore('Decimal not supported by MySQL')]
+  #[Test, Ignore('Decimal not supported by MySQL')]
   public function selectDecimalNull() { }
 
-  #[@test, @ignore('Decimal not supported by MySQL')]
+  #[Test, Ignore('Decimal not supported by MySQL')]
   public function selectDecimal() { }
 
-  #[@test, @ignore('Decimal not supported by MySQL')]
+  #[Test, Ignore('Decimal not supported by MySQL')]
   public function selectDecimalZero() { }
 
-  #[@test, @ignore('Decimal not supported by MySQL')]
+  #[Test, Ignore('Decimal not supported by MySQL')]
   public function selectNegativeDecimal() { }
 
-  #[@test, @ignore('DecimalWithScale not supported by MySQL')]
+  #[Test, Ignore('DecimalWithScale not supported by MySQL')]
   public function selectDecimalWithScaleNull() { }
 
-  #[@test, @ignore('DecimalWithScale not supported by MySQL')]
+  #[Test, Ignore('DecimalWithScale not supported by MySQL')]
   public function selectDecimalWithScale() { }
 
-  #[@test, @ignore('DecimalWithScale not supported by MySQL')]
+  #[Test, Ignore('DecimalWithScale not supported by MySQL')]
   public function selectDecimalWithScaleZero() { }
 
-  #[@test, @ignore('DecimalWithScale not supported by MySQL')]
+  #[Test, Ignore('DecimalWithScale not supported by MySQL')]
   public function selectNegativeDecimalWithScale() { }
 
-  #[@test, @ignore('Cast to float not supported by MySQL')]
+  #[Test, Ignore('Cast to float not supported by MySQL')]
   public function selectFloat() { }
 
-  #[@test, @ignore('Cast to float not supported by MySQL')]
+  #[Test, Ignore('Cast to float not supported by MySQL')]
   public function selectFloatOne() { }
 
-  #[@test, @ignore('Cast to float not supported by MySQL')]
+  #[Test, Ignore('Cast to float not supported by MySQL')]
   public function selectFloatZero() { }
 
-  #[@test, @ignore('Cast to float not supported by MySQL')]
+  #[Test, Ignore('Cast to float not supported by MySQL')]
   public function selectNegativeFloat() { }
 
-  #[@test, @ignore('Cast to real not supported by MySQL')]
+  #[Test, Ignore('Cast to real not supported by MySQL')]
   public function selectReal() { }
 
-  #[@test, @ignore('Cast to real not supported by MySQL')]
+  #[Test, Ignore('Cast to real not supported by MySQL')]
   public function selectRealOne() { }
 
-  #[@test, @ignore('Cast to real not supported by MySQL')]
+  #[Test, Ignore('Cast to real not supported by MySQL')]
   public function selectRealZero() { }
 
-  #[@test, @ignore('Cast to real not supported by MySQL')]
+  #[Test, Ignore('Cast to real not supported by MySQL')]
   public function selectNegativeReal() { }
 
-  #[@test, @ignore('Cast to varchar not supported by MySQL')]
+  #[Test, Ignore('Cast to varchar not supported by MySQL')]
   public function selectEmptyVarChar() { }
 
-  #[@test, @ignore('Cast to varchar not supported by MySQL')]
+  #[Test, Ignore('Cast to varchar not supported by MySQL')]
   public function selectVarChar() { }
 
-  #[@test, @ignore('Cast to varchar not supported by MySQL')]
+  #[Test, Ignore('Cast to varchar not supported by MySQL')]
   public function selectNullVarChar() { }
 
-  #[@test, @ignore('Money not supported by MySQL')]
+  #[Test, Ignore('Money not supported by MySQL')]
   public function selectMoney() { }
 
-  #[@test, @ignore('Money not supported by MySQL')]
+  #[Test, Ignore('Money not supported by MySQL')]
   public function selectHugeMoney() { }
 
-  #[@test, @ignore('Money not supported by MySQL')]
+  #[Test, Ignore('Money not supported by MySQL')]
   public function selectMoneyOne() { }
 
-  #[@test, @ignore('Money not supported by MySQL')]
+  #[Test, Ignore('Money not supported by MySQL')]
   public function selectMoneyZero() { }
 
-  #[@test, @ignore('Money not supported by MySQL')]
+  #[Test, Ignore('Money not supported by MySQL')]
   public function selectNegativeMoney() { }
 
-  #[@test, @ignore('Cast to text not supported by MySQL')]
+  #[Test, Ignore('Cast to text not supported by MySQL')]
   public function selectEmptyText() { }
 
-  #[@test, @ignore('Cast to text not supported by MySQL')]
+  #[Test, Ignore('Cast to text not supported by MySQL')]
   public function selectText() { }
 
-  #[@test, @ignore('Cast to text not supported by MySQL')]
+  #[Test, Ignore('Cast to text not supported by MySQL')]
   public function selectUmlautText() { }
 
-  #[@test, @ignore('Cast to text not supported by MySQL')]
+  #[Test, Ignore('Cast to text not supported by MySQL')]
   public function selectNulltext() { }
 
-  #[@test, @ignore('Cast to Image not supported by MySQL')]
+  #[Test, Ignore('Cast to Image not supported by MySQL')]
   public function selectEmptyImage() { }
 
-  #[@test, @ignore('Cast to Image not supported by MySQL')]
+  #[Test, Ignore('Cast to Image not supported by MySQL')]
   public function selectImage() { }
 
-  #[@test, @ignore('Cast to Image not supported by MySQL')]
+  #[Test, Ignore('Cast to Image not supported by MySQL')]
   public function selectUmlautImage() { }
 
-  #[@test, @ignore('Cast to Image not supported by MySQL')]
+  #[Test, Ignore('Cast to Image not supported by MySQL')]
   public function selectNullImage() { }
 
-  #[@test, @ignore('Cast to binary not supported by MySQL')]
+  #[Test, Ignore('Cast to binary not supported by MySQL')]
   public function selectEmptyBinary() { }
 
-  #[@test, @ignore('Cast to binary not supported by MySQL')]
+  #[Test, Ignore('Cast to binary not supported by MySQL')]
   public function selectBinary() { }
 
-  #[@test, @ignore('Cast to binary not supported by MySQL')]
+  #[Test, Ignore('Cast to binary not supported by MySQL')]
   public function selectUmlautBinary() { }
 
-  #[@test, @ignore('Cast to binary not supported by MySQL')]
+  #[Test, Ignore('Cast to binary not supported by MySQL')]
   public function selectNullBinary() { }
 
-  #[@test, @ignore('Cast to varbinary not supported by MySQL')]
+  #[Test, Ignore('Cast to varbinary not supported by MySQL')]
   public function selectEmptyVarBinary() { }
 
-  #[@test, @ignore('Cast to varbinary not supported by MySQL')]
+  #[Test, Ignore('Cast to varbinary not supported by MySQL')]
   public function selectVarBinary() { }
 
-  #[@test, @ignore('Cast to varbinary not supported by MySQL')]
+  #[Test, Ignore('Cast to varbinary not supported by MySQL')]
   public function selectUmlautVarBinary() { }
 
-  #[@test, @ignore('Cast to varbinary not supported by MySQL')]
+  #[Test, Ignore('Cast to varbinary not supported by MySQL')]
   public function selectNullVarBinary() { }
 
-  #[@test]
+  #[Test]
   public function selectEmptyChar() {
     $this->assertEquals('', $this->db()->query('select cast("" as char(4)) as value')->next('value'));
   }
 
-  #[@test]
+  #[Test]
   public function selectCharWithPadding() {
     $this->assertEquals('t', $this->db()->query('select cast("t" as char(4)) as value')->next('value'));
   }
 
-  #[@test, @ignore('No known way to test this in MySQL')]
+  #[Test, Ignore('No known way to test this in MySQL')]
   public function readingRowFailsWithQuery() { }
 
-  #[@test, @ignore('No known way to test this in MySQL')]
+  #[Test, Ignore('No known way to test this in MySQL')]
   public function readingRowFailsWithOpen() { }
 
-  #[@test]
+  #[Test]
   public function selectSignedInt() {
     $this->assertEquals(1, $this->db()->query('select cast(1 as signed integer) as value')->next('value'));
   }
 
-  #[@test, @ignore('MySQL does not know unsigned bigints')]
+  #[Test, Ignore('MySQL does not know unsigned bigints')]
   public function selectMaxUnsignedBigInt() { }
 
-  #[@test, @ignore('Cast to tinyint not supported by MySQL')]
+  #[Test, Ignore('Cast to tinyint not supported by MySQL')]
   public function selectTinyint() { }
 
-  #[@test, @ignore('Cast to tinyint not supported by MySQL')]
+  #[Test, Ignore('Cast to tinyint not supported by MySQL')]
   public function selectTinyintOne() { }
 
-  #[@test, @ignore('Cast to tinyint not supported by MySQL')]
+  #[Test, Ignore('Cast to tinyint not supported by MySQL')]
   public function selectTinyintZero() { }
 
-  #[@test, @ignore('Cast to smallint not supported by MySQL')]
+  #[Test, Ignore('Cast to smallint not supported by MySQL')]
   public function selectSmallint() { }
 
-  #[@test, @ignore('Cast to smallint not supported by MySQL')]
+  #[Test, Ignore('Cast to smallint not supported by MySQL')]
   public function selectSmallintOne() { }
 
-  #[@test, @ignore('Cast to smallint not supported by MySQL')]
+  #[Test, Ignore('Cast to smallint not supported by MySQL')]
   public function selectSmallintZero() { }
 
-  #[@test]
+  #[Test]
   public function selectUtf8mb4() {
 
     // Sending characters outside the BMP while the encoding isn't utf8mb4
@@ -242,7 +243,7 @@ class MySQLIntegrationTest extends RdbmsIntegrationTest {
     $this->assertNull($this->db()->query('show warnings')->next());
   }
 
-  #[@test]
+  #[Test]
   public function reconnects_when_server_disconnects() {
     $conn= $this->db();
     $before= $conn->query('select connection_id() as id')->next('id');
@@ -257,7 +258,7 @@ class MySQLIntegrationTest extends RdbmsIntegrationTest {
     $this->assertNotEquals($before, $after, 'Connection IDs must be different');
   }
 
-  #[@test]
+  #[Test]
   public function does_not_reconnect_if_disconnected_inside_transaction() {
     $conn= $this->db();
     $before= $conn->query('select connection_id() as id')->next('id');

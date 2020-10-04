@@ -1,7 +1,7 @@
 <?php namespace rdbms\unittest;
 
 use rdbms\{ConnectionManager, ConnectionNotRegisteredException, DBConnection, DriverNotSupportedException};
-use unittest\TestCase;
+use unittest\{Expect, Test, TestCase};
 
 /**
  * ConnectionManager testcase
@@ -25,53 +25,53 @@ abstract class ConnectionManagerTest extends TestCase {
    */
   protected abstract function instanceWith($dsns);
 
-  #[@test]
+  #[Test]
   public function initallyEmpty() {
     $this->assertEquals([], $this->instanceWith([])->getConnections());
   }
 
-  #[@test]
+  #[Test]
   public function acquireExistingConnectionViaGetByHost() {
     $cm= $this->instanceWith(['mydb' => 'mock://user:pass@host/db?autoconnect=1']);
     $this->assertInstanceOf(DBConnection::class, $cm->getByHost('mydb', 0));
   }
   
-  #[@test, @expect(ConnectionNotRegisteredException::class)]
+  #[Test, Expect(ConnectionNotRegisteredException::class)]
   public function acquireNonExistantConnectionViaGetByHost() {
     $cm= $this->instanceWith(['mydb' => 'mock://user:pass@host/db?autoconnect=1']);
     $cm->getByHost('nonexistant', 0);
   }
 
-  #[@test]
+  #[Test]
   public function acquireExistingConnectionViaGet() {
     $cm= $this->instanceWith(['mydb' => 'mock://user:pass@host/db?autoconnect=1']);
     $this->assertInstanceOf(DBConnection::class, $cm->getByHost('mydb', 0));
   }
   
-  #[@test, @expect(ConnectionNotRegisteredException::class)]
+  #[Test, Expect(ConnectionNotRegisteredException::class)]
   public function acquireNonExistantConnectionWithExistantUserViaGet() {
     $cm= $this->instanceWith(['mydb' => 'mock://user:pass@host/db?autoconnect=1']);
     $cm->get('nonexistant', 'user');
   }
 
-  #[@test, @expect(ConnectionNotRegisteredException::class)]
+  #[Test, Expect(ConnectionNotRegisteredException::class)]
   public function acquireExistantConnectionWithNonExistantUserViaGet() {
     $cm= $this->instanceWith(['mydb' => 'mock://user:pass@host/db?autoconnect=1']);
     $cm->get('mydb', 'nonexistant');
   }
 
-  #[@test]
+  #[Test]
   public function invalidDsnScheme() {
     $this->instanceWith(['mydb' => 'invalid://user:pass@host/db?autoconnect=1']);
   }
   
-  #[@test, @expect(DriverNotSupportedException::class)]
+  #[Test, Expect(DriverNotSupportedException::class)]
   public function acquireInvalidDsnScheme() {
     $cm= $this->instanceWith(['mydb' => 'invalid://user:pass@host/db?autoconnect=1']);
     $cm->getByHost('mydb', 0);
   }
 
-  #[@test]
+  #[Test]
   public function getByUserAndHost() {
     $dsns= [
       'mydb.user'  => 'mock://user:pass@host/db?autoconnect=1',
@@ -81,7 +81,7 @@ abstract class ConnectionManagerTest extends TestCase {
     $this->assertEquals(new \rdbms\DSN($dsns['mydb.user']), $cm->get('mydb', 'user')->dsn);
   }
  
-  #[@test]
+  #[Test]
   public function getFirstByHost() {
     $dsns= [
       'mydb.user'  => 'mock://user:pass@host/db?autoconnect=1',
@@ -91,7 +91,7 @@ abstract class ConnectionManagerTest extends TestCase {
     $this->assertEquals(new \rdbms\DSN($dsns['mydb.user']), $cm->getByHost('mydb', 0)->dsn);
   }
  
-  #[@test]
+  #[Test]
   public function getSecondByHost() {
     $dsns= [
       'mydb.user'  => 'mock://user:pass@host/db?autoconnect=1',
@@ -101,7 +101,7 @@ abstract class ConnectionManagerTest extends TestCase {
     $this->assertEquals(new \rdbms\DSN($dsns['mydb.admin']), $cm->getByHost('mydb', 1)->dsn);
   }
 
-  #[@test]
+  #[Test]
   public function getAllByHost() {
     $dsns= [
       'mydb.user'  => 'mock://user:pass@host/db?autoconnect=1',

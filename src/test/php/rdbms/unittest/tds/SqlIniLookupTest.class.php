@@ -2,6 +2,7 @@
 
 use rdbms\DSN;
 use rdbms\tds\SqlIniLookup;
+use unittest\Test;
 
 /**
  * TestCase
@@ -18,35 +19,35 @@ class SqlIniLookupTest extends \unittest\TestCase {
     $this->fixture= new SqlIniLookup(typeof($this)->getPackage()->getResourceAsStream('sql.ini'));
   }
   
-  #[@test]
+  #[Test]
   public function lookup() {
     $dsn= new DSN('sybase://CARLA');
     $this->fixture->lookup($dsn);
     $this->assertEquals(new DSN('sybase://carla.example.com:5000'), $dsn);
   }
 
-  #[@test]
+  #[Test]
   public function lookupCaseInsensitive() {
     $dsn= new DSN('sybase://carla');
     $this->fixture->lookup($dsn);
     $this->assertEquals(new DSN('sybase://carla.example.com:5000'), $dsn);
   }
 
-  #[@test]
+  #[Test]
   public function lookupNonExistantHost() {
     $dsn= new DSN('sybase://nonexistant');
     $this->fixture->lookup($dsn);
     $this->assertEquals(new DSN('sybase://nonexistant'), $dsn);
   }
 
-  #[@test]
+  #[Test]
   public function lookupExistingHostWithoutQueryKey() {
     $dsn= new DSN('sybase://banane');
     $this->fixture->lookup($dsn);
     $this->assertEquals(new DSN('sybase://banane'), $dsn);
   }
 
-  #[@test]
+  #[Test]
   public function lookupIpv4() {
     $dsn= new DSN('sybase://wurst4');
     $this->fixture->lookup($dsn);
@@ -54,7 +55,7 @@ class SqlIniLookupTest extends \unittest\TestCase {
   }
 
 
-  #[@test]
+  #[Test]
   public function lookupIpv6() {
     $dsn= new DSN('sybase://wurst6');
     $this->fixture->lookup($dsn);

@@ -5,7 +5,7 @@ use rdbms\mysql\MySQLConnection;
 use rdbms\unittest\dataset\{Job, Person};
 use rdbms\unittest\mock\MockResultSet;
 use rdbms\{CachedResults, ConnectionManager, Criteria, DSN};
-use unittest\TestCase;
+use unittest\{BeforeClass, Expect, Test, TestCase};
 use util\{Date, NoSuchElementException};
 
 /**
@@ -19,22 +19,22 @@ use util\{Date, NoSuchElementException};
  */
 class JoinIteratorTest extends TestCase {
   
-  #[@beforeClass]
+  #[BeforeClass]
   public static function registerConnection() {
     ConnectionManager::getInstance()->register(new MySQLConnection(new DSN('mysql://localhost:3306/')), 'jobs');
   }
   
-  #[@test, @expect(NoSuchElementException::class)]
+  #[Test, Expect(NoSuchElementException::class)]
   public function emptyResultNextTest() {
     (new JoinIterator(new JoinProcessor(Job::getPeer()), new MockResultSet()))->next();
   }
   
-  #[@test]
+  #[Test]
   public function emptyResultHasNextTest() {
     $this->assertFalse((new JoinIterator(new JoinProcessor(Job::getPeer()), new MockResultSet()))->hasNext());
   }
   
-  #[@test]
+  #[Test]
   public function resultHasNextTest() {
     $rs= new MockResultSet(
       [
@@ -66,7 +66,7 @@ class JoinIteratorTest extends TestCase {
     $this->assertFalse($ji->hasNext());
   }
 
-  #[@test]
+  #[Test]
   public function multipleResultTest() {
     $rs= new MockResultSet(
       [
@@ -107,7 +107,7 @@ class JoinIteratorTest extends TestCase {
     $this->assertFalse($ji->hasNext());
   }
 
-  #[@test]
+  #[Test]
   public function multipleJoinResultTest() {
     $rs= new MockResultSet(
       [

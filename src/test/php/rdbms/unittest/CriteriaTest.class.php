@@ -1,17 +1,18 @@
 <?php namespace rdbms\unittest;
  
 use lang\IllegalArgumentException;
-use rdbms\{Criteria, DriverManager, SQLStateException};
 use rdbms\criterion\Restrictions;
 use rdbms\unittest\dataset\Job;
-use unittest\TestCase;
+use rdbms\unittest\mock\RegisterMockConnection;
+use rdbms\{Criteria, DriverManager, SQLStateException};
+use unittest\{Expect, Test, TestCase};
 
 /**
  * Test criteria class
  *
  * @see      xp://rdbms.Criteria
  */
-#[@action(new \rdbms\unittest\mock\RegisterMockConnection())]
+#[Action(eval: 'new RegisterMockConnection()')]
 class CriteriaTest extends TestCase {
   public $conn= null;
   public $peer= null;
@@ -37,23 +38,23 @@ class CriteriaTest extends TestCase {
     $this->assertEquals($sql, trim($criteria->toSQL($this->conn, $this->peer), ' '));
   }
 
-  #[@test]
+  #[Test]
   public function emptyCriteria() {
     $this->assertSql('', new Criteria());
   }
 
-  #[@test]
+  #[Test]
   public function simpleCriteria() {
     $this->assertSql('where job_id = 1', new Criteria(['job_id', 1, EQUAL]));
   }
 
-  #[@test, @expect(IllegalArgumentException::class)]
+  #[Test, Expect(IllegalArgumentException::class)]
   public function nonExistantFieldCausesException() {
     $criteria= new Criteria(['non-existant-field', 1, EQUAL]);
     $criteria->toSQL($this->conn, $this->peer);
   }
 
-  #[@test]
+  #[Test]
   public function complexCriteria() {
     with ($c= new Criteria()); {
       $c->add('job_id', 1, EQUAL);
@@ -68,7 +69,7 @@ class CriteriaTest extends TestCase {
     );
   }
 
-  #[@test]
+  #[Test]
   public function inCriteria() {
     $c= new Criteria();
     $c->add('job_id', [1, 2], IN);
@@ -76,7 +77,7 @@ class CriteriaTest extends TestCase {
     $this->assertSql('where job_id in (1, 2)', $c);
   }
   
-  #[@test]
+  #[Test]
   public function notInCriteria() {
     $c= new Criteria();
     $c->add('job_id', [1, 2], NOT_IN);
@@ -84,7 +85,7 @@ class CriteriaTest extends TestCase {
     $this->assertSql('where job_id not in (1, 2)', $c);
   }
   
-  #[@test]
+  #[Test]
   public function likeCriteria() {
     $c= new Criteria();
     $c->add('title', '%keyword%', LIKE);
@@ -92,7 +93,7 @@ class CriteriaTest extends TestCase {
     $this->assertSql('where title like "%keyword%"', $c);
   }
   
-  #[@test]
+  #[Test]
   public function equalCriteria() {
     $c= new Criteria();
     $c->add('job_id', 1, EQUAL);
@@ -100,7 +101,7 @@ class CriteriaTest extends TestCase {
     $this->assertSql('where job_id = 1', $c);
   }
   
-  #[@test]
+  #[Test]
   public function notEqualCriteria() {
     $c= new Criteria();
     $c->add('job_id', 1, NOT_EQUAL);
@@ -108,7 +109,7 @@ class CriteriaTest extends TestCase {
     $this->assertSql('where job_id != 1', $c);
   }
   
-  #[@test]
+  #[Test]
   public function lessThanCriteria() {
     $c= new Criteria();
     $c->add('job_id', 100, LESS_THAN);
@@ -116,7 +117,7 @@ class CriteriaTest extends TestCase {
     $this->assertSql('where job_id < 100', $c);
   }
   
-  #[@test]
+  #[Test]
   public function greaterThanCriteria() {
     $c= new Criteria();
     $c->add('job_id', 100, GREATER_THAN);
@@ -124,7 +125,7 @@ class CriteriaTest extends TestCase {
     $this->assertSql('where job_id > 100', $c);
   }
   
-  #[@test]
+  #[Test]
   public function lessEqualCriteria() {
     $c= new Criteria();
     $c->add('job_id', 100, LESS_EQUAL);
@@ -132,7 +133,7 @@ class CriteriaTest extends TestCase {
     $this->assertSql('where job_id <= 100', $c);
   }
   
-  #[@test]
+  #[Test]
   public function greaterEqualCriteria() {
     $c= new Criteria();
     $c->add('job_id', 100, GREATER_EQUAL);
@@ -140,7 +141,7 @@ class CriteriaTest extends TestCase {
     $this->assertSql('where job_id >= 100', $c);
   }
   
-  #[@test]
+  #[Test]
   public function bitAndCriteria() {
     $c= new Criteria();
     $c->add('job_id', 100, BIT_AND);
@@ -148,7 +149,7 @@ class CriteriaTest extends TestCase {
     $this->assertSql('where job_id & 100 != 0', $c);
   }
   
-  #[@test]
+  #[Test]
   public function restrictionsFactory() {
     $job_id= Job::column('job_id');
     $c= new Criteria(Restrictions::anyOf(
@@ -173,7 +174,7 @@ class CriteriaTest extends TestCase {
     );
   }
   
-  #[@test]
+  #[Test]
   public function constructorAcceptsVarArgArrays() {
     $this->assertSql(
       'where job_id = 1 and title = "Hello"', 
@@ -181,22 +182,22 @@ class CriteriaTest extends TestCase {
     );
   }
 
-  #[@test]
+  #[Test]
   public function addReturnsThis() {
     $this->assertInstanceOf(Criteria::class, (new Criteria())->add('job_id', 1, EQUAL));
   }
 
-  #[@test]
+  #[Test]
   public function addOrderByReturnsThis() {
     $this->assertInstanceOf(Criteria::class, (new Criteria())->add('job_id', 1, EQUAL)->addOrderBy('valid_from', DESCENDING));
   }
 
-  #[@test]
+  #[Test]
   public function addGroupByReturnsThis() {
     $this->assertInstanceOf(Criteria::class, (new Criteria())->add('job_id', 1, EQUAL)->addGroupBy('valid_from'));
   }
 
-  #[@test]
+  #[Test]
   public function addOrderByColumn() {
     with ($c= new Criteria()); {
       $c->addOrderBy(Job::column('valid_from'));
@@ -208,7 +209,7 @@ class CriteriaTest extends TestCase {
     );
   }
 
-  #[@test]
+  #[Test]
   public function addOrderByString() {
     with ($c= new Criteria()); {
       $c->addOrderBy("valid_from");
@@ -220,7 +221,7 @@ class CriteriaTest extends TestCase {
     );
   }
 
-  #[@test]
+  #[Test]
   public function addGroupByColumn() {
     with ($c= new Criteria()); {
       $c->addGroupBy(Job::column('valid_from'));
@@ -232,7 +233,7 @@ class CriteriaTest extends TestCase {
     );
   }
 
-  #[@test]
+  #[Test]
   public function addGroupByString() {
     with ($c= new Criteria()); {
       $c->addGroupBy("valid_from");
@@ -244,22 +245,22 @@ class CriteriaTest extends TestCase {
     );
   }
 
-  #[@test, @expect(IllegalArgumentException::class)]
+  #[Test, Expect(IllegalArgumentException::class)]
   public function createNonExistantColumn() {
     Job::column('not_existant');
   }
 
-  #[@test, @expect(SQLStateException::class)]
+  #[Test, Expect(SQLStateException::class)]
   public function addGroupByNonExistantColumnString() {
     (new Criteria())->addGroupBy('not_existant')->toSQL($this->conn, $this->peer);
   }
 
-  #[@test]
+  #[Test]
   public function fetchModeChaining() {
     $this->assertInstanceOf(Criteria::class, (new Criteria())->setFetchmode(\rdbms\join\Fetchmode::join('PersonJob')));
   }
 
-  #[@test]
+  #[Test]
   public function testIsJoin() {
     $crit= new Criteria();
     $this->assertFalse($crit->isJoin());
@@ -269,7 +270,7 @@ class CriteriaTest extends TestCase {
     $this->assertFalse($crit->setFetchmode(\rdbms\join\Fetchmode::select('PersonJob'))->isJoin());
   }
 
-  #[@test]
+  #[Test]
   public function testJoinWithoutCondition() {
     $jp= new \rdbms\join\JoinProcessor(Job::getPeer());
     $jp->setFetchModes(['PersonJob->Department' => 'join']);
@@ -283,7 +284,7 @@ class CriteriaTest extends TestCase {
     $jp->leaveJoinContext();
   }
 
-  #[@test]
+  #[Test]
   public function testJoinWithCondition() {
     $jp= new \rdbms\join\JoinProcessor(Job::getPeer());
     $jp->setFetchModes(['PersonJob->Department' => 'join']);
@@ -299,7 +300,7 @@ class CriteriaTest extends TestCase {
     $jp->leaveJoinContext();
   }
 
-  #[@test]
+  #[Test]
   public function testJoinWithProjection() {
     $jp= new \rdbms\join\JoinProcessor(Job::getPeer());
     $jp->setFetchModes(['PersonJob->Department' => 'join']);

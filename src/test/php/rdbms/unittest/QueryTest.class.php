@@ -3,15 +3,15 @@
 use rdbms\Criteria;
 use rdbms\query\{DeleteQuery, SelectQuery, SetOperation, UpdateQuery};
 use rdbms\unittest\dataset\{Job, Person};
-use rdbms\unittest\mock\MockConnection;
-use unittest\TestCase;
+use rdbms\unittest\mock\{MockConnection, RegisterMockConnection};
+use unittest\{Test, TestCase};
 
 /**
  * Test query class
  *
  * @see  xp://rdbms.Query
  */
-#[@action(new \rdbms\unittest\mock\RegisterMockConnection())]
+#[Action(eval: 'new RegisterMockConnection()')]
 class QueryTest extends TestCase {
   private
     $qa= null,
@@ -50,7 +50,7 @@ class QueryTest extends TestCase {
     );
   }
   
-  #[@test]
+  #[Test]
   public function setCriteria() {
     $q= new SelectQuery();
     $c= new Criteria();
@@ -58,14 +58,14 @@ class QueryTest extends TestCase {
     $this->assertEquals($c, $q->getCriteria());
   }
   
-  #[@test]
+  #[Test]
   public function setPeer() {
     $q= new SelectQuery();
     $q->setPeer(Job::getPeer());
     $this->assertEquals(Job::getPeer(), $q->getPeer());
   }
   
-  #[@test]
+  #[Test]
   public function getConnection() {
     $q= new SelectQuery();
     $this->assertNull($q->getConnection());
@@ -73,18 +73,18 @@ class QueryTest extends TestCase {
     $this->assertInstanceOf(MockConnection::class, $q->getConnection());
   }
   
-  #[@test]
+  #[Test]
   public function executeWithRestriction() {
     $this->assertInstanceOf(SelectQuery::class, (new SelectQuery())->withRestriction(Job::column('job_id')->equal(5)));
   }
   
-  #[@test]
+  #[Test]
   public function getSingleQueryString() {
     $this->assertEquals($this->qas, $this->qa->getQueryString());
     $this->assertEquals($this->qbs, $this->qb->getQueryString());
   }
   
-  #[@test]
+  #[Test]
   public function getQueryString() {
     $so= new SetOperation(SetOperation::UNION, $this->qa, $this->qb);
     $this->assertEquals(
@@ -93,7 +93,7 @@ class QueryTest extends TestCase {
     );
   }
   
-  #[@test]
+  #[Test]
   public function factory() {
     $so= SetOperation::union($this->qa, $this->qb);
     $this->assertEquals(
@@ -112,7 +112,7 @@ class QueryTest extends TestCase {
     );
   }
   
-  #[@test]
+  #[Test]
   public function all() {
     $so= SetOperation::union($this->qa, $this->qb, true);
     $this->assertEquals(
@@ -121,7 +121,7 @@ class QueryTest extends TestCase {
     );
   }
   
-  #[@test]
+  #[Test]
   public function nesting() {
     $so= SetOperation::union(SetOperation::union($this->qb, $this->qa), SetOperation::union($this->qb, $this->qa));
     $this->assertEquals(

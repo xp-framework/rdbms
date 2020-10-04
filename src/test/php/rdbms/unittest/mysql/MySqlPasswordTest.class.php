@@ -1,6 +1,7 @@
 <?php namespace rdbms\unittest\mysql;
 
 use rdbms\mysqlx\MySqlPassword;
+use unittest\Test;
 use util\Bytes;
 
 /**
@@ -10,7 +11,7 @@ use util\Bytes;
  */
 class MySqlPasswordTest extends \unittest\TestCase {
 
-  #[@test]
+  #[Test]
   public function protocol40() {
     $this->assertEquals(
       new Bytes("UAXNPP\\O"), 
@@ -18,7 +19,7 @@ class MySqlPasswordTest extends \unittest\TestCase {
     );
   }
 
-  #[@test]
+  #[Test]
   public function protocol41() {
     $this->assertEquals(
       new Bytes("}PQn\016s\013\013\033\022\373\252\033\240\207o=\262\304\335"), 

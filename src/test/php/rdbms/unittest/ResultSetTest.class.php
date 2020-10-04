@@ -1,6 +1,7 @@
 <?php namespace rdbms\unittest;
 
 use lang\ClassLoader;
+use unittest\{BeforeClass, Test, Values};
 
 /**
  * Tests for the abstract ResultSet base class
@@ -15,7 +16,7 @@ class ResultSetTest extends \unittest\TestCase {
    *
    * @return void
    */
-  #[@beforeClass]
+  #[BeforeClass]
   public static function defineResultSet() {
     self::$resultSet= ClassLoader::defineClass('ResultSetTest_Fixture', 'rdbms.ResultSet', [], '{
       protected $records;
@@ -52,30 +53,30 @@ class ResultSetTest extends \unittest\TestCase {
     ];
   }
 
-  #[@test]
+  #[Test]
   public function isSuccess_always_returns_false() {
     $this->assertFalse(self::$resultSet->newInstance([])->isSuccess());
   }
 
-  #[@test]
+  #[Test]
   public function next_on_empty_results() {
     $q= self::$resultSet->newInstance([]);
     $this->assertEquals(false, $q->next());
   }
 
-  #[@test]
+  #[Test]
   public function next() {
     $q= self::$resultSet->newInstance([['id' => 1]]);
     $this->assertEquals(['id' => 1], $q->next());
   }
 
-  #[@test]
+  #[Test]
   public function next_with_field() {
     $q= self::$resultSet->newInstance([['id' => 1]]);
     $this->assertEquals(1, $q->next('id'));
   }
 
-  #[@test]
+  #[Test]
   public function seek_to_beginning() {
     $q= self::$resultSet->newInstance([['id' => 1]]);
     $q->next();
@@ -83,13 +84,13 @@ class ResultSetTest extends \unittest\TestCase {
     $this->assertEquals(['id' => 1], $q->next());
   }
 
-  #[@test, @values('fixtures')]
+  #[Test, Values('fixtures')]
   public function can_be_used_in_foreach($records) {
     $q= self::$resultSet->newInstance($records);
     $this->assertEquals($records, iterator_to_array($q));
   }
 
-  #[@test, @values('fixtures')]
+  #[Test, Values('fixtures')]
   public function can_be_iterated_twice($records) {
     $q= self::$resultSet->newInstance($records);
     iterator_to_array($q);

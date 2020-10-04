@@ -1,4 +1,6 @@
 <?php namespace rdbms\unittest\drivers;
+
+use unittest\Test;
  
 /**
  * Test tokenizers for PostgreSQL connections
@@ -17,7 +19,7 @@ class PostgreSQLTokenizerTest extends \rdbms\unittest\TokenizerTest {
     return new \rdbms\pgsql\PostgreSQLConnection(new \rdbms\DSN('pgsql://localhost/'));
   }
 
-  #[@test]
+  #[Test]
   public function labelToken() {
     $this->assertEquals(
       'select * from "order"',

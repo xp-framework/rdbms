@@ -1,7 +1,7 @@
 <?php namespace rdbms\unittest\integration;
 
 use rdbms\SQLStatementFailedException;
-use unittest\PrerequisitesNotMetError;
+use unittest\{BeforeClass, Expect, PrerequisitesNotMetError, Test, Version};
 use util\{Bytes, Date};
 
 /**
@@ -21,7 +21,7 @@ class SybaseIntegrationTest extends RdbmsIntegrationTest {
    *
    * @return void
    */
-  #[@beforeClass]
+  #[BeforeClass]
   public static function setMinimumServerSeverity() {
     if (function_exists('sybase_min_server_severity')) {
       sybase_min_server_severity(12);
@@ -68,47 +68,47 @@ class SybaseIntegrationTest extends RdbmsIntegrationTest {
     $this->db()->query('create table %c (pk int, username varchar(30))', $name);
   }
 
-  #[@test]
+  #[Test]
   public function selectEmptyString() {
     $this->assertEquals(' ', $this->db()->query('select "" as value')->next('value'));
   }
 
-  #[@test]
+  #[Test]
   public function selectEmptyVarchar() {
     $this->assertEquals(' ', $this->db()->query('select cast("" as varchar(255)) as value')->next('value'));
   }
 
-  #[@test]
+  #[Test]
   public function selectEmptyText() {
     $this->assertEquals(' ', $this->db()->query('select cast("" as text) as value')->next('value'));
   }
 
-  #[@test]
+  #[Test]
   public function selectEmptyImage() {
     $this->assertEquals(' ', $this->db()->query('select cast("" as image) as value')->next('value'));
   }
 
-  #[@test]
+  #[Test]
   public function selectEmptyBinary() {
     $this->assertEquals(' ', $this->db()->query('select cast("" as binary) as value')->next('value'));
   }
 
-  #[@test]
+  #[Test]
   public function selectEmptyVarBinary() {
     $this->assertEquals(' ', $this->db()->query('select cast("" as varbinary) as value')->next('value'));
   }
 
-  #[@test]
+  #[Test]
   public function selectEmptyUniVarChar() {
     $this->assertEquals(' ', $this->db()->query('select cast("" as univarchar(255)) as value')->next('value'));
   }
 
-  #[@test]
+  #[Test]
   public function selectUniVarChar() {
     $this->assertEquals('test', $this->db()->query('select cast("test" as univarchar(255)) as value')->next('value'));
   }
 
-  #[@test]
+  #[Test]
   public function selectUmlautUniVarChar() {
     $this->assertEquals(
       new Bytes("\303\234bercoder"),
@@ -116,22 +116,22 @@ class SybaseIntegrationTest extends RdbmsIntegrationTest {
     );
   }
 
-  #[@test]
+  #[Test]
   public function selectNullUniVarChar() {
     $this->assertEquals(null, $this->db()->query('select cast(NULL as univarchar(255)) as value')->next('value'));
   }
 
-  #[@test, @version(15000)]
+  #[Test, Version(15000)]
   public function selectEmptyUniText() {
     $this->assertEquals(' ', $this->db()->query('select cast("" as unitext) as value')->next('value'));
   }
 
-  #[@test, @version(15000)]
+  #[Test, Version(15000)]
   public function selectUniText() {
     $this->assertEquals('test', $this->db()->query('select cast("test" as unitext) as value')->next('value'));
   }
 
-  #[@test, @version(15000)]
+  #[Test, Version(15000)]
   public function selectUmlautUniText() {
     $this->assertEquals(
       new Bytes("\303\234bercoder"),
@@ -139,27 +139,27 @@ class SybaseIntegrationTest extends RdbmsIntegrationTest {
     );
   }
 
-  #[@test, @version(15000)]
+  #[Test, Version(15000)]
   public function selectNullUniText() {
     $this->assertEquals(null, $this->db()->query('select cast(NULL as unitext) as value')->next('value'));
   }
 
-  #[@test, @version(15000)]
+  #[Test, Version(15000)]
   public function selectUnsignedInt() {
     parent::selectUnsignedInt();
   }
 
-  #[@test, @version(15000)]
+  #[Test, Version(15000)]
   public function selectMaxUnsignedBigInt() {
     parent::selectMaxUnsignedBigInt();
   }
 
-  #[@test, @expect(['class' => SQLStatementFailedException::class, 'withMessage' => '/More power/'])]
+  #[Test, Expect(['class' => SQLStatementFailedException::class, 'withMessage' => '/More power/'])]
   public function raiseError() {
     $this->db()->query('raiserror 61000 "More power"');
   }
 
-  #[@test]
+  #[Test]
   public function printMessage() {
     $q= $this->db()->query('
       print "More power"
@@ -168,7 +168,7 @@ class SybaseIntegrationTest extends RdbmsIntegrationTest {
     $this->assertEquals(1, $q->next('result'));
   }
 
-  #[@test, @expect(SQLStatementFailedException::class)]
+  #[Test, Expect(SQLStatementFailedException::class)]
   public function dataTruncationWarning() {
     $conn= $this->db();
     $conn->query('
@@ -181,7 +181,7 @@ class SybaseIntegrationTest extends RdbmsIntegrationTest {
     $conn->insert('into %c (id, cost) values (1, 123.12345)', $this->tableName());
   }
 
-  #[@test]
+  #[Test]
   public function repeated_extend_errors() {
     $this->createTable();
     $conn= $this->db();
@@ -194,12 +194,12 @@ class SybaseIntegrationTest extends RdbmsIntegrationTest {
     $this->assertEquals([0 => ['working' => 1]], $conn->select('1 as working'));
   }
 
-  #[@test]
+  #[Test]
   public function sp_helpconstraint() {
     $this->assertTrue($this->db()->query('sp_helpconstraint %c', $this->tableName())->isSuccess());
   }
 
-  #[@test]
+  #[Test]
   public function sp_helpconstraint_and_query() {
     $q= $this->db()->query('
       sp_helpconstraint %c
@@ -209,7 +209,7 @@ class SybaseIntegrationTest extends RdbmsIntegrationTest {
     $this->assertEquals(1, $q->next('result'));
   }
 
-  #[@test]
+  #[Test]
   public function longcharImplementationRegression() {
     $this->assertEquals([
       'field1' => 'foo',
@@ -221,7 +221,7 @@ class SybaseIntegrationTest extends RdbmsIntegrationTest {
     ')->next());
   }
 
-  #[@test]
+  #[Test]
   public function datetime() {
     $cmp= new Date('2009-08-14 12:45:00');
     $result= $this->db()->query('select cast(%s as datetime) as value', $cmp)->next('value');
@@ -230,7 +230,7 @@ class SybaseIntegrationTest extends RdbmsIntegrationTest {
     $this->assertEquals($cmp->toString('Y-m-d H:i:s'), $result->toString('Y-m-d H:i:s'));
   }
 
-  #[@test]
+  #[Test]
   public function smalldatetime() {
     $cmp= new Date('2009-08-14 12:45:00');
     $result= $this->db()->query('select cast(%s as smalldatetime) as value', $cmp)->next('value');

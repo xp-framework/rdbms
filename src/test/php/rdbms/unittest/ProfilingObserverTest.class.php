@@ -1,9 +1,9 @@
 <?php namespace rdbms\unittest;
 
 use lang\IllegalArgumentException;
-use rdbms\{DBEvent, DSN, ProfilingObserver};
 use rdbms\sqlite3\SQLite3Connection;
-use unittest\TestCase;
+use rdbms\{DBEvent, DSN, ProfilingObserver};
+use unittest\{Expect, Ignore, Test, TestCase, Values};
 use util\log\{BufferedAppender, LogCategory};
 
 /**
@@ -38,22 +38,12 @@ class ProfilingObserverTest extends TestCase {
     return $o;
   }
 
-  #[@test]
+  #[Test]
   public function create() {
     new ProfilingObserver($this->cat);
   }
 
-  #[@test, @values([
-  #  'select * from world',
-  #  ' select * from world',
-  #  '  select * from world',
-  #  "\rselect * from world",
-  #  "\r\nselect * from world",
-  #  "\nselect * from world",
-  #  "\tselect * from world",
-  #  'SELECT * from world',
-  #  'Select * from world'
-  #])]
+  #[Test, Values(['select * from world', ' select * from world', '  select * from world', "\rselect * from world", "\r\nselect * from world", "\nselect * from world", "\tselect * from world", 'SELECT * from world', 'Select * from world'])]
   public function select_type($sql) {
     $this->assertEquals('select', (new ProfilingObserver($this->cat))->typeOf($sql));
   }
@@ -82,31 +72,31 @@ class ProfilingObserverTest extends TestCase {
     $this->assertEquals('unknown', (new ProfilingObserver($this->cat))->typeOf('explain ...'));
   }
 
-  #[@test]
+  #[Test]
   public function emitTiming_without_actually_having_any_timing_does_not_fatal() {
     (new ProfilingObserver($this->cat))->emitTimings();
   }
 
-  #[@test, @expect(IllegalArgumentException::class)]
+  #[Test, Expect(IllegalArgumentException::class)]
   public function update_with_anyarg() {
     $o= new ProfilingObserver($this->cat);
     $o->update(1);
   }
 
-  #[@test]
+  #[Test]
   public function update_with_event() {
     $o= new ProfilingObserver($this->cat);
     $o->update($this->conn(), new DBEvent('hello', 'select * from world'));
   }
 
-  #[@test]
+  #[Test]
   public function update_with_query_and_queryend_does_count_timing() {
     $o= $this->observerWithSelect();
 
     $this->assertEquals(1, $o->numberOfTimes('select'));
   }
 
-  #[@test]
+  #[Test]
   public function update_with_query_and_queryend_does_time_aggregation() {
     $o= $this->observerWithSelect();
 
@@ -115,13 +105,13 @@ class ProfilingObserverTest extends TestCase {
     $this->assertTrue($elapsed >= 0.098, $elapsed.' >= 0.098');
   }
 
-  #[@test]
+  #[Test]
   public function timing_as_string() {
     $o= $this->observerWithSelect();
     $this->assertTrue(0 < strlen($o->getTimingAsString()));
   }
 
-  #[@test]
+  #[Test]
   public function destructor_emits_timing() {
     $o= $this->observerWithSelect();
     $appender= $this->cat->addAppender(new BufferedAppender());
@@ -130,7 +120,7 @@ class ProfilingObserverTest extends TestCase {
     $this->assertTrue(0 < strlen($appender->buffer));
   }
 
-  #[@test]
+  #[Test]
   public function dbevent_in_illegal_order_is_ignored() {
     $o= new ProfilingObserver($this->cat);
     $conn= $this->conn();
@@ -139,7 +129,7 @@ class ProfilingObserverTest extends TestCase {
     $this->assertEquals(0.0, $o->elapsedTimeOfAll('queryend'));
   }
 
-  #[@test]
+  #[Test]
   public function connect_is_counted_as_verb() {
     $o= new ProfilingObserver($this->cat);
 
@@ -150,7 +140,7 @@ class ProfilingObserverTest extends TestCase {
     $this->assertEquals(1, $o->numberOfTimes('connect'));
   }
 
-  #[@test, @ignore('Expected behavior not finally decided')]
+  #[Test, Ignore('Expected behavior not finally decided')]
   public function observer_only_listens_to_one_dbconnection() {
     $o= new ProfilingObserver($this->cat);
 
@@ -165,7 +155,7 @@ class ProfilingObserverTest extends TestCase {
     $this->assertEquals(1, $o->numberOfTimes('connect'));
   }
 
-  #[@test]
+  #[Test]
   public function unknown_sql_token_is_classified_as_unknown() {
     $o= new ProfilingObserver($this->cat);
 
@@ -176,7 +166,7 @@ class ProfilingObserverTest extends TestCase {
     $this->assertEquals(1, $o->numberOfTimes('unknown'));
   }
 
-  #[@test]
+  #[Test]
   public function update_sql_token_is_classified_as_unknown() {
     $o= new ProfilingObserver($this->cat);
 

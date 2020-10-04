@@ -1,10 +1,10 @@
 <?php namespace rdbms\unittest;
  
-use rdbms\{Criteria, DSN};
 use rdbms\join\{JoinPart, JoinRelation, JoinTable};
 use rdbms\mysql\MySQLConnection;
 use rdbms\unittest\dataset\{Department, Job, Person};
-use unittest\TestCase;
+use rdbms\{Criteria, DSN};
+use unittest\{Test, TestCase};
 
 /**
  * Test JoinPart class
@@ -26,7 +26,7 @@ class JoinPartTest extends TestCase {
     $this->conn= new MySQLConnection(new DSN('mysql://localhost:3306/'));
   }
 
-  #[@test]
+  #[Test]
   public function getAttributesTest() {
     $joinpart= new JoinPart('job', Job::getPeer());
     $this->assertEquals(
@@ -40,14 +40,14 @@ class JoinPartTest extends TestCase {
     );
   }
 
-  #[@test]
+  #[Test]
   public function getTableTest() {
     $joinpart= new JoinPart('job', Job::getPeer());
     $this->assertInstanceOf(JoinTable::class, $joinpart->getTable());
     $this->assertEquals($joinpart->getTable()->toSqlString(), 'JOBS.job as job');
   }
 
-  #[@test]
+  #[Test]
   public function getJoinRelationsTest() {
     $jobpart=    new JoinPart('j', Job::getPeer());
     $personpart= new JoinPart('p', Person::getPeer());
@@ -65,7 +65,7 @@ class JoinPartTest extends TestCase {
     );
   }
 
-  #[@test]
+  #[Test]
   public function getComplexJoinRelationsTest() {
     $toJob=        new JoinPart('j', Job::getPeer());
     $toPerson=     new JoinPart('p', Person::getPeer());
@@ -82,7 +82,7 @@ class JoinPartTest extends TestCase {
     );
   }
 
-  #[@test]
+  #[Test]
   public function extractTest() {
     $toJob=        new JoinPart('j', Job::getPeer());
     $toPerson=     new JoinPart('p', Person::getPeer());

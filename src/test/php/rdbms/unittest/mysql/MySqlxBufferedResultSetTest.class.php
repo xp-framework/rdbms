@@ -3,7 +3,7 @@
 use lang\ClassLoader;
 use rdbms\SQLException;
 use rdbms\mysqlx\{MySqlxBufferedResultSet, MySqlxProtocol};
-use unittest\TestCase;
+use unittest\{BeforeClass, Expect, Test, TestCase};
 
 /**
  * TestCase
@@ -13,7 +13,7 @@ use unittest\TestCase;
 class MySqlxBufferedResultSetTest extends TestCase {
   protected static $proto;
 
-  #[@beforeClass]
+  #[BeforeClass]
   public static function mockProtocol() {
     $parent= class_exists('\\lang\\Object', false) ? 'lang.Object' : null;
     self::$proto= ClassLoader::defineClass('rdbms.unittest.mysql.MockMysqlProtocol', $parent, [], '{
@@ -54,12 +54,12 @@ class MySqlxBufferedResultSetTest extends TestCase {
     return new MySqlxBufferedResultSet(self::$proto->newInstance($records), $fields);
   }
 
-  #[@test]
+  #[Test]
   public function can_create_with_empty() { 
     $this->newResultSet([]);
   }
 
-  #[@test]
+  #[Test]
   public function can_create() { 
     $this->newResultSet([
       [
@@ -69,7 +69,7 @@ class MySqlxBufferedResultSetTest extends TestCase {
     ]);
   }
 
-  #[@test]
+  #[Test]
   public function next() { 
     $records= [
     ];
@@ -77,7 +77,7 @@ class MySqlxBufferedResultSetTest extends TestCase {
     $this->assertNull($fixture->next());
   }
 
-  #[@test]
+  #[Test]
   public function next_once() { 
     $records= [
       [
@@ -89,7 +89,7 @@ class MySqlxBufferedResultSetTest extends TestCase {
     $this->assertEquals($records[0], $fixture->next());
   }
 
-  #[@test]
+  #[Test]
   public function next_twice() { 
     $records= [
       [
@@ -106,7 +106,7 @@ class MySqlxBufferedResultSetTest extends TestCase {
     $this->assertEquals($records[1], $fixture->next());
   }
 
-  #[@test]
+  #[Test]
   public function next_returns_null_at_end() { 
     $records= [
       [
@@ -119,7 +119,7 @@ class MySqlxBufferedResultSetTest extends TestCase {
     $this->assertNull($fixture->next());
   }
 
-  #[@test]
+  #[Test]
   public function seek_to_0_before_start() {
     $records= [
       [
@@ -132,7 +132,7 @@ class MySqlxBufferedResultSetTest extends TestCase {
     $this->assertEquals($records[0], $fixture->next());
   }
 
-  #[@test]
+  #[Test]
   public function seek_to_0_after_start() {
     $records= [
       [
@@ -146,7 +146,7 @@ class MySqlxBufferedResultSetTest extends TestCase {
     $this->assertEquals($records[0], $fixture->next());
   }
 
-  #[@test]
+  #[Test]
   public function seek_to_1() {
     $records= [
       [
@@ -163,17 +163,17 @@ class MySqlxBufferedResultSetTest extends TestCase {
     $this->assertEquals($records[1], $fixture->next());
   }
 
-  #[@test, @expect(['class' => SQLException::class, 'withMessage' => 'Cannot seek to offset 1, out of bounds'])]
+  #[Test, Expect(['class' => SQLException::class, 'withMessage' => 'Cannot seek to offset 1, out of bounds'])]
   public function seek_to_offset_exceeding_length() {
     $fixture= $this->newResultSet([])->seek(1);
   }
 
-  #[@test, @expect(['class' => SQLException::class, 'withMessage' => 'Cannot seek to offset -1, out of bounds'])]
+  #[Test, Expect(['class' => SQLException::class, 'withMessage' => 'Cannot seek to offset -1, out of bounds'])]
   public function seek_to_negative_offset() {
     $fixture= $this->newResultSet([])->seek(-1);
   }
 
-  #[@test, @expect(['class' => SQLException::class, 'withMessage' => 'Cannot seek to offset 0, out of bounds'])]
+  #[Test, Expect(['class' => SQLException::class, 'withMessage' => 'Cannot seek to offset 0, out of bounds'])]
   public function seek_to_zero_offset_on_empty() {
     $fixture= $this->newResultSet([])->seek(0);
   }

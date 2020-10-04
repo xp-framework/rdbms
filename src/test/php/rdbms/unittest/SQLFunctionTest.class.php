@@ -1,13 +1,13 @@
 <?php namespace rdbms\unittest;
 
-use rdbms\{Criteria, SQLFunctions};
 use rdbms\criterion\Restrictions;
 use rdbms\mysql\MySQLConnection;
 use rdbms\pgsql\PostgreSQLConnection;
 use rdbms\sqlite3\SQLite3Connection;
 use rdbms\sybase\SybaseConnection;
 use rdbms\unittest\dataset\Job;
-use unittest\TestCase;
+use rdbms\{Criteria, SQLFunctions};
+use unittest\{Test, TestCase};
 use util\Date;
 
 /**
@@ -71,7 +71,7 @@ class SQLFunctionTest extends TestCase {
     $this->assertEquals('sqlite: '.$sqlite, 'sqlite: '.trim($criteria->projections($this->sqconn, $this->peer), ' '));
   }
   
-  #[@test]
+  #[Test]
   function columnTest() {
     $this->assertEquals(
       'job_id',
@@ -79,7 +79,7 @@ class SQLFunctionTest extends TestCase {
     );
   }
 
-  #[@test]
+  #[Test]
   function projectionTest() {
     $this->assertProjection(
       'day(valid_from)',
@@ -90,7 +90,7 @@ class SQLFunctionTest extends TestCase {
     );
   }
     
-  #[@test]
+  #[Test]
   function prepareProjectionTest() {
     $this->assertEquals(
       '- datepart(hour, valid_from) -',
@@ -110,7 +110,7 @@ class SQLFunctionTest extends TestCase {
     );
   }
     
-  #[@test]
+  #[Test]
   function stringFunctionTest() {
     $this->assertProjection(
       'ascii(\'a\') as `asciiTest`',
@@ -156,7 +156,7 @@ class SQLFunctionTest extends TestCase {
     );
   }
     
-  #[@test]
+  #[Test]
   function concatStringTest() {
     $this->assertProjection(
       'concat(\'aa\', cast(sysdate() as char), \'cc\') as `concatTest`',
@@ -167,7 +167,7 @@ class SQLFunctionTest extends TestCase {
     );
   }
     
-  #[@test]
+  #[Test]
   function dateFunctionTest() {
     $date= new Date();
     $myDate= $date->toString($this->myconn->getFormatter()->dialect->dateFormat);
@@ -211,7 +211,7 @@ class SQLFunctionTest extends TestCase {
     );
   }
     
-  #[@test]
+  #[Test]
   function mathArithFunctionTest() {
     $this->assertProjection(
       'abs(-6)',
@@ -279,7 +279,7 @@ class SQLFunctionTest extends TestCase {
     );
   }
     
-  #[@test]
+  #[Test]
   function mathTrigFunctionTest() {
     $this->assertProjection(
       'cot(45)',
@@ -346,7 +346,7 @@ class SQLFunctionTest extends TestCase {
     );
   }
     
-  #[@test]
+  #[Test]
   function randFunctionTest() {
     $this->assertProjection(
       'rand()',
@@ -357,7 +357,7 @@ class SQLFunctionTest extends TestCase {
     );
   }
     
-  #[@test]
+  #[Test]
   function castFunctionTest() {
     $this->assertProjection(
       'cast(\'345\' as decimal)',
@@ -375,7 +375,7 @@ class SQLFunctionTest extends TestCase {
     );
   }
     
-  #[@test]
+  #[Test]
   function restrictionTest() {
     $this->assertSQL(
       'where job_id = ceil(asin(sin(0.125)))',

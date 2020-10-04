@@ -1,18 +1,18 @@
 <?php namespace rdbms\unittest;
 
 use lang\{IllegalArgumentException, MethodNotImplementedException};
-use rdbms\{DriverManager, Peer, SQLExpression};
 use rdbms\finder\{FinderException, FinderMethod, GenericFinder, NoSuchEntityException};
 use rdbms\unittest\dataset\{Job, JobFinder};
 use rdbms\unittest\mock\{MockResultSet, RegisterMockConnection};
-use unittest\TestCase;
+use rdbms\{DriverManager, Peer, SQLExpression};
+use unittest\{Expect, Test, TestCase};
 
 /**
  * TestCase
  *
  * @see      xp://rdbms.finder.Finder
  */
-#[@action(new RegisterMockConnection())]
+#[Action(eval: 'new RegisterMockConnection()')]
 class FinderTest extends TestCase {
   protected $fixture = null;
 
@@ -49,17 +49,17 @@ class FinderTest extends TestCase {
     return $this->fixture->getPeer()->getConnection();
   }
 
-  #[@test]
+  #[Test]
   public function peerObject() {
     $this->assertInstanceOf(Peer::class, $this->fixture->getPeer());
   }
 
-  #[@test]
+  #[Test]
   public function jobPeer() {
     $this->assertEquals($this->fixture->getPeer(), Job::getPeer());
   }
 
-  #[@test]
+  #[Test]
   public function entityMethods() {
     $methods= $this->fixture->entityMethods();
     $this->assertEquals(1, sizeof($methods));
@@ -69,7 +69,7 @@ class FinderTest extends TestCase {
     $this->assertInstanceOf(SQLExpression::class, $methods[0]->invoke([$pk= 1]));
   }
 
-  #[@test]
+  #[Test]
   public function collectionMethods() {
     static $invocation= [
       'all'         => [],
@@ -89,13 +89,13 @@ class FinderTest extends TestCase {
     }
   }
 
-  #[@test]
+  #[Test]
   public function allMethods() {
     $methods= $this->fixture->allMethods(); // four declared plu all()
     $this->assertEquals(5, sizeof($methods));
   }
 
-  #[@test]
+  #[Test]
   public function byPrimaryMethod() {
     $method= $this->fixture->method('byPrimary');
     $this->assertInstanceOf(FinderMethod::class, $method);
@@ -103,17 +103,17 @@ class FinderTest extends TestCase {
     $this->assertEquals(ENTITY, $method->getKind());
   }
   
-  #[@test, @expect(MethodNotImplementedException::class)]
+  #[Test, Expect(MethodNotImplementedException::class)]
   public function nonExistantMethod() {
     $this->method('@@NON-EXISTANT@@');
   }
 
-  #[@test, @expect(IllegalArgumentException::class)]
+  #[Test, Expect(IllegalArgumentException::class)]
   public function notAFinderMethod() {
     $this->method('getPeer');
   }
   
-  #[@test]
+  #[Test]
   public function findByExistingPrimary() {
     $this->getConnection()->setResultSet(new MockResultSet([
       0 => [   // First row
@@ -127,7 +127,7 @@ class FinderTest extends TestCase {
     $this->assertInstanceOf(Job::class, $entity);
   }
 
-  #[@test]
+  #[Test]
   public function findByExistingPrimaryFluent() {
     $this->getConnection()->setResultSet(new MockResultSet([
       0 => [   // First row
@@ -141,12 +141,12 @@ class FinderTest extends TestCase {
     $this->assertInstanceOf(Job::class, $entity);
   }
 
-  #[@test]
+  #[Test]
   public function findByNonExistantPrimary() {
     $this->assertNull($this->fixture->find($this->fixture->byPrimary(0)));
   }
 
-  #[@test, @expect(FinderException::class)]
+  #[Test, Expect(FinderException::class)]
   public function findUnexpectedResults() {
     $this->getConnection()->setResultSet(new MockResultSet([
       0 => [   // First row
@@ -165,7 +165,7 @@ class FinderTest extends TestCase {
     $this->fixture->find($this->fixture->byPrimary(1));
   }
 
-  #[@test]
+  #[Test]
   public function getByExistingPrimary() {
     $this->getConnection()->setResultSet(new MockResultSet([
       0 => [   // First row
@@ -179,7 +179,7 @@ class FinderTest extends TestCase {
     $this->assertInstanceOf(Job::class, $entity);
   }
 
-  #[@test]
+  #[Test]
   public function getByExistingPrimaryFluent() {
     $this->getConnection()->setResultSet(new MockResultSet([
       0 => [   // First row
@@ -193,12 +193,12 @@ class FinderTest extends TestCase {
     $this->assertInstanceOf(Job::class, $entity);
   }
 
-  #[@test, @expect(NoSuchEntityException::class)]
+  #[Test, Expect(NoSuchEntityException::class)]
   public function getByNonExistantPrimary() {
     $this->fixture->get($this->fixture->byPrimary(0));
   }
 
-  #[@test, @expect(FinderException::class)]
+  #[Test, Expect(FinderException::class)]
   public function getUnexpectedResults() {
     $this->getConnection()->setResultSet(new MockResultSet([
       0 => [   // First row
@@ -217,7 +217,7 @@ class FinderTest extends TestCase {
     $this->fixture->get($this->fixture->byPrimary(1));
   }
 
-  #[@test]
+  #[Test]
   public function findNewestJobs() {
     $this->getConnection()->setResultSet(new MockResultSet([
       0 => [   // First row
@@ -237,7 +237,7 @@ class FinderTest extends TestCase {
     $this->assertEquals(2, sizeof($collection));
   }
 
-  #[@test]
+  #[Test]
   public function findNewestJobsFluent() {
     $this->getConnection()->setResultSet(new MockResultSet([
       0 => [   // First row
@@ -257,7 +257,7 @@ class FinderTest extends TestCase {
     $this->assertEquals(2, sizeof($collection));
   }
 
-  #[@test]
+  #[Test]
   public function getNewestJobs() {
     $this->getConnection()->setResultSet(new MockResultSet([
       0 => [   // First row
@@ -277,7 +277,7 @@ class FinderTest extends TestCase {
     $this->assertEquals(2, sizeof($collection));
   }
 
-  #[@test]
+  #[Test]
   public function getNewestJobsFluent() {
     $this->getConnection()->setResultSet(new MockResultSet([
       0 => [   // First row
@@ -297,29 +297,29 @@ class FinderTest extends TestCase {
     $this->assertEquals(2, sizeof($collection));
   }
 
-  #[@test, @expect(NoSuchEntityException::class)]
+  #[Test, Expect(NoSuchEntityException::class)]
   public function getNothingFound() {
     $this->fixture->getAll($this->fixture->newestJobs());
   }
 
-  #[@test, @expect(FinderException::class)]
+  #[Test, Expect(FinderException::class)]
   public function findWrapsSQLException() {
     $this->getConnection()->makeQueryFail(6010, 'Not enough power');
     $this->fixture->find(new \rdbms\Criteria());
   }
 
-  #[@test, @expect(FinderException::class)]
+  #[Test, Expect(FinderException::class)]
   public function findAllWrapsSQLException() {
     $this->getConnection()->makeQueryFail(6010, 'Not enough power');
     $this->fixture->findAll(new \rdbms\Criteria());
   }
 
-  #[@test, @expect(['class' => FinderException::class, 'withMessage' => '/No such method nonExistantMethod/'])]
+  #[Test, Expect(['class' => FinderException::class, 'withMessage' => '/No such method nonExistantMethod/'])]
   public function fluentNonExistantFinder() {
     $this->fixture->findAll()->nonExistantMethod(new \rdbms\Criteria());
   }
 
-  #[@test]
+  #[Test]
   public function genericFinderGetAll() {
     $this->getConnection()->setResultSet(new MockResultSet([
       0 => [   // First row

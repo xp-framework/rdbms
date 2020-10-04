@@ -1,13 +1,13 @@
 <?php namespace rdbms\unittest;
  
+use rdbms\unittest\mock\{MockResultSet, RegisterMockConnection};
 use rdbms\{DriverManager, ResultSet, SQLConnectException, SQLConnectionClosedException, SQLStateException, SQLStatementFailedException};
-use rdbms\unittest\mock\MockResultSet;
-use unittest\TestCase;
+use unittest\{Expect, Test, TestCase};
 
 /**
  * Test rdbms API
  */
-#[@action(new \rdbms\unittest\mock\RegisterMockConnection())]
+#[Action(eval: 'new RegisterMockConnection()')]
 class DBTest extends TestCase {
   protected $conn = null;
     
@@ -40,30 +40,30 @@ class DBTest extends TestCase {
     ) $this->assertEquals($field, $version);
   }
 
-  #[@test]
+  #[Test]
   public function connect() {
     $result= $this->conn->connect();
     $this->assertTrue($result);
   }
 
-  #[@test, @expect(SQLConnectException::class)]
+  #[Test, Expect(SQLConnectException::class)]
   public function connectFailure() {
     $this->conn->makeConnectFail('Unknown server');
     $this->conn->connect();
   }
   
-  #[@test]
+  #[Test]
   public function select() {
     $this->conn->connect();
     $this->assertQuery();
   }
 
-  #[@test, @expect(SQLStateException::class)]
+  #[Test, Expect(SQLStateException::class)]
   public function queryOnUnConnected() {
     $this->conn->query('select 1');   // Not connected
   }
 
-  #[@test, @expect(SQLStateException::class)]
+  #[Test, Expect(SQLStateException::class)]
   public function queryOnDisConnected() {
     $this->conn->connect();
     $this->assertQuery();
@@ -71,7 +71,7 @@ class DBTest extends TestCase {
     $this->conn->query('select 1');   // Not connected
   }
 
-  #[@test, @expect(SQLConnectionClosedException::class)]
+  #[Test, Expect(SQLConnectionClosedException::class)]
   public function connectionLost() {
     $this->conn->connections->automatic(true)->reconnect(0);
 
@@ -81,7 +81,7 @@ class DBTest extends TestCase {
     $this->conn->query('select 1');   // Not connected
   }
 
-  #[@test]
+  #[Test]
   public function connection_reestablished() {
     $this->conn->connections->automatic(true)->reconnect(1);
 
@@ -91,7 +91,7 @@ class DBTest extends TestCase {
     $this->assertQuery();
   }
 
-  #[@test, @expect(SQLStateException::class)]
+  #[Test, Expect(SQLStateException::class)]
   public function queryOnFailedConnection() {
     $this->conn->connections->automatic(true)->reconnect(0);
 
@@ -103,7 +103,7 @@ class DBTest extends TestCase {
     $this->conn->query('select 1');   // Previously failed to connect
   }
 
-  #[@test, @expect(SQLStatementFailedException::class)]
+  #[Test, Expect(SQLStatementFailedException::class)]
   public function statementFailed() {
     $this->conn->connect();
     $this->conn->makeQueryFail('Deadlock', 1205);

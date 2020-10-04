@@ -1,4 +1,6 @@
 <?php namespace rdbms\unittest\drivers;
+
+use unittest\Test;
  
 /**
  * Test tokenizers for MySQL based connections
@@ -7,7 +9,7 @@
  */
 abstract class MySQLTokenizerTest extends \rdbms\unittest\TokenizerTest {
 
-  #[@test]
+  #[Test]
   public function labelToken() {
     $this->assertEquals(
       'select * from `order`',
@@ -15,7 +17,7 @@ abstract class MySQLTokenizerTest extends \rdbms\unittest\TokenizerTest {
     );
   }
 
-  #[@test]
+  #[Test]
   public function backslash() {
     $this->assertEquals(
       'select \'Hello \\\\ \' as strval',

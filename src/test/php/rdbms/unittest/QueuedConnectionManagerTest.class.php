@@ -1,6 +1,8 @@
 <?php namespace rdbms\unittest;
 
+use rdbms\unittest\mock\RegisterMockConnection;
 use rdbms\{ConnectionManager, DSN};
+use unittest\Test;
 
 /**
  * Tests for connection managers with connections programmatically
@@ -9,7 +11,7 @@ use rdbms\{ConnectionManager, DSN};
  * @see   xp://rdbms.ConnectionManager#queue
  * @see   xp://net.xp_framework.unittest.rdbms.ConnectionManagerTest
  */
-#[@action(new \rdbms\unittest\mock\RegisterMockConnection())]
+#[Action(eval: 'new RegisterMockConnection()')]
 class QueuedConnectionManagerTest extends ConnectionManagerTest {
 
   /**
@@ -30,7 +32,7 @@ class QueuedConnectionManagerTest extends ConnectionManagerTest {
     return $cm;
   }
   
-  #[@test]
+  #[Test]
   public function queueReturnsDSN() {
     $dsn= 'mock://user:pass@host/db';
     $cm= $this->instanceWith([]);
@@ -38,7 +40,7 @@ class QueuedConnectionManagerTest extends ConnectionManagerTest {
     $this->assertEquals(new DSN($dsn), $cm->queue($dsn));
   }
  
-  #[@test]
+  #[Test]
   public function queueReturnsDSNWhenPreviouslyRegistered() {
     $dsn= 'mock://user:pass@host/db';
     $cm= $this->instanceWith([]);
@@ -47,7 +49,7 @@ class QueuedConnectionManagerTest extends ConnectionManagerTest {
     $this->assertEquals(new DSN($dsn), $cm->queue($dsn));
   }
 
-  #[@test]
+  #[Test]
   public function queueOverwritesPreviouslyRegistered() {
     $conn1= 'mock://user:pass@host/db1';
     $conn2= 'mock://user:pass@host/db2';

@@ -1,6 +1,8 @@
 <?php namespace rdbms\unittest;
 
+use rdbms\unittest\mock\RegisterMockConnection;
 use rdbms\{ConnectionManager, DriverManager};
+use unittest\{Action, Ignore, Test};
 
 /**
  * Tests for connection managers with connections programmatically
@@ -9,7 +11,7 @@ use rdbms\{ConnectionManager, DriverManager};
  * @see   xp://rdbms.ConnectionManager#register
  * @see   xp://net.xp_framework.unittest.rdbms.ConnectionManagerTest
  */
-#[@action(new \rdbms\unittest\mock\RegisterMockConnection())]
+#[Action(eval: 'new RegisterMockConnection()')]
 class RegisteredConnectionManagerTest extends ConnectionManagerTest {
 
   /**
@@ -31,12 +33,12 @@ class RegisteredConnectionManagerTest extends ConnectionManagerTest {
     return $cm;
   }
 
-  #[@test, @ignore('Does not work in this class as we eagerly create connections in instanceWith()')]
+  #[Test, Ignore('Does not work in this class as we eagerly create connections in instanceWith()')]
   public function invalidDsnScheme() {
     // NOOP
   }
 
-  #[@test]
+  #[Test]
   public function registerReturnsConnection() {
     $conn= DriverManager::getConnection('mock://user:pass@host/db');
     $cm= $this->instanceWith([]);
@@ -44,7 +46,7 @@ class RegisteredConnectionManagerTest extends ConnectionManagerTest {
     $this->assertEquals($conn, $cm->register($conn));
   }
  
-  #[@test]
+  #[Test]
   public function registerReturnsConnectionWhenPreviouslyRegistered() {
     $conn= DriverManager::getConnection('mock://user:pass@host/db');
     $cm= $this->instanceWith([]);
@@ -53,7 +55,7 @@ class RegisteredConnectionManagerTest extends ConnectionManagerTest {
     $this->assertEquals($conn, $cm->register($conn));
   }
 
-  #[@test]
+  #[Test]
   public function registerOverwritesPreviouslyRegistered() {
     $conn1= DriverManager::getConnection('mock://user:pass@host/db1');
     $conn2= DriverManager::getConnection('mock://user:pass@host/db2');

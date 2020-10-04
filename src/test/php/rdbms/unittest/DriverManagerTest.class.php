@@ -2,6 +2,7 @@
 
 use lang\{FormatException, IllegalArgumentException};
 use rdbms\{DriverManager, DriverNotSupportedException};
+use unittest\{Expect, Test};
 
 /**
  * TestCase
@@ -31,27 +32,27 @@ class DriverManagerTest extends \unittest\TestCase {
     }
   }
 
-  #[@test, @expect(DriverNotSupportedException::class)]
+  #[Test, Expect(DriverNotSupportedException::class)]
   public function unsupportedDriver() {
     DriverManager::getConnection('unsupported://localhost');
   }
 
-  #[@test, @expect(FormatException::class)]
+  #[Test, Expect(FormatException::class)]
   public function nullConnection() {
     DriverManager::getConnection(null);
   }
 
-  #[@test, @expect(FormatException::class)]
+  #[Test, Expect(FormatException::class)]
   public function emptyConnection() {
     DriverManager::getConnection('');
   }
 
-  #[@test, @expect(FormatException::class)]
+  #[Test, Expect(FormatException::class)]
   public function malformedConnection() {
     DriverManager::getConnection('not.a.dsn');
   }
 
-  #[@test]
+  #[Test]
   public function mysqlxProvidedByDefaultDrivers() {
     $this->assertInstanceOf(
       'rdbms.mysqlx.MySqlxConnection', 
@@ -59,12 +60,12 @@ class DriverManagerTest extends \unittest\TestCase {
     );
   }
 
-  #[@test, @expect(DriverNotSupportedException::class)]
+  #[Test, Expect(DriverNotSupportedException::class)]
   public function unsupportedDriverInMySQLDriverFamily() {
     DriverManager::getConnection('mysql+unsupported://localhost');
   }
 
-  #[@test]
+  #[Test]
   public function mysqlAlwaysSupported() {
     $this->assertInstanceOf(
       'rdbms.DBConnection', 
@@ -72,7 +73,7 @@ class DriverManagerTest extends \unittest\TestCase {
     );
   }
 
-  #[@test]
+  #[Test]
   public function registerConnection() {
     $this->register('mock', \lang\XPClass::forName('rdbms.unittest.mock.MockConnection'));
     $this->assertInstanceOf(
@@ -81,12 +82,12 @@ class DriverManagerTest extends \unittest\TestCase {
     );
   }
 
-  #[@test, @expect(IllegalArgumentException::class)]
+  #[Test, Expect(IllegalArgumentException::class)]
   public function registerNonDbConnection() {
     $this->register('fail', typeof($this));
   }
 
-  #[@test]
+  #[Test]
   public function searchImplementation() {
 
     // Should not be found

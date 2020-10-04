@@ -1,12 +1,12 @@
 <?php namespace rdbms\unittest;
 
 use lang\IllegalArgumentException;
-use rdbms\{SQLDialect, SQLFunction};
 use rdbms\criterion\Restrictions;
 use rdbms\join\{JoinRelation, JoinTable};
 use rdbms\mysql\MySQLConnection;
 use rdbms\sybase\SybaseConnection;
-use unittest\TestCase;
+use rdbms\{SQLDialect, SQLFunction};
+use unittest\{Expect, Test, TestCase, Values};
 use util\Date;
 
 /**
@@ -42,47 +42,47 @@ class SQLDialectTest extends TestCase {
     return $r;
   }
 
-  #[@test, @values('dialects')]
+  #[Test, Values('dialects')]
   public function dialect_member($dialect) {
     $this->assertInstanceOf(SQLDialect::class, $dialect);
   }
 
-  #[@test, @values('dialects')]
+  #[Test, Values('dialects')]
   public function pi_function($dialect) {
     $this->assertEquals('pi()', $dialect->formatFunction(new SQLFunction('pi', '%s')));
   }
 
-  #[@test, @values('dialects'), @expect(IllegalArgumentException::class)]
+  #[Test, Values('dialects'), Expect(IllegalArgumentException::class)]
   public function unknown_function($dialect) {
     $dialect->formatFunction(new SQLFunction('foo', '%s', [1, 2, 3, 4, 5]));
   }
 
-  #[@test, @values('dialects')]
+  #[Test, Values('dialects')]
   public function month_datepart($dialect) {
     $this->assertEquals('month', $dialect->datepart('month'));
   }
 
-  #[@test, @values('dialects'), @expect(IllegalArgumentException::class)]
+  #[Test, Values('dialects'), Expect(IllegalArgumentException::class)]
   public function unknown_datepart($dialect) {
     $dialect->datepart('month_foo_bar_buz');
   }
 
-  #[@test, @values('dialects')]
+  #[Test, Values('dialects')]
   public function int_datatype($dialect) {
     $this->assertEquals('int', $dialect->datatype('int'));
   }
 
-  #[@test, @values('dialects'), @expect(IllegalArgumentException::class)]
+  #[Test, Values('dialects'), Expect(IllegalArgumentException::class)]
   public function unknown_datatype($dialect) {
     $dialect->datatype('int_foo_bar_buz');
   }
 
-  #[@test, @values('dialects'), @expect(IllegalArgumentException::class)]
+  #[Test, Values('dialects'), Expect(IllegalArgumentException::class)]
   public function join_by_empty($dialect) {
     $dialect->makeJoinBy([]);
   }
 
-  #[@test, @values('dialects')]
+  #[Test, Values('dialects')]
   public function join_two_tables($dialect, $name) {
     static $asserts= [
       self::MYSQL  => 'table0 as t0 LEFT OUTER JOIN table1 as t1 on (t0.id1_1 = t0.id1_1 and t0.id1_2 = t0.id1_2) where ',
@@ -97,7 +97,7 @@ class SQLDialectTest extends TestCase {
     ]));
   }
 
-  #[@test, @values('dialects')]
+  #[Test, Values('dialects')]
   public function join_three_tables($dialect, $name) {
     static $asserts= [
       self::MYSQL  => 'table0 as t0 LEFT OUTER JOIN table1 as t1 on (t0.id1_1 = t0.id1_1 and t0.id1_2 = t0.id1_2) LEFT JOIN table2 as t2 on (t1.id2_1 = t2.id2_1) where ',

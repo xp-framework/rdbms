@@ -3,6 +3,7 @@
 use io\File;
 use rdbms\DSN;
 use rdbms\tds\FreeTdsLookup;
+use unittest\Test;
 
 /**
  * TestCase
@@ -11,7 +12,7 @@ use rdbms\tds\FreeTdsLookup;
  */
 class FreeTdsConfigLocationTest extends \unittest\TestCase {
 
-  #[@test]
+  #[Test]
   public function noAlternativesFound() {
     $fixture= new class() extends FreeTdsLookup {
       public function parse() { throw new IllegalStateException('Should never be called!'); }
@@ -23,7 +24,7 @@ class FreeTdsConfigLocationTest extends \unittest\TestCase {
     $this->assertEquals(new DSN('sybase://test'), $dsn);
   }
 
-  #[@test]
+  #[Test]
   public function fileReturned() {
     $fixture= new class() extends FreeTdsLookup {
       public function parse() { return ['test' => ['host' => $this->conf->getFilename(), 'port' => 1999]]; }

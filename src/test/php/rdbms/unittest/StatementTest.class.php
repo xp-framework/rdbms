@@ -1,15 +1,16 @@
 <?php namespace rdbms\unittest;
  
-use rdbms\{DriverManager, Statement};
 use rdbms\unittest\dataset\Job;
-use unittest\TestCase;
+use rdbms\unittest\mock\RegisterMockConnection;
+use rdbms\{DriverManager, Statement};
+use unittest\{Test, TestCase};
 
 /**
  * Test Statement class
  *
  * @see   xp://rdbms.Statement
  */
-#[@action(new \rdbms\unittest\mock\RegisterMockConnection())]
+#[Action(eval: 'new RegisterMockConnection()')]
 class StatementTest extends TestCase {
   public $conn= null;
   public $peer= null;
@@ -36,12 +37,12 @@ class StatementTest extends TestCase {
     $this->assertEquals($sql, trim($this->conn->getStatement(), ' '));
   }
 
-  #[@test]
+  #[Test]
   public function simpleStatement() {
     $this->assertStatement('select * from job', new Statement('select * from job'));
   }
   
-  #[@test]
+  #[Test]
   public function tokenizedStatement() {
     $this->assertStatement(
       'select * from job where job_id= 1',
@@ -49,7 +50,7 @@ class StatementTest extends TestCase {
     );
   }
   
-  #[@test]
+  #[Test]
   public function multiTokenStatement() {
     $this->assertStatement(
       'select * from job where job_id= 1 and title= "Test"',

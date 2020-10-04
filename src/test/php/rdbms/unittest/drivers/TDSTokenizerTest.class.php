@@ -1,5 +1,6 @@
 <?php namespace rdbms\unittest\drivers;
  
+use unittest\Test;
 use util\Date;
 
 /**
@@ -9,7 +10,7 @@ use util\Date;
  */
 abstract class TDSTokenizerTest extends \rdbms\unittest\TokenizerTest {
 
-  #[@test]
+  #[Test]
   public function dateToken() {
     $t= new Date('1977-12-14');
     $this->assertEquals(
@@ -18,7 +19,7 @@ abstract class TDSTokenizerTest extends \rdbms\unittest\TokenizerTest {
     );
   }
 
-  #[@test]
+  #[Test]
   public function timeStampToken() {
     $t= (new Date('1977-12-14'))->getTime();
     $this->assertEquals(
@@ -27,7 +28,7 @@ abstract class TDSTokenizerTest extends \rdbms\unittest\TokenizerTest {
     );
   }
 
-  #[@test]
+  #[Test]
   public function dateArrayToken() {
     $d1= new Date('1977-12-14');
     $d2= new Date('1977-12-15');

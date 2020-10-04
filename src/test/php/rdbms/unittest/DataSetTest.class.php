@@ -2,9 +2,9 @@
 
 use lang\IllegalArgumentException;
 use rdbms\unittest\dataset\Job;
-use rdbms\unittest\mock\MockResultSet;
+use rdbms\unittest\mock\{MockResultSet, RegisterMockConnection};
 use rdbms\{Column, DBEvent, DriverManager, Peer, ResultIterator, SQLException, Statement};
-use unittest\TestCase;
+use unittest\{Expect, Test, TestCase};
 use util\log\BoundLogObserver;
 use util\{Date, DateUtil, NoSuchElementException};
 
@@ -13,7 +13,7 @@ use util\{Date, DateUtil, NoSuchElementException};
  *
  * @see      xp://rdbms.DataSet
  */
-#[@action(new \rdbms\unittest\mock\RegisterMockConnection())]
+#[Action(eval: 'new RegisterMockConnection()')]
 class DataSetTest extends TestCase {
   const IRRELEVANT_NUMBER= -1;
 
@@ -42,7 +42,7 @@ class DataSetTest extends TestCase {
     $this->getConnection()->setResultSet($r);
   }
   
-  #[@test]
+  #[Test]
   public function peerObject() {
     $peer= Job::getPeer();
     $this->assertInstanceOf(Peer::class, $peer);
@@ -60,7 +60,7 @@ class DataSetTest extends TestCase {
     );
   }
   
-  #[@test]
+  #[Test]
   public function getByJob_id() {
     $now= Date::now();
     $this->setResults(new MockResultSet([
@@ -79,13 +79,13 @@ class DataSetTest extends TestCase {
     $this->assertNull($job->getExpire_at());
   }
   
-  #[@test]
+  #[Test]
   public function newObject() {
     $j= new Job();
     $this->assertTrue($j->isNew());
   }
 
-  #[@test]
+  #[Test]
   public function existingObject() {
     $this->setResults(new MockResultSet([
       0 => [   // First row
@@ -101,7 +101,7 @@ class DataSetTest extends TestCase {
     $this->assertFalse($job->isNew());
   }
 
-  #[@test]
+  #[Test]
   public function noLongerNewAfterSave() {
     $j= new Job();
     $j->setTitle('New job');
@@ -113,13 +113,13 @@ class DataSetTest extends TestCase {
     $this->assertFalse($j->isNew());
   }
 
-  #[@test]
+  #[Test]
   public function noResultsDuringGetByJob_id() {
     $this->setResults(new MockResultSet());
     $this->assertNull(Job::getByJob_id(self::IRRELEVANT_NUMBER));
   }
 
-  #[@test, @expect(SQLException::class)]
+  #[Test, Expect(SQLException::class)]
   public function failedQueryInGetByJob_id() {
     $mock= $this->getConnection();
     $mock->makeQueryFail(1, 'Select failed');
@@ -127,7 +127,7 @@ class DataSetTest extends TestCase {
     Job::getByJob_id(self::IRRELEVANT_NUMBER);
   }
 
-  #[@test]
+  #[Test]
   public function insertReturnsIdentity() {
     $mock= $this->getConnection();
     $mock->setIdentityValue(14121977);
@@ -141,7 +141,7 @@ class DataSetTest extends TestCase {
     $this->assertEquals(14121977, $id);
   }
   
-  #[@test]
+  #[Test]
   public function saveReturnsIdentityForInserts() {
     $mock= $this->getConnection();
     $mock->setIdentityValue(14121977);
@@ -155,7 +155,7 @@ class DataSetTest extends TestCase {
     $this->assertEquals(14121977, $id);
   }
 
-  #[@test]
+  #[Test]
   public function saveReturnsIdentityForUpdates() {
     $this->setResults(new MockResultSet([
       0 => [   // First row
@@ -172,7 +172,7 @@ class DataSetTest extends TestCase {
     $this->assertEquals(1, $id);
   }
   
-  #[@test]
+  #[Test]
   public function identityFieldIsSet() {
     $mock= $this->getConnection();
     $mock->setIdentityValue(14121977);
@@ -188,7 +188,7 @@ class DataSetTest extends TestCase {
     $this->assertEquals(14121977, $j->getJob_id());
   }
   
-  #[@test, @expect(SQLException::class)]
+  #[Test, Expect(SQLException::class)]
   public function failedQueryInInsert() {
     $mock= $this->getConnection();
     $mock->makeQueryFail(1205, 'Deadlock');
@@ -201,7 +201,7 @@ class DataSetTest extends TestCase {
     $j->insert();
   }
   
-  #[@test]
+  #[Test]
   public function oneResultForDoSelect() {
     $this->setResults(new MockResultSet([
       0 => [
@@ -220,7 +220,7 @@ class DataSetTest extends TestCase {
     $this->assertInstanceOf(Job::class, $jobs[0]);
   }
 
-  #[@test]
+  #[Test]
   public function noResultForDoSelect() {
     $this->setResults(new MockResultSet());
   
@@ -231,7 +231,7 @@ class DataSetTest extends TestCase {
     $this->assertEquals(0, sizeof($jobs));
   }
 
-  #[@test]
+  #[Test]
   public function multipleResultForDoSelect() {
     $this->setResults(new MockResultSet([
       0 => [
@@ -259,7 +259,7 @@ class DataSetTest extends TestCase {
     $this->assertEquals(9, $jobs[1]->getJob_id());
   }
   
-  #[@test]
+  #[Test]
   public function iterateOverCriteria() {
     $this->setResults(new MockResultSet([
       0 => [
@@ -299,7 +299,7 @@ class DataSetTest extends TestCase {
     $this->assertFalse($iterator->hasNext());
   }
 
-  #[@test]
+  #[Test]
   public function nextCallWithoutHasNext() {
     $this->setResults(new MockResultSet([
       0 => [
@@ -326,7 +326,7 @@ class DataSetTest extends TestCase {
     $this->assertTrue($iterator->hasNext());
   }
 
-  #[@test, @expect(NoSuchElementException::class)]
+  #[Test, Expect(NoSuchElementException::class)]
   public function nextCallOnEmptyResultSet() {
     $this->setResults(new MockResultSet());
     $peer= Job::getPeer();
@@ -334,7 +334,7 @@ class DataSetTest extends TestCase {
     $iterator->next();
   }
 
-  #[@test, @expect(NoSuchElementException::class)]
+  #[Test, Expect(NoSuchElementException::class)]
   public function nextCallPastEndOfResultSet() {
     $this->setResults(new MockResultSet([
       0 => [
@@ -351,7 +351,7 @@ class DataSetTest extends TestCase {
     $iterator->next();
   }
   
-  #[@test]
+  #[Test]
   public function iterateOverStatement() {
     $this->setResults(new MockResultSet([
       0 => [
@@ -376,7 +376,7 @@ class DataSetTest extends TestCase {
     $this->assertFalse($iterator->hasNext());
   }
 
-  #[@test]
+  #[Test]
   public function updateUnchangedObject() {
 
     // First, retrieve an object
@@ -401,45 +401,45 @@ class DataSetTest extends TestCase {
     $this->setResults(new MockResultSet());
   }
 
-  #[@test]
+  #[Test]
   public function column() {
     $c= Job::column('job_id');
     $this->assertInstanceOf(Column::class, $c);
     $this->assertEquals('job_id', $c->getName());
   }
 
-  #[@test, @expect(IllegalArgumentException::class)]
+  #[Test, Expect(IllegalArgumentException::class)]
   public function nonExistantColumn() {
     Job::column('non_existant');
   }
 
-  #[@test]
+  #[Test]
   public function relativeColumn() {
     $this->assertInstanceOf(Column::class, Job::column('PersonJob->person_id'));
   }
 
-  #[@test, @expect(IllegalArgumentException::class)]
+  #[Test, Expect(IllegalArgumentException::class)]
   public function nonExistantRelativeColumn() {
     Job::column('PersonJob->non_existant');
   }
 
-  #[@test]
+  #[Test]
   public function farRelativeColumn() {
     $this->assertInstanceOf(Column::class, Job::column('PersonJob->Department->department_id'));
   }
 
-  #[@test, @expect(IllegalArgumentException::class)]
+  #[Test, Expect(IllegalArgumentException::class)]
   public function nonExistantfarRelativeColumn() {
     Job::column('PersonJob->Department->non_existant');
   }
 
-  #[@test, @expect(IllegalArgumentException::class)]
+  #[Test, Expect(IllegalArgumentException::class)]
   public function nonExistantRelative() {
     Job::column('NonExistant->person_id');
   }
 
 
-  #[@test]
+  #[Test]
   public function doUpdate() {
     $this->setResults(new MockResultSet([
       0 => [
@@ -455,7 +455,7 @@ class DataSetTest extends TestCase {
     $job->doUpdate(new \rdbms\Criteria(['job_id', $job->getJob_id(), EQUAL]));
   }
 
-  #[@test]
+  #[Test]
   public function doDelete() {
     $this->setResults(new MockResultSet([
       0 => [
@@ -470,7 +470,7 @@ class DataSetTest extends TestCase {
     $job->doDelete(new \rdbms\Criteria(['job_id', $job->getJob_id(), EQUAL]));
   }
 
-  #[@test]
+  #[Test]
   public function percentSign() {
     $observer= $this->getConnection()->addObserver(new class() implements BoundLogObserver {
       public $statements= [];
@@ -491,7 +491,7 @@ class DataSetTest extends TestCase {
     );
   }
 
-  #[@test]
+  #[Test]
   public function testDoSelectMax() {
     for ($i= 0; $i < 4; $i++) {
       $this->setResults(new MockResultSet([
