@@ -1,11 +1,12 @@
 RDBMS support for the XP Framework
 ========================================================================
 
-[![Build Status on TravisCI](https://secure.travis-ci.org/xp-framework/rdbms.svg)](http://travis-ci.org/xp-framework/rdbms)
+[![Build status on GitHub](https://github.com/xp-framework/rdbms/workflows/Tests/badge.svg)](https://github.com/xp-framework/rdbms/actions)
 [![Build status on AppVeyor](https://ci.appveyor.com/api/projects/status/wyt2cgdnkvahlaqa?svg=true)](https://ci.appveyor.com/project/thekid/rdbms)
 [![XP Framework Module](https://raw.githubusercontent.com/xp-framework/web/master/static/xp-framework-badge.png)](https://github.com/xp-framework/core)
 [![BSD Licence](https://raw.githubusercontent.com/xp-framework/web/master/static/licence-bsd.png)](https://github.com/xp-framework/core/blob/master/LICENCE.md)
-[![Requires PHP 7.0+](https://raw.githubusercontent.com/xp-framework/web/master/static/php-7_0plus.png)](http://php.net/)
+[![Requires PHP 7.0+](https://raw.githubusercontent.com/xp-framework/web/master/static/php-7_0plus.svg)](http://php.net/)
+[![Supports PHP 8.0+](https://raw.githubusercontent.com/xp-framework/web/master/static/php-8_0plus.svg)](http://php.net/)
 [![Latest Stable Version](https://poser.pugx.org/xp-framework/rdbms/version.png)](https://packagist.org/packages/xp-framework/rdbms)
 
 RDBMS access APIs, connection manager, reverse engineering, O/R mapping.
