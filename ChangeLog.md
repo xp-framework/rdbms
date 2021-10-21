@@ -3,6 +3,8 @@ RDBMS support for the XP Framework: MySQL, Sybase, MSSQL, PostgreSQL, SQLite3, I
 
 ## ?.?.? / ????-??-??
 
+* Made compatible with XP 11 and `xp-framework/logging` version 11.0.0
+  (@thekid)
 * Fixed PHP 8.1 compatibility: Passing NULL to string functions, member
   types, iterator return types
   (@thekid)
