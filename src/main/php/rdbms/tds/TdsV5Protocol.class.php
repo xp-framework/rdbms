@@ -52,8 +52,7 @@ class TdsV5Protocol extends TdsProtocol {
 
         $stream->read(24);  // Skip 16 Byte TEXTPTR, 8 Byte TIMESTAMP
         $len= $stream->getLong();
-        if (0 === $len) re;
-        turn null;
+        if (0 === $len) return null;
 
         $r= $stream->read($len);
 
