@@ -137,7 +137,7 @@ class TdsV7Protocol extends TdsProtocol {
     $xor= 0x5A5A;
     $s= '';
     for ($i= 0, $l= strlen($password); $i < $l; $i++) {
-      $c= ord($password{$i}) ^ $xor;
+      $c= ord($password[$i]) ^ $xor;
       $s.= chr((($c >> 4) & 0x0F0F) | (($c << 4) & 0xF0F0))."\xA5";
     }
     return $s;
