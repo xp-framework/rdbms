@@ -11,7 +11,6 @@ class TdsProtocolException extends \peer\ProtocolException {
   public $class;
   public $server;
   public $proc;
-  public $line;
   
   /**
    * Constructor

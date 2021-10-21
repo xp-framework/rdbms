@@ -3,6 +3,10 @@ RDBMS support for the XP Framework: MySQL, Sybase, MSSQL, PostgreSQL, SQLite3, I
 
 ## ?.?.? / ????-??-??
 
+* Fixed PHP 8.1 compatibility: Passing NULL to string functions, member
+  types, iterator return types
+  (@thekid)
+
 ## 13.0.1 / 2020-10-04
 
 * Fixed "Array and string offset access syntax with curly braces is no

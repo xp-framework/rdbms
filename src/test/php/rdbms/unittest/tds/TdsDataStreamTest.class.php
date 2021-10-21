@@ -24,7 +24,7 @@ class TdsDataStreamTest extends TestCase {
       protected $offset= 0;
       
       public function __construct($bytes= "") {
-        $this->bytes= $bytes;
+        $this->bytes= (string)$bytes;
       }
 
       public function write($bytes) {

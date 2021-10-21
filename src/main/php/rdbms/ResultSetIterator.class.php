@@ -1,11 +1,13 @@
 <?php namespace rdbms;
 
+use Iterator, ReturnTypeWillChange;
+
 /**
  * Foreach support for results
  *
  * @test xp://rdbms.unittest.ResultSetTest
  */
-class ResultSetIterator implements \Iterator {
+class ResultSetIterator implements Iterator {
   const EOF = -1;
   protected $rs, $offset, $current;
 
@@ -20,6 +22,7 @@ class ResultSetIterator implements \Iterator {
   }
 
   /** @return void */
+  #[ReturnTypeWillChange]
   public function rewind() {
     if (self::EOF === $this->offset) {
       $this->rs->seek(0);
@@ -33,16 +36,19 @@ class ResultSetIterator implements \Iterator {
   }
 
   /** @return var */
+  #[ReturnTypeWillChange]
   public function current() {
     return $this->current;
   }
 
   /** @return var */
+  #[ReturnTypeWillChange]
   public function key() {
     return $this->offset;
   }
 
   /** @return void */
+  #[ReturnTypeWillChange]
   public function next() {
     if (!($this->current= $this->rs->next())) {
       $this->offset= self::EOF;
@@ -52,6 +58,7 @@ class ResultSetIterator implements \Iterator {
   }
 
   /** @return bool */
+  #[ReturnTypeWillChange]
   public function valid() {
     return $this->offset > self::EOF;
   }
