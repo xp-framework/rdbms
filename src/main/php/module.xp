@@ -1,0 +1,13 @@
+<?php namespace rdbms;
+
+use util\Configurable;
+
+module xp-framework/rdbms {
+  
+  /** Declare util.Configurable */
+  public function initialize() {
+    if (interface_exists(Configurable::class)) return;
+
+    eval('<?php namespace util; interface Configurable { public function configure($properties); }');
+  }
+}
