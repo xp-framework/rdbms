@@ -19,7 +19,7 @@ class ResultSetTest extends \unittest\TestCase {
   #[BeforeClass]
   public static function defineResultSet() {
     self::$resultSet= ClassLoader::defineClass('ResultSetTest_Fixture', 'rdbms.ResultSet', [], '{
-      protected $records;
+      protected $records, $offset;
 
       public function __construct($records) {
         $this->records= $records;

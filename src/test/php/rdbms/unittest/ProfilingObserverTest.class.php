@@ -12,6 +12,7 @@ use util\log\{BufferedAppender, LogCategory};
  * @see   xp://rdbms.ProfilingObserver
  */
 class ProfilingObserverTest extends TestCase {
+  private $cat;
 
   /** @return void */
   public function setUp() {

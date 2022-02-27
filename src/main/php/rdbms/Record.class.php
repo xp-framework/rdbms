@@ -1,8 +1,11 @@
 <?php namespace rdbms;
 
+use AllowDynamicProperties;
+
 /**
  * A Record saves key value pairs
  */
+#[AllowDynamicProperties]
 class Record {
   
   /**
