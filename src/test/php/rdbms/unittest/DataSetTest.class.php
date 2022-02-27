@@ -6,7 +6,7 @@ use rdbms\unittest\mock\{MockResultSet, RegisterMockConnection};
 use rdbms\{Column, DBEvent, DriverManager, Peer, ResultIterator, SQLException, Statement};
 use unittest\{Expect, Test, TestCase};
 use util\log\BoundLogObserver;
-use util\{Date, DateUtil, NoSuchElementException};
+use util\{Date, NoSuchElementException};
 
 /**
  * O/R-mapping API unit test
@@ -244,7 +244,7 @@ class DataSetTest extends TestCase {
         'job_id'      => 9,
         'title'       => 'PHP programmer',
         'valid_from'  => Date::now(),
-        'expire_at'   => DateUtil::addDays(Date::now(), 7)
+        'expire_at'   => new Date(time() + 86400 * 7),
       ]
     ]));
   
