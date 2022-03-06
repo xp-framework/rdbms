@@ -128,6 +128,9 @@ class StatementFormatter {
         $type= 's';
         $this->conn->tz && $arg= $this->conn->tz->translate($arg);
         $p= $arg->toString($this->dialect->dateFormat);
+      } else if ($arg instanceof \util\UUID) {
+        $type= 's';
+        $p= $arg->hashCode();
       } else if ($arg instanceof SQLRenderable) {
         $r.= $arg->asSql($this->conn).', ';
         continue;
