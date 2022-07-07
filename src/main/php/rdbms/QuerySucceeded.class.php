@@ -1,5 +1,7 @@
 <?php namespace rdbms;
 
+use Traversable;
+
 /**
  * Success result set as returned from the DBConnection::query method
  *
@@ -52,12 +54,8 @@ class QuerySucceeded extends ResultSet {
     return false;
   }
 
-  /**
-   * Returns an iterator
-   *
-   * @return php.Iterator
-   */
-  public function getIterator() {
+  /** Returns an iterator */
+  public function getIterator(): Traversable {
     return new \ArrayIterator([]);
   }
 
