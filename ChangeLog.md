@@ -3,6 +3,11 @@ RDBMS support for the XP Framework: MySQL, Sybase, MSSQL, PostgreSQL, SQLite3, I
 
 ## ?.?.? / ????-??-??
 
+## 13.0.4 / 2022-07-07
+
+* Fixed #50: *TypeError (get_resource_type(): Argument #1 ($resource)
+  must be of type resource, SQLite3 given)*
+  (@thekid)
 * Fixed #51: *Warning: Return type of rdbms\ResultSet::getIterator()*
   (@thekid)
 

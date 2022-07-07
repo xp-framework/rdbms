@@ -199,4 +199,17 @@ class SQLite3Connection extends DBConnection {
     $this->transaction--;
     return true;
   }
+
+  /** @return string */
+  public function hashCode() {
+    if (PHP_VERSION_ID >= 70200) {
+      $id= spl_object_id($this->handle);
+    } else {
+      ob_start();
+      var_dump($this->handle);
+      sscanf(ob_get_contents(), 'object(%*[^)])#%d', $id);
+      ob_get_clean();
+    }
+    return 'sqlite #'.$id;
+  }
 }

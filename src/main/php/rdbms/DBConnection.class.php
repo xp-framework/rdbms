@@ -63,7 +63,7 @@ abstract class DBConnection extends Observable {
       nameof($this),
       $this->dsn->asString(),
       $this->tz ? ', tz='.$this->tz->toString() : '',
-      $this->handle ? ', conn='.get_resource_type($this->handle).' #'.(int)$this->handle : ''
+      $this->handle ? ', conn='.$this->hashCode() : ''
     );
   }
 
