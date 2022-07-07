@@ -3,6 +3,9 @@ RDBMS support for the XP Framework: MySQL, Sybase, MSSQL, PostgreSQL, SQLite3, I
 
 ## ?.?.? / ????-??-??
 
+* Fixed #51: *Warning: Return type of rdbms\ResultSet::getIterator()*
+  (@thekid)
+
 ## 13.0.3 / 2022-02-27
 
 * Fixed "Creation of dynamic property" warnings in PHP 8.2 - @thekid

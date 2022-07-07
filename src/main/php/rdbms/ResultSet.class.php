@@ -1,5 +1,6 @@
 <?php namespace rdbms;
 
+use IteratorAggregate, Traversable;
 use lang\Closeable;
 use util\{Objects, TimeZone};
 
@@ -17,7 +18,7 @@ use util\{Objects, TimeZone};
  *
  * @test  xp://rdbms.unittest.ResultSetTest
  */
-abstract class ResultSet implements Closeable, \IteratorAggregate {
+abstract class ResultSet implements Closeable, IteratorAggregate {
   protected $handle, $fields, $tz;
   private $iterator= null;
 
@@ -66,30 +67,20 @@ abstract class ResultSet implements Closeable, \IteratorAggregate {
    */
   public function close() { }
 
-  /**
-   * Returns an iterator
-   *
-   * @return php.Iterator
-   */
-  public function getIterator() {
+  /** Returns an iterator */
+  public function getIterator(): Traversable {
     if (null === $this->iterator) {
       $this->iterator= new ResultSetIterator($this);
     }
     return $this->iterator;
   }
 
-  /**
-   * Returns a string representation of this object
-   *
-   * @return  string
-   */
+  /** @return string */
   public function toString() {
     return nameof($this).'('.Objects::stringOf($this->handle).')@'.Objects::stringOf($this->fields);
   }
 
-  /**
-   * Destructor. Ensures `close()` is called.
-   */
+  /** Destructor. Ensures `close()` is called */
   public function __destruct() {
     $this->close();
   }
