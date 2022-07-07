@@ -3,7 +3,7 @@
 use rdbms\{DBConnection, SQLStateException};
 use unittest\actions\RuntimeVersion;
 use unittest\{Expect, Test};
-use util\Date;
+use util\{Date, UUID};
 
 /**
  * Test rdbms tokenizer
@@ -162,6 +162,15 @@ abstract class TokenizerTest extends \unittest\TestCase {
     $this->assertEquals(
       "select * from news where date= '1977-12-14 00:00:00'",
       $this->fixture->prepare('select * from news where date= %s', $t)
+    );
+  }
+
+  #[Test]
+  public function uuidToken() {
+    $t= new UUID('b1e2f772-ae5b-4eba-aca5-174c8d0f4cc1');
+    $this->assertEquals(
+      "select * from news where id= 'b1e2f772-ae5b-4eba-aca5-174c8d0f4cc1'",
+      $this->fixture->prepare('select * from news where id= %s', $t)
     );
   }
 
