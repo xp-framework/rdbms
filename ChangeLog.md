@@ -3,8 +3,10 @@ RDBMS support for the XP Framework: MySQL, Sybase, MSSQL, PostgreSQL, SQLite3, I
 
 ## ?.?.? / ????-??-??
 
-## 13.0.4 / 2022-07-07
+## 13.1.0 / 2022-07-07
 
+* Merged #49: Add support for util.UUID instances (in `%s` tokens)
+  (@thekid)
 * Fixed #50: *TypeError (get_resource_type(): Argument #1 ($resource)
   must be of type resource, SQLite3 given)*
   (@thekid)
