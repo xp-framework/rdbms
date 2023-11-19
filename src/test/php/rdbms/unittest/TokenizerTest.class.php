@@ -1,6 +1,7 @@
 <?php namespace rdbms\unittest;
- 
+
 use rdbms\{DBConnection, SQLStateException};
+use unittest\Assert;
 use unittest\actions\RuntimeVersion;
 use unittest\{Expect, Test};
 use util\{Date, UUID};
@@ -10,7 +11,7 @@ use util\{Date, UUID};
  *
  * @see   xp://rdbms.StatementFormatter
  */
-abstract class TokenizerTest extends \unittest\TestCase {
+abstract class TokenizerTest {
   protected $fixture= null;
 
   /**
@@ -23,13 +24,14 @@ abstract class TokenizerTest extends \unittest\TestCase {
   /**
    * Sets up a Database Object for the test
    */
+  #[Before]
   public function setUp() {
     $this->fixture= $this->fixture();
   }
 
   #[Test]
   public function doubleQuotedString() {
-    $this->assertEquals(
+    Assert::equals(
       'select \'Uber\' + \' \' + \'Coder\' as realname',
       $this->fixture->prepare('select "Uber" + " " + "Coder" as realname')
     );
@@ -37,7 +39,7 @@ abstract class TokenizerTest extends \unittest\TestCase {
 
   #[Test]
   public function singleQuotedString() {
-    $this->assertEquals(
+    Assert::equals(
       'select \'Uber\' + \' \' + \'Coder\' as realname',
       $this->fixture->prepare("select 'Uber' + ' ' + 'Coder' as realname")
     );
@@ -45,7 +47,7 @@ abstract class TokenizerTest extends \unittest\TestCase {
 
   #[Test]
   public function doubleQuotedStringWithEscapes() {
-    $this->assertEquals(
+    Assert::equals(
       'select \'Quote signs: " \'\' ` \'\'\' as test',
       $this->fixture->prepare('select "Quote signs: "" \' ` \'" as test')
     );
@@ -53,7 +55,7 @@ abstract class TokenizerTest extends \unittest\TestCase {
 
   #[Test]
   public function singleQuotedStringWithEscapes() {
-    $this->assertEquals(
+    Assert::equals(
       'select \'Quote signs: " \'\' ` \'\'\' as test',
       $this->fixture->prepare("select 'Quote signs: \" '' ` ''' as test")
     );
@@ -61,7 +63,7 @@ abstract class TokenizerTest extends \unittest\TestCase {
     
   #[Test]
   public function escapedPercentTokenInString() {
-    $this->assertEquals(
+    Assert::equals(
       'select * from test where name like \'%.de\'',
       $this->fixture->prepare('select * from test where name like "%%.de"')
     );
@@ -69,7 +71,7 @@ abstract class TokenizerTest extends \unittest\TestCase {
 
   #[Test]
   public function doubleEscapedPercentTokenInString() {
-    $this->assertEquals(
+    Assert::equals(
       'select * from test where url like \'http://%%20\'',
       $this->fixture->prepare('select * from test where url like "http://%%%%20"')
     );
@@ -77,7 +79,7 @@ abstract class TokenizerTest extends \unittest\TestCase {
 
   #[Test]
   public function escapedPercentTokenInValue() {
-    $this->assertEquals(
+    Assert::equals(
       'select * from test where url like \'http://%%20\'',
       $this->fixture->prepare('select * from test where url like %s', 'http://%%20')
     );
@@ -85,7 +87,7 @@ abstract class TokenizerTest extends \unittest\TestCase {
 
   #[Test]
   public function percentTokenInString() {
-    $this->assertEquals(
+    Assert::equals(
       'select * from test where name like \'%.de\'',
       $this->fixture->prepare('select * from test where name like "%.de"')
     );
@@ -93,7 +95,7 @@ abstract class TokenizerTest extends \unittest\TestCase {
 
   #[Test]
   public function unknownTokenInString() {
-    $this->assertEquals(
+    Assert::equals(
       'select * from test where name like \'%X\'',
       $this->fixture->prepare('select * from test where name like "%X"')
     );
@@ -126,7 +128,7 @@ abstract class TokenizerTest extends \unittest\TestCase {
   
   #[Test]
   public function numberTokenWithPrimitive() {
-    $this->assertEquals(
+    Assert::equals(
       'select 1 as intval',
       $this->fixture->prepare('select %d as intval', 1)
     );
@@ -134,7 +136,7 @@ abstract class TokenizerTest extends \unittest\TestCase {
 
   #[Test]
   public function floatTokenWithPrimitive() {
-    $this->assertEquals(
+    Assert::equals(
       'select 6.1 as floatval',
       $this->fixture->prepare('select %f as floatval', 6.1)
     );
@@ -142,7 +144,7 @@ abstract class TokenizerTest extends \unittest\TestCase {
 
   #[Test]
   public function stringToken() {
-    $this->assertEquals(
+    Assert::equals(
       'select \'"Hello", Tom\'\'s friend said\' as strval',
       $this->fixture->prepare('select %s as strval', '"Hello", Tom\'s friend said')
     );
@@ -150,7 +152,7 @@ abstract class TokenizerTest extends \unittest\TestCase {
 
   #[Test]
   public function labelToken() {
-    $this->assertEquals(
+    Assert::equals(
       'select * from \'order\'',
       $this->fixture->prepare('select * from %l', 'order')
     );
@@ -159,7 +161,7 @@ abstract class TokenizerTest extends \unittest\TestCase {
   #[Test]
   public function dateToken() {
     $t= new Date('1977-12-14');
-    $this->assertEquals(
+    Assert::equals(
       "select * from news where date= '1977-12-14 00:00:00'",
       $this->fixture->prepare('select * from news where date= %s', $t)
     );
@@ -168,7 +170,7 @@ abstract class TokenizerTest extends \unittest\TestCase {
   #[Test]
   public function uuidToken() {
     $t= new UUID('b1e2f772-ae5b-4eba-aca5-174c8d0f4cc1');
-    $this->assertEquals(
+    Assert::equals(
       "select * from news where id= 'b1e2f772-ae5b-4eba-aca5-174c8d0f4cc1'",
       $this->fixture->prepare('select * from news where id= %s', $t)
     );
@@ -177,7 +179,7 @@ abstract class TokenizerTest extends \unittest\TestCase {
   #[Test]
   public function timeStampToken() {
     $t= (new Date('1977-12-14'))->getTime();
-    $this->assertEquals(
+    Assert::equals(
       "select * from news where created= '1977-12-14 00:00:00'",
       $this->fixture->prepare('select * from news where created= %u', $t)
     );
@@ -185,7 +187,7 @@ abstract class TokenizerTest extends \unittest\TestCase {
 
   #[Test]
   public function backslash() {
-    $this->assertEquals(
+    Assert::equals(
       'select \'Hello \\ \' as strval',
       $this->fixture->prepare('select %s as strval', 'Hello \\ ')
     );
@@ -193,11 +195,11 @@ abstract class TokenizerTest extends \unittest\TestCase {
   
   #[Test]
   public function integerArrayToken() {
-    $this->assertEquals(
+    Assert::equals(
       'select * from news where news_id in ()',
       $this->fixture->prepare('select * from news where news_id in (%d)', [])
     );
-    $this->assertEquals(
+    Assert::equals(
       'select * from news where news_id in (1, 2, 3)',
       $this->fixture->prepare('select * from news where news_id in (%d)', [1, 2, 3])
     );
@@ -207,7 +209,7 @@ abstract class TokenizerTest extends \unittest\TestCase {
   public function dateArrayToken() {
     $d1= new Date('1977-12-14');
     $d2= new Date('1977-12-15');
-    $this->assertEquals(
+    Assert::equals(
       "select * from news where created in ('1977-12-14 00:00:00', '1977-12-15 00:00:00')",
       $this->fixture->prepare('select * from news where created in (%s)', [$d1, $d2])
     );
@@ -215,7 +217,7 @@ abstract class TokenizerTest extends \unittest\TestCase {
   
   #[Test]
   public function leadingToken() {
-    $this->assertEquals(
+    Assert::equals(
       'select 1',
       $this->fixture->prepare('%c', 'select 1')
     );
@@ -223,7 +225,7 @@ abstract class TokenizerTest extends \unittest\TestCase {
   
   #[Test]
   public function randomAccess() {
-    $this->assertEquals(
+    Assert::equals(
       'select column from table',
       $this->fixture->prepare('select %2$c from %1$c', 'table', 'column')
     );
@@ -231,7 +233,7 @@ abstract class TokenizerTest extends \unittest\TestCase {
   
   #[Test]
   public function passNullValues() {
-    $this->assertEquals(
+    Assert::equals(
       'select NULL from NULL',
       $this->fixture->prepare('select %2$c from %1$c', null, null)
     );
@@ -244,7 +246,7 @@ abstract class TokenizerTest extends \unittest\TestCase {
 
   #[Test]
   public function percentSignInPrepareString() {
-    $this->assertEquals(
+    Assert::equals(
       'insert into table values (\'value\', \'str%&ing\', \'value\')',
       $this->fixture->prepare('insert into table values (%s, "str%&ing", %s)', 'value', 'value')
     );
@@ -252,7 +254,7 @@ abstract class TokenizerTest extends \unittest\TestCase {
 
   #[Test]
   public function percentSignInValues() {
-    $this->assertEquals(
+    Assert::equals(
       "select '%20'",
       $this->fixture->prepare('select %s', '%20')
     );
@@ -260,19 +262,19 @@ abstract class TokenizerTest extends \unittest\TestCase {
   
   #[Test]
   public function testHugeIntegerNumber() {
-    $this->assertEquals(
+    Assert::equals(
       'NULL',
       $this->fixture->prepare('%d', 'Helo 123 Moto')
     );
-    $this->assertEquals(
+    Assert::equals(
       '0',
       $this->fixture->prepare('%d', '0')
     );
-    $this->assertEquals(
+    Assert::equals(
       '999999999999999999999999999',
       $this->fixture->prepare('%d', '999999999999999999999999999')
     );
-    $this->assertEquals(
+    Assert::equals(
       '-999999999999999999999999999',
       $this->fixture->prepare('%d', '-999999999999999999999999999')
     );
@@ -280,19 +282,19 @@ abstract class TokenizerTest extends \unittest\TestCase {
   
   #[Test]
   public function testHugeFloatNumber() {
-    $this->assertEquals(
+    Assert::equals(
       'NULL',
       $this->fixture->prepare('%d', 'Helo 123 Moto')
     );
-    $this->assertEquals(
+    Assert::equals(
       '0.0',
       $this->fixture->prepare('%d', '0.0')
     );
-    $this->assertEquals(
+    Assert::equals(
       '0.00000000000000234E03',
       $this->fixture->prepare('%d', '0.00000000000000234E03')
     );
-    $this->assertEquals(
+    Assert::equals(
       '1232342354362.00000000000000234e-14',
       $this->fixture->prepare('%d', '1232342354362.00000000000000234e-14')
     );
@@ -300,31 +302,31 @@ abstract class TokenizerTest extends \unittest\TestCase {
 
   #[Test]
   public function emptyStringAsNumber() {
-    $this->assertEquals('NULL', $this->fixture->prepare('%d', ''));
+    Assert::equals('NULL', $this->fixture->prepare('%d', ''));
   }
 
   #[Test]
   public function dashAsNumber() {
-    $this->assertEquals('NULL', $this->fixture->prepare('%d', '-'));
+    Assert::equals('NULL', $this->fixture->prepare('%d', '-'));
   }
 
   #[Test]
   public function dotAsNumber() {
-    $this->assertEquals('NULL', $this->fixture->prepare('%d', '.'));
+    Assert::equals('NULL', $this->fixture->prepare('%d', '.'));
   }
  
   #[Test]
   public function plusAsNumber() {
-    $this->assertEquals('NULL', $this->fixture->prepare('%d', '+'));
+    Assert::equals('NULL', $this->fixture->prepare('%d', '+'));
   } 
 
   #[Test]
   public function trueAsNumber() {
-    $this->assertEquals('1', $this->fixture->prepare('%d', true));
+    Assert::equals('1', $this->fixture->prepare('%d', true));
   } 
 
   #[Test]
   public function falseAsNumber() {
-    $this->assertEquals('0', $this->fixture->prepare('%d', false));
+    Assert::equals('0', $this->fixture->prepare('%d', false));
   } 
 }

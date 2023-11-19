@@ -1,10 +1,11 @@
 <?php namespace rdbms\unittest;
- 
+
 use rdbms\join\{JoinIterator, JoinProcessor};
 use rdbms\mysql\MySQLConnection;
 use rdbms\unittest\dataset\{Job, Person};
 use rdbms\unittest\mock\MockResultSet;
 use rdbms\{CachedResults, ConnectionManager, Criteria, DSN};
+use unittest\Assert;
 use unittest\{BeforeClass, Expect, Test, TestCase};
 use util\{Date, NoSuchElementException};
 
@@ -17,7 +18,7 @@ use util\{Date, NoSuchElementException};
  *
  * @see    xp://rdbms.join.JoinIterator
  */
-class JoinIteratorTest extends TestCase {
+class JoinIteratorTest {
   
   #[BeforeClass]
   public static function registerConnection() {
@@ -31,7 +32,7 @@ class JoinIteratorTest extends TestCase {
   
   #[Test]
   public function emptyResultHasNextTest() {
-    $this->assertFalse((new JoinIterator(new JoinProcessor(Job::getPeer()), new MockResultSet()))->hasNext());
+    Assert::false((new JoinIterator(new JoinProcessor(Job::getPeer()), new MockResultSet()))->hasNext());
   }
   
   #[Test]
@@ -61,9 +62,9 @@ class JoinIteratorTest extends TestCase {
       ]
     );
     $ji= new JoinIterator(new JoinProcessor(Job::getPeer()), $rs);
-    $this->assertTrue($ji->hasNext());
-    $this->assertInstanceOf(Job::class, $ji->next());
-    $this->assertFalse($ji->hasNext());
+    Assert::true($ji->hasNext());
+    Assert::instance(Job::class, $ji->next());
+    Assert::false($ji->hasNext());
   }
 
   #[Test]
@@ -98,13 +99,13 @@ class JoinIteratorTest extends TestCase {
     );
     $jp= new JoinProcessor(Job::getPeer());
     $ji= new JoinIterator($jp, $rs);
-    $this->assertTrue($ji->hasNext());
-    $this->assertInstanceOf(Job::class, $job= $ji->next());
-    $this->assertTrue($ji->hasNext());
-    $this->assertInstanceOf(Job::class, $job= $ji->next());
-    $this->assertTrue($ji->hasNext());
-    $this->assertInstanceOf(Job::class, $job= $ji->next());
-    $this->assertFalse($ji->hasNext());
+    Assert::true($ji->hasNext());
+    Assert::instance(Job::class, $job= $ji->next());
+    Assert::true($ji->hasNext());
+    Assert::instance(Job::class, $job= $ji->next());
+    Assert::true($ji->hasNext());
+    Assert::instance(Job::class, $job= $ji->next());
+    Assert::false($ji->hasNext());
   }
 
   #[Test]
@@ -157,31 +158,31 @@ class JoinIteratorTest extends TestCase {
     $jp->setFetchModes(['PersonJob' => 'join']);
     $ji= new JoinIterator($jp, $rs);
 
-    $this->assertTrue($ji->hasNext());
-    $this->assertInstanceOf(Job::class, $job= $ji->next());
-    $this->assertInstanceOf('var[]', $job->getPersonJobList());
-    $this->assertInstanceOf(CachedResults::class, $pji= $job->getPersonJobIterator());
+    Assert::true($ji->hasNext());
+    Assert::instance(Job::class, $job= $ji->next());
+    Assert::instance('var[]', $job->getPersonJobList());
+    Assert::instance(CachedResults::class, $pji= $job->getPersonJobIterator());
 
-    $this->assertTrue($pji->hasNext());
-    $this->assertInstanceOf(Person::class, $pji->next());
-    $this->assertTrue($pji->hasNext());
-    $this->assertInstanceOf(Person::class, $pji->next());
-    $this->assertFalse($pji->hasNext());
+    Assert::true($pji->hasNext());
+    Assert::instance(Person::class, $pji->next());
+    Assert::true($pji->hasNext());
+    Assert::instance(Person::class, $pji->next());
+    Assert::false($pji->hasNext());
 
-    $this->assertTrue($ji->hasNext());
-    $this->assertInstanceOf(Job::class, $job= $ji->next());
-    $this->assertInstanceOf('var[]', $job->getPersonJobList());
-    $this->assertInstanceOf(CachedResults::class, $pji= $job->getPersonJobIterator());
-    $this->assertTrue($pji->hasNext());
-    $this->assertInstanceOf(Person::class, $pji->next());
-    $this->assertFalse($pji->hasNext());
+    Assert::true($ji->hasNext());
+    Assert::instance(Job::class, $job= $ji->next());
+    Assert::instance('var[]', $job->getPersonJobList());
+    Assert::instance(CachedResults::class, $pji= $job->getPersonJobIterator());
+    Assert::true($pji->hasNext());
+    Assert::instance(Person::class, $pji->next());
+    Assert::false($pji->hasNext());
 
-    $this->assertTrue($ji->hasNext());
-    $this->assertInstanceOf(Job::class, $job= $ji->next());
-    $this->assertInstanceOf('var[]', $job->getPersonJobList());
-    $this->assertInstanceOf(CachedResults::class, $pji= $job->getPersonJobIterator());
-    $this->assertFalse($pji->hasNext());
+    Assert::true($ji->hasNext());
+    Assert::instance(Job::class, $job= $ji->next());
+    Assert::instance('var[]', $job->getPersonJobList());
+    Assert::instance(CachedResults::class, $pji= $job->getPersonJobIterator());
+    Assert::false($pji->hasNext());
 
-    $this->assertFalse($ji->hasNext());
+    Assert::false($ji->hasNext());
   }
 }

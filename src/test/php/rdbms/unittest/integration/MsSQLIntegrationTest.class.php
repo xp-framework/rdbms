@@ -1,6 +1,7 @@
 <?php namespace rdbms\unittest\integration;
 
 use rdbms\SQLStatementFailedException;
+use unittest\Assert;
 use unittest\{BeforeClass, Expect, Ignore, Test};
 use util\Date;
 
@@ -58,18 +59,18 @@ class MsSQLIntegrationTest extends RdbmsIntegrationTest {
     $cmp= new Date('2009-08-14 12:45:00');
     $result= $this->db()->query('select convert(datetime, %s, 120) as value', $cmp)->next('value');
 
-    $this->assertInstanceOf(Date::class, $result);
-    $this->assertEquals($cmp->toString('Y-m-d'), $result->toString('Y-m-d'));
+    Assert::instance(Date::class, $result);
+    Assert::equals($cmp->toString('Y-m-d'), $result->toString('Y-m-d'));
   }
 
   #[Test]
   public function selectNVarchar() {
-    $this->assertEquals('Test', $this->db()->query('select cast("Test" as nvarchar) as value')->next('value'));
+    Assert::equals('Test', $this->db()->query('select cast("Test" as nvarchar) as value')->next('value'));
   }
 
   #[Test]
   public function selectNVarchars() {
-    $this->assertEquals(
+    Assert::equals(
       ['one' => 'Test1', 'two' => 'Test2'],
       $this->db()->query('select cast("Test1" as nvarchar) as one, cast("Test2" as nvarchar) as two')->next()
     );
@@ -77,12 +78,12 @@ class MsSQLIntegrationTest extends RdbmsIntegrationTest {
 
   #[Test]
   public function selectVarcharVariant() {
-    $this->assertEquals('Test', $this->db()->query('select cast("Test" as sql_variant) as value')->next('value'));
+    Assert::equals('Test', $this->db()->query('select cast("Test" as sql_variant) as value')->next('value'));
   }
 
   #[Test]
   public function selectVarcharVariants() {
-    $this->assertEquals(
+    Assert::equals(
       ['one' => 'Test1', 'two' => 'Test2'], 
       $this->db()->query('select cast("Test1" as sql_variant) as one, cast("Test2" as sql_variant) as two')->next()
     );
@@ -90,17 +91,17 @@ class MsSQLIntegrationTest extends RdbmsIntegrationTest {
 
   #[Test]
   public function selectIntegerVariant() {
-    $this->assertEquals(1, $this->db()->query('select cast(1 as sql_variant) as value')->next('value'));
+    Assert::equals(1, $this->db()->query('select cast(1 as sql_variant) as value')->next('value'));
   }
 
   #[Test]
   public function selectDecimalVariant() {
-    $this->assertEquals(1.2, $this->db()->query('select cast(1.2 as sql_variant) as value')->next('value'));
+    Assert::equals(1.2, $this->db()->query('select cast(1.2 as sql_variant) as value')->next('value'));
   }
 
   #[Test]
   public function selectNumericVariantWithFollowingVarchar() {
-    $this->assertEquals(
+    Assert::equals(
       ['n' => 10, 'v' => 'Test'],
       $this->db()->query('select cast(convert(numeric, 10) as sql_variant) as n, "Test" as v')->next()
     );
@@ -108,30 +109,30 @@ class MsSQLIntegrationTest extends RdbmsIntegrationTest {
 
   #[Test]
   public function selectMoneyVariant() {
-    $this->assertEquals(1.23, $this->db()->query('select cast($1.23 as sql_variant) as value')->next('value'));
+    Assert::equals(1.23, $this->db()->query('select cast($1.23 as sql_variant) as value')->next('value'));
   }
 
   #[Test]
   public function selectDateVariant() {
     $cmp= new Date('2009-08-14 12:45:00');
-    $this->assertEquals($cmp, $this->db()->query('select cast(convert(datetime, %s, 102) as sql_variant) as value', $cmp)->next('value'));
+    Assert::equals($cmp, $this->db()->query('select cast(convert(datetime, %s, 102) as sql_variant) as value', $cmp)->next('value'));
   }
 
   #[Test]
   public function selectUniqueIdentifierariant() {
     $cmp= '0E984725-C51C-4BF4-9960-E1C80E27ABA0';
-    $this->assertEquals($cmp, $this->db()->query('select cast(convert(uniqueidentifier, %s) as sql_variant) as value', $cmp)->next('value'));
+    Assert::equals($cmp, $this->db()->query('select cast(convert(uniqueidentifier, %s) as sql_variant) as value', $cmp)->next('value'));
   }
 
   #[Test]
   public function selectUniqueIdentifier() {
     $cmp= '0E984725-C51C-4BF4-9960-E1C80E27ABA0';
-    $this->assertEquals($cmp, $this->db()->query('select convert(uniqueidentifier, %s) as value', $cmp)->next('value'));
+    Assert::equals($cmp, $this->db()->query('select convert(uniqueidentifier, %s) as value', $cmp)->next('value'));
   }
 
   #[Test]
   public function selectNullUniqueIdentifier() {
-    $this->assertNull($this->db()->query('select convert(uniqueidentifier, NULL) as value')->next('value'));
+    Assert::null($this->db()->query('select convert(uniqueidentifier, NULL) as value')->next('value'));
   }
 
   #[Test, Ignore('MsSQL does not know unsigned ints')]
@@ -142,22 +143,22 @@ class MsSQLIntegrationTest extends RdbmsIntegrationTest {
 
   #[Test]
   public function selectEmptyString() {
-    $this->assertEquals('', $this->db()->query('select "" as value')->next('value'));
+    Assert::equals('', $this->db()->query('select "" as value')->next('value'));
   }
 
   #[Test]
   public function selectEmptyVarChar() {
-    $this->assertEquals('', $this->db()->query('select cast("" as varchar(255)) as value')->next('value'));
+    Assert::equals('', $this->db()->query('select cast("" as varchar(255)) as value')->next('value'));
   }
 
   #[Test]
   public function selectEmptyImage() {
-    $this->assertNull($this->db()->query('select cast("" as image) as value')->next('value'));
+    Assert::null($this->db()->query('select cast("" as image) as value')->next('value'));
   }
 
   #[Test]
   public function selectEmptyVarBinary() {
-    $this->assertNull($this->db()->query('select cast("" as varbinary) as value')->next('value'));
+    Assert::null($this->db()->query('select cast("" as varbinary) as value')->next('value'));
   }
 
   #[Test, Expect(['class' => SQLStatementFailedException::class, 'withMessage' => '/More power/'])]
@@ -171,7 +172,7 @@ class MsSQLIntegrationTest extends RdbmsIntegrationTest {
       print "More power"
       select 1 as "result"
     ');
-    $this->assertEquals(1, $q->next('result'));
+    Assert::equals(1, $q->next('result'));
   }
 
   #[Test]
@@ -179,8 +180,8 @@ class MsSQLIntegrationTest extends RdbmsIntegrationTest {
     $cmp= new Date('2009-08-14 12:45:00');
     $result= $this->db()->query('select cast(%s as datetime) as value', $cmp)->next('value');
 
-    $this->assertInstanceOf(Date::class, $result);
-    $this->assertEquals($cmp->toString('Y-m-d H:i:s'), $result->toString('Y-m-d H:i:s'));
+    Assert::instance(Date::class, $result);
+    Assert::equals($cmp->toString('Y-m-d H:i:s'), $result->toString('Y-m-d H:i:s'));
   }
 
   #[Test]
@@ -188,7 +189,7 @@ class MsSQLIntegrationTest extends RdbmsIntegrationTest {
     $cmp= new Date('2009-08-14 12:45:00');
     $result= $this->db()->query('select cast(%s as smalldatetime) as value', $cmp)->next('value');
 
-    $this->assertInstanceOf(Date::class, $result);
-    $this->assertEquals($cmp->toString('Y-m-d H:i:s'), $result->toString('Y-m-d H:i:s'));
+    Assert::instance(Date::class, $result);
+    Assert::equals($cmp->toString('Y-m-d H:i:s'), $result->toString('Y-m-d H:i:s'));
   }
 }

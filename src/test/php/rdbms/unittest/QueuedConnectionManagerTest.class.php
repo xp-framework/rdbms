@@ -2,6 +2,7 @@
 
 use rdbms\unittest\mock\RegisterMockConnection;
 use rdbms\{ConnectionManager, DSN};
+use unittest\Assert;
 use unittest\Test;
 
 /**
@@ -37,7 +38,7 @@ class QueuedConnectionManagerTest extends ConnectionManagerTest {
     $dsn= 'mock://user:pass@host/db';
     $cm= $this->instanceWith([]);
     
-    $this->assertEquals(new DSN($dsn), $cm->queue($dsn));
+    Assert::equals(new DSN($dsn), $cm->queue($dsn));
   }
  
   #[Test]
@@ -46,7 +47,7 @@ class QueuedConnectionManagerTest extends ConnectionManagerTest {
     $cm= $this->instanceWith([]);
     $cm->queue($dsn);
 
-    $this->assertEquals(new DSN($dsn), $cm->queue($dsn));
+    Assert::equals(new DSN($dsn), $cm->queue($dsn));
   }
 
   #[Test]
@@ -55,9 +56,9 @@ class QueuedConnectionManagerTest extends ConnectionManagerTest {
     $conn2= 'mock://user:pass@host/db2';
     $cm= $this->instanceWith([]);
 
-    $this->assertEquals(new DSN($conn1), $cm->queue($conn1));
-    $this->assertEquals(new DSN($conn2), $cm->queue($conn2));
+    Assert::equals(new DSN($conn1), $cm->queue($conn1));
+    Assert::equals(new DSN($conn2), $cm->queue($conn2));
 
-    $this->assertEquals(new DSN($conn2), $cm->getByHost('host', 0)->dsn);
+    Assert::equals(new DSN($conn2), $cm->getByHost('host', 0)->dsn);
   }
 }

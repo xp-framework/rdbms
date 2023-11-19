@@ -2,6 +2,7 @@
 
 use lang\FormatException;
 use rdbms\DSN;
+use unittest\Assert;
 use unittest\{Expect, Test};
 
 /**
@@ -9,11 +10,11 @@ use unittest\{Expect, Test};
  *
  * @see  xp://rdbms.DSN
  */
-class DSNTest extends \unittest\TestCase {
+class DSNTest {
 
   #[Test]
   public function stringRepresentationWithPassword() {
-    $this->assertEquals(
+    Assert::equals(
       'rdbms.DSN@(sybase://sa:********@localhost:1999/CAFFEINE?autoconnect=1)',
       (new DSN('sybase://sa:password@localhost:1999/CAFFEINE?autoconnect=1'))->toString()
     );
@@ -21,7 +22,7 @@ class DSNTest extends \unittest\TestCase {
   
   #[Test]
   public function stringRepresentationWithoutPassword() {
-    $this->assertEquals(
+    Assert::equals(
       'rdbms.DSN@(mysql://root@localhost/)',
       (new DSN('mysql://root@localhost/'))->toString()
     );
@@ -29,7 +30,7 @@ class DSNTest extends \unittest\TestCase {
 
   #[Test]
   public function asStringRemovesPassword() {
-    $this->assertEquals(
+    Assert::equals(
       'mysql://user:********@localhost/',
       (new DSN('mysql://user:foobar@localhost/'))->asString()
     );
@@ -37,7 +38,7 @@ class DSNTest extends \unittest\TestCase {
 
   #[Test]
   public function asStringKeepsPasswordIfRequested() {
-    $this->assertEquals(
+    Assert::equals(
       'mysql://user:foobar@localhost/',
       (new DSN('mysql://user:foobar@localhost/'))->asString(true)
     );
@@ -45,7 +46,7 @@ class DSNTest extends \unittest\TestCase {
 
   #[Test]
   public function asStringSkipsUserEvenWithRaw() {
-    $this->assertEquals(
+    Assert::equals(
       'mysql://localhost/',
       (new DSN('mysql://localhost/'))->asString(true)
     );
@@ -53,7 +54,7 @@ class DSNTest extends \unittest\TestCase {
 
   #[Test]
   public function driver() {
-    $this->assertEquals(
+    Assert::equals(
       'sybase', 
       (new DSN('sybase://TEST/'))->getDriver()
     );
@@ -66,7 +67,7 @@ class DSNTest extends \unittest\TestCase {
 
   #[Test]
   public function host() {
-    $this->assertEquals(
+    Assert::equals(
       'TEST', 
       (new DSN('sybase://TEST/'))->getHost()
     );
@@ -74,7 +75,7 @@ class DSNTest extends \unittest\TestCase {
   
   #[Test]
   public function port() {
-    $this->assertEquals(
+    Assert::equals(
       1999, 
       (new DSN('sybase://TEST:1999/'))->getPort()
     );
@@ -82,7 +83,7 @@ class DSNTest extends \unittest\TestCase {
 
   #[Test]
   public function portDefault() {
-    $this->assertEquals(
+    Assert::equals(
       1999, 
       (new DSN('sybase://TEST:1999/'))->getPort(5000)
     );
@@ -90,12 +91,12 @@ class DSNTest extends \unittest\TestCase {
 
   #[Test]
   public function noPort() {
-    $this->assertNull((new DSN('sybase://TEST/'))->getPort());
+    Assert::null((new DSN('sybase://TEST/'))->getPort());
   }
 
   #[Test]
   public function noPortDefault() {
-    $this->assertEquals(
+    Assert::equals(
       1999, 
       (new DSN('sybase://TEST/'))->getPort(1999)
     );
@@ -103,7 +104,7 @@ class DSNTest extends \unittest\TestCase {
 
   #[Test]
   public function database() {
-    $this->assertEquals(
+    Assert::equals(
       'CAFFEINE', 
       (new DSN('sybase://TEST/CAFFEINE'))->getDatabase()
     );
@@ -111,7 +112,7 @@ class DSNTest extends \unittest\TestCase {
 
   #[Test]
   public function databaseDefault() {
-    $this->assertEquals(
+    Assert::equals(
       'CAFFEINE', 
       (new DSN('sybase://TEST/CAFFEINE'))->getDatabase('master')
     );
@@ -119,12 +120,12 @@ class DSNTest extends \unittest\TestCase {
 
   #[Test]
   public function noDatabase() {
-    $this->assertNull((new DSN('mysql://root@localhost'))->getDatabase());
+    Assert::null((new DSN('mysql://root@localhost'))->getDatabase());
   }
 
   #[Test]
   public function noDatabaseDefault() {
-    $this->assertEquals(
+    Assert::equals(
       'master', 
       (new DSN('mysql://root@localhost'))->getDatabase('master')
     );
@@ -132,12 +133,12 @@ class DSNTest extends \unittest\TestCase {
 
   #[Test]
   public function slashDatabase() {
-    $this->assertNull((new DSN('mysql://root@localhost/'))->getDatabase());
+    Assert::null((new DSN('mysql://root@localhost/'))->getDatabase());
   }
 
   #[Test]
   public function slashDatabaseDefault() {
-    $this->assertEquals(
+    Assert::equals(
       'master', 
       (new DSN('mysql://root@localhost/'))->getDatabase('master')
     );
@@ -145,7 +146,7 @@ class DSNTest extends \unittest\TestCase {
 
   #[Test]
   public function fileDatabase() {
-    $this->assertEquals(
+    Assert::equals(
       '/usr/local/fb/jobs.fdb', 
       (new DSN('ibase://localhost//usr/local/fb/jobs.fdb'))->getDatabase()
     );
@@ -153,7 +154,7 @@ class DSNTest extends \unittest\TestCase {
 
   #[Test]
   public function user() {
-    $this->assertEquals(
+    Assert::equals(
       'sa', 
       (new DSN('sybase://sa@TEST'))->getUser()
     );
@@ -161,7 +162,7 @@ class DSNTest extends \unittest\TestCase {
 
   #[Test]
   public function userDefault() {
-    $this->assertEquals(
+    Assert::equals(
       'sa', 
       (new DSN('sybase://sa@TEST'))->getUser('reader')
     );
@@ -169,12 +170,12 @@ class DSNTest extends \unittest\TestCase {
 
   #[Test]
   public function noUser() {
-    $this->assertNull((new DSN('sybase://TEST'))->getUser());
+    Assert::null((new DSN('sybase://TEST'))->getUser());
   }
 
   #[Test]
   public function noUserDefault() {
-    $this->assertEquals(
+    Assert::equals(
       'reader', 
       (new DSN('sybase://TEST'))->getUser('reader')
     );
@@ -182,7 +183,7 @@ class DSNTest extends \unittest\TestCase {
 
   #[Test]
   public function password() {
-    $this->assertEquals(
+    Assert::equals(
       'password', 
       (new DSN('sybase://sa:password@TEST'))->getPassword()
     );
@@ -190,7 +191,7 @@ class DSNTest extends \unittest\TestCase {
 
   #[Test]
   public function passwordDefault() {
-    $this->assertEquals(
+    Assert::equals(
       'password', 
       (new DSN('sybase://sa:password@TEST'))->getPassword('secret')
     );
@@ -198,12 +199,12 @@ class DSNTest extends \unittest\TestCase {
 
   #[Test]
   public function noPassword() {
-    $this->assertNull((new DSN('sybase://sa@TEST'))->getPassword());
+    Assert::null((new DSN('sybase://sa@TEST'))->getPassword());
   }
 
   #[Test]
   public function noPasswordDefault() {
-    $this->assertEquals(
+    Assert::equals(
       'secret', 
       (new DSN('sybase://sa@TEST'))->getPassword('secret')
     );
@@ -211,7 +212,7 @@ class DSNTest extends \unittest\TestCase {
   
   #[Test]
   public function stringPropertyValue() {
-    $this->assertEquals(
+    Assert::equals(
       'Europe/Berlin', 
       (new DSN('sybase://sa@TEST?tz=Europe/Berlin'))->getProperty('tz')
     );
@@ -220,12 +221,12 @@ class DSNTest extends \unittest\TestCase {
   #[Test]
   public function twoDsnsCreatedFromSameStringAreEqual() {
     $string= 'scheme://user:password@host/DATABASE?&autoconnect=1';
-    $this->assertEquals(new DSN($string), new DSN($string));
+    Assert::equals(new DSN($string), new DSN($string));
   }
 
   #[Test]
   public function twoDsnsWithDifferingAutoconnectNotEqual() {
-    $this->assertNotEquals(
+    Assert::notEquals(
       new DSN('scheme://user:password@host/DATABASE?autoconnect=0'), 
       new DSN('scheme://user:password@host/DATABASE?autoconnect=1')
     );
@@ -233,7 +234,7 @@ class DSNTest extends \unittest\TestCase {
 
   #[Test]
   public function twoDsnsWithDifferingParamsNotEqual() {
-    $this->assertNotEquals(
+    Assert::notEquals(
       new DSN('scheme://user:password@host/DATABASE'), 
       new DSN('scheme://user:password@host/DATABASE?tz=Europe/Berlin')
     );
@@ -241,7 +242,7 @@ class DSNTest extends \unittest\TestCase {
 
   #[Test]
   public function twoDsnsWithDifferingFlagParamsNotEqual() {
-    $this->assertNotEquals(
+    Assert::notEquals(
       new DSN('scheme://user:password@host/DATABASE'), 
       new DSN('scheme://user:password@host/DATABASE?autoconnect=1')
     );
@@ -249,7 +250,7 @@ class DSNTest extends \unittest\TestCase {
 
   #[Test]
   public function twoDsnsWithDifferentlyOrderedParamsAreEqual() {
-    $this->assertEquals(
+    Assert::equals(
       new DSN('scheme://host/DATABASE?autoconnect=1&tz=Europe/Berlin'), 
       new DSN('scheme://host/DATABASE?tz=Europe/Berlin&autoconnect=1')
     );
@@ -260,13 +261,13 @@ class DSNTest extends \unittest\TestCase {
     $dsn= new DSN('mysql://root:password@localhost/');
     $clone= clone $dsn;
     $clone->url->setPassword(null);
-    $this->assertEquals('password', $dsn->getPassword());
+    Assert::equals('password', $dsn->getPassword());
   }
 
   #[Test]
   public function withoutPassword() {
     $dsn= new DSN('mysql://root:password@localhost/');
     $clean= $dsn->withoutPassword();
-    $this->assertNull($clean->getPassword());
+    Assert::null($clean->getPassword());
   }
 }

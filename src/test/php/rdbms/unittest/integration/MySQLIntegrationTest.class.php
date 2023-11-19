@@ -1,6 +1,7 @@
 <?php namespace rdbms\unittest\integration;
 
 use rdbms\{SQLConnectionClosedException, SQLException, Transaction};
+use unittest\Assert;
 use unittest\{Ignore, Test};
 
 class MySQLIntegrationTest extends RdbmsIntegrationTest {
@@ -9,6 +10,7 @@ class MySQLIntegrationTest extends RdbmsIntegrationTest {
   protected function driverName() { return 'mysql'; }
 
   /** @return void */
+  #[After]
   public function tearDown() {
     parent::tearDown();
 
@@ -194,12 +196,12 @@ class MySQLIntegrationTest extends RdbmsIntegrationTest {
 
   #[Test]
   public function selectEmptyChar() {
-    $this->assertEquals('', $this->db()->query('select cast("" as char(4)) as value')->next('value'));
+    Assert::equals('', $this->db()->query('select cast("" as char(4)) as value')->next('value'));
   }
 
   #[Test]
   public function selectCharWithPadding() {
-    $this->assertEquals('t', $this->db()->query('select cast("t" as char(4)) as value')->next('value'));
+    Assert::equals('t', $this->db()->query('select cast("t" as char(4)) as value')->next('value'));
   }
 
   #[Test, Ignore('No known way to test this in MySQL')]
@@ -210,7 +212,7 @@ class MySQLIntegrationTest extends RdbmsIntegrationTest {
 
   #[Test]
   public function selectSignedInt() {
-    $this->assertEquals(1, $this->db()->query('select cast(1 as signed integer) as value')->next('value'));
+    Assert::equals(1, $this->db()->query('select cast(1 as signed integer) as value')->next('value'));
   }
 
   #[Test, Ignore('MySQL does not know unsigned bigints')]
@@ -239,8 +241,8 @@ class MySQLIntegrationTest extends RdbmsIntegrationTest {
 
     // Sending characters outside the BMP while the encoding isn't utf8mb4
     // produces a warning.
-    $this->assertEquals('💩', $this->db()->query("select '💩' as poop")->next('poop'));
-    $this->assertNull($this->db()->query('show warnings')->next());
+    Assert::equals('💩', $this->db()->query("select '💩' as poop")->next('poop'));
+    Assert::null($this->db()->query('show warnings')->next());
   }
 
   #[Test]
@@ -255,7 +257,7 @@ class MySQLIntegrationTest extends RdbmsIntegrationTest {
     }
 
     $after= $conn->query('select connection_id() as id')->next('id');
-    $this->assertNotEquals($before, $after, 'Connection IDs must be different');
+    Assert::notEquals($before, $after, 'Connection IDs must be different');
   }
 
   #[Test]

@@ -3,6 +3,7 @@
 use io\File;
 use rdbms\DSN;
 use rdbms\tds\FreeTdsLookup;
+use unittest\Assert;
 use unittest\Test;
 
 /**
@@ -10,7 +11,7 @@ use unittest\Test;
  *
  * @see   xp://rdbms.tds.FreeTdsLookup#locateConf
  */
-class FreeTdsConfigLocationTest extends \unittest\TestCase {
+class FreeTdsConfigLocationTest {
 
   #[Test]
   public function noAlternativesFound() {
@@ -21,7 +22,7 @@ class FreeTdsConfigLocationTest extends \unittest\TestCase {
 
     $dsn= new DSN('sybase://test');
     $fixture->lookup($dsn);
-    $this->assertEquals(new DSN('sybase://test'), $dsn);
+    Assert::equals(new DSN('sybase://test'), $dsn);
   }
 
   #[Test]
@@ -33,6 +34,6 @@ class FreeTdsConfigLocationTest extends \unittest\TestCase {
 
     $dsn= new DSN('sybase://test');
     $fixture->lookup($dsn);
-    $this->assertEquals(new DSN('sybase://it.worked:1999'), $dsn);
+    Assert::equals(new DSN('sybase://it.worked:1999'), $dsn);
   }
 }

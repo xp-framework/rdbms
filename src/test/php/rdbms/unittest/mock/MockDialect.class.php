@@ -1,5 +1,4 @@
 <?php namespace rdbms\unittest\mock;
-
 /**
  * SQL dialect for MockConnections
  *

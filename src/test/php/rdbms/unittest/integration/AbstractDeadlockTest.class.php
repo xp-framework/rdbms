@@ -2,13 +2,14 @@
 
 use lang\{Runtime, Throwable};
 use rdbms\DriverManager;
+use unittest\Assert;
 use unittest\{PrerequisitesNotMetError, Test, TestCase};
 
 /**
  * Abstract deadlock test
  *
  */
-abstract class AbstractDeadlockTest extends TestCase {
+abstract class AbstractDeadlockTest {
   private $dsn;
 
   /** @return string */
@@ -28,6 +29,7 @@ abstract class AbstractDeadlockTest extends TestCase {
   }
 
   /** @return void */
+  #[Before]
   public function setUp() {
     $env= strtoupper($this->driverName()).'_DSN';
     if (!($this->dsn= getenv($env))) {
@@ -43,6 +45,7 @@ abstract class AbstractDeadlockTest extends TestCase {
   }
 
   /** @return void */
+  #[After]
   public function tearDown() {
     $this->dsn && $this->dropTables();
   }
@@ -95,7 +98,7 @@ abstract class AbstractDeadlockTest extends TestCase {
         'rdbms.unittest.integration.SQLRunner',
         [$this->dsn]
       );
-      $this->assertEquals('! Started', $proc->out->readLine());
+      Assert::equals('! Started', $proc->out->readLine());
       return $proc;
     }
   }
@@ -133,6 +136,6 @@ abstract class AbstractDeadlockTest extends TestCase {
     
     // Assert one process succeeds, the other catches a deadlock exception
     // We can't tell which one will do what, though.
-    $this->assertEquals(['+ OK', '- rdbms.SQLDeadlockException'], $result);
+    Assert::equals(['+ OK', '- rdbms.SQLDeadlockException'], $result);
   }
 }

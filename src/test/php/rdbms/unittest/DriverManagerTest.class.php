@@ -2,6 +2,7 @@
 
 use lang\{FormatException, IllegalArgumentException};
 use rdbms\{DriverManager, DriverNotSupportedException};
+use unittest\Assert;
 use unittest\{Expect, Test};
 
 /**
@@ -9,7 +10,7 @@ use unittest\{Expect, Test};
  *
  * @see  xp://rdbms.DriverManager
  */
-class DriverManagerTest extends \unittest\TestCase {
+class DriverManagerTest {
   protected $registered= [];
 
   /**
@@ -26,6 +27,7 @@ class DriverManagerTest extends \unittest\TestCase {
   /**
    * Tears down test case - removes all drivers registered via register().
    */
+  #[After]
   public function tearDown() {
     foreach ($this->registered as $name) {
       DriverManager::remove($name);
@@ -54,7 +56,7 @@ class DriverManagerTest extends \unittest\TestCase {
 
   #[Test]
   public function mysqlxProvidedByDefaultDrivers() {
-    $this->assertInstanceOf(
+    Assert::instance(
       'rdbms.mysqlx.MySqlxConnection', 
       DriverManager::getConnection('mysql+x://localhost')
     );
@@ -67,7 +69,7 @@ class DriverManagerTest extends \unittest\TestCase {
 
   #[Test]
   public function mysqlAlwaysSupported() {
-    $this->assertInstanceOf(
+    Assert::instance(
       'rdbms.DBConnection', 
       DriverManager::getConnection('mysql://localhost')
     );
@@ -76,7 +78,7 @@ class DriverManagerTest extends \unittest\TestCase {
   #[Test]
   public function registerConnection() {
     $this->register('mock', \lang\XPClass::forName('rdbms.unittest.mock.MockConnection'));
-    $this->assertInstanceOf(
+    Assert::instance(
       'rdbms.unittest.mock.MockConnection',
       DriverManager::getConnection('mock://localhost')
     );
@@ -107,7 +109,7 @@ class DriverManagerTest extends \unittest\TestCase {
       '{}'
     ));
 
-    $this->assertInstanceOf(
+    Assert::instance(
       'rdbms.unittest.mock.AMockConnection', 
       DriverManager::getConnection('test://localhost')
     );

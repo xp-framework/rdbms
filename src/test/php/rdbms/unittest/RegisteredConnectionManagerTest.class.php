@@ -2,6 +2,7 @@
 
 use rdbms\unittest\mock\RegisterMockConnection;
 use rdbms\{ConnectionManager, DriverManager};
+use unittest\Assert;
 use unittest\{Action, Ignore, Test};
 
 /**
@@ -43,7 +44,7 @@ class RegisteredConnectionManagerTest extends ConnectionManagerTest {
     $conn= DriverManager::getConnection('mock://user:pass@host/db');
     $cm= $this->instanceWith([]);
     
-    $this->assertEquals($conn, $cm->register($conn));
+    Assert::equals($conn, $cm->register($conn));
   }
  
   #[Test]
@@ -52,7 +53,7 @@ class RegisteredConnectionManagerTest extends ConnectionManagerTest {
     $cm= $this->instanceWith([]);
     $cm->register($conn);
 
-    $this->assertEquals($conn, $cm->register($conn));
+    Assert::equals($conn, $cm->register($conn));
   }
 
   #[Test]
@@ -61,9 +62,9 @@ class RegisteredConnectionManagerTest extends ConnectionManagerTest {
     $conn2= DriverManager::getConnection('mock://user:pass@host/db2');
     $cm= $this->instanceWith([]);
 
-    $this->assertEquals($conn1, $cm->register($conn1));
-    $this->assertEquals($conn2, $cm->register($conn2));
+    Assert::equals($conn1, $cm->register($conn1));
+    Assert::equals($conn2, $cm->register($conn2));
 
-    $this->assertEquals($conn2, $cm->getByHost('host', 0));
+    Assert::equals($conn2, $cm->getByHost('host', 0));
   }
 }

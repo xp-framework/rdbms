@@ -3,7 +3,7 @@
 use lang\{ClassLoader, IllegalArgumentException};
 use peer\Socket;
 use rdbms\tds\{TdsDataStream, TdsProtocolException};
-use unittest\{BeforeClass, Expect, Test, TestCase};
+use unittest\{Assert, Before, Expect, Test};
 use util\Bytes;
 
 /**
@@ -11,14 +11,11 @@ use util\Bytes;
  *
  * @see   xp://rdbms.tds.TdsDataStream
  */
-class TdsDataStreamTest extends TestCase {
+class TdsDataStreamTest {
   protected static $sock;
 
-  /**
-   * Defines the mock socket class necessary for these tests
-   */
-  #[BeforeClass]
-  public static function mockSocket() {
+  #[Before]
+  public function mockSocket() {
     self::$sock= ClassLoader::defineClass('rdbms.unittest.tds.MockTdsSocket', Socket::class, [], '{
       public $bytes;
       protected $offset= 0;
@@ -70,7 +67,7 @@ class TdsDataStreamTest extends TestCase {
    */
   protected function assertBytes($bytes, $str) {
     $field= typeof($str)->getField('sock')->setAccessible(true);
-    $this->assertEquals(new Bytes($bytes), new Bytes($field->get($str)->bytes));
+    Assert::equals(new Bytes($bytes), new Bytes($field->get($str)->bytes));
   }
 
   #[Test, Expect(TdsProtocolException::class)]
@@ -80,27 +77,27 @@ class TdsDataStreamTest extends TestCase {
   
   #[Test]
   public function readOneZeroLength() { 
-    $this->assertEquals('', $this->newDataStream($this->headerWith(0))->read(1));
+    Assert::equals('', $this->newDataStream($this->headerWith(0))->read(1));
   }
 
   #[Test]
   public function readAllZeroLength() { 
-    $this->assertEquals('', $this->newDataStream($this->headerWith(0))->read(-1));
+    Assert::equals('', $this->newDataStream($this->headerWith(0))->read(-1));
   }
 
   #[Test]
   public function readLength() { 
-    $this->assertEquals('Test', $this->newDataStream($this->headerWith(4).'Test')->read(4));
+    Assert::equals('Test', $this->newDataStream($this->headerWith(4).'Test')->read(4));
   }
 
   #[Test]
   public function readMore() { 
-    $this->assertEquals('Test', $this->newDataStream($this->headerWith(4).'Test')->read(1000));
+    Assert::equals('Test', $this->newDataStream($this->headerWith(4).'Test')->read(1000));
   }
 
   #[Test]
   public function readAll() { 
-    $this->assertEquals('Test', $this->newDataStream($this->headerWith(4).'Test')->read(-1));
+    Assert::equals('Test', $this->newDataStream($this->headerWith(4).'Test')->read(-1));
   }
 
   #[Test]
@@ -109,7 +106,7 @@ class TdsDataStreamTest extends TestCase {
       $this->headerWith(2, false).'Te'.
       $this->headerWith(2, true).'st'
     );
-    $this->assertEquals('Test', $this->newDataStream($packets)->read(4));
+    Assert::equals('Test', $this->newDataStream($packets)->read(4));
   }
 
   #[Test]
@@ -118,7 +115,7 @@ class TdsDataStreamTest extends TestCase {
       $this->headerWith(2, false).'Te'.
       $this->headerWith(2, true).'st'
     );
-    $this->assertEquals('Test', $this->newDataStream($packets)->read(1000));
+    Assert::equals('Test', $this->newDataStream($packets)->read(1000));
   }
 
   #[Test]
@@ -127,43 +124,43 @@ class TdsDataStreamTest extends TestCase {
       $this->headerWith(2, false).'Te'.
       $this->headerWith(2, true).'st'
     );
-    $this->assertEquals('Test', $this->newDataStream($packets)->read(-1));
+    Assert::equals('Test', $this->newDataStream($packets)->read(-1));
   }
 
   #[Test]
   public function getString() {
     $str= $this->newDataStream($this->headerWith(9)."\x04T\x00e\x00s\x00t\x00");
-    $this->assertEquals('Test', $str->getString($str->getByte()));
+    Assert::equals('Test', $str->getString($str->getByte()));
   }
 
   #[Test]
   public function getToken() {
     $str= $this->newDataStream($this->headerWith(1)."\x07");
-    $this->assertEquals("\x07", $str->getToken());
+    Assert::equals("\x07", $str->getToken());
   }
 
   #[Test]
   public function getByte() {
     $str= $this->newDataStream($this->headerWith(1)."\x07");
-    $this->assertEquals(0x07, $str->getByte());
+    Assert::equals(0x07, $str->getByte());
   }
 
   #[Test]
   public function getShort() {
     $str= $this->newDataStream($this->headerWith(2)."\x07\x08");
-    $this->assertEquals(0x0807, $str->getShort());
+    Assert::equals(0x0807, $str->getShort());
   }
 
   #[Test]
   public function getLong() {
     $str= $this->newDataStream($this->headerWith(4)."\x05\x06\x07\x08");
-    $this->assertEquals(0x8070605, $str->getLong());
+    Assert::equals(0x8070605, $str->getLong());
   }
 
   #[Test]
   public function get() {
     $str= $this->newDataStream($this->headerWith(4)."\x05\x06\x07\x08");
-    $this->assertEquals(
+    Assert::equals(
       ['length' => 0x05, 'flags' => 0x06, 'state' => 0x0807],
       $str->get("Clength/Cflags/vstate", 4)
     );
@@ -172,22 +169,22 @@ class TdsDataStreamTest extends TestCase {
   #[Test]
   public function beginReturnsMessageType() {
     $str= $this->newDataStream($this->headerWith(1)."\xAA");
-    $this->assertEquals(0x04, $str->begin());
+    Assert::equals(0x04, $str->begin());
   }
 
   #[Test]
   public function beginDoesNotDiscardFirstByte() {
     $str= $this->newDataStream($this->headerWith(1)."\xAA");
     $str->begin();
-    $this->assertEquals("\xAA", $str->getToken());
+    Assert::equals("\xAA", $str->getToken());
   }
 
   #[Test]
   public function beginDoesNotDiscardFirstBytes() {
     $str= $this->newDataStream($this->headerWith(2)."\xAA\xA2");
     $str->begin();
-    $this->assertEquals("\xAA", $str->getToken());
-    $this->assertEquals("\xA2", $str->getToken());
+    Assert::equals("\xAA", $str->getToken());
+    Assert::equals("\xA2", $str->getToken());
   }
 
   #[Test, Expect(['class' => IllegalArgumentException::class, 'withMessage' => '/must be at least 9/'])]

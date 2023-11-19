@@ -6,25 +6,17 @@ use rdbms\join\{JoinRelation, JoinTable};
 use rdbms\mysql\MySQLConnection;
 use rdbms\sybase\SybaseConnection;
 use rdbms\{SQLDialect, SQLFunction};
-use unittest\{Expect, Test, TestCase, Values};
+use unittest\{Assert, Before, Expect, Test, Values};
 use util\Date;
 
-/**
- * TestCase
- *
- * @see  xp://rdbms.SQLDialect
- */
-class SQLDialectTest extends TestCase {
+class SQLDialectTest {
   const SYBASE= 'sybase';
   const MYSQL= 'mysql';
 
   protected $conn= [];
     
-  /**
-   * Fill conn and dialectClass members
-   */
-  public function __construct($name) {
-    parent::__construct($name);
+  #[Before]
+  public function conn() {
     $this->conn[self::MYSQL]= new MySQLConnection(new \rdbms\DSN('mysql://localhost:3306/'));
     $this->conn[self::SYBASE]= new SybaseConnection(new \rdbms\DSN('sybase://localhost:1999/'));
   }
@@ -44,12 +36,12 @@ class SQLDialectTest extends TestCase {
 
   #[Test, Values('dialects')]
   public function dialect_member($dialect) {
-    $this->assertInstanceOf(SQLDialect::class, $dialect);
+    Assert::instance(SQLDialect::class, $dialect);
   }
 
   #[Test, Values('dialects')]
   public function pi_function($dialect) {
-    $this->assertEquals('pi()', $dialect->formatFunction(new SQLFunction('pi', '%s')));
+    Assert::equals('pi()', $dialect->formatFunction(new SQLFunction('pi', '%s')));
   }
 
   #[Test, Values('dialects'), Expect(IllegalArgumentException::class)]
@@ -59,7 +51,7 @@ class SQLDialectTest extends TestCase {
 
   #[Test, Values('dialects')]
   public function month_datepart($dialect) {
-    $this->assertEquals('month', $dialect->datepart('month'));
+    Assert::equals('month', $dialect->datepart('month'));
   }
 
   #[Test, Values('dialects'), Expect(IllegalArgumentException::class)]
@@ -69,7 +61,7 @@ class SQLDialectTest extends TestCase {
 
   #[Test, Values('dialects')]
   public function int_datatype($dialect) {
-    $this->assertEquals('int', $dialect->datatype('int'));
+    Assert::equals('int', $dialect->datatype('int'));
   }
 
   #[Test, Values('dialects'), Expect(IllegalArgumentException::class)]
@@ -92,7 +84,7 @@ class SQLDialectTest extends TestCase {
     $t0= new JoinTable('table0', 't0');
     $t1= new JoinTable('table1', 't1');
 
-    $this->assertEquals($asserts[$name], $dialect->makeJoinBy([
+    Assert::equals($asserts[$name], $dialect->makeJoinBy([
       new JoinRelation($t0, $t1, ['t0.id1_1 = t0.id1_1', 't0.id1_2 = t0.id1_2'])
     ]));
   }
@@ -108,7 +100,7 @@ class SQLDialectTest extends TestCase {
     $t1= new JoinTable('table1', 't1');
     $t2= new JoinTable('table2', 't2');
 
-    $this->assertEquals($asserts[$name], $dialect->makeJoinBy([
+    Assert::equals($asserts[$name], $dialect->makeJoinBy([
       new JoinRelation($t0, $t1, ['t0.id1_1 = t0.id1_1', 't0.id1_2 = t0.id1_2']),
       new JoinRelation($t1, $t2, ['t1.id2_1 = t2.id2_1'])
     ]));

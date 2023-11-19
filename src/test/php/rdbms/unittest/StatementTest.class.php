@@ -1,23 +1,25 @@
 <?php namespace rdbms\unittest;
- 
+
+use lang\XPClass;
 use rdbms\unittest\dataset\Job;
-use rdbms\unittest\mock\RegisterMockConnection;
+use rdbms\unittest\mock\MockConnection;
 use rdbms\{DriverManager, Statement};
-use unittest\{Test, TestCase};
+use unittest\{Assert, Before, After, Test};
 
-/**
- * Test Statement class
- *
- * @see   xp://rdbms.Statement
- */
-#[Action(eval: 'new RegisterMockConnection()')]
-class StatementTest extends TestCase {
-  public $conn= null;
-  public $peer= null;
+class StatementTest {
+  public $conn, $peer;
 
-  /**
-   * Setup method
-   */
+  #[Before]
+  public function registerMock() {
+    DriverManager::register('mock', new XPClass(MockConnection::class));
+  }
+
+  #[After]
+  public function removeMock() {
+    DriverManager::remove('mock');
+  }
+
+  #[Before]
   public function setUp() {
     $this->conn= DriverManager::getConnection('mock://mock/JOBS?autoconnect=1');
     $this->peer= Job::getPeer();
@@ -34,7 +36,7 @@ class StatementTest extends TestCase {
    */
   protected function assertStatement($sql, $statement) {
     $statement->executeSelect($this->conn, $this->peer);
-    $this->assertEquals($sql, trim($this->conn->getStatement(), ' '));
+    Assert::equals($sql, trim($this->conn->getStatement(), ' '));
   }
 
   #[Test]

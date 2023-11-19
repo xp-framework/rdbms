@@ -1,6 +1,7 @@
 <?php namespace rdbms\unittest\integration;
 
 use rdbms\ResultSet;
+use unittest\Assert;
 use unittest\{Ignore, Test};
 use util\Date;
 
@@ -46,7 +47,7 @@ class SQLiteIntegrationTest extends RdbmsIntegrationTest {
 
   #[Test]
   public function simpleSelect() {
-    $this->assertEquals(
+    Assert::equals(
       [['foo' => 1]], 
       $this->db()->select('1 as foo')
     );
@@ -55,19 +56,19 @@ class SQLiteIntegrationTest extends RdbmsIntegrationTest {
   #[Test]
   public function simpleQuery() {
     $q= $this->db()->query('select 1 as foo');
-    $this->assertInstanceOf(ResultSet::class, $q);
-    $this->assertEquals(1, $q->next('foo'));
+    Assert::instance(ResultSet::class, $q);
+    Assert::equals(1, $q->next('foo'));
   }
 
   #[Test]
   public function selectInteger() {
-    $this->assertEquals(1, $this->db()->query('select 1 as value')->next('value'));
+    Assert::equals(1, $this->db()->query('select 1 as value')->next('value'));
   }
 
   #[Test]
   public function selectFloat() {
-    $this->assertEquals(0.5, $this->db()->query('select 0.5 as value')->next('value'));
-    $this->assertEquals(1.0, $this->db()->query('select 1.0 as value')->next('value'));
+    Assert::equals(0.5, $this->db()->query('select 0.5 as value')->next('value'));
+    Assert::equals(1.0, $this->db()->query('select 1.0 as value')->next('value'));
   }
 
   #[Test]
@@ -75,8 +76,8 @@ class SQLiteIntegrationTest extends RdbmsIntegrationTest {
     $cmp= new Date('2009-08-14 12:45:00');
     $result= $this->db()->query('select marshal(datetime(%s), "date") as value', $cmp)->next('value');
 
-    $this->assertInstanceOf(Date::class, $result);
-    $this->assertEquals($cmp->toString('Y-m-d'), $result->toString('Y-m-d'));
+    Assert::instance(Date::class, $result);
+    Assert::equals($cmp->toString('Y-m-d'), $result->toString('Y-m-d'));
   }
 
   #[Test, Ignore('SQLite does not have numeric(X)')]
@@ -135,12 +136,12 @@ class SQLiteIntegrationTest extends RdbmsIntegrationTest {
 
   #[Test]
   public function selectEmptyChar() {
-    $this->assertEquals('', $this->db()->query('select cast("" as char(4)) as value')->next('value'));
+    Assert::equals('', $this->db()->query('select cast("" as char(4)) as value')->next('value'));
   }
 
   #[Test]
   public function selectCharWithPadding() {
-    $this->assertEquals('t', $this->db()->query('select cast("t" as char(4)) as value')->next('value'));
+    Assert::equals('t', $this->db()->query('select cast("t" as char(4)) as value')->next('value'));
   }
 
   #[Test, Ignore('SQLite does not have an image datatype')]

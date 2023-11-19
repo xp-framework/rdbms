@@ -1,5 +1,6 @@
 <?php namespace rdbms\unittest\drivers;
 
+use unittest\Assert;
 use unittest\Test;
  
 /**
@@ -21,7 +22,7 @@ class PostgreSQLTokenizerTest extends \rdbms\unittest\TokenizerTest {
 
   #[Test]
   public function labelToken() {
-    $this->assertEquals(
+    Assert::equals(
       'select * from "order"',
       $this->fixture->prepare('select * from %l', 'order')
     );

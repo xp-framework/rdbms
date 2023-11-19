@@ -1,5 +1,6 @@
 <?php namespace rdbms\unittest\drivers;
- 
+
+use unittest\Assert;
 /**
  * Test MSSQL tokenizer
  *

@@ -2,6 +2,7 @@
 
 use rdbms\mysql\MySQLDBAdapter;
 use rdbms\{DBTableAttribute, FieldType};
+use unittest\Assert;
 use unittest\Test;
 
 /**
@@ -9,11 +10,11 @@ use unittest\Test;
  *
  * @see    xp://rdbms.mysql.MySQLDBAdapter
  */
-class TableDescriptionTest extends \unittest\TestCase {
+class TableDescriptionTest {
 
   #[Test]
   public function auto_increment() {
-    $this->assertEquals(
+    Assert::equals(
       new DBTableAttribute('contract_id', FieldType::INT, true, false, 8, 0, 0),
       MySQLDBAdapter::tableAttributeFrom([
         'Field'   => 'contract_id',
@@ -28,7 +29,7 @@ class TableDescriptionTest extends \unittest\TestCase {
 
   #[Test]
   public function unsigned_int() {
-    $this->assertEquals(
+    Assert::equals(
       new DBTableAttribute('bz_id', FieldType::INT, false, false, 6, 0, 0),
       MySQLDBAdapter::tableAttributeFrom([
         'Field'   => 'bz_id',

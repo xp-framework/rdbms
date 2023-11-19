@@ -2,6 +2,7 @@
 
 use rdbms\util\DBXmlGenerator;
 use rdbms\{DBIndex, DBTable, DriverManager};
+use unittest\Assert;
 use unittest\{BeforeClass, Test, TestCase};
 use xml\XPath;
 
@@ -10,14 +11,14 @@ use xml\XPath;
  *
  * @see   rdbms.util.DBXmlGenerator
  */
-class DBXmlGeneratorTest extends TestCase {
+class DBXmlGeneratorTest {
   protected $xpath= null;
 
   /**
    * Sets up test case
    */
-  #[BeforeClass]
-  public static function onlyWithXmlModule() {
+  #[Before]
+  public function onlyWithXmlModule() {
     if (!class_exists('xml\Tree')) {
       throw new \unittest\PrerequisitesNotMetError('XML Module not available', NULL, ['loaded']);
     }
@@ -26,6 +27,7 @@ class DBXmlGeneratorTest extends TestCase {
   /**
    * Sets up a Database Object for the test
    */
+  #[Before]
   public function setUp() {
     $generated= DBXmlGenerator::createFromTable(
       $this->newTable('deviceinfo', [
@@ -72,67 +74,67 @@ class DBXmlGeneratorTest extends TestCase {
 
   #[Test]
   public function correctTableNameSet() {
-    $this->assertEquals('deviceinfo', $this->xpath->query('string(/document/table/@name)'));
+    Assert::equals('deviceinfo', $this->xpath->query('string(/document/table/@name)'));
   }
 
   #[Test]
   public function correctDatabaseNameSet() {
-    $this->assertEquals('FOOBAR', $this->xpath->query('string(/document/table/@database)'));
+    Assert::equals('FOOBAR', $this->xpath->query('string(/document/table/@database)'));
   }
 
   #[Test]
   public function correctTypeSet() {
-    $this->assertEquals('DB_ATTRTYPE_TEXT', $this->xpath->query('string(/document/table/attribute[3]/@type)'));
+    Assert::equals('DB_ATTRTYPE_TEXT', $this->xpath->query('string(/document/table/attribute[3]/@type)'));
   }    
 
   #[Test]
   public function correctTypeNameSet() {
-    $this->assertEquals('string', $this->xpath->query('string(/document/table/attribute[3]/@typename)'));
-    $this->assertEquals('int', $this->xpath->query('string(/document/table/attribute[2]/@typename)'));
+    Assert::equals('string', $this->xpath->query('string(/document/table/attribute[3]/@typename)'));
+    Assert::equals('int', $this->xpath->query('string(/document/table/attribute[2]/@typename)'));
   }    
 
   #[Test]
   public function primaryKeySet() {
-    $this->assertEquals('true', $this->xpath->query('string(/document/table/index[1]/@primary)'));
+    Assert::equals('true', $this->xpath->query('string(/document/table/index[1]/@primary)'));
   }
 
   #[Test]
   public function primaryKeyNotSet() {
-    $this->assertEquals('false', $this->xpath->query('string(/document/table/index[2]/@primary)'));
+    Assert::equals('false', $this->xpath->query('string(/document/table/index[2]/@primary)'));
   }    
 
   #[Test]
   public function uniqueKeySet() {
-    $this->assertEquals('true', $this->xpath->query('string(/document/table/index[1]/@unique)'));
+    Assert::equals('true', $this->xpath->query('string(/document/table/index[1]/@unique)'));
   }
 
   #[Test]
   public function uniqueKeyNotSet() {
-    $this->assertEquals('false', $this->xpath->query('string(/document/table/index[2]/@unique)'));
+    Assert::equals('false', $this->xpath->query('string(/document/table/index[2]/@unique)'));
   }
   
   #[Test]
   public function correctKey() {
-    $this->assertEquals('deviceinfo_id', trim($this->xpath->query('string(/document/table/index[1]/key)')));
+    Assert::equals('deviceinfo_id', trim($this->xpath->query('string(/document/table/index[1]/key)')));
   }
 
   #[Test]
   public function correctKeyName() {
-    $this->assertEquals('PRIMARY', $this->xpath->query('string(/document/table/index[1]/@name)'));
+    Assert::equals('PRIMARY', $this->xpath->query('string(/document/table/index[1]/@name)'));
   }
 
   #[Test]
   public function identitySet() {
-    $this->assertEquals('true', $this->xpath->query('string(/document/table/attribute[1]/@identity)'));
+    Assert::equals('true', $this->xpath->query('string(/document/table/attribute[1]/@identity)'));
   }
 
   #[Test]
   public function nullableSet() {
-    $this->assertEquals('false', $this->xpath->query('string(/document/table/attribute[1]/@nullable)'));
+    Assert::equals('false', $this->xpath->query('string(/document/table/attribute[1]/@nullable)'));
   }
 
   #[Test]
   public function dbhostSet() {
-    $this->assertEquals('localhost', $this->xpath->query('string(/document/table/@dbhost)'));
+    Assert::equals('localhost', $this->xpath->query('string(/document/table/@dbhost)'));
   }
 }

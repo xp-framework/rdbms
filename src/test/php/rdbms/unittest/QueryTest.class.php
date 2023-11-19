@@ -1,28 +1,31 @@
 <?php namespace rdbms\unittest;
- 
-use rdbms\Criteria;
+
+use lang\XPClass;
 use rdbms\query\{DeleteQuery, SelectQuery, SetOperation, UpdateQuery};
 use rdbms\unittest\dataset\{Job, Person};
-use rdbms\unittest\mock\{MockConnection, RegisterMockConnection};
-use unittest\{Test, TestCase};
+use rdbms\unittest\mock\MockConnection;
+use rdbms\{Criteria, DriverManager};
+use unittest\{Assert, Before, After, Test};
 
-/**
- * Test query class
- *
- * @see  xp://rdbms.Query
- */
-#[Action(eval: 'new RegisterMockConnection()')]
-class QueryTest extends TestCase {
+class QueryTest {
   private
     $qa= null,
     $qb= null,
     $qas= 'select  job_id, title from JOBS.job  where job_id = 5',
     $qbs= 'select  job_id, name from JOBS.Person ',
     $qu= null;
-    
-  /**
-   * Setup method
-   */
+
+  #[Before]
+  public function registerMock() {
+    DriverManager::register('mock', new XPClass(MockConnection::class));
+  }
+
+  #[After]
+  public function removeMock() {
+    DriverManager::remove('mock');
+  }
+
+  #[Before]
   public function setUp() {
     with ($conn= \rdbms\DriverManager::getConnection('mock://mock/JOBS?autoconnect=1')); {
       Job::getPeer()->setConnection($conn);
@@ -55,39 +58,39 @@ class QueryTest extends TestCase {
     $q= new SelectQuery();
     $c= new Criteria();
     $q->setCriteria($c);
-    $this->assertEquals($c, $q->getCriteria());
+    Assert::equals($c, $q->getCriteria());
   }
   
   #[Test]
   public function setPeer() {
     $q= new SelectQuery();
     $q->setPeer(Job::getPeer());
-    $this->assertEquals(Job::getPeer(), $q->getPeer());
+    Assert::equals(Job::getPeer(), $q->getPeer());
   }
   
   #[Test]
   public function getConnection() {
     $q= new SelectQuery();
-    $this->assertNull($q->getConnection());
+    Assert::null($q->getConnection());
     $q->setPeer(Job::getPeer());
-    $this->assertInstanceOf(MockConnection::class, $q->getConnection());
+    Assert::instance(MockConnection::class, $q->getConnection());
   }
   
   #[Test]
   public function executeWithRestriction() {
-    $this->assertInstanceOf(SelectQuery::class, (new SelectQuery())->withRestriction(Job::column('job_id')->equal(5)));
+    Assert::instance(SelectQuery::class, (new SelectQuery())->withRestriction(Job::column('job_id')->equal(5)));
   }
   
   #[Test]
   public function getSingleQueryString() {
-    $this->assertEquals($this->qas, $this->qa->getQueryString());
-    $this->assertEquals($this->qbs, $this->qb->getQueryString());
+    Assert::equals($this->qas, $this->qa->getQueryString());
+    Assert::equals($this->qbs, $this->qb->getQueryString());
   }
   
   #[Test]
   public function getQueryString() {
     $so= new SetOperation(SetOperation::UNION, $this->qa, $this->qb);
-    $this->assertEquals(
+    Assert::equals(
       $this->qas.' union '.$this->qbs,
       $so->getQueryString()
     );
@@ -96,17 +99,17 @@ class QueryTest extends TestCase {
   #[Test]
   public function factory() {
     $so= SetOperation::union($this->qa, $this->qb);
-    $this->assertEquals(
+    Assert::equals(
       $this->qas.' union '.$this->qbs,
       $so->getQueryString()
     );
     $so= SetOperation::except($this->qa, $this->qb);
-    $this->assertEquals(
+    Assert::equals(
       $this->qas.' except '.$this->qbs,
       $so->getQueryString()
     );
     $so= SetOperation::intercept($this->qa, $this->qb);
-    $this->assertEquals(
+    Assert::equals(
       $this->qas.' intercept '.$this->qbs,
       $so->getQueryString()
     );
@@ -115,7 +118,7 @@ class QueryTest extends TestCase {
   #[Test]
   public function all() {
     $so= SetOperation::union($this->qa, $this->qb, true);
-    $this->assertEquals(
+    Assert::equals(
       $this->qas.' union all '.$this->qbs,
       $so->getQueryString()
     );
@@ -124,7 +127,7 @@ class QueryTest extends TestCase {
   #[Test]
   public function nesting() {
     $so= SetOperation::union(SetOperation::union($this->qb, $this->qa), SetOperation::union($this->qb, $this->qa));
-    $this->assertEquals(
+    Assert::equals(
       $this->qbs.' union '.$this->qas.' union '.$this->qbs.' union '.$this->qas,
       $so->getQueryString()
     );

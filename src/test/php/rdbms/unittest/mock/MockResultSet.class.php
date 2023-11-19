@@ -1,5 +1,4 @@
 <?php namespace rdbms\unittest\mock;
-
 /**
  * Result set Mock Object
  */

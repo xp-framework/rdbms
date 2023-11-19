@@ -1,5 +1,6 @@
 <?php namespace rdbms\unittest\integration;
 
+use unittest\Assert;
 /**
  * Deadlock test on mysql
  *
@@ -10,6 +11,7 @@ class MySQLDeadlockTest extends AbstractDeadlockTest {
   protected function driverName() { return 'mysql'; }
 
   /** @return void */
+  #[After]
   public function tearDown() {
     parent::tearDown();
 

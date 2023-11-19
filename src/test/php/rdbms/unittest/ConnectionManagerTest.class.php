@@ -1,21 +1,9 @@
 <?php namespace rdbms\unittest;
 
 use rdbms\{ConnectionManager, ConnectionNotRegisteredException, DBConnection, DriverNotSupportedException};
-use unittest\{Expect, Test, TestCase};
+use unittest\{Assert, Expect, Test};
 
-/**
- * ConnectionManager testcase
- *
- * @see   xp://rdbms.ConnectionManager
- */
-abstract class ConnectionManagerTest extends TestCase {
-  
-  /**
-   * Empties connection manager pool
-   */
-  public function setUp() {
-    ConnectionManager::getInstance()->pool= [];
-  }
+abstract class ConnectionManagerTest {
   
   /**
    * Returns an instance with a given number of DSNs
@@ -27,13 +15,14 @@ abstract class ConnectionManagerTest extends TestCase {
 
   #[Test]
   public function initallyEmpty() {
-    $this->assertEquals([], $this->instanceWith([])->getConnections());
+    ConnectionManager::getInstance()->pool= [];
+    Assert::equals([], $this->instanceWith([])->getConnections());
   }
 
   #[Test]
   public function acquireExistingConnectionViaGetByHost() {
     $cm= $this->instanceWith(['mydb' => 'mock://user:pass@host/db?autoconnect=1']);
-    $this->assertInstanceOf(DBConnection::class, $cm->getByHost('mydb', 0));
+    Assert::instance(DBConnection::class, $cm->getByHost('mydb', 0));
   }
   
   #[Test, Expect(ConnectionNotRegisteredException::class)]
@@ -45,7 +34,7 @@ abstract class ConnectionManagerTest extends TestCase {
   #[Test]
   public function acquireExistingConnectionViaGet() {
     $cm= $this->instanceWith(['mydb' => 'mock://user:pass@host/db?autoconnect=1']);
-    $this->assertInstanceOf(DBConnection::class, $cm->getByHost('mydb', 0));
+    Assert::instance(DBConnection::class, $cm->getByHost('mydb', 0));
   }
   
   #[Test, Expect(ConnectionNotRegisteredException::class)]
@@ -78,7 +67,7 @@ abstract class ConnectionManagerTest extends TestCase {
       'mydb.admin' => 'mock://admin:pass@host/db?autoconnect=1'
     ];
     $cm= $this->instanceWith($dsns);
-    $this->assertEquals(new \rdbms\DSN($dsns['mydb.user']), $cm->get('mydb', 'user')->dsn);
+    Assert::equals(new \rdbms\DSN($dsns['mydb.user']), $cm->get('mydb', 'user')->dsn);
   }
  
   #[Test]
@@ -88,7 +77,7 @@ abstract class ConnectionManagerTest extends TestCase {
       'mydb.admin' => 'mock://admin:pass@host/db?autoconnect=1'
     ];
     $cm= $this->instanceWith($dsns);
-    $this->assertEquals(new \rdbms\DSN($dsns['mydb.user']), $cm->getByHost('mydb', 0)->dsn);
+    Assert::equals(new \rdbms\DSN($dsns['mydb.user']), $cm->getByHost('mydb', 0)->dsn);
   }
  
   #[Test]
@@ -98,7 +87,7 @@ abstract class ConnectionManagerTest extends TestCase {
       'mydb.admin' => 'mock://admin:pass@host/db?autoconnect=1'
     ];
     $cm= $this->instanceWith($dsns);
-    $this->assertEquals(new \rdbms\DSN($dsns['mydb.admin']), $cm->getByHost('mydb', 1)->dsn);
+    Assert::equals(new \rdbms\DSN($dsns['mydb.admin']), $cm->getByHost('mydb', 1)->dsn);
   }
 
   #[Test]
@@ -113,7 +102,7 @@ abstract class ConnectionManagerTest extends TestCase {
     foreach ($cm->getByHost('mydb') as $conn) {
       $values[]= $conn->dsn;
     }
-    $this->assertEquals(
+    Assert::equals(
       [new \rdbms\DSN($dsns['mydb.user']), new \rdbms\DSN($dsns['mydb.admin'])], 
       $values
     );

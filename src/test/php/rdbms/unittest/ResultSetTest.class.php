@@ -1,14 +1,9 @@
 <?php namespace rdbms\unittest;
 
 use lang\ClassLoader;
-use unittest\{BeforeClass, Test, Values};
+use unittest\{Assert, Before, Test, Values};
 
-/**
- * Tests for the abstract ResultSet base class
- *
- * @see  xp://rdbms.ResultSet
- */
-class ResultSetTest extends \unittest\TestCase {
+class ResultSetTest {
   protected static $resultSet;
 
   /**
@@ -16,8 +11,8 @@ class ResultSetTest extends \unittest\TestCase {
    *
    * @return void
    */
-  #[BeforeClass]
-  public static function defineResultSet() {
+  #[Before]
+  public function defineResultSet() {
     self::$resultSet= ClassLoader::defineClass('ResultSetTest_Fixture', 'rdbms.ResultSet', [], '{
       protected $records, $offset;
 
@@ -55,25 +50,25 @@ class ResultSetTest extends \unittest\TestCase {
 
   #[Test]
   public function isSuccess_always_returns_false() {
-    $this->assertFalse(self::$resultSet->newInstance([])->isSuccess());
+    Assert::false(self::$resultSet->newInstance([])->isSuccess());
   }
 
   #[Test]
   public function next_on_empty_results() {
     $q= self::$resultSet->newInstance([]);
-    $this->assertEquals(false, $q->next());
+    Assert::equals(false, $q->next());
   }
 
   #[Test]
   public function next() {
     $q= self::$resultSet->newInstance([['id' => 1]]);
-    $this->assertEquals(['id' => 1], $q->next());
+    Assert::equals(['id' => 1], $q->next());
   }
 
   #[Test]
   public function next_with_field() {
     $q= self::$resultSet->newInstance([['id' => 1]]);
-    $this->assertEquals(1, $q->next('id'));
+    Assert::equals(1, $q->next('id'));
   }
 
   #[Test]
@@ -81,19 +76,19 @@ class ResultSetTest extends \unittest\TestCase {
     $q= self::$resultSet->newInstance([['id' => 1]]);
     $q->next();
     $q->seek(0);
-    $this->assertEquals(['id' => 1], $q->next());
+    Assert::equals(['id' => 1], $q->next());
   }
 
   #[Test, Values('fixtures')]
   public function can_be_used_in_foreach($records) {
     $q= self::$resultSet->newInstance($records);
-    $this->assertEquals($records, iterator_to_array($q));
+    Assert::equals($records, iterator_to_array($q));
   }
 
   #[Test, Values('fixtures')]
   public function can_be_iterated_twice($records) {
     $q= self::$resultSet->newInstance($records);
     iterator_to_array($q);
-    $this->assertEquals($records, iterator_to_array($q));
+    Assert::equals($records, iterator_to_array($q));
   }
 }

@@ -1,25 +1,26 @@
 <?php namespace rdbms\unittest;
- 
-use lang\IllegalArgumentException;
+
+use lang\{IllegalArgumentException, XPClass};
 use rdbms\criterion\Restrictions;
 use rdbms\unittest\dataset\Job;
-use rdbms\unittest\mock\RegisterMockConnection;
+use rdbms\unittest\mock\MockConnection;
 use rdbms\{Criteria, DriverManager, SQLStateException};
-use unittest\{Expect, Test, TestCase};
+use unittest\{Assert, After, Before, Expect, Test};
 
-/**
- * Test criteria class
- *
- * @see      xp://rdbms.Criteria
- */
-#[Action(eval: 'new RegisterMockConnection()')]
-class CriteriaTest extends TestCase {
-  public $conn= null;
-  public $peer= null;
+class CriteriaTest {
+  public $conn, $peer;
 
-  /**
-   * Setup method
-   */
+  #[Before]
+  public function registerMock() {
+    DriverManager::register('mock', new XPClass(MockConnection::class));
+  }
+
+  #[After]
+  public function removeMock() {
+    DriverManager::remove('mock');
+  }
+
+  #[Before]
   public function setUp() {
     $this->conn= DriverManager::getConnection('mock://mock/JOBS?autoconnect=1');
     $this->peer= Job::getPeer();
@@ -35,7 +36,7 @@ class CriteriaTest extends TestCase {
    * @throws  unittest.AssertionFailedError
    */
   protected function assertSql($sql, $criteria) {
-    $this->assertEquals($sql, trim($criteria->toSQL($this->conn, $this->peer), ' '));
+    Assert::equals($sql, trim($criteria->toSQL($this->conn, $this->peer), ' '));
   }
 
   #[Test]
@@ -184,17 +185,17 @@ class CriteriaTest extends TestCase {
 
   #[Test]
   public function addReturnsThis() {
-    $this->assertInstanceOf(Criteria::class, (new Criteria())->add('job_id', 1, EQUAL));
+    Assert::instance(Criteria::class, (new Criteria())->add('job_id', 1, EQUAL));
   }
 
   #[Test]
   public function addOrderByReturnsThis() {
-    $this->assertInstanceOf(Criteria::class, (new Criteria())->add('job_id', 1, EQUAL)->addOrderBy('valid_from', DESCENDING));
+    Assert::instance(Criteria::class, (new Criteria())->add('job_id', 1, EQUAL)->addOrderBy('valid_from', DESCENDING));
   }
 
   #[Test]
   public function addGroupByReturnsThis() {
-    $this->assertInstanceOf(Criteria::class, (new Criteria())->add('job_id', 1, EQUAL)->addGroupBy('valid_from'));
+    Assert::instance(Criteria::class, (new Criteria())->add('job_id', 1, EQUAL)->addGroupBy('valid_from'));
   }
 
   #[Test]
@@ -257,17 +258,17 @@ class CriteriaTest extends TestCase {
 
   #[Test]
   public function fetchModeChaining() {
-    $this->assertInstanceOf(Criteria::class, (new Criteria())->setFetchmode(\rdbms\join\Fetchmode::join('PersonJob')));
+    Assert::instance(Criteria::class, (new Criteria())->setFetchmode(\rdbms\join\Fetchmode::join('PersonJob')));
   }
 
   #[Test]
   public function testIsJoin() {
     $crit= new Criteria();
-    $this->assertFalse($crit->isJoin());
-    $this->assertTrue($crit->setFetchmode(\rdbms\join\Fetchmode::join('PersonJob'))->isJoin());
+    Assert::false($crit->isJoin());
+    Assert::true($crit->setFetchmode(\rdbms\join\Fetchmode::join('PersonJob'))->isJoin());
     $crit->fetchmode= [];
-    $this->assertFalse($crit->isJoin());
-    $this->assertFalse($crit->setFetchmode(\rdbms\join\Fetchmode::select('PersonJob'))->isJoin());
+    Assert::false($crit->isJoin());
+    Assert::false($crit->setFetchmode(\rdbms\join\Fetchmode::select('PersonJob'))->isJoin());
   }
 
   #[Test]
@@ -275,7 +276,7 @@ class CriteriaTest extends TestCase {
     $jp= new \rdbms\join\JoinProcessor(Job::getPeer());
     $jp->setFetchModes(['PersonJob->Department' => 'join']);
     $jp->enterJoinContext();
-    $this->assertEquals(
+    Assert::equals(
       '1 = 1',
       (new Criteria())
       ->setFetchmode(\rdbms\join\Fetchmode::join('PersonJob'))
@@ -289,7 +290,7 @@ class CriteriaTest extends TestCase {
     $jp= new \rdbms\join\JoinProcessor(Job::getPeer());
     $jp->setFetchModes(['PersonJob->Department' => 'join']);
     $jp->enterJoinContext();
-    $this->assertEquals(
+    Assert::equals(
       'PersonJob_Department.department_id = 5 and start.job_id = 2',
       (new Criteria())
         ->setFetchmode(\rdbms\join\Fetchmode::join('PersonJob'))
@@ -306,7 +307,7 @@ class CriteriaTest extends TestCase {
     $jp->setFetchModes(['PersonJob->Department' => 'join']);
     $jp->enterJoinContext();
     try {
-      $this->assertEquals(
+      Assert::equals(
         'select  PersonJob.job_id, PersonJob_Department.department_id from JOBS.job as start, JOBS.Person as PersonJob, JOBS.Department as PersonJob_Department where start.job_id *= PersonJob.job_id and PersonJob.department_id *= PersonJob_Department.department_id and  1 = 1',
         (new Criteria())
           ->setFetchmode(\rdbms\join\Fetchmode::join('PersonJob'))

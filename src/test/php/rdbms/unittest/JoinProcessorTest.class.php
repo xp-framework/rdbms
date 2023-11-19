@@ -1,10 +1,11 @@
 <?php namespace rdbms\unittest;
- 
+
 use lang\IllegalArgumentException;
 use rdbms\join\JoinProcessor;
 use rdbms\mysql\MySQLConnection;
 use rdbms\unittest\dataset\Job;
 use rdbms\{Criteria, DriverManager};
+use unittest\Assert;
 use unittest\{Expect, Test, TestCase};
 
 /**
@@ -16,11 +17,12 @@ use unittest\{Expect, Test, TestCase};
  *
  * @see      xp://rdbms.join.JoinProcessor
  */
-class JoinProcessorTest extends TestCase {
+class JoinProcessorTest {
 
   /**
    * Make Job's peer use mysql
    */
+  #[Before]
   public function setUp() {
     Job::getPeer()->setConnection(new MySQLConnection(new \rdbms\DSN('mysql://localhost:3306/')));
   }
@@ -29,7 +31,7 @@ class JoinProcessorTest extends TestCase {
   public function getAttributeStringTest() {
     $jp= new JoinProcessor(Job::getPeer());
     $jp->setFetchModes(['PersonJob->Department' => 'join']);
-    $this->assertEquals(
+    Assert::equals(
       $jp->getAttributeString(),
       JoinProcessor::FIRST.'.job_id as '.JoinProcessor::FIRST.'_job_id, '
       .JoinProcessor::FIRST.'.title as '.JoinProcessor::FIRST.'_title, '
@@ -50,7 +52,7 @@ class JoinProcessorTest extends TestCase {
     $jp= new JoinProcessor(Job::getPeer());
     $jp->setFetchModes(['PersonJob' => 'join']);
     $jp->setFetchModes(['PersonJob->Department' => 'join']);
-    $this->assertEquals(
+    Assert::equals(
       'JOBS.job as '.JoinProcessor::FIRST.' LEFT OUTER JOIN JOBS.Person as '.JoinProcessor::pathToKey(['PersonJob']).' on ('.JoinProcessor::FIRST.'.job_id = '.JoinProcessor::pathToKey(['PersonJob']).'.job_id) LEFT JOIN JOBS.Department as '.JoinProcessor::pathToKey(['PersonJob', 'Department']).' on ('.JoinProcessor::pathToKey(['PersonJob']).'.department_id = '.JoinProcessor::pathToKey(['PersonJob', 'Department']).'.department_id) where ',
       $jp->getJoinString()
     );

@@ -3,6 +3,7 @@
 use lang\IllegalArgumentException;
 use rdbms\sqlite3\SQLite3Connection;
 use rdbms\{DBEvent, DSN, ProfilingObserver};
+use unittest\Assert;
 use unittest\{Expect, Ignore, Test, TestCase, Values};
 use util\log\{BufferedAppender, LogCategory};
 
@@ -11,10 +12,11 @@ use util\log\{BufferedAppender, LogCategory};
  *
  * @see   xp://rdbms.ProfilingObserver
  */
-class ProfilingObserverTest extends TestCase {
+class ProfilingObserverTest {
   private $cat;
 
   /** @return void */
+  #[Before]
   public function setUp() {
     $this->cat= new LogCategory('test');
   }
@@ -46,31 +48,31 @@ class ProfilingObserverTest extends TestCase {
 
   #[Test, Values(['select * from world', ' select * from world', '  select * from world', "\rselect * from world", "\r\nselect * from world", "\nselect * from world", "\tselect * from world", 'SELECT * from world', 'Select * from world'])]
   public function select_type($sql) {
-    $this->assertEquals('select', (new ProfilingObserver($this->cat))->typeOf($sql));
+    Assert::equals('select', (new ProfilingObserver($this->cat))->typeOf($sql));
   }
 
   public function update_type() {
-    $this->assertEquals('update', (new ProfilingObserver($this->cat))->typeOf('update world set ...'));
+    Assert::equals('update', (new ProfilingObserver($this->cat))->typeOf('update world set ...'));
   }
 
   public function insert_type() {
-    $this->assertEquals('insert', (new ProfilingObserver($this->cat))->typeOf('insert into world ...'));
+    Assert::equals('insert', (new ProfilingObserver($this->cat))->typeOf('insert into world ...'));
   }
 
   public function delete_type() {
-    $this->assertEquals('delete', (new ProfilingObserver($this->cat))->typeOf('delete from world ...'));
+    Assert::equals('delete', (new ProfilingObserver($this->cat))->typeOf('delete from world ...'));
   }
 
   public function set_type() {
-    $this->assertEquals('set', (new ProfilingObserver($this->cat))->typeOf('set showplan on'));
+    Assert::equals('set', (new ProfilingObserver($this->cat))->typeOf('set showplan on'));
   }
 
   public function show_type() {
-    $this->assertEquals('show', (new ProfilingObserver($this->cat))->typeOf('show keys from ...'));
+    Assert::equals('show', (new ProfilingObserver($this->cat))->typeOf('show keys from ...'));
   }
 
   public function unknown_type() {
-    $this->assertEquals('unknown', (new ProfilingObserver($this->cat))->typeOf('explain ...'));
+    Assert::equals('unknown', (new ProfilingObserver($this->cat))->typeOf('explain ...'));
   }
 
   #[Test]
@@ -94,7 +96,7 @@ class ProfilingObserverTest extends TestCase {
   public function update_with_query_and_queryend_does_count_timing() {
     $o= $this->observerWithSelect();
 
-    $this->assertEquals(1, $o->numberOfTimes('select'));
+    Assert::equals(1, $o->numberOfTimes('select'));
   }
 
   #[Test]
@@ -102,14 +104,14 @@ class ProfilingObserverTest extends TestCase {
     $o= $this->observerWithSelect();
 
     $elapsed= $o->elapsedTimeOfAll('queryend');
-    $this->assertFalse(0 == $elapsed, $elapsed.'!= 0');
-    $this->assertTrue($elapsed >= 0.098, $elapsed.' >= 0.098');
+    Assert::false(0 == $elapsed, $elapsed.'!= 0');
+    Assert::true($elapsed >= 0.098, $elapsed.' >= 0.098');
   }
 
   #[Test]
   public function timing_as_string() {
     $o= $this->observerWithSelect();
-    $this->assertTrue(0 < strlen($o->getTimingAsString()));
+    Assert::true(0 < strlen($o->getTimingAsString()));
   }
 
   #[Test]
@@ -118,7 +120,7 @@ class ProfilingObserverTest extends TestCase {
     $appender= $this->cat->addAppender(new BufferedAppender());
     $o= null;
 
-    $this->assertTrue(0 < strlen($appender->buffer));
+    Assert::true(0 < strlen($appender->buffer));
   }
 
   #[Test]
@@ -127,7 +129,7 @@ class ProfilingObserverTest extends TestCase {
     $conn= $this->conn();
 
     $o->update($conn, new DBEvent('queryend', 5));
-    $this->assertEquals(0.0, $o->elapsedTimeOfAll('queryend'));
+    Assert::equals(0.0, $o->elapsedTimeOfAll('queryend'));
   }
 
   #[Test]
@@ -138,7 +140,7 @@ class ProfilingObserverTest extends TestCase {
     $o->update($c1, new DBEvent('connect'));
     $o->update($c1, new DBEvent('connected'));
 
-    $this->assertEquals(1, $o->numberOfTimes('connect'));
+    Assert::equals(1, $o->numberOfTimes('connect'));
   }
 
   #[Test, Ignore('Expected behavior not finally decided')]
@@ -153,7 +155,7 @@ class ProfilingObserverTest extends TestCase {
     $o->update($c2, new DBEvent('connect'));
     $o->update($c2, new DBEvent('connected'));
 
-    $this->assertEquals(1, $o->numberOfTimes('connect'));
+    Assert::equals(1, $o->numberOfTimes('connect'));
   }
 
   #[Test]
@@ -164,7 +166,7 @@ class ProfilingObserverTest extends TestCase {
     $o->update($c1, new DBEvent('query', 'encrypt foo from bar'));;
     $o->update($c1, new DBEvent('queryend'));
 
-    $this->assertEquals(1, $o->numberOfTimes('unknown'));
+    Assert::equals(1, $o->numberOfTimes('unknown'));
   }
 
   #[Test]
@@ -175,6 +177,6 @@ class ProfilingObserverTest extends TestCase {
     $o->update($c1, new DBEvent('query', 'update foo from bar'));;
     $o->update($c1, new DBEvent('queryend'));
 
-    $this->assertEquals(1, $o->numberOfTimes('update'));
+    Assert::equals(1, $o->numberOfTimes('update'));
   }
 }

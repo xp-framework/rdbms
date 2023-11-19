@@ -8,27 +8,18 @@ use rdbms\sybase\SybaseConnection;
 use rdbms\unittest\dataset\Job;
 use rdbms\unittest\mock\{MockResultSet, RegisterMockConnection};
 use rdbms\{Criteria, DriverManager, Record};
-use unittest\Test;
+use unittest\{Assert, Test};
 use util\Date;
 
-/**
- * TestCase
- *
- * @see  xp://rdbms.criterion.Projections
- */
 #[Action(eval: 'new RegisterMockConnection()')]
-class ProjectionTest extends \unittest\TestCase {
-  public
-    $syconn = null,
-    $myconn = null,
-    $pgconn = null,
-    $sqconn = null,
-    $peer   = null;
+class ProjectionTest {
+  private $syconn, $myconn, $pgconn, $sqconn, $peer;
     
   /**
    * Sets up a Database Object for the test
    *
    */
+  #[Before]
   public function setUp() {
     $this->syconn= new SybaseConnection(new \rdbms\DSN('sybase://localhost:1999/'));
     $this->myconn= new MySQLConnection(new \rdbms\DSN('mysql://localhost/'));
@@ -49,10 +40,10 @@ class ProjectionTest extends \unittest\TestCase {
    * @throws  unittest.AssertionFailedError
    */
   protected function assertSql($mysql, $sysql, $pgsql, $sqlite, $criteria) {
-    $this->assertEquals('mysql: '.$mysql,  'mysql: '.trim($criteria->toSQL($this->myconn, $this->peer), ' '));
-    $this->assertEquals('sybase: '.$sysql, 'sybase: '.trim($criteria->toSQL($this->syconn, $this->peer), ' '));
-    $this->assertEquals('pgsql: '.$pgsql, 'pgsql: '.trim($criteria->toSQL($this->pgconn, $this->peer), ' '));
-    $this->assertEquals('sqlite: '.$sqlite, 'sqlite: '.trim($criteria->toSQL($this->sqconn, $this->peer), ' '));
+    Assert::equals('mysql: '.$mysql,  'mysql: '.trim($criteria->toSQL($this->myconn, $this->peer), ' '));
+    Assert::equals('sybase: '.$sysql, 'sybase: '.trim($criteria->toSQL($this->syconn, $this->peer), ' '));
+    Assert::equals('pgsql: '.$pgsql, 'pgsql: '.trim($criteria->toSQL($this->pgconn, $this->peer), ' '));
+    Assert::equals('sqlite: '.$sqlite, 'sqlite: '.trim($criteria->toSQL($this->sqconn, $this->peer), ' '));
   }
   
   /**
@@ -67,10 +58,10 @@ class ProjectionTest extends \unittest\TestCase {
    * @throws  unittest.AssertionFailedError
    */
   protected function assertProjection($mysql, $sysql, $pgsql, $sqlite, $criteria) {
-    $this->assertEquals('mysql: '.$mysql,  'mysql: '.trim($criteria->projections($this->myconn, $this->peer), ' '));
-    $this->assertEquals('sybase: '.$sysql, 'sybase: '.trim($criteria->projections($this->syconn, $this->peer), ' '));
-    $this->assertEquals('pgsql: '.$pgsql, 'pgsql: '.trim($criteria->projections($this->pgconn, $this->peer), ' '));
-    $this->assertEquals('sqlite: '.$sqlite, 'sqlite: '.trim($criteria->projections($this->sqconn, $this->peer), ' '));
+    Assert::equals('mysql: '.$mysql,  'mysql: '.trim($criteria->projections($this->myconn, $this->peer), ' '));
+    Assert::equals('sybase: '.$sysql, 'sybase: '.trim($criteria->projections($this->syconn, $this->peer), ' '));
+    Assert::equals('pgsql: '.$pgsql, 'pgsql: '.trim($criteria->projections($this->pgconn, $this->peer), ' '));
+    Assert::equals('sqlite: '.$sqlite, 'sqlite: '.trim($criteria->projections($this->sqconn, $this->peer), ' '));
   }
   
   #[Test]
@@ -183,7 +174,7 @@ class ProjectionTest extends \unittest\TestCase {
         ->add(Projections::property(Job::column('job_id')))
         ->add(Projections::property(Job::column('title')))
     ));
-    $this->assertInstanceOf(
+    Assert::instance(
       'rdbms.criterion.ProjectionList',
       Projections::projectionList()->add(Projections::property(Job::column('job_id')))
     );
@@ -205,26 +196,26 @@ class ProjectionTest extends \unittest\TestCase {
   #[Test]
   function setProjectionTest() {
     $crit= new Criteria();
-    $this->assertFalse($crit->isProjection());
+    Assert::false($crit->isProjection());
     $crit->setProjection(Projections::property(Job::column('job_id')));
-    $this->assertTrue($crit->isProjection());
+    Assert::true($crit->isProjection());
     $crit->setProjection(null);
-    $this->assertFalse($crit->isProjection());
+    Assert::false($crit->isProjection());
     $crit->setProjection(Job::column('job_id'));
-    $this->assertTrue($crit->isProjection());
+    Assert::true($crit->isProjection());
     $crit->setProjection();
-    $this->assertFalse($crit->isProjection());
+    Assert::false($crit->isProjection());
   }
 
   #[Test]
   function withProjectionTest() {
     $crit= new Criteria();
-    $this->assertInstanceOf(
+    Assert::instance(
       'rdbms.Criteria',
       $crit->withProjection(Projections::property(Job::column('job_id')))
     );
-    $this->assertFalse($crit->isProjection());
-    $this->assertTrue($crit->withProjection(Projections::property(Job::column('job_id')))->isProjection());
+    Assert::false($crit->isProjection());
+    Assert::true($crit->withProjection(Projections::property(Job::column('job_id')))->isProjection());
   }
 
   #[Test]
@@ -233,6 +224,6 @@ class ProjectionTest extends \unittest\TestCase {
     $conn->setResultSet(new MockResultSet([['count' => 5]]));
     $crit= (new Criteria())->withProjection(Projections::count('*'));
     $this->peer->setConnection($conn);
-    $this->assertInstanceOf(Record::class, $this->peer->iteratorFor($crit)->next());
+    Assert::instance(Record::class, $this->peer->iteratorFor($crit)->next());
   }
 }

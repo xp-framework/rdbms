@@ -2,6 +2,7 @@
 
 use rdbms\sqlite3\SQLite3Connection;
 use rdbms\{DSN, SQLConnectException};
+use unittest\Assert;
 use unittest\actions\ExtensionAvailable;
 use unittest\{Expect, Test, TestCase};
 
@@ -14,7 +15,7 @@ use unittest\{Expect, Test, TestCase};
  * @see   https://bugs.php.net/bug.php?id=55154
  */
 #[Action(eval: 'new ExtensionAvailable("sqlite3")')]
-class SQLite3CreationTest extends TestCase {
+class SQLite3CreationTest {
 
   #[Test]
   public function connect_dot() {

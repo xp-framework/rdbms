@@ -1,5 +1,6 @@
 <?php namespace rdbms\unittest\drivers;
 
+use unittest\Assert;
 use unittest\Test;
  
 /**
@@ -11,7 +12,7 @@ abstract class MySQLTokenizerTest extends \rdbms\unittest\TokenizerTest {
 
   #[Test]
   public function labelToken() {
-    $this->assertEquals(
+    Assert::equals(
       'select * from `order`',
       $this->fixture->prepare('select * from %l', 'order')
     );
@@ -19,7 +20,7 @@ abstract class MySQLTokenizerTest extends \rdbms\unittest\TokenizerTest {
 
   #[Test]
   public function backslash() {
-    $this->assertEquals(
+    Assert::equals(
       'select \'Hello \\\\ \' as strval',
       $this->fixture->prepare('select %s as strval', 'Hello \\ ')
     );

@@ -1,24 +1,27 @@
 <?php namespace rdbms\unittest;
 
-use lang\{IllegalArgumentException, MethodNotImplementedException};
+use lang\{IllegalArgumentException, MethodNotImplementedException, XPClass};
 use rdbms\finder\{FinderException, FinderMethod, GenericFinder, NoSuchEntityException};
 use rdbms\unittest\dataset\{Job, JobFinder};
-use rdbms\unittest\mock\{MockResultSet, RegisterMockConnection};
+use rdbms\unittest\mock\{MockResultSet, MockConnection};
 use rdbms\{DriverManager, Peer, SQLExpression};
+use unittest\Assert;
 use unittest\{Expect, Test, TestCase};
 
-/**
- * TestCase
- *
- * @see      xp://rdbms.finder.Finder
- */
-#[Action(eval: 'new RegisterMockConnection()')]
-class FinderTest extends TestCase {
-  protected $fixture = null;
+class FinderTest {
+  protected $fixture;
 
-  /**
-   * Setup method
-   */
+  #[Before]
+  public function registerMock() {
+    DriverManager::register('mock', new XPClass(MockConnection::class));
+  }
+
+  #[After]
+  public function removeMock() {
+    DriverManager::remove('mock');
+  }
+
+  #[Before]
   public function setUp() {
     $this->fixture= new JobFinder();
     $this->fixture->getPeer()->setConnection(DriverManager::getConnection('mock://mock/JOBS?autoconnect=1'));
@@ -51,22 +54,22 @@ class FinderTest extends TestCase {
 
   #[Test]
   public function peerObject() {
-    $this->assertInstanceOf(Peer::class, $this->fixture->getPeer());
+    Assert::instance(Peer::class, $this->fixture->getPeer());
   }
 
   #[Test]
   public function jobPeer() {
-    $this->assertEquals($this->fixture->getPeer(), Job::getPeer());
+    Assert::equals($this->fixture->getPeer(), Job::getPeer());
   }
 
   #[Test]
   public function entityMethods() {
     $methods= $this->fixture->entityMethods();
-    $this->assertEquals(1, sizeof($methods));
-    $this->assertInstanceOf(FinderMethod::class, $methods[0]);
-    $this->assertEquals(ENTITY, $methods[0]->getKind());
-    $this->assertEquals('byPrimary', $methods[0]->getName());
-    $this->assertInstanceOf(SQLExpression::class, $methods[0]->invoke([$pk= 1]));
+    Assert::equals(1, sizeof($methods));
+    Assert::instance(FinderMethod::class, $methods[0]);
+    Assert::equals(ENTITY, $methods[0]->getKind());
+    Assert::equals('byPrimary', $methods[0]->getName());
+    Assert::instance(SQLExpression::class, $methods[0]->invoke([$pk= 1]));
   }
 
   #[Test]
@@ -79,28 +82,28 @@ class FinderTest extends TestCase {
     ];
 
     $methods= $this->fixture->collectionMethods();
-    $this->assertEquals(4, sizeof($methods)); // three declared plu all()
+    Assert::equals(4, sizeof($methods)); // three declared plu all()
     foreach ($methods as $method) {
-      $this->assertInstanceOf(FinderMethod::class, $method);
+      Assert::instance(FinderMethod::class, $method);
       $name= $method->getName();
-      $this->assertEquals(COLLECTION, $method->getKind(), $name);
-      $this->assertEquals(true, isset($invocation[$name]), $name);
-      $this->assertInstanceOf(SQLExpression::class, $method->invoke($invocation[$name]), $name);
+      Assert::equals(COLLECTION, $method->getKind(), $name);
+      Assert::equals(true, isset($invocation[$name]), $name);
+      Assert::instance(SQLExpression::class, $method->invoke($invocation[$name]), $name);
     }
   }
 
   #[Test]
   public function allMethods() {
     $methods= $this->fixture->allMethods(); // four declared plu all()
-    $this->assertEquals(5, sizeof($methods));
+    Assert::equals(5, sizeof($methods));
   }
 
   #[Test]
   public function byPrimaryMethod() {
     $method= $this->fixture->method('byPrimary');
-    $this->assertInstanceOf(FinderMethod::class, $method);
-    $this->assertEquals('byPrimary', $method->getName());
-    $this->assertEquals(ENTITY, $method->getKind());
+    Assert::instance(FinderMethod::class, $method);
+    Assert::equals('byPrimary', $method->getName());
+    Assert::equals(ENTITY, $method->getKind());
   }
   
   #[Test, Expect(MethodNotImplementedException::class)]
@@ -118,13 +121,13 @@ class FinderTest extends TestCase {
     $this->getConnection()->setResultSet(new MockResultSet([
       0 => [   // First row
         'job_id'      => 1,
-        'title'       => $this->getName(),
+        'title'       => __METHOD__,
         'valid_from'  => \util\Date::now(),
         'expire_at'   => null
       ]
     ]));
     $entity= $this->fixture->find($this->fixture->byPrimary(1));
-    $this->assertInstanceOf(Job::class, $entity);
+    Assert::instance(Job::class, $entity);
   }
 
   #[Test]
@@ -132,18 +135,18 @@ class FinderTest extends TestCase {
     $this->getConnection()->setResultSet(new MockResultSet([
       0 => [   // First row
         'job_id'      => 1,
-        'title'       => $this->getName(),
+        'title'       => __METHOD__,
         'valid_from'  => \util\Date::now(),
         'expire_at'   => null
       ]
     ]));
     $entity= $this->fixture->find()->byPrimary(1);
-    $this->assertInstanceOf(Job::class, $entity);
+    Assert::instance(Job::class, $entity);
   }
 
   #[Test]
   public function findByNonExistantPrimary() {
-    $this->assertNull($this->fixture->find($this->fixture->byPrimary(0)));
+    Assert::null($this->fixture->find($this->fixture->byPrimary(0)));
   }
 
   #[Test, Expect(FinderException::class)]
@@ -151,13 +154,13 @@ class FinderTest extends TestCase {
     $this->getConnection()->setResultSet(new MockResultSet([
       0 => [   // First row
         'job_id'      => 1,
-        'title'       => $this->getName(),
+        'title'       => __METHOD__,
         'valid_from'  => \util\Date::now(),
         'expire_at'   => null
       ],
       1 => [   // Second row
         'job_id'      => 2,
-        'title'       => $this->getName().' #2',
+        'title'       => __METHOD__.' #2',
         'valid_from'  => \util\Date::now(),
         'expire_at'   => null
       ]
@@ -170,13 +173,13 @@ class FinderTest extends TestCase {
     $this->getConnection()->setResultSet(new MockResultSet([
       0 => [   // First row
         'job_id'      => 1,
-        'title'       => $this->getName(),
+        'title'       => __METHOD__,
         'valid_from'  => \util\Date::now(),
         'expire_at'   => null
       ]
     ]));
     $entity= $this->fixture->get($this->fixture->byPrimary(1));
-    $this->assertInstanceOf(Job::class, $entity);
+    Assert::instance(Job::class, $entity);
   }
 
   #[Test]
@@ -184,13 +187,13 @@ class FinderTest extends TestCase {
     $this->getConnection()->setResultSet(new MockResultSet([
       0 => [   // First row
         'job_id'      => 1,
-        'title'       => $this->getName(),
+        'title'       => __METHOD__,
         'valid_from'  => \util\Date::now(),
         'expire_at'   => null
       ]
     ]));
     $entity= $this->fixture->get()->byPrimary(1);
-    $this->assertInstanceOf(Job::class, $entity);
+    Assert::instance(Job::class, $entity);
   }
 
   #[Test, Expect(NoSuchEntityException::class)]
@@ -203,13 +206,13 @@ class FinderTest extends TestCase {
     $this->getConnection()->setResultSet(new MockResultSet([
       0 => [   // First row
         'job_id'      => 1,
-        'title'       => $this->getName(),
+        'title'       => __METHOD__,
         'valid_from'  => \util\Date::now(),
         'expire_at'   => null
       ],
       1 => [   // Second row
         'job_id'      => 2,
-        'title'       => $this->getName().' #2',
+        'title'       => __METHOD__.' #2',
         'valid_from'  => \util\Date::now(),
         'expire_at'   => null
       ]
@@ -222,19 +225,19 @@ class FinderTest extends TestCase {
     $this->getConnection()->setResultSet(new MockResultSet([
       0 => [   // First row
         'job_id'      => 1,
-        'title'       => $this->getName(),
+        'title'       => __METHOD__,
         'valid_from'  => \util\Date::now(),
         'expire_at'   => null
       ],
       1 => [   // Second row
         'job_id'      => 2,
-        'title'       => $this->getName().' #2',
+        'title'       => __METHOD__.' #2',
         'valid_from'  => \util\Date::now(),
         'expire_at'   => null
       ]
     ]));
     $collection= $this->fixture->findAll($this->fixture->newestJobs());
-    $this->assertEquals(2, sizeof($collection));
+    Assert::equals(2, sizeof($collection));
   }
 
   #[Test]
@@ -242,19 +245,19 @@ class FinderTest extends TestCase {
     $this->getConnection()->setResultSet(new MockResultSet([
       0 => [   // First row
         'job_id'      => 1,
-        'title'       => $this->getName(),
+        'title'       => __METHOD__,
         'valid_from'  => \util\Date::now(),
         'expire_at'   => null
       ],
       1 => [   // Second row
         'job_id'      => 2,
-        'title'       => $this->getName().' #2',
+        'title'       => __METHOD__.' #2',
         'valid_from'  => \util\Date::now(),
         'expire_at'   => null
       ]
     ]));
     $collection= $this->fixture->findAll()->newestJobs();
-    $this->assertEquals(2, sizeof($collection));
+    Assert::equals(2, sizeof($collection));
   }
 
   #[Test]
@@ -262,19 +265,19 @@ class FinderTest extends TestCase {
     $this->getConnection()->setResultSet(new MockResultSet([
       0 => [   // First row
         'job_id'      => 1,
-        'title'       => $this->getName(),
+        'title'       => __METHOD__,
         'valid_from'  => \util\Date::now(),
         'expire_at'   => null
       ],
       1 => [   // Second row
         'job_id'      => 2,
-        'title'       => $this->getName().' #2',
+        'title'       => __METHOD__.' #2',
         'valid_from'  => \util\Date::now(),
         'expire_at'   => null
       ]
     ]));
     $collection= $this->fixture->getAll($this->fixture->newestJobs());
-    $this->assertEquals(2, sizeof($collection));
+    Assert::equals(2, sizeof($collection));
   }
 
   #[Test]
@@ -282,19 +285,19 @@ class FinderTest extends TestCase {
     $this->getConnection()->setResultSet(new MockResultSet([
       0 => [   // First row
         'job_id'      => 1,
-        'title'       => $this->getName(),
+        'title'       => __METHOD__,
         'valid_from'  => \util\Date::now(),
         'expire_at'   => null
       ],
       1 => [   // Second row
         'job_id'      => 2,
-        'title'       => $this->getName().' #2',
+        'title'       => __METHOD__.' #2',
         'valid_from'  => \util\Date::now(),
         'expire_at'   => null
       ]
     ]));
     $collection= $this->fixture->getAll()->newestJobs();
-    $this->assertEquals(2, sizeof($collection));
+    Assert::equals(2, sizeof($collection));
   }
 
   #[Test, Expect(NoSuchEntityException::class)]
@@ -324,20 +327,20 @@ class FinderTest extends TestCase {
     $this->getConnection()->setResultSet(new MockResultSet([
       0 => [   // First row
         'job_id'      => 1,
-        'title'       => $this->getName(),
+        'title'       => __METHOD__,
         'valid_from'  => \util\Date::now(),
         'expire_at'   => null
       ],
       1 => [   // Second row
         'job_id'      => 2,
-        'title'       => $this->getName().' #2',
+        'title'       => __METHOD__.' #2',
         'valid_from'  => \util\Date::now(),
         'expire_at'   => null
       ]
     ]));
     $all= (new GenericFinder(Job::getPeer()))->getAll(new \rdbms\Criteria());
-    $this->assertEquals(2, sizeof($all));
-    $this->assertInstanceOf(Job::class, $all[0]);
-    $this->assertInstanceOf(Job::class, $all[1]);
+    Assert::equals(2, sizeof($all));
+    Assert::instance(Job::class, $all[0]);
+    Assert::instance(Job::class, $all[1]);
   }
 }

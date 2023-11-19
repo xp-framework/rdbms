@@ -3,17 +3,12 @@
 use lang\ClassLoader;
 use rdbms\SQLException;
 use rdbms\tds\{TdsBufferedResultSet, TdsProtocol};
-use unittest\{BeforeClass, Expect, Test, TestCase};
+use unittest\{Assert, Before, Expect, Test};
 
-/**
- * TestCase
- *
- * @see   xp://rdbms.tds.TdsBufferedResultSet
- */
-class TdsBufferedResultSetTest extends TestCase {
+class TdsBufferedResultSetTest {
   protected static $proto;
 
-  #[BeforeClass]
+  #[Before]
   public static function mockProtocol() {
     $parent= class_exists('\\lang\\Object', false) ? 'lang.Object' : null;
     self::$proto= ClassLoader::defineClass('rdbms.unittest.tds.MockTdsProtocol', $parent, [], '{
@@ -74,7 +69,7 @@ class TdsBufferedResultSetTest extends TestCase {
     $records= [
     ];
     $fixture= $this->newResultSet($records);
-    $this->assertNull($fixture->next());
+    Assert::null($fixture->next());
   }
 
   #[Test]
@@ -86,7 +81,7 @@ class TdsBufferedResultSetTest extends TestCase {
       ]
     ];
     $fixture= $this->newResultSet($records);
-    $this->assertEquals($records[0], $fixture->next());
+    Assert::equals($records[0], $fixture->next());
   }
 
   #[Test]
@@ -102,8 +97,8 @@ class TdsBufferedResultSetTest extends TestCase {
       ]
     ];
     $fixture= $this->newResultSet($records);
-    $this->assertEquals($records[0], $fixture->next());
-    $this->assertEquals($records[1], $fixture->next());
+    Assert::equals($records[0], $fixture->next());
+    Assert::equals($records[1], $fixture->next());
   }
 
   #[Test]
@@ -116,7 +111,7 @@ class TdsBufferedResultSetTest extends TestCase {
     ];
     $fixture= $this->newResultSet($records);
     $fixture->next();
-    $this->assertNull($fixture->next());
+    Assert::null($fixture->next());
   }
 
   #[Test]
@@ -129,7 +124,7 @@ class TdsBufferedResultSetTest extends TestCase {
     ];
     $fixture= $this->newResultSet($records);
     $fixture->seek(0);
-    $this->assertEquals($records[0], $fixture->next());
+    Assert::equals($records[0], $fixture->next());
   }
 
   #[Test]
@@ -143,7 +138,7 @@ class TdsBufferedResultSetTest extends TestCase {
     $fixture= $this->newResultSet($records);
     $fixture->next();
     $fixture->seek(0);
-    $this->assertEquals($records[0], $fixture->next());
+    Assert::equals($records[0], $fixture->next());
   }
 
   #[Test]
@@ -160,7 +155,7 @@ class TdsBufferedResultSetTest extends TestCase {
     ];
     $fixture= $this->newResultSet($records);
     $fixture->seek(1);
-    $this->assertEquals($records[1], $fixture->next());
+    Assert::equals($records[1], $fixture->next());
   }
 
   #[Test, Expect(['class' => SQLException::class, 'withMessage' => 'Cannot seek to offset 1, out of bounds'])]

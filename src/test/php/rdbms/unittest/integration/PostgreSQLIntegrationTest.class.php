@@ -1,6 +1,7 @@
 <?php namespace rdbms\unittest\integration;
 
 use rdbms\SQLException;
+use unittest\Assert;
 use unittest\{Ignore, Test};
 
 class PostgreSQLIntegrationTest extends RdbmsIntegrationTest {
@@ -224,6 +225,6 @@ class PostgreSQLIntegrationTest extends RdbmsIntegrationTest {
 
     $conn->connections->reconnect(1);
     $after= $conn->query('select pg_backend_pid() as id')->next('id'); 
-    $this->assertNotEquals($before, $after, 'Connection IDs must be different'); 
+    Assert::notEquals($before, $after, 'Connection IDs must be different'); 
   } 
 }

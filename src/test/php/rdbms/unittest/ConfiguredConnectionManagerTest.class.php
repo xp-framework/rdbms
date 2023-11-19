@@ -3,6 +3,7 @@
 use io\streams\MemoryInputStream;
 use rdbms\ConnectionManager;
 use rdbms\unittest\mock\RegisterMockConnection;
+use unittest\Assert;
 use util\Properties;
 
 /**

@@ -7,6 +7,7 @@ use rdbms\sqlite3\SQLite3Connection;
 use rdbms\sybase\SybaseConnection;
 use rdbms\unittest\dataset\Job;
 use rdbms\{Criteria, SQLFunctions};
+use unittest\Assert;
 use unittest\{Test, TestCase};
 use util\Date;
 
@@ -15,7 +16,7 @@ use util\Date;
  *
  * @see   xp://rdbms.SQLFunction
  */
-class SQLFunctionTest extends TestCase {
+class SQLFunctionTest {
   public
     $syconn = null,
     $myconn = null,
@@ -27,6 +28,7 @@ class SQLFunctionTest extends TestCase {
    * Sets up a Database Object for the test
    *
    */
+  #[Before]
   public function setUp() {
     $this->syconn= new SybaseConnection(new \rdbms\DSN('sybase://localhost:1999/'));
     $this->myconn= new MySQLConnection(new \rdbms\DSN('mysql://localhost/'));
@@ -47,10 +49,10 @@ class SQLFunctionTest extends TestCase {
    * @throws  unittest.AssertionFailedError
    */
   protected function assertSql($mysql, $sysql, $pgsql, $sqlite, $criteria) {
-    $this->assertEquals('mysql: '.$mysql,  'mysql: '.trim($criteria->toSQL($this->myconn, $this->peer), ' '));
-    $this->assertEquals('sybase: '.$sysql, 'sybase: '.trim($criteria->toSQL($this->syconn, $this->peer), ' '));
-    $this->assertEquals('pgsql: '.$pgsql, 'pgsql: '.trim($criteria->toSQL($this->pgconn, $this->peer), ' '));
-    $this->assertEquals('sqlite: '.$sqlite, 'sqlite: '.trim($criteria->toSQL($this->sqconn, $this->peer), ' '));
+    Assert::equals('mysql: '.$mysql,  'mysql: '.trim($criteria->toSQL($this->myconn, $this->peer), ' '));
+    Assert::equals('sybase: '.$sysql, 'sybase: '.trim($criteria->toSQL($this->syconn, $this->peer), ' '));
+    Assert::equals('pgsql: '.$pgsql, 'pgsql: '.trim($criteria->toSQL($this->pgconn, $this->peer), ' '));
+    Assert::equals('sqlite: '.$sqlite, 'sqlite: '.trim($criteria->toSQL($this->sqconn, $this->peer), ' '));
   }
   
   /**
@@ -65,15 +67,15 @@ class SQLFunctionTest extends TestCase {
    * @throws  unittest.AssertionFailedError
    */
   protected function assertProjection($mysql, $sysql, $pgsql, $sqlite, $criteria) {
-    $this->assertEquals('mysql: '.$mysql,  'mysql: '.trim($criteria->projections($this->myconn, $this->peer), ' '));
-    $this->assertEquals('sybase: '.$sysql, 'sybase: '.trim($criteria->projections($this->syconn, $this->peer), ' '));
-    $this->assertEquals('pgsql: '.$pgsql, 'pgsql: '.trim($criteria->projections($this->pgconn, $this->peer), ' '));
-    $this->assertEquals('sqlite: '.$sqlite, 'sqlite: '.trim($criteria->projections($this->sqconn, $this->peer), ' '));
+    Assert::equals('mysql: '.$mysql,  'mysql: '.trim($criteria->projections($this->myconn, $this->peer), ' '));
+    Assert::equals('sybase: '.$sysql, 'sybase: '.trim($criteria->projections($this->syconn, $this->peer), ' '));
+    Assert::equals('pgsql: '.$pgsql, 'pgsql: '.trim($criteria->projections($this->pgconn, $this->peer), ' '));
+    Assert::equals('sqlite: '.$sqlite, 'sqlite: '.trim($criteria->projections($this->sqconn, $this->peer), ' '));
   }
   
   #[Test]
   function columnTest() {
-    $this->assertEquals(
+    Assert::equals(
       'job_id',
       Job::column('job_id')->getName()
     );
@@ -92,19 +94,19 @@ class SQLFunctionTest extends TestCase {
     
   #[Test]
   function prepareProjectionTest() {
-    $this->assertEquals(
+    Assert::equals(
       '- datepart(hour, valid_from) -',
       $this->syconn->prepare('- %s -', SQLFunctions::datepart('hour', Job::column('valid_from')))
     );
-    $this->assertEquals(
+    Assert::equals(
       '- extract(hour from valid_from) -',
       $this->myconn->prepare('- %s -', SQLFunctions::datepart('hour', Job::column('valid_from')))
     );
-    $this->assertEquals(
+    Assert::equals(
       '- datepart(hour, valid_from) -',
       $this->pgconn->prepare('- %s -', SQLFunctions::datepart('hour', Job::column('valid_from')))
     );
-    $this->assertEquals(
+    Assert::equals(
       '- php(\'idate\', "H", php(\'strtotime\', valid_from)) -',
       $this->sqconn->prepare('- %s -', SQLFunctions::datepart('hour', Job::column('valid_from')))
     );

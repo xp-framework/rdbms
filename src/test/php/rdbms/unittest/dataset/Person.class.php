@@ -1,5 +1,5 @@
 <?php namespace rdbms\unittest\dataset;
- 
+
 use rdbms\join\JoinExtractable;
 use rdbms\{CachedResults, DataSet};
 

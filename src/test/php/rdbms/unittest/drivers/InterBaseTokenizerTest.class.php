@@ -1,5 +1,6 @@
 <?php namespace rdbms\unittest\drivers;
- 
+
+use unittest\Assert;
 /**
  * Test tokenizers for IBase connections
  *

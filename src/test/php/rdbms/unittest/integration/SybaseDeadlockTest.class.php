@@ -1,5 +1,6 @@
 <?php namespace rdbms\unittest\integration;
 
+use unittest\Assert;
 use unittest\BeforeClass;
 
 /**
