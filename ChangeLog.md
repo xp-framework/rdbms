@@ -3,6 +3,21 @@ RDBMS support for the XP Framework: MySQL, Sybase, MSSQL, PostgreSQL, SQLite3, I
 
 ## ?.?.? / ????-??-??
 
+* Fixed empty string handling in TDS protocol for PHP 8.1+, see
+  https://wiki.php.net/rfc/deprecate_null_to_scalar_internal_arg
+  (@thekid)
+* Fixed missing declaration for `MySqlxProtocol::$fieldparser`, see
+  https://wiki.php.net/rfc/deprecate_dynamic_properties
+  (@thekid)
+* Fixed handling of MySQL error code 1927 ("Connection was killed")
+  (@thekid)
+* Overhauled test suite:
+  . Migrated tests to baseless
+  . Split unit and integration tests
+  . Added PHP 8.3 and PHP 8.4 to the test matrix
+  . Fixed integration tests to no longer reuse connections
+  (@thekid)
+
 ## 13.1.0 / 2022-07-07
 
 * Merged #49: Add support for util.UUID instances (in `%s` tokens)
