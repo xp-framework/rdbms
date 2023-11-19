@@ -103,7 +103,9 @@ class SQLite3Connection extends DBConnection {
 
     try {
       $this->handle= new SQLite3($database, SQLITE3_OPEN_READWRITE | SQLITE3_OPEN_CREATE);
+      PHP_VERSION_ID >= 90000 || $this->handle->enableExceptions(true);
     } catch (Exception $e) {
+      $this->handle= false;
       throw new SQLConnectException($e->getMessage().': '.$database, $this->dsn);
     }
     
@@ -160,16 +162,17 @@ class SQLite3Connection extends DBConnection {
   protected function query0($sql, $buffered= true) {
     $this->handle instanceof SQLite3 || $this->connections->establish($this);
 
-    $result= $this->handle->query($sql);
-    if (false === $result) {
-      $e= new SQLStatementFailedException(
+    try {
+      $result= $this->handle->query($sql);
+    } catch (Exception $e) {
+      throw new SQLStatementFailedException(
         'Statement failed: '.$this->handle->lastErrorMsg().' @ '.$this->dsn->getDatabase(),
         $sql, 
         $this->handle->lastErrorCode()
       );
-      \xp::gc(__FILE__);
-      throw $e;
-    } else if ($result->numColumns()) {
+    }
+
+    if ($result->numColumns()) {
       return new SQLite3ResultSet($result);
     } else {
       return new QuerySucceeded($this->handle->changes());
