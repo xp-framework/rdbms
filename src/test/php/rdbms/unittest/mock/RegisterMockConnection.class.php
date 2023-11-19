@@ -18,7 +18,6 @@ class RegisterMockConnection implements \unittest\TestClassAction {
    */
   public function beforeTestClass(\lang\XPClass $c) {
     \rdbms\DriverManager::register('mock', \lang\XPClass::forName(self::MOCK_CONNECTION_CLASS));
-    var_dump(\rdbms\DriverManager::getInstance()->drivers);
   }
 
   /**
