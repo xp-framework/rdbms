@@ -9,7 +9,7 @@ use util\{Date, Objects};
  * @see   http://forge.mysql.com/wiki/MySQL_Internals_ClientServer_Protocol
  */
 class MySqlxProtocol {
-  protected $pkt= 0, $thread= 0;
+  protected $pkt= 0, $thread= 0, $fieldparser= 'unknown';
   protected $sock= null;
   public $connected= false;
   const MAX_PACKET_LENGTH = 16777215;   // 256 * 256 * 256 - 1
