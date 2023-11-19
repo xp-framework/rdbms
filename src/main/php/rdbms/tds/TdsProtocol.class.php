@@ -118,6 +118,8 @@ abstract class TdsProtocol {
         $len= $stream->getShort();
         if (0xFFFF === $len) {
           return null;
+        } else if (0 === $len) {
+          return '';
         } else if (\xp::ENCODING === $field['conv']) {
           return $stream->read($len);
         } else {
