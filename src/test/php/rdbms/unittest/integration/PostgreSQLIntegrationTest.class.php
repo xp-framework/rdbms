@@ -1,8 +1,7 @@
 <?php namespace rdbms\unittest\integration;
 
 use rdbms\SQLException;
-use unittest\Assert;
-use unittest\{Ignore, Test};
+use unittest\{Assert, Ignore, Test};
 
 class PostgreSQLIntegrationTest extends RdbmsIntegrationTest {
   
@@ -12,23 +11,25 @@ class PostgreSQLIntegrationTest extends RdbmsIntegrationTest {
   /**
    * Create autoincrement table
    *
+   * @param  rdbms.DBConnection $conn
    * @param  string $name
    * @return void
    */
-  protected function createAutoIncrementTable($name) {
-    $this->removeTable($name);
-    $this->db()->query('create table %c (pk serial primary key, username varchar(30))', $name);
+  protected function createAutoIncrementTable($conn, $name) {
+    $this->removeTable($conn, $name);
+    $conn->query('create table %c (pk serial primary key, username varchar(30))', $name);
   }
 
   /**
    * Create transactions table
    *
+   * @param  rdbms.DBConnection $conn
    * @param  string $name
    * @return void
    */
-  protected function createTransactionsTable($name) {
-    $this->removeTable($name);
-    $this->db()->query('create table %c (pk serial primary key, username varchar(30))', $name);
+  protected function createTransactionsTable($conn, $name) {
+    $this->removeTable($conn, $name);
+    $conn->query('create table %c (pk serial primary key, username varchar(30))', $name);
   }
 
   #[Test, Ignore('Numeric not supported by PostgreSQL')]

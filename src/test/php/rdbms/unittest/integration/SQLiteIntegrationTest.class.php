@@ -1,8 +1,7 @@
 <?php namespace rdbms\unittest\integration;
 
 use rdbms\ResultSet;
-use unittest\Assert;
-use unittest\{Ignore, Test};
+use unittest\{Assert, Ignore, Test};
 use util\Date;
 
 /**
@@ -18,21 +17,25 @@ class SQLiteIntegrationTest extends RdbmsIntegrationTest {
   /**
    * Create autoincrement table
    *
-   * @param   string name
+   * @param  rdbms.DBConnection $conn
+   * @param  string name
+   * @return void
    */
-  protected function createAutoIncrementTable($name) {
-    $this->removeTable($name);
-    $this->db()->query('create table %c (pk integer primary key, username varchar(30))', $name);
+  protected function createAutoIncrementTable($conn, $name) {
+    $this->removeTable($conn, $name);
+    $conn->query('create table %c (pk integer primary key, username varchar(30))', $name);
   }
 
   /**
    * Create transactions table
    *
-   * @param   string name
+   * @param  rdbms.DBConnection $conn
+   * @param  string $name
+   * @return void
    */
-  protected function createTransactionsTable($name) {
-    $this->removeTable($name);
-    $this->db()->query('create table %c (pk int, username varchar(30))', $name);
+  protected function createTransactionsTable($conn, $name) {
+    $this->removeTable($conn, $name);
+    $conn->query('create table %c (pk int, username varchar(30))', $name);
   }
 
   #[Test, Ignore('SQLite does not use credentials')]

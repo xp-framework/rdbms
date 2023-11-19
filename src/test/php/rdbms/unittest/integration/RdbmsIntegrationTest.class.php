@@ -56,63 +56,70 @@ abstract class RdbmsIntegrationTest {
   /**
    * Helper method to remove table if existant
    *
-   * @param   string name
+   * @param  rdbms.DBConnection $conn
+   * @param  string $name
    */
-  protected function removeTable($name) {
+  protected function removeTable($conn, $name) {
+
     // Try to remove, if already exist...
     try {
-      $this->db()->query('drop table %c', $name);
+      $conn->query('drop table %c', $name);
     } catch (\rdbms\SQLStatementFailedException $ignored) {}
   }
 
   /**
    * Create autoincrement table
    *
+   * @param  rdbms.DBConnection $conn
    * @return void
    */
-  protected function createTable() {
-    $this->removeTable($this->tableName());
-    $this->db()->query('create table %c (pk int, username varchar(30))', $this->tableName());
-    $this->db()->insert('into %c values (1, "kiesel")', $this->tableName());
-    $this->db()->insert('into %c values (2, "kiesel")', $this->tableName());
+  protected function createTable($conn) {
+    $this->removeTable($conn, $this->tableName());
+    $conn->query('create table %c (pk int, username varchar(30))', $this->tableName());
+    $conn->insert('into %c values (1, "kiesel")', $this->tableName());
+    $conn->insert('into %c values (2, "kiesel")', $this->tableName());
   }
 
   /**
    * Helper method to create table
    *
-   * @param   string name
+   * @param  rdbms.DBConnection $conn
+   * @param  string name
    */
-  protected function createAutoIncrementTable($name) {
+  protected function createAutoIncrementTable($conn, $name) {
     throw new MethodNotImplementedException($name, __FUNCTION__);
   }
 
   /**
    * Create transactions table
    *
-   * @param   string name
+   * @param  rdbms.DBConnection $conn
+   * @param  string $name
    */
-  protected function createTransactionsTable($name) {
+  protected function createTransactionsTable($conn, $name) {
     throw new MethodNotImplementedException($name, __FUNCTION__);
   }
 
   /**
    * Creates fixture for readingRowFailsWithQuery* tests
    *
-   * @return  string SQL
+   * @param  rdbms.DBConnection $conn
+   * @return string SQL
    */
-  protected function rowFailureFixture() {
-    $this->removeTable($this->tableName());
-    $this->db()->query('create table %c (i varchar(20))', $this->tableName());
-    $this->db()->insert('into %c values ("1")', $this->tableName());
-    $this->db()->insert('into %c values ("not-a-number")', $this->tableName());
-    $this->db()->insert('into %c values ("2")', $this->tableName());
-    return $this->db()->prepare('select cast(i as int) as i from %c', $this->tableName());
+  protected function rowFailureFixture($conn) {
+    $this->removeTable($conn, $this->tableName());
+    $conn->query('create table %c (i varchar(20))', $this->tableName());
+    $conn->insert('into %c values ("1")', $this->tableName());
+    $conn->insert('into %c values ("not-a-number")', $this->tableName());
+    $conn->insert('into %c values ("2")', $this->tableName());
+    return $conn->prepare('select cast(i as int) as i from %c', $this->tableName());
   }
 
   #[Test, Expect(SQLStateException::class)]
   public function noQueryWhenNotConnected() {
-    $this->conn->connections->automatic(false);
-    $this->conn->query('select 1');
+    $conn= $this->db(false);
+    $conn->connections->automatic(false);
+    $conn->query('select 1');
   }
   
   #[Test, Expect(SQLConnectException::class)]
@@ -126,15 +133,16 @@ abstract class RdbmsIntegrationTest {
   
   #[Test]
   public function connect() {
-    Assert::equals(true, $this->conn->connect());
+    Assert::equals(true, $this->db(false)->connect());
   }
 
   #[Test, Expect(SQLStateException::class)]
   public function noQueryWhenDisConnected() {
-    $this->conn->connections->automatic(false);
-    $this->conn->connect();
-    $this->conn->close();
-    $this->conn->query('select 1');
+    $conn= $this->db(false);
+    $conn->connections->automatic(false);
+    $conn->connect();
+    $conn->close();
+    $conn->query('select 1');
   }
   
   #[Test]
@@ -175,56 +183,64 @@ abstract class RdbmsIntegrationTest {
  
   #[Test]
   public function emptyQuery() {
-    $this->createTable();
-    $q= $this->db()->query('select * from %c where 1 = 0', $this->tableName());
+    $conn= $this->db();
+    $this->createTable($conn);
+    $q= $conn->query('select * from %c where 1 = 0', $this->tableName());
     Assert::instance(ResultSet::class, $q);
     Assert::null($q->next());
   }
 
   #[Test]
   public function insertViaQuery() {
-    $this->createTable();
-    Assert::true($this->db()->query('insert into %c values (1, "kiesel")', $this->tableName())->isSuccess());
+    $conn= $this->db();
+    $this->createTable($conn);
+    Assert::true($conn->query('insert into %c values (1, "kiesel")', $this->tableName())->isSuccess());
   }
 
   #[Test]
   public function insertIntoTable() {
-    $this->createTable();
-    Assert::equals(1, $this->db()->insert('into %c values (2, "xp")', $this->tableName()));
+    $conn= $this->db();
+    $this->createTable($conn);
+    Assert::equals(1, $conn->insert('into %c values (2, "xp")', $this->tableName()));
   }
 
   #[Test]
   public function updateViaQuery() {
-    $this->createTable();
-    Assert::true($this->db()->query('update %c set pk= pk+ 1 where pk= 2', $this->tableName())->isSuccess());
+    $conn= $this->db();
+    $this->createTable($conn);
+    Assert::true($conn->query('update %c set pk= pk+ 1 where pk= 2', $this->tableName())->isSuccess());
   }
   
   #[Test]
   public function updateTable() {
-    $this->createTable();
-    Assert::equals(1, $this->db()->update('%c set pk= pk+ 1 where pk= 1', $this->tableName()));
+    $conn= $this->db();
+    $this->createTable($conn);
+    Assert::equals(1, $conn->update('%c set pk= pk+ 1 where pk= 1', $this->tableName()));
   }
 
   #[Test]
   public function deleteViaQuery() {
-    $this->createTable();
-    Assert::true($this->db()->query('delete from %c where pk= 2', $this->tableName())->isSuccess());
+    $conn= $this->db();
+    $this->createTable($conn);
+    Assert::true($conn->query('delete from %c where pk= 2', $this->tableName())->isSuccess());
   }
   
   #[Test]
   public function deleteFromTable() {
-    $this->createTable();
-    Assert::equals(1, $this->db()->delete('from %c where pk= 1', $this->tableName()));
+    $conn= $this->db();
+    $this->createTable($conn);
+    Assert::equals(1, $conn->delete('from %c where pk= 1', $this->tableName()));
   }
   
   #[Test]
   public function identity() {
-    $this->createAutoIncrementTable($this->tableName());      
-    Assert::equals(1, $this->db()->insert('into %c (username) values ("kiesel")', $this->tableName()));
-    $first= $this->db()->identity('unittest_pk_seq');
+    $conn= $this->db();
+    $this->createAutoIncrementTable($conn, $this->tableName());      
+    Assert::equals(1, $conn->insert('into %c (username) values ("kiesel")', $this->tableName()));
+    $first= $conn->identity('unittest_pk_seq');
     
-    Assert::equals(1, $this->db()->insert('into %c (username) values ("kiesel")', $this->tableName()));
-    Assert::equals($first+ 1, $this->db()->identity('unittest_pk_seq'));
+    Assert::equals(1, $conn->insert('into %c (username) values ("kiesel")', $this->tableName()));
+    Assert::equals($first+ 1, $conn->identity('unittest_pk_seq'));
   }
   
   #[Test, Expect(SQLStatementFailedException::class)]
@@ -636,9 +652,9 @@ abstract class RdbmsIntegrationTest {
       }
     };
     
-    $db= $this->db();
-    $db->addObserver($observer);
-    $db->query('select 1');
+    $conn= $this->db();
+    $conn->addObserver($observer);
+    $conn->query('select 1');
     
     Assert::equals(2, $observer->numberOfObservations());
     
@@ -657,65 +673,65 @@ abstract class RdbmsIntegrationTest {
 
   #[Test]
   public function rolledBackTransaction() {
-    $this->createTransactionsTable($this->tableName());
-    $db= $this->db();
+    $conn= $this->db();
+    $this->createTransactionsTable($conn, $this->tableName());
 
-    $tran= $db->begin(new \rdbms\Transaction('test'));
-    $db->insert('into %c values (1, "should_not_be_here")', $this->tableName());
+    $tran= $conn->begin(new \rdbms\Transaction('test'));
+    $conn->insert('into %c values (1, "should_not_be_here")', $this->tableName());
     $tran->rollback();
     
     Assert::equals(
       [], 
-      $db->select('* from %c',$this->tableName())
+      $conn->select('* from %c',$this->tableName())
     );
   }
 
 
   #[Test]
   public function committedTransaction() {
-    $this->createTransactionsTable($this->tableName());
-    $db= $this->db();
+    $conn= $this->db();
+    $this->createTransactionsTable($conn, $this->tableName());
 
-    $tran= $db->begin(new \rdbms\Transaction('test'));
-    $db->insert('into %c values (1, "should_be_here")', $this->tableName());
+    $tran= $conn->begin(new \rdbms\Transaction('test'));
+    $conn->insert('into %c values (1, "should_be_here")', $this->tableName());
     $tran->commit();
     
     Assert::equals(
       [['pk' => 1, 'username' => 'should_be_here']], 
-      $db->select('* from %c', $this->tableName())
+      $conn->select('* from %c', $this->tableName())
     );
   }
 
   #[Test]
   public function consecutiveQueryDoesNotAffectBufferedResults() {
-    $this->createTable();
-    $db= $this->db();
+    $conn= $this->db();
+    $this->createTable($conn);
 
-    $result= $db->query('select * from %c where pk = 2', $this->tableName());
-    $db->query('update %c set username = "test" where pk = 1', $this->tableName());
+    $result= $conn->query('select * from %c where pk = 2', $this->tableName());
+    $conn->query('update %c set username = "test" where pk = 1', $this->tableName());
 
     Assert::equals([['pk' => 2, 'username' => 'kiesel']], iterator_to_array($result));
   }
 
   #[Test]
   public function unbufferedReadNoResults() {
-    $this->createTable();
-    $db= $this->db();
+    $conn= $this->db();
+    $this->createTable($conn);
 
-    $db->open('select * from %c', $this->tableName());
+    $conn->open('select * from %c', $this->tableName());
 
-    Assert::equals(1, $db->query('select 1 as num')->next('num'));
+    Assert::equals(1, $conn->query('select 1 as num')->next('num'));
   }
   
   #[Test]
   public function unbufferedReadOneResult() {
-    $this->createTable();
-    $db= $this->db();
+    $conn= $this->db();
+    $this->createTable($conn);
 
-    $q= $db->open('select * from %c', $this->tableName());
+    $q= $conn->open('select * from %c', $this->tableName());
     Assert::equals(['pk' => 1, 'username' => 'kiesel'], $q->next());
 
-    Assert::equals(1, $db->query('select 1 as num')->next('num'));
+    Assert::equals(1, $conn->query('select 1 as num')->next('num'));
   }
 
   #[Test, Expect(SQLException::class)]
@@ -730,13 +746,14 @@ abstract class RdbmsIntegrationTest {
 
   #[Test]
   public function readingRowFailsWithQuery() {
-    $q= $this->db()->query($this->rowFailureFixture());
+    $conn= $this->db();
+    $q= $conn->query($this->rowFailureFixture($conn));
     $records= [];
     do {
       try {
         $r= $q->next('i');
         if ($r) $records[]= $r;
-      } catch (\rdbms\SQLException $e) {
+      } catch (SQLException $e) {
         $records[]= false;
       }
     } while ($r);
@@ -745,13 +762,14 @@ abstract class RdbmsIntegrationTest {
 
   #[Test]
   public function readingRowFailsWithOpen() {
-    $q= $this->db()->open($this->rowFailureFixture());
+    $conn= $this->db();
+    $q= $conn->query($this->rowFailureFixture($conn));
     $records= [];
     do {
       try {
         $r= $q->next('i');
         if ($r) $records[]= $r;
-      } catch (\rdbms\SQLException $e) {
+      } catch (SQLException $e) {
         $records[]= false;
       }
     } while ($r);

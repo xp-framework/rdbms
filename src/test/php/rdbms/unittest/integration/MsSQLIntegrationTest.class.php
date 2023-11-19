@@ -38,9 +38,9 @@ class MsSQLIntegrationTest extends RdbmsIntegrationTest {
    *
    * @param   string name
    */
-  protected function createAutoIncrementTable($name) {
-    $this->removeTable($name);
-    $this->db()->query('create table %c (pk int identity, username varchar(30))', $name);
+  protected function createAutoIncrementTable($conn, $name) {
+    $this->removeTable($conn, $name);
+    $conn->query('create table %c (pk int identity, username varchar(30))', $name);
   }
   
   /**
@@ -48,9 +48,9 @@ class MsSQLIntegrationTest extends RdbmsIntegrationTest {
    *
    * @param   string name
    */
-  protected function createTransactionsTable($name) {
-    $this->removeTable($name);
-    $this->db()->query('create table %c (pk int, username varchar(30))', $name);
+  protected function createTransactionsTable($conn, $name) {
+    $this->removeTable($conn, $name);
+    $conn->query('create table %c (pk int, username varchar(30))', $name);
   }
 
   #[Test]

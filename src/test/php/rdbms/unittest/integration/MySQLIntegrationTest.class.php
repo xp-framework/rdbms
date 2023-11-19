@@ -9,39 +9,28 @@ class MySQLIntegrationTest extends RdbmsIntegrationTest {
   /** @return string */
   protected function driverName() { return 'mysql'; }
 
-  /** @return void */
-  #[After]
-  public function tearDown() {
-    parent::tearDown();
-
-    // Suppress "mysql_connect(): The mysql extension is deprecated [...]"
-    foreach (\xp::$errors as $file => $errors) {
-      if (strstr($file, 'MySQLConnection')) {
-        unset(\xp::$errors[$file]);
-      }
-    }
-  }
-
   /**
    * Create autoincrement table
    *
+   * @param  rdbms.DBConnection $conn
    * @param  string $name
    * @return void
    */
-  protected function createAutoIncrementTable($name) {
-    $this->removeTable($name);
-    $this->db()->query('create table %c (pk int primary key auto_increment, username varchar(30))', $name);
+  protected function createAutoIncrementTable($conn, $name) {
+    $this->removeTable($conn, $name);
+    $conn->query('create table %c (pk int primary key auto_increment, username varchar(30))', $name);
   }
   
   /**
    * Create transactions table
    *
+   * @param  rdbms.DBConnection $conn
    * @param  string $name
    * @return void
    */
-  protected function createTransactionsTable($name) {
-    $this->removeTable($name);
-    $this->db()->query('create table %c (pk int, username varchar(30)) Engine=InnoDB', $name);
+  protected function createTransactionsTable($conn, $name) {
+    $this->removeTable($conn, $name);
+    $conn->query('create table %c (pk int, username varchar(30)) Engine=InnoDB', $name);
   }
 
   #[Test, Ignore('Numeric not supported by MySQL')]
@@ -236,13 +225,20 @@ class MySQLIntegrationTest extends RdbmsIntegrationTest {
   #[Test, Ignore('Cast to smallint not supported by MySQL')]
   public function selectSmallintZero() { }
 
+  #[Test, Ignore('Does not cause an exception in MySQL')]
+  public function arithmeticOverflowWithQuery() { }
+
+  #[Test, Ignore('Does not cause an exception in MySQL')]
+  public function arithmeticOverflowWithOpen() { }
+
   #[Test]
   public function selectUtf8mb4() {
+    $conn= $this->db();
 
     // Sending characters outside the BMP while the encoding isn't utf8mb4
     // produces a warning.
-    Assert::equals('💩', $this->db()->query("select '💩' as poop")->next('poop'));
-    Assert::null($this->db()->query('show warnings')->next());
+    Assert::equals('💩', $conn->query("select '💩' as poop")->next('poop'));
+    Assert::null($conn->query('show warnings')->next());
   }
 
   #[Test]
@@ -258,25 +254,5 @@ class MySQLIntegrationTest extends RdbmsIntegrationTest {
 
     $after= $conn->query('select connection_id() as id')->next('id');
     Assert::notEquals($before, $after, 'Connection IDs must be different');
-  }
-
-  #[Test]
-  public function does_not_reconnect_if_disconnected_inside_transaction() {
-    $conn= $this->db();
-    $before= $conn->query('select connection_id() as id')->next('id');
-
-    $tran= $conn->begin(new Transaction('test'));
-    try {
-      $conn->query('kill %d', $before);
-    } catch (SQLException $expected) {
-      // errorcode 1927: Connection was killed (sqlstate 70100)
-    }
-
-    try {
-      $conn->query('select connection_id() as id');
-      $this->fail('No exception raised', null, SQLConnectionClosedException::class);
-    } catch (SQLConnectionClosedException $expected) {
-      // errorcode 2006: Server disconnected (sqlstate 00000)
-    }
   }
 }

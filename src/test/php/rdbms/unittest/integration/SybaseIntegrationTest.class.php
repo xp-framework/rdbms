@@ -22,7 +22,7 @@ class SybaseIntegrationTest extends RdbmsIntegrationTest {
    * @return void
    */
   #[Before]
-  public static function setMinimumServerSeverity() {
+  public function setMinimumServerSeverity() {
     if (function_exists('sybase_min_server_severity')) {
       sybase_min_server_severity(12);
     }
@@ -37,21 +37,25 @@ class SybaseIntegrationTest extends RdbmsIntegrationTest {
   /**
    * Create autoincrement table
    *
-   * @param   string name
+   * @param  rdbms.DBConnection $conn
+   * @param  string $name
+   * @return void
    */
-  protected function createAutoIncrementTable($name) {
-    $this->removeTable($name);
-    $this->db()->query('create table %c (pk int identity, username varchar(30))', $name);
+  protected function createAutoIncrementTable($conn, $name) {
+    $this->removeTable($conn, $name);
+    $conn->query('create table %c (pk int identity, username varchar(30))', $name);
   }
 
   /**
    * Create transactions table
    *
-   * @param   string name
+   * @param  rdbms.DBConnection $conn
+   * @param  string $name
+   * @return void
    */
-  protected function createTransactionsTable($name) {
-    $this->removeTable($name);
-    $this->db()->query('create table %c (pk int, username varchar(30))', $name);
+  protected function createTransactionsTable($conn, $name) {
+    $this->removeTable($conn, $name);
+    $conn->query('create table %c (pk int, username varchar(30))', $name);
   }
 
   #[Test]
@@ -109,8 +113,9 @@ class SybaseIntegrationTest extends RdbmsIntegrationTest {
 
   private function runOn($version, $callable) {
     $conn= $this->db();
-    $server= $conn->query('select @@version_number as v')->next('v');
-    $server >= $version && $callable($conn);
+    if ($conn->query('select @@version_number as v')->next('v') >= $version) {
+      $callable($conn);
+    }
   }
 
   #[Test]
@@ -187,8 +192,8 @@ class SybaseIntegrationTest extends RdbmsIntegrationTest {
 
   #[Test]
   public function repeated_extend_errors() {
-    $this->createTable();
     $conn= $this->db();
+    $this->createTable($conn);
     try {
       $conn->select('not_the_table_name.field1, not_the_table_name.field2 from %c', $this->tableName());
       $this->fail('No exception raised', NULL, 'rdbms.SQLStatementFailedException');
