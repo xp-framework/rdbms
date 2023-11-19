@@ -20,10 +20,6 @@ class DBXmlGenerator implements Traceable {
     $doc   = null,
     $table = null;
 
-  static function __static() {
-    \lang\XPClass::forName('rdbms.DBTableAttribute');  // For global constants
-  }
-
   /**
    * Constructor
    *
@@ -43,7 +39,7 @@ class DBXmlGenerator implements Traceable {
   public static function createFromTable(DBTable $table, $dbhost, $database) {
     $g= new self();
     $g->doc->root()->setAttribute('created_at', date('r'));
-    $g->doc->root()->setAttribute('created_by', System::getProperty('user.name'));
+    $g->doc->root()->setAttribute('created_by', getenv('USER'));
     
     $g->doc->root()->addChild(new \xml\Node('table', null, [
       'name'     => $table->name,

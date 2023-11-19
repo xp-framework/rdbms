@@ -1,9 +1,8 @@
 <?php namespace rdbms\unittest;
 
-use rdbms\unittest\mock\RegisterMockConnection;
+use rdbms\unittest\mock\MockConnection;
 use rdbms\{ConnectionManager, DSN};
-use unittest\Assert;
-use unittest\Test;
+use test\{Assert, Test};
 
 /**
  * Tests for connection managers with connections programmatically
@@ -12,7 +11,6 @@ use unittest\Test;
  * @see   xp://rdbms.ConnectionManager#queue
  * @see   xp://net.xp_framework.unittest.rdbms.ConnectionManagerTest
  */
-#[Action(eval: 'new RegisterMockConnection()')]
 class QueuedConnectionManagerTest extends ConnectionManagerTest {
 
   /**

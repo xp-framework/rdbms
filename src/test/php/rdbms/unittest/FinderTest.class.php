@@ -3,10 +3,9 @@
 use lang\{IllegalArgumentException, MethodNotImplementedException, XPClass};
 use rdbms\finder\{FinderException, FinderMethod, GenericFinder, NoSuchEntityException};
 use rdbms\unittest\dataset\{Job, JobFinder};
-use rdbms\unittest\mock\{MockResultSet, MockConnection};
+use rdbms\unittest\mock\{MockConnection, MockResultSet};
 use rdbms\{DriverManager, Peer, SQLExpression};
-use unittest\Assert;
-use unittest\{Expect, Test, TestCase};
+use test\{Assert, Before, After, Expect, Test};
 
 class FinderTest {
   protected $fixture;
@@ -317,7 +316,7 @@ class FinderTest {
     $this->fixture->findAll(new \rdbms\Criteria());
   }
 
-  #[Test, Expect(['class' => FinderException::class, 'withMessage' => '/No such method nonExistantMethod/'])]
+  #[Test, Expect(class: FinderException::class, message: '/No such method nonExistantMethod/')]
   public function fluentNonExistantFinder() {
     $this->fixture->findAll()->nonExistantMethod(new \rdbms\Criteria());
   }

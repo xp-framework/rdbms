@@ -1,7 +1,7 @@
 <?php namespace rdbms\unittest\drivers;
 
-use unittest\Assert;
-use unittest\Test;
+use test\Assert;
+use test\Test;
  
 /**
  * Test tokenizers for MySQL based connections

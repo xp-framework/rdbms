@@ -4,9 +4,8 @@ use lang\IllegalArgumentException;
 use rdbms\join\JoinProcessor;
 use rdbms\mysql\MySQLConnection;
 use rdbms\unittest\dataset\Job;
-use rdbms\{Criteria, DriverManager};
-use unittest\Assert;
-use unittest\{Expect, Test, TestCase};
+use rdbms\{Criteria, DriverManager, DSN};
+use test\{Assert, Before, Expect, Test, TestCase};
 
 /**
  * Test JoinProcessor class
@@ -19,12 +18,9 @@ use unittest\{Expect, Test, TestCase};
  */
 class JoinProcessorTest {
 
-  /**
-   * Make Job's peer use mysql
-   */
   #[Before]
   public function setUp() {
-    Job::getPeer()->setConnection(new MySQLConnection(new \rdbms\DSN('mysql://localhost:3306/')));
+    Job::getPeer()->setConnection(new MySQLConnection(new DSN('mysql://localhost:3306/')));
   }
   
   #[Test]

@@ -2,17 +2,8 @@
 
 use io\streams\MemoryInputStream;
 use rdbms\ConnectionManager;
-use rdbms\unittest\mock\RegisterMockConnection;
-use unittest\Assert;
 use util\Properties;
 
-/**
- * Tests for configured connection managers
- *
- * @see   xp://rdbms.ConnectionManager#configure
- * @see   xp://net.xp_framework.unittest.rdbms.ConnectionManagerTest
- */
-#[Action(eval: 'new RegisterMockConnection()')]
 class ConfiguredConnectionManagerTest extends ConnectionManagerTest {
 
   /**

@@ -2,8 +2,8 @@
 
 use rdbms\mysql\MySQLDBAdapter;
 use rdbms\{DBTableAttribute, FieldType};
-use unittest\Assert;
-use unittest\Test;
+use test\Assert;
+use test\Test;
 
 /**
  * TestCase

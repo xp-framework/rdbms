@@ -2,20 +2,11 @@
 
 use rdbms\DSN;
 use rdbms\tds\SqlIniLookup;
-use unittest\Assert;
-use unittest\Test;
+use test\{Assert, Before, Test};
 
-/**
- * TestCase
- *
- * @see   xp://rdbms.tds.SqlIniLookup
- */
 class SqlIniLookupTest {
-  protected $fixture= null;
+  protected $fixture;
 
-  /**
-   * Sets up test case
-   */
   #[Before]
   public function setUp() {
     $this->fixture= new SqlIniLookup(typeof($this)->getPackage()->getResourceAsStream('sql.ini'));

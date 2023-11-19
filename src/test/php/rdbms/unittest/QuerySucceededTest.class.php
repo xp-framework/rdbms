@@ -1,8 +1,8 @@
 <?php namespace rdbms\unittest;
 
 use rdbms\{QuerySucceeded, SQLException};
-use unittest\Assert;
-use unittest\{Expect, Test, Values};
+use test\Assert;
+use test\{Expect, Test, Values};
 
 class QuerySucceededTest {
 

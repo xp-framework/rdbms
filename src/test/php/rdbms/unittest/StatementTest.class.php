@@ -4,7 +4,7 @@ use lang\XPClass;
 use rdbms\unittest\dataset\Job;
 use rdbms\unittest\mock\MockConnection;
 use rdbms\{DriverManager, Statement};
-use unittest\{Assert, Before, After, Test};
+use test\{After, Assert, Before, Test};
 
 class StatementTest {
   public $conn, $peer;

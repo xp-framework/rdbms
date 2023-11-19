@@ -2,8 +2,8 @@
 
 use lang\FormatException;
 use rdbms\DSN;
-use unittest\Assert;
-use unittest\{Expect, Test};
+use test\Assert;
+use test\{Expect, Test};
 
 /**
  * Tests the DSN class

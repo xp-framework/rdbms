@@ -1,18 +1,11 @@
 <?php namespace rdbms\unittest\integration;
 
 use rdbms\ResultSet;
-use unittest\{Assert, Ignore, Test};
+use test\{Assert, Ignore, Test};
 use util\Date;
 
-/**
- * SQLite integration test
- *
- * @ext       sqlite
- */
 class SQLiteIntegrationTest extends RdbmsIntegrationTest {
-
-  /** @return string */
-  protected function driverName() { return 'sqlite'; }
+  protected static $DRIVER= 'sqlite';
 
   /**
    * Create autoincrement table

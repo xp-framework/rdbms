@@ -1,7 +1,15 @@
 <?php namespace rdbms\unittest;
 
-use rdbms\{ConnectionManager, ConnectionNotRegisteredException, DBConnection, DriverNotSupportedException};
-use unittest\{Assert, Expect, Test};
+use lang\XPClass;
+use rdbms\unittest\mock\MockConnection;
+use rdbms\{
+  ConnectionManager,
+  ConnectionNotRegisteredException,
+  DBConnection,
+  DriverNotSupportedException,
+  DriverManager
+};
+use test\{Assert, Before, After, Expect, Test};
 
 abstract class ConnectionManagerTest {
   
@@ -12,6 +20,16 @@ abstract class ConnectionManagerTest {
    * @return  rdbms.ConnectionManager
    */
   protected abstract function instanceWith($dsns);
+
+  #[Before]
+  public function registerMock() {
+    DriverManager::register('mock', new XPClass(MockConnection::class));
+  }
+
+  #[After]
+  public function removeMock() {
+    DriverManager::remove('mock');
+  }
 
   #[Test]
   public function initallyEmpty() {

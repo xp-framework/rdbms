@@ -1,14 +1,9 @@
 <?php namespace rdbms\unittest\integration;
 
-use unittest\Assert;
-use unittest\BeforeClass;
+use test\Before;
 
-/**
- * Deadlock test on Sybase
- *
- * @ext  sybase_ct
- */
 class SybaseDeadlockTest extends AbstractDeadlockTest {
+  protected static $DRIVER= 'sybase';
 
   /**
    * Before class method: set minimun server severity;
@@ -17,13 +12,10 @@ class SybaseDeadlockTest extends AbstractDeadlockTest {
    *
    * @return void
    */
-  #[BeforeClass]
+  #[Before]
   public static function setMinimumServerSeverity() {
     if (function_exists('sybase_min_message_severity')) {
       sybase_min_message_severity(12);
     }
   }
-
-  /** @return string */
-  protected function driverName() { return 'sybase'; }
 }

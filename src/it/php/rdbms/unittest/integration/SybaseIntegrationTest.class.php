@@ -1,7 +1,7 @@
 <?php namespace rdbms\unittest\integration;
 
 use rdbms\SQLStatementFailedException;
-use unittest\{Assert, Before, Expect, PrerequisitesNotMetError, Test};
+use test\{Assert, Before, Expect, PrerequisitesNotMetError, Test};
 use util\{Bytes, Date};
 
 /**
@@ -13,6 +13,7 @@ use util\{Bytes, Date};
  * @ext  sybase_ct
  */
 class SybaseIntegrationTest extends RdbmsIntegrationTest {
+  protected static $DRIVER= 'sybase';
 
   /**
    * Before class method: set minimun server severity;
@@ -30,9 +31,6 @@ class SybaseIntegrationTest extends RdbmsIntegrationTest {
 
   /** @return string */
   protected function tableName() { return '#unittest'; }
-
-  /** @return string */
-  protected function driverName() { return 'sybase'; }
   
   /**
    * Create autoincrement table

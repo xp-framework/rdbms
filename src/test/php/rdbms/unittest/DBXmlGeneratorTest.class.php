@@ -1,39 +1,23 @@
 <?php namespace rdbms\unittest;
 
+use lang\MethodNotImplementedException;
 use rdbms\util\DBXmlGenerator;
-use rdbms\{DBIndex, DBTable, DriverManager};
-use unittest\Assert;
-use unittest\{BeforeClass, Test, TestCase};
-use xml\XPath;
+use rdbms\{DBIndex, DBTable, DBTableAttribute, DriverManager};
+use test\verify\Condition;
+use test\{Assert, Before, Test};
+use xml\{XPath, Tree};
 
-/**
- * TestCase
- *
- * @see   rdbms.util.DBXmlGenerator
- */
+#[Condition('class_exists(Tree::class);')]
 class DBXmlGeneratorTest {
-  protected $xpath= null;
+  protected $xpath;
 
-  /**
-   * Sets up test case
-   */
-  #[Before]
-  public function onlyWithXmlModule() {
-    if (!class_exists('xml\Tree')) {
-      throw new \unittest\PrerequisitesNotMetError('XML Module not available', NULL, ['loaded']);
-    }
-  }
-
-  /**
-   * Sets up a Database Object for the test
-   */
   #[Before]
   public function setUp() {
     $generated= DBXmlGenerator::createFromTable(
       $this->newTable('deviceinfo', [
-        'deviceinfo_id' => [DB_ATTRTYPE_INT, 255], 
-        'serial_number' => [DB_ATTRTYPE_INT, 16],
-        'text'          => [DB_ATTRTYPE_TEXT, 255]
+        'deviceinfo_id' => [DBTableAttribute::DB_ATTRTYPE_INT, 255], 
+        'serial_number' => [DBTableAttribute::DB_ATTRTYPE_INT, 16],
+        'text'          => [DBTableAttribute::DB_ATTRTYPE_TEXT, 255]
       ]),
       'localhost',
       'FOOBAR'
@@ -51,7 +35,7 @@ class DBXmlGeneratorTest {
   public function newTable($name, $attr) {
     $t= new DBTable($name);
     foreach ($attr as $key => $definitions) {
-      $t->attributes[]= new \rdbms\DBTableAttribute(
+      $t->attributes[]= new DBTableAttribute(
         $key,
         $definitions[0],    // Type
         true,

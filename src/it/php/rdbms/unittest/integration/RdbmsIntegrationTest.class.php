@@ -1,23 +1,26 @@
 <?php namespace rdbms\unittest\integration;
 
-use lang\{MethodNotImplementedException, Throwable};
+use lang\{MethodNotImplementedException, Throwable, IllegalArgumentException};
 use rdbms\{DBEvent, DSN, DriverManager, ResultSet, SQLConnectException, SQLException, SQLStateException, SQLStatementFailedException};
-use unittest\{Assert, Before, Expect, PrerequisitesNotMetError, Test};
+use test\verify\Condition;
+use test\{Assert, Before, Expect, Test};
 use util\{Bytes, Date, Observer};
 
-/**
- * Base class for all RDBMS integration tests
- */
+#[Condition('self::testDsnSet()')]
 abstract class RdbmsIntegrationTest {
+  protected static $DRIVER= null;
+
   private $dsn;
   private $close= [];
 
-  #[Before]
-  public function verify() {
-    $env= strtoupper($this->driverName()).'_DSN';
-    if (!($this->dsn= getenv($env))) {
-      throw new PrerequisitesNotMetError('No credentials for '.nameof($this).', use '.$env.' to set');
-    }
+  /** Verifies [NAME]_DSN */
+  public static function testDsnSet() {
+    return getenv(strtoupper(static::$DRIVER).'_DSN');
+  }
+
+  /** Initialize DSN */
+  public function __construct() {
+    $this->dsn= self::testDsnSet();
   }
 
   #[After]
@@ -33,13 +36,6 @@ abstract class RdbmsIntegrationTest {
    * @return  string
    */
   protected function tableName() { return 'unittest'; }
-
-  /**
-   * Retrieve driver name
-   *
-   * @return  string
-   */
-  abstract protected function driverName();
 
   /**
    * Retrieve database connection object

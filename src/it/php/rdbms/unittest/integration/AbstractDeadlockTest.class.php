@@ -1,47 +1,43 @@
 <?php namespace rdbms\unittest\integration;
 
-use lang\{Runtime, Throwable};
-use rdbms\DriverManager;
-use unittest\Assert;
-use unittest\{PrerequisitesNotMetError, Test, TestCase};
+use lang\Runtime;
+use rdbms\{DriverManager, SQLStatementFailedException};
+use test\verify\Condition;
+use test\{Assert, Before, After, Test};
 
-/**
- * Abstract deadlock test
- *
- */
+#[Condition('self::testDsnSet()')]
 abstract class AbstractDeadlockTest {
+  protected static $DRIVER= null;
   private $dsn;
+  private $close= [];
 
-  /** @return string */
-  protected abstract function driverName();
+  /** Verifies [NAME]_DSN */
+  public static function testDsnSet() {
+    return getenv(strtoupper(static::$DRIVER).'_DSN');
+  }
+
+  /** Initialize DSN */
+  public function __construct() {
+    $this->dsn= self::testDsnSet();
+  }
 
   /**
    * Retrieve database connection object
    *
-   * @param   bool connect default TRUE
-   * @return  rdbms.DBConnection
+   * @param  bool $connect default TRUE
+   * @return rdbms.DBConnection
    */
   protected function db($connect= true) {
-    with ($db= DriverManager::getConnection($this->dsn)); {
-      if ($connect) $db->connect();
-      return $db;
-    }
+    $conn= DriverManager::getConnection($this->dsn);
+    $connect && $conn->connect();
+    return $conn;
   }
 
   /** @return void */
   #[Before]
   public function setUp() {
-    $env= strtoupper($this->driverName()).'_DSN';
-    if (!($this->dsn= getenv($env))) {
-      throw new PrerequisitesNotMetError('No credentials for '.nameof($this).', use '.$env.' to set');
-    }
-
-    try {
-      $this->dropTables();
-      $this->createTables();
-    } catch (Throwable $e) {
-      throw new PrerequisitesNotMetError($e->getMessage(), $e);
-    }
+    $this->dropTables();
+    $this->createTables();
   }
 
   /** @return void */
@@ -76,11 +72,11 @@ abstract class AbstractDeadlockTest {
     
     try {
       $db->query('drop table table_a');
-    } catch (\rdbms\SQLStatementFailedException $ignored) {}
+    } catch (SQLStatementFailedException $ignored) {}
     
     try {
       $db->query('drop table table_b');
-    } catch (\rdbms\SQLStatementFailedException $ignored) {}
+    } catch (SQLStatementFailedException $ignored) {}
     
     $db->close();
   }
@@ -91,29 +87,29 @@ abstract class AbstractDeadlockTest {
    * @return  lang.Process
    */
   protected function newProcess() {
-    with ($rt= Runtime::getInstance()); {
-      $proc= $rt->newInstance(
-        $rt->startupOptions(),
-        'class',
-        'rdbms.unittest.integration.SQLRunner',
-        [$this->dsn]
-      );
-      Assert::equals('! Started', $proc->out->readLine());
-      return $proc;
-    }
+    $rt= Runtime::getInstance();
+    $proc= $rt->newInstance(
+      $rt->startupOptions(),
+      'class',
+      'rdbms.unittest.integration.SQLRunner',
+      [$this->dsn]
+    );
+    Assert::equals('! Started', $proc->out->readLine());
+    return $proc;
   }
 
   #[Test]
   public function provokeDeadlock() {
     $a= $this->newProcess();
     $b= $this->newProcess();
+    $result= [];
     
     $a->in->write("update table_a set pk= pk+1\n");
     $b->in->write("update table_b set pk= pk+1\n");
     
     // Reads "+ OK", on each process
-    $a->out->readLine();
-    $b->out->readLine();
+    $result[]= $a->out->readLine();
+    $result[]= $b->out->readLine();
     
     // Now, process a hangs, waiting for lock to table_b
     $a->in->write("update table_b set pk= pk+1\n");
@@ -125,10 +121,8 @@ abstract class AbstractDeadlockTest {
     $a->in->close();
     $b->in->close();
     
-    $result= [
-      $a->out->readLine(),
-      $b->out->readLine()
-    ];
+    $result[]= $a->out->readLine();
+    $result[]= $b->out->readLine();
     sort($result);
     
     // Cleanup
@@ -136,6 +130,6 @@ abstract class AbstractDeadlockTest {
     
     // Assert one process succeeds, the other catches a deadlock exception
     // We can't tell which one will do what, though.
-    Assert::equals(['+ OK', '- rdbms.SQLDeadlockException'], $result);
+    Assert::equals(['+ OK', '+ OK', '+ OK', '- rdbms.SQLDeadlockException'], $result);
   }
 }

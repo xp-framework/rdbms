@@ -3,14 +3,9 @@
 use lang\{ClassLoader, IllegalArgumentException};
 use peer\Socket;
 use rdbms\tds\{TdsDataStream, TdsProtocolException};
-use unittest\{Assert, Before, Expect, Test};
+use test\{Assert, Before, Expect, Test};
 use util\Bytes;
 
-/**
- * TestCase
- *
- * @see   xp://rdbms.tds.TdsDataStream
- */
 class TdsDataStreamTest {
   protected static $sock;
 
@@ -187,7 +182,7 @@ class TdsDataStreamTest {
     Assert::equals("\xA2", $str->getToken());
   }
 
-  #[Test, Expect(['class' => IllegalArgumentException::class, 'withMessage' => '/must be at least 9/'])]
+  #[Test, Expect(class: IllegalArgumentException::class, message: '/must be at least 9/')]
   public function illegalPacketSize() {
     $this->newDataStream('', 1);
   }

@@ -2,20 +2,11 @@
 
 use rdbms\DSN;
 use rdbms\tds\InterfacesLookup;
-use unittest\Assert;
-use unittest\Test;
+use test\{Assert, Before, Test};
 
-/**
- * TestCase
- *
- * @see   xp://rdbms.tds.InterfacesLookup
- */
 class InterfacesLookupTest {
-  protected $fixture= null;
+  protected $fixture;
 
-  /**
-   * Sets up test case
-   */
   #[Before]
   public function setUp() {
     $this->fixture= new InterfacesLookup(typeof($this)->getPackage()->getResourceAsStream('interfaces'));

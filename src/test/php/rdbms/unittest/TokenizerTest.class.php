@@ -1,16 +1,10 @@
 <?php namespace rdbms\unittest;
 
 use rdbms\{DBConnection, SQLStateException};
-use unittest\Assert;
-use unittest\actions\RuntimeVersion;
-use unittest\{Expect, Test};
+use test\verify\Runtime;
+use test\{Assert, Before, Expect, Test};
 use util\{Date, UUID};
 
-/**
- * Test rdbms tokenizer
- *
- * @see   xp://rdbms.StatementFormatter
- */
 abstract class TokenizerTest {
   protected $fixture= null;
 
@@ -21,9 +15,6 @@ abstract class TokenizerTest {
    */
   protected abstract function fixture();
 
-  /**
-   * Sets up a Database Object for the test
-   */
   #[Before]
   public function setUp() {
     $this->fixture= $this->fixture();

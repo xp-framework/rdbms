@@ -5,7 +5,7 @@ use rdbms\criterion\Restrictions;
 use rdbms\unittest\dataset\Job;
 use rdbms\unittest\mock\MockConnection;
 use rdbms\{Criteria, DriverManager, SQLStateException};
-use unittest\{Assert, After, Before, Expect, Test};
+use test\{After, Assert, Before, Expect, Test};
 
 class CriteriaTest {
   public $conn, $peer;

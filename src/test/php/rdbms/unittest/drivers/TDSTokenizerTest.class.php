@@ -1,15 +1,10 @@
 <?php namespace rdbms\unittest\drivers;
 
-use unittest\Assert;
-use unittest\Test;
+use rdbms\unittest\TokenizerTest;
+use test\{Assert, Test};
 use util\Date;
 
-/**
- * Test tokenizers for TDS based connections
- *
- * @see   xp://net.xp_framework.unittest.rdbms.TokenizerTest
- */
-abstract class TDSTokenizerTest extends \rdbms\unittest\TokenizerTest {
+abstract class TDSTokenizerTest extends TokenizerTest {
 
   #[Test]
   public function dateToken() {

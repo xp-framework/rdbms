@@ -1,9 +1,9 @@
 <?php namespace rdbms\unittest;
 
 use lang\XPClass;
-use rdbms\unittest\mock\{MockResultSet, MockConnection};
+use rdbms\unittest\mock\{MockConnection, MockResultSet};
 use rdbms\{DriverManager, ResultSet, SQLConnectException, SQLConnectionClosedException, SQLStateException, SQLStatementFailedException};
-use unittest\{Assert, Before, After, Expect, Test};
+use test\{After, Assert, Before, Expect, Test};
 
 class DBTest {
   private $close= [];

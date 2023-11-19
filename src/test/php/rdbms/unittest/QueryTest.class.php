@@ -5,7 +5,7 @@ use rdbms\query\{DeleteQuery, SelectQuery, SetOperation, UpdateQuery};
 use rdbms\unittest\dataset\{Job, Person};
 use rdbms\unittest\mock\MockConnection;
 use rdbms\{Criteria, DriverManager};
-use unittest\{Assert, Before, After, Test};
+use test\{After, Assert, Before, Test};
 
 class QueryTest {
   private

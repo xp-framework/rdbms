@@ -3,10 +3,10 @@
 use lang\IllegalStateException;
 use rdbms\sqlite3\{SQLite3Connection, SQLite3ResultSet};
 use rdbms\{DSN, SQLStateException, SQLStatementFailedException};
-use unittest\actions\ExtensionAvailable;
-use unittest\{Assert, After, Expect, Test};
+use test\verify\Runtime;
+use test\{After, Assert, Expect, Test};
 
-#[Action(eval: 'new ExtensionAvailable("sqlite3")')]
+#[Runtime(extensions: ['sqlite3'])]
 class SQLite3ConnectionTest {
   private $close= [];
 

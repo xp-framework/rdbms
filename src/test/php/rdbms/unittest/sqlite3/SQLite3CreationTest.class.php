@@ -2,9 +2,8 @@
 
 use rdbms\sqlite3\SQLite3Connection;
 use rdbms\{DSN, SQLConnectException};
-use unittest\Assert;
-use unittest\actions\ExtensionAvailable;
-use unittest\{Expect, Test, TestCase};
+use test\verify\Runtime;
+use test\{Assert, Expect, Test};
 
 /**
  * Testcase for rdbms.sqlite3.SQLite3Connection
@@ -14,7 +13,7 @@ use unittest\{Expect, Test, TestCase};
  * @see   https://github.com/xp-framework/xp-framework/issues/111
  * @see   https://bugs.php.net/bug.php?id=55154
  */
-#[Action(eval: 'new ExtensionAvailable("sqlite3")')]
+#[Runtime(extensions: ['sqlite3'])]
 class SQLite3CreationTest {
 
   #[Test]

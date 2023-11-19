@@ -5,8 +5,8 @@ use rdbms\mysql\MySQLConnection;
 use rdbms\unittest\dataset\{Job, Person};
 use rdbms\unittest\mock\MockResultSet;
 use rdbms\{CachedResults, ConnectionManager, Criteria, DSN};
-use unittest\Assert;
-use unittest\{BeforeClass, Expect, Test, TestCase};
+use test\Assert;
+use test\{BeforeClass, Expect, Test, TestCase};
 use util\{Date, NoSuchElementException};
 
 /**

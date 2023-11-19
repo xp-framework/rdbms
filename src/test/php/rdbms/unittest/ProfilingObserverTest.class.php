@@ -3,23 +3,11 @@
 use lang\IllegalArgumentException;
 use rdbms\sqlite3\SQLite3Connection;
 use rdbms\{DBEvent, DSN, ProfilingObserver};
-use unittest\Assert;
-use unittest\{Expect, Ignore, Test, TestCase, Values};
+use test\{Assert, Before, Expect, Ignore, Test, Values};
 use util\log\{BufferedAppender, LogCategory};
 
-/**
- * Testcase for the profiling observer class
- *
- * @see   xp://rdbms.ProfilingObserver
- */
 class ProfilingObserverTest {
   private $cat;
-
-  /** @return void */
-  #[Before]
-  public function setUp() {
-    $this->cat= new LogCategory('test');
-  }
 
   /** @return rdbms.DBConnection */
   private function conn() {
@@ -39,6 +27,11 @@ class ProfilingObserverTest {
     $o->update($conn, new DBEvent('queryend', 5));
 
     return $o;
+  }
+
+  #[Before]
+  public function setUp() {
+    $this->cat= new LogCategory('test');
   }
 
   #[Test]

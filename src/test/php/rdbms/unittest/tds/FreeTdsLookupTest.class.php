@@ -2,20 +2,11 @@
 
 use rdbms\DSN;
 use rdbms\tds\FreeTdsLookup;
-use unittest\Assert;
-use unittest\Test;
+use test\{Assert, Before, Test};
 
-/**
- * TestCase
- *
- * @see   xp://rdbms.tds.FreeTdsLookup
- */
 class FreeTdsLookupTest {
-  protected $fixture= null;
+  protected $fixture;
 
-  /**
-   * Sets up test case
-   */
   #[Before]
   public function setUp() {
     $this->fixture= new FreeTdsLookup(typeof($this)->getPackage()->getResourceAsStream('freetds.conf'));

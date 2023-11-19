@@ -1,12 +1,12 @@
 <?php namespace rdbms\unittest\integration;
 
-use rdbms\DriverManager;
+use rdbms\{DriverManager, SQLException, Transaction};
 use util\cmd\Console;
 
 /**
  * SQL Runner used inside deadlock tests
  *
- * @see   xp://net.xp_framework.unittest.rdbms.integration.AbstractDeadlockTest
+ * @see  net.xp_framework.unittest.rdbms.integration.AbstractDeadlockTest
  */
 class SQLRunner {
   
@@ -19,7 +19,7 @@ class SQLRunner {
     $db= DriverManager::getConnection($args[0]);
     try {
       $db->connect();
-      $tran= $db->begin(new \rdbms\Transaction('process'));
+      $tran= $db->begin(new Transaction('process'));
 
       Console::$out->writeLine('! Started');
       while ($sql= Console::$in->readLine()) {
@@ -28,7 +28,7 @@ class SQLRunner {
       }
       
       $tran->commit();
-    } catch (\rdbms\SQLException $e) {
+    } catch (SQLException $e) {
       Console::$out->writeLine('- ', nameof($e));
     }
   }

@@ -3,7 +3,7 @@
 use lang\ClassLoader;
 use rdbms\SQLException;
 use rdbms\mysqlx\{MySqlxBufferedResultSet, MySqlxProtocol};
-use unittest\{Assert, Before, Expect, Test};
+use test\{Assert, Before, Expect, Test};
 
 class MySqlxBufferedResultSetTest {
   protected static $proto;
@@ -158,17 +158,17 @@ class MySqlxBufferedResultSetTest {
     Assert::equals($records[1], $fixture->next());
   }
 
-  #[Test, Expect(['class' => SQLException::class, 'withMessage' => 'Cannot seek to offset 1, out of bounds'])]
+  #[Test, Expect(class: SQLException::class, message: 'Cannot seek to offset 1, out of bounds')]
   public function seek_to_offset_exceeding_length() {
     $fixture= $this->newResultSet([])->seek(1);
   }
 
-  #[Test, Expect(['class' => SQLException::class, 'withMessage' => 'Cannot seek to offset -1, out of bounds'])]
+  #[Test, Expect(class: SQLException::class, message: 'Cannot seek to offset -1, out of bounds')]
   public function seek_to_negative_offset() {
     $fixture= $this->newResultSet([])->seek(-1);
   }
 
-  #[Test, Expect(['class' => SQLException::class, 'withMessage' => 'Cannot seek to offset 0, out of bounds'])]
+  #[Test, Expect(class: SQLException::class, message: 'Cannot seek to offset 0, out of bounds')]
   public function seek_to_zero_offset_on_empty() {
     $fixture= $this->newResultSet([])->seek(0);
   }

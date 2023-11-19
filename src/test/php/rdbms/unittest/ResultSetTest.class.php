@@ -1,7 +1,7 @@
 <?php namespace rdbms\unittest;
 
 use lang\ClassLoader;
-use unittest\{Assert, Before, Test, Values};
+use test\{Assert, Before, Test, Values};
 
 class ResultSetTest {
   protected static $resultSet;
@@ -79,13 +79,13 @@ class ResultSetTest {
     Assert::equals(['id' => 1], $q->next());
   }
 
-  #[Test, Values('fixtures')]
+  #[Test, Values(from: 'fixtures')]
   public function can_be_used_in_foreach($records) {
     $q= self::$resultSet->newInstance($records);
     Assert::equals($records, iterator_to_array($q));
   }
 
-  #[Test, Values('fixtures')]
+  #[Test, Values(from: 'fixtures')]
   public function can_be_iterated_twice($records) {
     $q= self::$resultSet->newInstance($records);
     iterator_to_array($q);

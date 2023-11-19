@@ -12,7 +12,7 @@ RDBMS support for the XP Framework: MySQL, Sybase, MSSQL, PostgreSQL, SQLite3, I
 * Fixed handling of MySQL error code 1927 ("Connection was killed")
   (@thekid)
 * Overhauled test suite:
-  . Migrated tests to baseless
+  . Migrated tests to new testing library, see xp-framework/rfc#344
   . Split unit and integration tests
   . Added PHP 8.3 and PHP 8.4 to the test matrix
   . Fixed integration tests to no longer reuse connections

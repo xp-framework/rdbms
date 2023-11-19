@@ -1,8 +1,8 @@
 <?php namespace rdbms\unittest\mysql;
 
 use rdbms\mysqlx\MySqlPassword;
-use unittest\Assert;
-use unittest\Test;
+use test\Assert;
+use test\Test;
 use util\Bytes;
 
 /**

@@ -3,8 +3,8 @@
 use io\File;
 use rdbms\DSN;
 use rdbms\tds\FreeTdsLookup;
-use unittest\Assert;
-use unittest\Test;
+use test\Assert;
+use test\Test;
 
 /**
  * TestCase

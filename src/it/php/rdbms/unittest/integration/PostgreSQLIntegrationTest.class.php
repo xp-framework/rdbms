@@ -1,13 +1,11 @@
 <?php namespace rdbms\unittest\integration;
 
 use rdbms\SQLException;
-use unittest\{Assert, Ignore, Test};
+use test\{Assert, Ignore, Test};
 
 class PostgreSQLIntegrationTest extends RdbmsIntegrationTest {
-  
-  /** @return string */
-  protected function driverName() { return 'pgsql'; }
-  
+  protected static $DRIVER= 'pgsql';
+
   /**
    * Create autoincrement table
    *
@@ -212,7 +210,7 @@ class PostgreSQLIntegrationTest extends RdbmsIntegrationTest {
   #[Test, Ignore('Cast to smallint not supported by PostgreSQL')]
   public function selectSmallintZero() { }
 
-  #[Test] 
+  #[Test]
   public function reconnects_when_server_disconnects() { 
     $conn= $this->db();
     $before= $conn->query('select pg_backend_pid() as id')->next('id'); 

@@ -3,15 +3,14 @@
 use lang\ClassLoader;
 use rdbms\SQLException;
 use rdbms\tds\{TdsBufferedResultSet, TdsProtocol};
-use unittest\{Assert, Before, Expect, Test};
+use test\{Assert, Before, Expect, Test};
 
 class TdsBufferedResultSetTest {
   protected static $proto;
 
   #[Before]
-  public static function mockProtocol() {
-    $parent= class_exists('\\lang\\Object', false) ? 'lang.Object' : null;
-    self::$proto= ClassLoader::defineClass('rdbms.unittest.tds.MockTdsProtocol', $parent, [], '{
+  public function mockProtocol() {
+    self::$proto= ClassLoader::defineClass('rdbms.unittest.tds.MockTdsProtocol', null, [], '{
       private $records= [];
 
       public function __construct($records) {
@@ -158,17 +157,17 @@ class TdsBufferedResultSetTest {
     Assert::equals($records[1], $fixture->next());
   }
 
-  #[Test, Expect(['class' => SQLException::class, 'withMessage' => 'Cannot seek to offset 1, out of bounds'])]
+  #[Test, Expect(class: SQLException::class, message: 'Cannot seek to offset 1, out of bounds')]
   public function seek_to_offset_exceeding_length() {
     $fixture= $this->newResultSet([])->seek(1);
   }
 
-  #[Test, Expect(['class' => SQLException::class, 'withMessage' => 'Cannot seek to offset -1, out of bounds'])]
+  #[Test, Expect(class: SQLException::class, message: 'Cannot seek to offset -1, out of bounds')]
   public function seek_to_negative_offset() {
     $fixture= $this->newResultSet([])->seek(-1);
   }
 
-  #[Test, Expect(['class' => SQLException::class, 'withMessage' => 'Cannot seek to offset 0, out of bounds'])]
+  #[Test, Expect(class: SQLException::class, message: 'Cannot seek to offset 0, out of bounds')]
   public function seek_to_zero_offset_on_empty() {
     $fixture= $this->newResultSet([])->seek(0);
   }

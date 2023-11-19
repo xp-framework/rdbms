@@ -1,24 +1,30 @@
 <?php namespace rdbms\unittest;
 
+use lang\XPClass;
 use rdbms\criterion\{Projections, Restrictions};
 use rdbms\mysql\MySQLConnection;
 use rdbms\pgsql\PostgreSQLConnection;
 use rdbms\sqlite3\SQLite3Connection;
 use rdbms\sybase\SybaseConnection;
 use rdbms\unittest\dataset\Job;
-use rdbms\unittest\mock\{MockResultSet, RegisterMockConnection};
+use rdbms\unittest\mock\{MockResultSet, MockConnection};
 use rdbms\{Criteria, DriverManager, Record};
-use unittest\{Assert, Test};
+use test\{Assert, Before, After, Test};
 use util\Date;
 
-#[Action(eval: 'new RegisterMockConnection()')]
 class ProjectionTest {
   private $syconn, $myconn, $pgconn, $sqconn, $peer;
-    
-  /**
-   * Sets up a Database Object for the test
-   *
-   */
+
+  #[Before]
+  public function registerMock() {
+    DriverManager::register('mock', new XPClass(MockConnection::class));
+  }
+
+  #[After]
+  public function removeMock() {
+    DriverManager::remove('mock');
+  }
+
   #[Before]
   public function setUp() {
     $this->syconn= new SybaseConnection(new \rdbms\DSN('sybase://localhost:1999/'));

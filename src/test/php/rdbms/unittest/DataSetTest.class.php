@@ -2,9 +2,9 @@
 
 use lang\{IllegalArgumentException, XPClass};
 use rdbms\unittest\dataset\Job;
-use rdbms\unittest\mock\{MockResultSet, MockConnection};
+use rdbms\unittest\mock\{MockConnection, MockResultSet};
 use rdbms\{Column, DBEvent, DriverManager, Peer, ResultIterator, SQLException, Statement};
-use unittest\{Assert, After, Before, Expect, Test};
+use test\{After, Assert, Before, Expect, Test};
 use util\log\BoundLogObserver;
 use util\{Date, NoSuchElementException};
 

@@ -1,7 +1,7 @@
 <?php namespace rdbms\unittest\integration;
 
 use rdbms\SQLStatementFailedException;
-use unittest\{Assert, Before, Expect, Ignore, Test};
+use test\{Assert, Before, Expect, Ignore, Test};
 use util\Date;
 
 /**
@@ -12,6 +12,7 @@ use util\Date;
  * @ext   mssql
  */
 class MsSQLIntegrationTest extends RdbmsIntegrationTest {
+  protected static $DRIVER= 'mssql';
 
   /**
    * Before class method: set minimun server severity;
@@ -29,9 +30,6 @@ class MsSQLIntegrationTest extends RdbmsIntegrationTest {
 
   /** @return  string */
   protected function tableName() { return '#unittest'; }
-
-  /** @return string */
-  protected function driverName() { return 'mssql'; }
   
   /**
    * Create autoincrement table

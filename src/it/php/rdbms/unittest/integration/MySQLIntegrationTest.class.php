@@ -1,13 +1,11 @@
 <?php namespace rdbms\unittest\integration;
 
 use rdbms\{SQLConnectionClosedException, SQLException, Transaction};
-use unittest\Assert;
-use unittest\{Ignore, Test};
+use test\Assert;
+use test\{Ignore, Test};
 
 class MySQLIntegrationTest extends RdbmsIntegrationTest {
-
-  /** @return string */
-  protected function driverName() { return 'mysql'; }
+  protected static $DRIVER= 'mysql';
 
   /**
    * Create autoincrement table

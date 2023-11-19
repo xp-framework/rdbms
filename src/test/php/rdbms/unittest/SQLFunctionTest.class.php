@@ -7,27 +7,12 @@ use rdbms\sqlite3\SQLite3Connection;
 use rdbms\sybase\SybaseConnection;
 use rdbms\unittest\dataset\Job;
 use rdbms\{Criteria, SQLFunctions};
-use unittest\Assert;
-use unittest\{Test, TestCase};
+use test\{Assert, Before, Test};
 use util\Date;
 
-/**
- * TestCase
- *
- * @see   xp://rdbms.SQLFunction
- */
 class SQLFunctionTest {
-  public
-    $syconn = null,
-    $myconn = null,
-    $sqconn = null,
-    $pgconn = null,
-    $peer   = null;
-    
-  /**
-   * Sets up a Database Object for the test
-   *
-   */
+  public $syconn, $myconn, $sqconn, $pgconn, $peer;
+
   #[Before]
   public function setUp() {
     $this->syconn= new SybaseConnection(new \rdbms\DSN('sybase://localhost:1999/'));

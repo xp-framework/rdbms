@@ -4,8 +4,7 @@ use rdbms\join\{JoinPart, JoinRelation, JoinTable};
 use rdbms\mysql\MySQLConnection;
 use rdbms\unittest\dataset\{Department, Job, Person};
 use rdbms\{Criteria, DSN};
-use unittest\Assert;
-use unittest\{Test, TestCase};
+use test\{Assert, Before, Test};
 
 /**
  * Test JoinPart class
@@ -17,12 +16,8 @@ use unittest\{Test, TestCase};
  * @see     xp://rdbms.Criteria
  */
 class JoinPartTest {
-  public $conn= null;
-  public $peer= null;
+  public $conn, $peer= null;
     
-  /**
-   * Setup test
-   */
   #[Before]
   public function setUp() {
     $this->conn= new MySQLConnection(new DSN('mysql://localhost:3306/'));
