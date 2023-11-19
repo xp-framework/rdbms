@@ -1,8 +1,7 @@
 <?php namespace rdbms\unittest\integration;
 
 use rdbms\SQLStatementFailedException;
-use unittest\Assert;
-use unittest\{BeforeClass, Expect, Ignore, Test};
+use unittest\{Assert, Before, Expect, Ignore, Test};
 use util\Date;
 
 /**
@@ -21,7 +20,7 @@ class MsSQLIntegrationTest extends RdbmsIntegrationTest {
    *
    * @return void
    */
-  #[BeforeClass]
+  #[Before]
   public static function setMinimumServerSeverity() {
     if (function_exists('mssql_min_message_severity')) {
       mssql_min_message_severity(12);
