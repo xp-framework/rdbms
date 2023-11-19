@@ -1,8 +1,7 @@
 <?php namespace rdbms\unittest\integration;
 
 use rdbms\SQLStatementFailedException;
-use unittest\Assert;
-use unittest\{BeforeClass, Expect, PrerequisitesNotMetError, Test, Version};
+use unittest\{Assert, Before, Expect, PrerequisitesNotMetError, Test};
 use util\{Bytes, Date};
 
 /**
@@ -22,27 +21,12 @@ class SybaseIntegrationTest extends RdbmsIntegrationTest {
    *
    * @return void
    */
-  #[BeforeClass]
+  #[Before]
   public static function setMinimumServerSeverity() {
     if (function_exists('sybase_min_server_severity')) {
       sybase_min_server_severity(12);
     }
   }
-
-  /**
-   * Skip tests which require a specific minimum server version
-   */
-  #[Before]
-  public function setUp() {
-    parent::setUp();
-    $m= typeof($this)->getMethod($this->name);
-    if ($m->hasAnnotation('version')) {
-      $server= $this->db()->query('select @@version_number as v')->next('v');
-      if ($server < ($required= $m->getAnnotation('version'))) {
-        throw new PrerequisitesNotMetError('Server version not sufficient: '.$server, null, [$required]);
-      }
-    }
-  }    
 
   /** @return string */
   protected function tableName() { return '#unittest'; }
@@ -123,37 +107,55 @@ class SybaseIntegrationTest extends RdbmsIntegrationTest {
     Assert::equals(null, $this->db()->query('select cast(NULL as univarchar(255)) as value')->next('value'));
   }
 
-  #[Test, Version(15000)]
+  private function runOn($version, $callable) {
+    $conn= $this->db();
+    $server= $conn->query('select @@version_number as v')->next('v');
+    $server >= $version && $callable($conn);
+  }
+
+  #[Test]
   public function selectEmptyUniText() {
-    Assert::equals(' ', $this->db()->query('select cast("" as unitext) as value')->next('value'));
+    $this->runOn(15000, function($conn) {
+      Assert::equals(' ', $conn->query('select cast("" as unitext) as value')->next('value'));
+    });
   }
 
-  #[Test, Version(15000)]
+  #[Test]
   public function selectUniText() {
-    Assert::equals('test', $this->db()->query('select cast("test" as unitext) as value')->next('value'));
+    $this->runOn(15000, function($conn) {
+      Assert::equals('test', $this->db()->query('select cast("test" as unitext) as value')->next('value'));
+    });
   }
 
-  #[Test, Version(15000)]
+  #[Test]
   public function selectUmlautUniText() {
-    Assert::equals(
-      new Bytes("\303\234bercoder"),
-      new Bytes($this->db()->query('select cast("Übercoder" as unitext) as value')->next('value'))
-    );
+    $this->runOn(15000, function($conn) {
+      Assert::equals(
+        new Bytes("\303\234bercoder"),
+        new Bytes($this->db()->query('select cast("Übercoder" as unitext) as value')->next('value'))
+      );
+    });
   }
 
-  #[Test, Version(15000)]
+  #[Test]
   public function selectNullUniText() {
-    Assert::equals(null, $this->db()->query('select cast(NULL as unitext) as value')->next('value'));
+    $this->runOn(15000, function($conn) {
+      Assert::equals(null, $this->db()->query('select cast(NULL as unitext) as value')->next('value'));
+    });
   }
 
-  #[Test, Version(15000)]
+  #[Test]
   public function selectUnsignedInt() {
-    parent::selectUnsignedInt();
+    $this->runOn(15000, function($conn) {
+      parent::selectUnsignedInt();
+    });
   }
 
-  #[Test, Version(15000)]
+  #[Test]
   public function selectMaxUnsignedBigInt() {
-    parent::selectMaxUnsignedBigInt();
+    $this->runOn(15000, function($conn) {
+      parent::selectMaxUnsignedBigInt();
+    });
   }
 
   #[Test, Expect(['class' => SQLStatementFailedException::class, 'withMessage' => '/More power/'])]

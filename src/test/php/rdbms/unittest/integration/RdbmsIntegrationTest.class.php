@@ -2,35 +2,29 @@
 
 use lang\{MethodNotImplementedException, Throwable};
 use rdbms\{DBEvent, DSN, DriverManager, ResultSet, SQLConnectException, SQLException, SQLStateException, SQLStatementFailedException};
-use unittest\Assert;
-use unittest\{Expect, PrerequisitesNotMetError, Test, TestCase};
+use unittest\{Assert, Before, Expect, PrerequisitesNotMetError, Test};
 use util\{Bytes, Date, Observer};
 
 /**
  * Base class for all RDBMS integration tests
  */
 abstract class RdbmsIntegrationTest {
-  private $dsn, $conn;
+  private $dsn;
+  private $close= [];
 
-  /** @return void */
   #[Before]
-  public function setUp() {
+  public function verify() {
     $env= strtoupper($this->driverName()).'_DSN';
     if (!($this->dsn= getenv($env))) {
       throw new PrerequisitesNotMetError('No credentials for '.nameof($this).', use '.$env.' to set');
     }
-
-    try {
-      $this->conn= DriverManager::getConnection($this->dsn);
-    } catch (Throwable $t) {
-      throw new PrerequisitesNotMetError($t->getMessage(), $t);
-    }
   }
 
-  /** @return void */
   #[After]
-  public function tearDown() {
-    $this->conn && $this->conn->close();
+  public function disconnect() {
+    foreach ($this->close as $conn) {
+      $conn->close();
+    }
   }
 
   /**
@@ -54,8 +48,9 @@ abstract class RdbmsIntegrationTest {
    * @return  rdbms.DBConnection
    */
   protected function db($connect= true) {
-    $connect && $this->conn->connect();
-    return $this->conn;
+    $conn= DriverManager::getConnection($this->dsn);
+    $connect && $conn->connect();
+    return $conn;
   }
 
   /**

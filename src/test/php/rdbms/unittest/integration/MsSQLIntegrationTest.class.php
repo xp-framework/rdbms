@@ -21,7 +21,7 @@ class MsSQLIntegrationTest extends RdbmsIntegrationTest {
    * @return void
    */
   #[Before]
-  public static function setMinimumServerSeverity() {
+  public function setMinimumServerSeverity() {
     if (function_exists('mssql_min_message_severity')) {
       mssql_min_message_severity(12);
     }
