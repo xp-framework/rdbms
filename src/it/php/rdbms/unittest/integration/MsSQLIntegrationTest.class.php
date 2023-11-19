@@ -158,7 +158,7 @@ class MsSQLIntegrationTest extends RdbmsIntegrationTest {
     Assert::null($this->db()->query('select cast("" as varbinary) as value')->next('value'));
   }
 
-  #[Test, Expect(['class' => SQLStatementFailedException::class, 'withMessage' => '/More power/'])]
+  #[Test, Expect(class: SQLStatementFailedException::class, message: '/More power/')]
   public function raiseError() {
     $this->db()->query('raiserror ("More power", 16, 1)');
   }

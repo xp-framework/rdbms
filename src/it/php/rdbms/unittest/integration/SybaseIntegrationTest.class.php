@@ -1,7 +1,7 @@
 <?php namespace rdbms\unittest\integration;
 
 use rdbms\SQLStatementFailedException;
-use test\{Assert, Before, Expect, PrerequisitesNotMetError, Test};
+use test\{Assert, Before, Expect, Test};
 use util\{Bytes, Date};
 
 /**
@@ -161,7 +161,7 @@ class SybaseIntegrationTest extends RdbmsIntegrationTest {
     });
   }
 
-  #[Test, Expect(['class' => SQLStatementFailedException::class, 'withMessage' => '/More power/'])]
+  #[Test, Expect(class: SQLStatementFailedException::class, message: '/More power/')]
   public function raiseError() {
     $this->db()->query('raiserror 61000 "More power"');
   }
