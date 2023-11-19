@@ -57,3 +57,8 @@ jobs:
 
     - name: Run test suite
       run: sh xp-run xp.unittest.TestRunner src/test/php
+
+    - name: SQLite integration test suite
+      run: >
+        export SQLITE_DSN=sqlite://./unittest.db
+        sh xp-run xp.unittest.TestRunner src/it/php
