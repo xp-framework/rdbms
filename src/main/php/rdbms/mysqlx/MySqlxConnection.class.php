@@ -3,8 +3,8 @@
 use io\IOException;
 use lang\XPClass;
 use peer\Socket;
-use rdbms\{DBConnection, DBEvent, DriverManager, QuerySucceeded, SQLConnectException, SQLConnectionClosedException, SQLDeadlockException, SQLStateException, SQLStatementFailedException, StatementFormatter, Transaction};
 use rdbms\mysql\MysqlDialect;
+use rdbms\{DBConnection, DBEvent, DriverManager, QuerySucceeded, SQLConnectException, SQLConnectionClosedException, SQLDeadlockException, SQLStateException, SQLStatementFailedException, StatementFormatter, Transaction};
 
 /**
  * Connection to MySQL Databases
@@ -165,9 +165,14 @@ class MySqlxConnection extends DBConnection {
           $this->transaction= 0;
           throw new SQLConnectionClosedException($message, $tries, $sql, $e->error);
 
+        case 1927: // Connection was killed, do not retry
+          $this->close();
+          $this->transaction= 0;
+          throw new SQLConnectionClosedException($message, $tries, $sql, $e->error);
+
         case 1213: // Deadlock
           throw new SQLDeadlockException($message, $sql, $e->error);
-        
+
         default:
           throw new SQLStatementFailedException($message, $sql, $e->error);
       }
