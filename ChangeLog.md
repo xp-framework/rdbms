@@ -3,6 +3,11 @@ RDBMS support for the XP Framework: MySQL, Sybase, MSSQL, PostgreSQL, SQLite3, I
 
 ## ?.?.? / ????-??-??
 
+## 13.2.0 / 2023-11-19
+
+* Implemented forward compatibility for SQLite error handling, see
+  https://wiki.php.net/rfc/sqlite3_exceptions and #52
+  (@thekid)
 * Fixed empty string handling in TDS protocol for PHP 8.1+, see
   https://wiki.php.net/rfc/deprecate_null_to_scalar_internal_arg
   (@thekid)
