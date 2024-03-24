@@ -124,11 +124,11 @@ class Criteria implements SQLExpression {
    * If the first parameter is omitted or NULL given the projection will be cleared
    * projection is then assumed
    *
-   * @param   rdbms.SQLRenderable projection optional
+   * @param   ?rdbms.SQLRenderable projection optional
    * @param   string optional alias
-   * @return  rdbms.Criteria this object
+   * @return  self this object
    */
-  public function setProjection(SQLRenderable $projection= null, $alias= '') {
+  public function setProjection($projection= null, $alias= '') {
     $this->projection= (is_null($projection) || ($projection instanceof ProjectionList))
       ? $projection
       : $projection= Projections::projectionList()->add($projection, $alias)
@@ -141,7 +141,7 @@ class Criteria implements SQLExpression {
    *
    * @param   rdbms.SQLRenderable projection
    * @param   string optional alias
-   * @return  rdbms.Criteria this object
+   * @return  self this object
    */
   public function withProjection(SQLRenderable $projection, $alias= '') {
     $crit= clone($this);

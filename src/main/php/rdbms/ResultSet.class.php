@@ -25,11 +25,11 @@ abstract class ResultSet implements Closeable, IteratorAggregate {
   /**
    * Constructor
    *
-   * @param   var $handle
-   * @param   var $fields
-   * @param   util.TimeZone $tz
+   * @param  var $handle
+   * @param  var $fields
+   * @param  ?util.TimeZone $tz
    */
-  public function __construct($handle, $fields, TimeZone $tz= null) {
+  public function __construct($handle, $fields, $tz= null) {
     $this->handle= $handle;
     $this->fields= $fields;
     $this->tz= $tz;

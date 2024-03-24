@@ -17,11 +17,11 @@ class TdsBufferedResultSet extends AbstractTdsResultSet {
   /**
    * Constructor
    *
-   * @param   var result
-   * @param   [:var] fields
-   * @param   util.TimeZone tz
+   * @param   var $result
+   * @param   [:var] $fields
+   * @param   ?util.TimeZone $tz
    */
-  public function __construct($result, $fields, TimeZone $tz= null) {
+  public function __construct($result, $fields, $tz= null) {
     parent::__construct($result, $fields, $tz);
     do {
       try {

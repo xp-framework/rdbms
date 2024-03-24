@@ -13,9 +13,11 @@ class MySqlxBufferedResultSet extends AbstractMysqlxResultSet {
   /**
    * Constructor
    *
-   * @param   resource handle
+   * @param   var $result
+   * @param   [:var] $fields
+   * @param   ?util.TimeZone $tz
    */
-  public function __construct($result, $fields, \util\TimeZone $tz= null) {
+  public function __construct($result, $fields, $tz= null) {
     parent::__construct($result, $fields, $tz);
     while (null !== ($record= $this->handle->fetch($this->fields))) {
       $this->records[]= $record;
