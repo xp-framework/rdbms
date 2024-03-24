@@ -3,6 +3,10 @@ RDBMS support for the XP Framework: MySQL, Sybase, MSSQL, PostgreSQL, SQLite3, I
 
 ## ?.?.? / ????-??-??
 
+## 13.3.0 / 2024-03-24
+
+* Made compatible with XP 12 - @thekid
+
 ## 13.2.0 / 2023-11-19
 
 * Implemented forward compatibility for SQLite error handling, see
