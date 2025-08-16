@@ -53,18 +53,6 @@ class TdsDataStreamTest {
     return pack('CCnnCc', 0x04, $last ? 0x01 : 0x00, $length + 8, 0x00, 0x00, 0x00);
   }
 
-  /**
-   * Assertion helper
-   *
-   * @param   string bytes
-   * @param   rdbms.tds.TdsDataStream str
-   * @throws  unittest.AssertionFailedError
-   */
-  protected function assertBytes($bytes, $str) {
-    $field= typeof($str)->getField('sock')->setAccessible(true);
-    Assert::equals(new Bytes($bytes), new Bytes($field->get($str)->bytes));
-  }
-
   #[Test, Expect(TdsProtocolException::class)]
   public function nullHeader() { 
     $this->newDataStream(null)->read(1);
@@ -189,18 +177,22 @@ class TdsDataStreamTest {
 
   #[Test]
   public function writeBytes() {
-    $str= $this->newDataStream();
+    $socket= self::$sock->newInstance();
+    $str= new TdsDataStream($socket);
     $str->write(0x04, 'Login');
-    $this->assertBytes($this->headerWith(5).'Login', $str);
+
+    Assert::equals(new Bytes($this->headerWith(5).'Login'), new Bytes($socket->bytes));
   }
 
   #[Test]
   public function writeBytesSpanningMultiplePackets() {
-    $str= $this->newDataStream('', 10);
+    $socket= self::$sock->newInstance();
+    $str= new TdsDataStream($socket, 10);
     $str->write(0x04, 'Test');
-    $this->assertBytes(
-      $this->headerWith(2, false).'Te'.$this->headerWith(2, true).'st', 
-      $str
+
+    Assert::equals(
+      new Bytes($this->headerWith(2, false).'Te'.$this->headerWith(2, true).'st'),
+      new Bytes($socket->bytes),
     );
   }
 }
