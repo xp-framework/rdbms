@@ -192,7 +192,7 @@ class TdsDataStreamTest {
 
     Assert::equals(
       new Bytes($this->headerWith(2, false).'Te'.$this->headerWith(2, true).'st'),
-      new Bytes($socket->bytes),
+      new Bytes($socket->bytes)
     );
   }
 }
