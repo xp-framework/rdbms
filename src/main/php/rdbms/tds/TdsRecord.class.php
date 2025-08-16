@@ -28,7 +28,7 @@ abstract class TdsRecord {
    *
    * @param   int hi
    * @param   int lo
-   * @return  double
+   * @return  float
    */
   protected function toMoney($hi, $lo= 0) {
     if ($hi < 0) {
@@ -38,7 +38,7 @@ abstract class TdsRecord {
     } else {
       $div= 10000;
     }
-    return (double)bcdiv(bcadd(bcmul($hi, '4294967296'), $lo), $div, 5);
+    return (float)bcdiv(bcadd(bcmul($hi, '4294967296'), $lo), $div, 5);
   }
 
   /**
@@ -74,7 +74,7 @@ abstract class TdsRecord {
       return bccomp($n, PHP_INT_MAX) == 1 || bccomp($n, -PHP_INT_MAX -1) == -1 ? $n : (int)$n;
     } else {
       $n= bcdiv($n, pow(10, $scale), $scale);
-      return strlen($n) > self::$precision ? $n : (double)$n;
+      return strlen($n) > self::$precision ? $n : (float)$n;
     }
   }
   

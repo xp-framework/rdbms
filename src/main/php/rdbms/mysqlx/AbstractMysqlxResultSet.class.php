@@ -45,7 +45,7 @@ abstract class AbstractMysqlxResultSet extends ResultSet {
           if ($value <= PHP_INT_MAX && $value >= -PHP_INT_MAX- 1) {
             $return[$info['name']]= (int)$value;
           } else {
-            $return[$info['name']]= (double)$value;
+            $return[$info['name']]= (float)$value;
           }
           break;
           
@@ -53,7 +53,7 @@ abstract class AbstractMysqlxResultSet extends ResultSet {
         case 5:     // DOUBLE
         case 0:     // DECIMAL
         case 246:   // NEWDECIMAL
-          $return[$info['name']]= (double)$value;
+          $return[$info['name']]= (float)$value;
           break;
 
         case 253:   // CHAR
