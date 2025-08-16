@@ -8,12 +8,8 @@
 abstract class DriverImplementationsProvider {
   protected $parent= null;
 
-  /**
-   * Constructor
-   *
-   * @param   rdbms.DriverImplementationsProvider parent
-   */
-  public function __construct(self $parent= null) {
+  /** @param self $parent */
+  public function __construct($parent= null) {
     $this->parent= $parent;
   }
   
