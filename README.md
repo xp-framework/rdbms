@@ -40,6 +40,7 @@ Basics
 Once we have fetched a specific database connection class, we can now invoke a number of methods on it.
 
 ### Selecting
+
 Selecting can be done with the "one-stop" method `select()` which will return all results into an array. Alternatively, the `query()` method allows iterative fetching.
 
 ```php
@@ -63,6 +64,7 @@ while ($record= $q->next()) {
 ```
 
 ### Inserting
+
 To "bind" parameters to an SQL query, the query, select, update, delete and insert methods offer a printf style tokenizer and support varargs syntax. These take care of NULL, type handling and proper escaping for you.
 
 ```php
@@ -85,6 +87,7 @@ $conn->insert('
 ```
 
 ### Updating
+
 The `update()` and `delete()` methods will return the number of affected rows, in case you're interested.
 
 ```php
@@ -92,6 +95,7 @@ $conn->update('news set author_id= %d where author_id is null', $authorId);
 ```
 
 ### Deleting
+
 Even if your RDBMS requires you to use single quotes (or what-else), the API will take care of rewriting string literals for you.
 
 ```php
