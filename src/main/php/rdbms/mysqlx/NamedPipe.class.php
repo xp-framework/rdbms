@@ -1,6 +1,6 @@
 <?php namespace rdbms\mysqlx;
 
-use io\{File, IOException};
+use io\{File, OperationFailed};
 use peer\Socket;
 
 /**
@@ -53,7 +53,7 @@ class NamedPipe extends LocalSocket {
     if (null === $socket) $socket= $this->locate();
 
     if (!($fd= fopen($socket, 'r+'))) {
-      $e= new IOException('Cannot open pipe "'.$socket.'"');
+      $e= new OperationFailed('Cannot open pipe "'.$socket.'"');
       \xp::gc(__FILE__);
       throw $e;
     }

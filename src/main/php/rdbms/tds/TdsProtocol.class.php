@@ -327,7 +327,7 @@ abstract class TdsProtocol {
    *
    * @param   string user
    * @param   string password
-   * @throws  io.IOException
+   * @throws  io.OperationFailed
    */
   protected abstract function login($user, $password);
 
@@ -472,7 +472,7 @@ abstract class TdsProtocol {
    * @param   string user
    * @param   string password
    * @param   string charset
-   * @throws  io.IOException
+   * @throws  io.OperationFailed
    */
   public function connect($user= '', $password= '', $charset= null) {
     $this->connected= false;
@@ -661,7 +661,7 @@ abstract class TdsProtocol {
 
     try {
       $this->stream->write(self::MSG_LOGOFF, "\0");
-    } catch (\io\IOException $ignored) {
+    } catch (\io\OperationFailed $ignored) {
       // Can't do much here
     } 
 
