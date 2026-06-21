@@ -5,7 +5,7 @@ RDBMS support for the XP Framework: MySQL, Sybase, MSSQL, PostgreSQL, SQLite3, I
 
 ## 13.5.0 / 2026-06-21
 
-* Merged PR #12: Refactor I/O exceptions, dropping XP 10 support in the
+* Merged PR #53: Refactor I/O exceptions, dropping XP 10 support in the
   doing. See xp-framework/core#363 for a write-up on the reason behind
   this and the plan to move forward.
   (@thekid)
