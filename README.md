@@ -2,7 +2,6 @@ RDBMS support for the XP Framework
 ========================================================================
 
 [![Build status on GitHub](https://github.com/xp-framework/rdbms/workflows/Tests/badge.svg)](https://github.com/xp-framework/rdbms/actions)
-[![Build status on AppVeyor](https://ci.appveyor.com/api/projects/status/wyt2cgdnkvahlaqa?svg=true)](https://ci.appveyor.com/project/thekid/rdbms)
 [![XP Framework Module](https://raw.githubusercontent.com/xp-framework/web/master/static/xp-framework-badge.png)](https://github.com/xp-framework/core)
 [![BSD Licence](https://raw.githubusercontent.com/xp-framework/web/master/static/licence-bsd.png)](https://github.com/xp-framework/core/blob/master/LICENCE.md)
 [![Requires PHP 7.0+](https://raw.githubusercontent.com/xp-framework/web/master/static/php-7_0plus.svg)](http://php.net/)
