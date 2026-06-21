@@ -156,7 +156,7 @@ class TdsV7Protocol extends TdsProtocol {
    * @param   string user
    * @param   string password
    * @param   string charset
-   * @throws  io.IOException
+   * @throws  io.OperationFailed
    */
   protected function login($user, $password, $charset= null) {
     $params= [

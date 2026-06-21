@@ -72,7 +72,7 @@ class MySqlxProtocol {
    *
    * @param   string user
    * @param   string user
-   * @throws  io.IOException
+   * @throws  io.OperationFailed
    */
   public function connect($user= '', $password= '') {
     $this->sock->isConnected() || $this->sock->connect();
@@ -159,7 +159,7 @@ class MySqlxProtocol {
 
     try {
       $this->write(chr(self::COM_QUIT));
-    } catch (\io\IOException $ignored) {
+    } catch (\io\OperationFailed $ignored) {
       // Can't do much here
     }
     $this->sock->close();

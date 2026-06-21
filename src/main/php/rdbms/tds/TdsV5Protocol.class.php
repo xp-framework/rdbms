@@ -119,7 +119,7 @@ class TdsV5Protocol extends TdsProtocol {
    * @param   string user
    * @param   string password
    * @param   string charset
-   * @throws  io.IOException
+   * @throws  io.OperationFailed
    */
   protected function login($user, $password, $charset= null) {
     if (strlen($password) > 253) {

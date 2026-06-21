@@ -1,6 +1,6 @@
 <?php namespace rdbms\mysqlx;
 
-use io\IOException;
+use io\OperationFailed;
 use lang\XPClass;
 use peer\Socket;
 use rdbms\mysql\MysqlDialect;
@@ -70,7 +70,7 @@ class MySqlxConnection extends DBConnection {
     try {
       $this->handle->connect($this->dsn->getUser(), $this->dsn->getPassword());
       $this->_obs && $this->notifyObservers(new DBEvent(DBEvent::CONNECTED, $reconnect));
-    } catch (IOException $e) {
+    } catch (OperationFailed $e) {
       $this->handle->connected= null;
       $this->_obs && $this->notifyObservers(new DBEvent(DBEvent::CONNECTED, $reconnect));
       throw new SQLConnectException($e->getMessage(), $this->dsn);
@@ -84,7 +84,7 @@ class MySqlxConnection extends DBConnection {
       // "modes is a list of different modes separated by comma (,) characters."
       $query= $this->handle->consume($this->handle->query("show variables like 'sql_mode'"));
       $modes= array_flip(explode(',', $query[0][1]));
-    } catch (IOException $e) {
+    } catch (OperationFailed $e) {
       // Ignore
     }
     
@@ -121,7 +121,7 @@ class MySqlxConnection extends DBConnection {
     try {
       $this->handle->exec('use '.$db);
       return true;
-    } catch (IOException $e) {
+    } catch (OperationFailed $e) {
       throw new SQLStatementFailedException($e->getMessage());
     }
   }
@@ -176,7 +176,7 @@ class MySqlxConnection extends DBConnection {
         default:
           throw new SQLStatementFailedException($message, $sql, $e->error);
       }
-    } catch (IOException $e) {
+    } catch (OperationFailed $e) {
       $this->close();
       $this->transaction= 0;
       throw new SQLConnectionClosedException($e->getMessage(), $tries, $sql, -1);

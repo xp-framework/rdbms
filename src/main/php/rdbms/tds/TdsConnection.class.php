@@ -1,9 +1,9 @@
 <?php namespace rdbms\tds;
 
-use io\IOException;
+use io\OperationFailed;
 use peer\Socket;
-use rdbms\{DBConnection, DBEvent, QuerySucceeded, SQLConnectException, SQLConnectionClosedException, SQLDeadlockException, SQLStateException, SQLStatementFailedException, StatementFormatter, Transaction};
 use rdbms\mssql\MsSQLDialect;
+use rdbms\{DBConnection, DBEvent, QuerySucceeded, SQLConnectException, SQLConnectionClosedException, SQLDeadlockException, SQLStateException, SQLStatementFailedException, StatementFormatter, Transaction};
 
 /**
  * Connection to MSSQL Databases via TDS
@@ -56,7 +56,7 @@ abstract class TdsConnection extends DBConnection {
     try {
       $this->handle->connect($this->dsn->getUser(), $this->dsn->getPassword(), $this->dsn->getProperty('charset', null));
       $this->_obs && $this->notifyObservers(new DBEvent(DBEvent::CONNECTED, $reconnect));
-    } catch (IOException $e) {
+    } catch (OperationFailed $e) {
       $this->handle->connected= null;
       $this->_obs && $this->notifyObservers(new DBEvent(DBEvent::CONNECTED, $reconnect));
       $message= '';
@@ -91,7 +91,7 @@ abstract class TdsConnection extends DBConnection {
     try {
       $this->handle->exec('use '.$db);
       return true;
-    } catch (IOException $e) {
+    } catch (OperationFailed $e) {
       throw new SQLStatementFailedException($e->getMessage());
     }
   }
@@ -131,7 +131,7 @@ abstract class TdsConnection extends DBConnection {
         default:   // Other error
           throw new SQLStatementFailedException($message, $sql, $e->number);
       }
-    } catch (IOException $e) {
+    } catch (OperationFailed $e) {
       if (0 === $this->transaction && $this->connections->retry($this, $tries)) {
         $tries++;
         goto retry;
